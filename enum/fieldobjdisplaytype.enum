@@ -1,0 +1,8 @@
+None
+StairUp inout
+StairDn inout
+PortalIn in only 
+PortalAutoIn auto in 
+PortalOut out only 
+Recycler sell item 
+RotateLineAttack rotate line of dangerobj

@@ -1,0 +1,45 @@
+Invalid make empty packet error
+Login
+Heartbeat
+Chat
+AchieveInfo
+
+Rebirth
+MoveFloor tower cmd 
+AIPlay
+VisitFloorList floor info of visited 
+
+# ao action, need turn AP
+Meditate rest and recover HP,SP
+KillSelf
+Move move 8way near tile
+Attack attack near 1 tile 
+AttackWide attack near 3 tile 
+AttackLong attack 3 tile to direction
+Pickup pickup carryobj
+Drop drop carryobj
+Equip equip equipable carryobj
+UnEquip unequip equipable carryobj
+DrinkPotion
+ReadScroll
+Recycle sell carryobj 
+EnterPortal
+ActTeleport
+
+AdminTowerCmd generic cmd 
+AdminFloorCmd generic cmd 
+AdminActiveObjCmd generic cmd 
+
+AdminFloorMove Next Before floorUUID
+AdminTeleport random pos in floor 
+
+AdminAddExp  add arg to battle exp
+AdminPotionEffect buff by arg potion type
+AdminScrollEffect buff by arg Scroll type
+AdminCondition add arg condition for 100 turn
+AdminAddPotion add arg potion to inven
+AdminAddScroll add arg scroll to inven
+AdminAddMoney add arg money to inven
+AdminAddEquip add random equip to inven
+AdminForgetFloor forget current floor map
+AdminFloorMap complete current floor map 

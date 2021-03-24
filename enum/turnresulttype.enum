@@ -1,0 +1,16 @@
+None empty make error
+AttackTo
+AttackedFrom
+Kill
+KilledBy
+DamagedByTile
+DeadByTile
+HPDamageFromTrap
+SPDamageFromTrap
+DropCarryObj
+DropMoney
+DropMoneyInsteadOfCarryObj
+ContagionTo success 
+ContagionFrom success 
+ContagionToFail fail
+ContagionFromFail fail
