@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/aoscore"
-	"github.com/kasworld/goguelike-single/game/towerlist4client"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"
@@ -29,9 +28,6 @@ import (
 )
 
 type InitData struct {
-	TowerList  []towerlist4client.TowerInfo2Enter
-	TowerIndex int
-
 	// set by login
 	ServiceInfo       *c2t_obj.ServiceInfo
 	AccountInfo       *c2t_obj.AccountInfo
@@ -43,11 +39,10 @@ func New() *InitData {
 	rtn := &InitData{
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
-	rtn.TowerList = RefreshTowerListHTML("towerlist")
 	return rtn
 }
 func (idata *InitData) String() string {
-	return fmt.Sprintf("WasmClient[%v %v]", idata.GetNickName(), idata.GetConnectToTowerURL())
+	return fmt.Sprintf("WasmClient[%v]", idata.GetNickName())
 }
 
 func (idata *InitData) GetNickName() string {
@@ -60,14 +55,6 @@ func (idata *InitData) GetNickName() string {
 
 func (idata *InitData) GetTowerName() string {
 	return idata.TowerInfo.Name
-}
-
-func (idata *InitData) GetConnectToTowerURL() string {
-	if idata.TowerList == nil {
-		jslog.Error("TowerList not loaded")
-		return ""
-	}
-	return idata.TowerList[idata.TowerIndex].ConnectURL
 }
 
 func (idata *InitData) MakeServiceInfoHTML() string {
@@ -87,39 +74,6 @@ func (idata *InitData) CanUseCmd(cmd c2t_idcmd.CommandID) bool {
 		return false
 	}
 	return idata.AccountInfo.CmdList[cmd]
-}
-
-func RefreshTowerListHTML(objid string) []towerlist4client.TowerInfo2Enter {
-	jsobj := js.Global().Get("document").Call("getElementById", objid)
-	tlurl := ReplacePathFromHref("towerlist.json")
-	tl, err := towerlist4client.LoadFromURL(tlurl)
-	if err != nil {
-		jslog.Errorf("towerlist load fail %v\n", err)
-		jsobj.Set("innerHTML", "fail to load towerlist")
-		return nil
-	}
-
-	var buf bytes.Buffer
-	for i, v := range tl {
-		if v.ConnectURL != "" {
-			fmt.Fprintf(&buf, "Entrance found, Tower %v ",
-				v.Name,
-			)
-			fmt.Fprintf(&buf,
-				`<button type="button" style="font-size:20px;" onclick="enterTower(%d)">Enter</button>`,
-				i,
-			)
-		} else {
-			fmt.Fprintf(&buf, "Entrance not found, Tower %v ", v.Name)
-		}
-		fmt.Fprintf(&buf,
-			` <button type="button" style="font-size:20px;" onclick="clearSession(%d)">Clear Memory</button>`,
-			i,
-		)
-		buf.WriteString("<br/>")
-	}
-	jsobj.Set("innerHTML", buf.String())
-	return tl
 }
 
 func LoadHighScoreHTML() string {

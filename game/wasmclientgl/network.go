@@ -46,7 +46,7 @@ func GetQuery() url.Values {
 
 func (app *WasmClient) NetInit(ctx context.Context) error {
 	app.wsConn = c2t_connwasm.New(
-		gInitData.GetConnectToTowerURL(),
+		MakeWebSocketString(),
 		c2t_gob.MarshalBodyFn,
 		app.handleRecvPacket,
 		app.handleSentPacket)
@@ -66,7 +66,7 @@ func (app *WasmClient) NetInit(ctx context.Context) error {
 	authkey := GetQuery().Get("authkey")
 	nick := jsobj.GetTextValueFromInputText("nickname")
 	ck := wasmcookie.GetMap()
-	sessionkey := string(ck[clientcookie.SessionKeyName(gInitData.TowerIndex)])
+	sessionkey := string(ck[clientcookie.SessionKeyName()])
 	wg.Wait()
 
 	wg.Add(1)
@@ -87,6 +87,18 @@ func (app *WasmClient) NetInit(ctx context.Context) error {
 	)
 	wg.Wait()
 	return nil
+}
+
+func MakeWebSocketString() string {
+	loc := js.Global().Get("window").Get("location").Get("href")
+	u, err := url.Parse(loc.String())
+	if err != nil {
+		jslog.Errorf("%v", err)
+		return ""
+	}
+	u.Path = "ws"
+	u.Scheme = "ws"
+	return u.String()
 }
 
 func (app *WasmClient) Cleanup() {

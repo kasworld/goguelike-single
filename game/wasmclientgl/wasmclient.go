@@ -142,14 +142,14 @@ func InitPage() {
 
 	js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 
-	// js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// 	go app.enterTower(args[0].Int())
-	// 	return nil
-	// }))
-	// js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// 	go clientcookie.ClearSession(args[0].Int())
-	// 	return nil
-	// }))
+	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		go app.enterTower()
+		return nil
+	}))
+	js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		go clientcookie.ClearSession()
+		return nil
+	}))
 	app.registerJSButton()
 
 	clientcookie.InitNickname()
@@ -194,11 +194,6 @@ func InitPage() {
 
 	app.AOUUID2AOClient = make(map[string]*c2t_obj.ActiveObjClient)
 	app.CaObjUUID2CaObjClient = make(map[string]interface{})
-
-	// go func() {
-	// 	time.Sleep(3 * time.Second)
-	// 	go app.enterTower(0)
-	// }()
 }
 
 func (app *WasmClient) makeButtons() string {
@@ -211,9 +206,7 @@ func (app *WasmClient) makeButtons() string {
 }
 
 // link to enter tower button
-func (app *WasmClient) enterTower(towerindex int) {
-	gInitData.TowerIndex = towerindex
-
+func (app *WasmClient) enterTower() {
 	jsobj.Hide(GetElementById("titleform"))
 	GetElementById("centerinfo").Set("innerHTML", "")
 	jsobj.Show(GetElementById("cmdrow"))
@@ -260,7 +253,7 @@ func (app *WasmClient) enterTower(towerindex int) {
 			c2t_version.ProtocolVersion, gInitData.ServiceInfo.ProtocolVersion)
 	}
 
-	clientcookie.SetSession(towerindex, string(gInitData.AccountInfo.SessionUUID), gInitData.AccountInfo.NickName)
+	clientcookie.SetSession(string(gInitData.AccountInfo.SessionUUID), gInitData.AccountInfo.NickName)
 
 	if gInitData.CanUseCmd(c2t_idcmd.AIPlay) {
 		app.reqAIPlay(true)

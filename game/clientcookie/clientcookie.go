@@ -21,22 +21,22 @@ import (
 	"github.com/kasworld/gowasmlib/wasmcookie"
 )
 
-func SessionKeyName(towerindex int) string {
-	return fmt.Sprintf("sessionkey%d", towerindex)
+func SessionKeyName() string {
+	return fmt.Sprintf("sessionkey")
 }
 
-func ClearSession(towerindex int) {
+func ClearSession() {
 	wasmcookie.Set(&http.Cookie{
-		Name:    SessionKeyName(towerindex),
+		Name:    SessionKeyName(),
 		Value:   "",
 		Path:    "/",
 		Expires: time.Now().AddDate(1, 0, 0),
 	})
 }
 
-func SetSession(towerindex int, sessionkey string, nick string) {
+func SetSession(sessionkey string, nick string) {
 	wasmcookie.Set(&http.Cookie{
-		Name:    SessionKeyName(towerindex),
+		Name:    SessionKeyName(),
 		Value:   sessionkey,
 		Path:    "/",
 		Expires: time.Now().AddDate(1, 0, 0),

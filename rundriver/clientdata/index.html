@@ -202,7 +202,12 @@ function chatEnter(event) {
   Player name: 
   <input type="text" id="nickname" value="Unnamed" autofocus size=20 maxlength=20>
   <br/>Searching Tower entrance...<br/>
-  <span id="towerlist"></span>
+  <span id="towerlist">
+    Entrance found,
+    <button type="button" style="font-size:20px;" onclick="enterTower()">Enter</button>
+    <button type="button" style="font-size:20px;" onclick="clearSession()">Clear Memory</button>
+    <br/>
+  </span>
 </span>
 
 <div id="cmdrow" style="position: fixed; bottom: 0; left: 0;display: none;color:gray;">
