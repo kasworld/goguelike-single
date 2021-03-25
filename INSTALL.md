@@ -6,7 +6,7 @@
 # 준비물 
     
     linux(debian,ubuntu,mint) 
-    또는 window (아마도 10) 제한적 지원(groundserver 미지원) + powershell(7.x)
+    또는 window (아마도 10) 제한적 지원 + powershell(7.x)
         windows에서는 sig_usr1을 사용할수 없어서 log-rotate가 불가능해 졌습니다.
     windows 에서 powershell 5.x 사용 불가 
         dataversion_gen.go 생성시 utf-8 이 아닌(utf16le) 파일을 만듭니다. 
@@ -73,54 +73,6 @@ wasm 바이너리 생성 : ./rundriver 폴더에서
 
 ./rundriver 속에 
 
-groundserver : towerserver 관리 서버 
-
-    Usage of ./groundserver:
-    -AdminAuthKey string
-        AdminAuthKey (default "6e9456cf-ab29-99b2-f223-1459e00cfcd5")
-    -BaseLogDir string
-        BaseLogDir (default "/tmp/")
-    -ClientDataFolder string
-        ClientDataFolder (default "./clientdata")
-    -DataFolder string
-        DataFolder (default "./serverdata")
-    -ExeFolder string
-        ExeFolder (default "./")
-    -GroundAdminWebPort int
-        GroundAdminWebPort (default 14001)
-    -GroundHost string
-        GroundHost (default "localhost")
-    -GroundRPCPort int
-        GroundRPCPort (default 14002)
-    -GroundServiceWebPort int
-        GroundServiceWebPort (default 14003)
-    -HighScoreFile string
-        HighScoreFile (default "highscore.json")
-    -LogLevel uint
-        LogLevel (default 7)
-    -SplitLogLevel uint
-        SplitLogLevel
-    -TowerAdminHostBase string
-        TowerAdminHostBase (default "http://localhost")
-    -TowerAdminWebPortBase int
-        TowerAdminWebPortBase (default 14200)
-    -TowerBin string
-        TowerBin (default "towerserver")
-    -TowerDataFile string
-        TowerDataFile (default "towerdata.json")
-    -TowerServiceHostBase string
-        TowerServiceHostBase (default "http://localhost")
-    -TowerServicePortBase int
-        TowerServicePortBase (default 14100)
-    -WebAdminID string
-        WebAdminID (default "root")
-    -WebAdminPass string
-        WebAdminPass (default "password")
-    -i string
-        server config file or url
-    -service string
-        start,stop,restart,forcestart,logreopen (default "start")
-
 
 towerserver : goguelike game server 또는 windows용 towerserverwin 
 
@@ -136,8 +88,6 @@ towerserver : goguelike game server 또는 windows용 towerserverwin
         ConcurrentConnections (default 10000)
     -DataFolder string
         DataFolder (default "./serverdata")
-    -GroundRPC string
-        GroundRPC (default "localhost:14002")
     -LogLevel uint
         LogLevel (default 7)
     -ScriptFilename string

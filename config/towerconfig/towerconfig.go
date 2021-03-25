@@ -26,7 +26,6 @@ type TowerConfig struct {
 	BaseLogDir       string        `default:"" argname:""`
 	DataFolder       string        `default:"./serverdata" argname:""`
 	ClientDataFolder string        `default:"./clientdata" argname:""`
-	GroundRPC        string        `default:"localhost:14002" argname:""`
 	WebAdminID       string        `default:"root" argname:""`
 	WebAdminPass     string        `default:"password" argname:"" prettystring:"hidevalue"`
 	AdminAuthKey     string        `default:"6e9456cf-ab29-99b2-f223-1459e00cfcd5" argname:"" prettystring:"hidevalue"`

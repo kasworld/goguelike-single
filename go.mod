@@ -20,9 +20,7 @@ require (
 	github.com/kasworld/htmlcolors v0.0.0-20210321033505-e7fe9c6a43cc
 	github.com/kasworld/ifop v0.0.0-20190506032142-30f140457f43
 	github.com/kasworld/intervalduration v0.0.0-20191119062840-82a720a6b837
-	github.com/kasworld/launcherlib v0.0.0-20190513092519-5ce52b882f53
 	github.com/kasworld/log v0.0.0-20210321033816-d4232145e6fb
-	github.com/kasworld/multirun v0.0.0-20191216055936-decb66787001
 	github.com/kasworld/prettystring v0.0.0-20200313054137-8305061037e7
 	github.com/kasworld/primenum v0.0.0-20200519063715-de250634a56d
 	github.com/kasworld/rangestat v0.0.0-20190508031937-d4380fb43f7a

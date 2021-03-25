@@ -44,9 +44,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
-	"github.com/kasworld/goguelike-single/protocol_t2g/t2g_idcmd"
-	"github.com/kasworld/goguelike-single/protocol_t2g/t2g_obj"
-	"github.com/kasworld/goguelike-single/protocol_t2g/t2g_packet"
 	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/rangestat"
 	"github.com/kasworld/recordduration"
@@ -88,7 +85,6 @@ type Tower struct {
 
 	serviceInfo *c2t_obj.ServiceInfo
 	towerInfo   *c2t_obj.TowerInfo
-	conn2ground *Conn2Ground `prettystring:"simple"`
 	registered  bool
 
 	// for server
@@ -251,8 +247,6 @@ func (tw *Tower) ServiceInit() error {
 		TurnPerSec:    tw.sconfig.TurnPerSec,
 	}
 
-	tw.conn2ground = NewConn2Ground(tw.sconfig.GroundRPC)
-
 	tw.log.TraceService("%v", tw.towerInfo.StringForm())
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	if tw.sconfig.StandAlone {
@@ -340,9 +334,6 @@ func (tw *Tower) runTower(ctx context.Context) {
 	rankMakeTk := time.NewTicker(1 * time.Second)
 	defer rankMakeTk.Stop()
 
-	groundHeartbeat := time.NewTicker(1 * time.Second)
-	defer groundHeartbeat.Stop()
-
 loop:
 	for {
 		select {
@@ -372,21 +363,6 @@ loop:
 			go tw.makeActiveObjExpRank()
 			go tw.makeActiveObjExpRankSuspended()
 
-		case <-groundHeartbeat.C:
-			if !tw.sconfig.StandAlone {
-				if !tw.conn2ground.IsConnected() {
-					go tw.conn2ground.Run(ctx)
-					tw.registered = false
-				} else if !tw.registered {
-					go tw.Ground_Register()
-				} else {
-					go tw.Ground_Heartbeat([]string{
-						fmt.Sprintf("Connection: %v", tw.connManager.Len()),
-						fmt.Sprintf("Pause: %v", tw.listenClientPaused),
-						fmt.Sprintf("Session: %v", tw.sessionManager.Count()),
-					})
-				}
-			}
 		}
 	}
 }
@@ -403,60 +379,6 @@ func (tw *Tower) makeActiveObjExpRankSuspended() {
 	rtn := tw.id2aoSuspend.GetAllList()
 	aoexpsort.ByExp(rtn).Sort()
 	tw.aoExpRankingSuspended = rtn
-}
-
-func (tw *Tower) Ground_Register() {
-	if !tw.conn2ground.IsConnected() {
-		return
-	}
-	tw.conn2ground.ReqWithRspFn(
-		t2g_idcmd.Register,
-		&t2g_obj.ReqRegister_data{
-			TI: tw.towerInfo,
-			SI: tw.serviceInfo,
-			TC: tw.sconfig,
-		},
-		func(hd t2g_packet.Header, rsp interface{}) error {
-			tw.registered = true
-			return nil
-		},
-	)
-}
-
-func (tw *Tower) Ground_Heartbeat(StatusInfo []string) {
-	if !tw.conn2ground.IsConnected() {
-		return
-	}
-	tw.conn2ground.ReqWithRspFn(
-		t2g_idcmd.Heartbeat,
-		&t2g_obj.ReqHeartbeat_data{
-			TowerUUID:  tw.uuid,
-			StatusInfo: StatusInfo,
-		},
-		func(hd t2g_packet.Header, rsp interface{}) error {
-			return nil
-		},
-	)
-}
-
-func (tw *Tower) Ground_HighScore(ao gamei.ActiveObjectI) {
-	if !tw.conn2ground.IsConnected() {
-		return
-	}
-	aos := ao.To_ActiveObjScore()
-	aos.TowerName = tw.towerInfo.Name
-	aos.TowerUUID = tw.uuid
-	aos.RecordTime = time.Now()
-
-	tw.conn2ground.ReqWithRspFn(
-		t2g_idcmd.HighScore,
-		&t2g_obj.ReqHighScore_data{
-			ActiveObjScore: aos,
-		},
-		func(hd t2g_packet.Header, rsp interface{}) error {
-			return nil
-		},
-	)
 }
 
 func (tw *Tower) NewRandFactor() [3]int64 {

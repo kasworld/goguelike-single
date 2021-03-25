@@ -20,20 +20,14 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/config/groundconst"
-	"github.com/kasworld/goguelike-single/config/towerwsurl"
 	"github.com/kasworld/goguelike-single/enum/aotype"
-	"github.com/kasworld/goguelike-single/game/aoexpsort"
-	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
-	"github.com/kasworld/goguelike-single/game/towerlist4client"
 	"github.com/kasworld/goguelike-single/lib/conndata"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/uuidstr"
-	"github.com/kasworld/weblib"
 )
 
 func (tw *Tower) initServiceWeb(ctx context.Context) {
@@ -42,8 +36,6 @@ func (tw *Tower) initServiceWeb(ctx context.Context) {
 		webMux.Handle("/",
 			http.FileServer(http.Dir(tw.Config().ClientDataFolder)),
 		)
-		webMux.HandleFunc("/towerlist.json", tw.json_TowerList)
-		webMux.HandleFunc("/highscore.json", tw.json_HighScore)
 	}
 	webMux.HandleFunc("/TowerInfo", tw.json_TowerInfo)
 	webMux.HandleFunc("/ServiceInfo", tw.json_ServiceInfo)
@@ -167,7 +159,6 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 		panic(fmt.Sprintf("ao not found %v", connData))
 	}
 	if ao != nil && ao.GetActiveObjType() == aotype.User {
-		go tw.Ground_HighScore(ao)
 		ao.Suspend()
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjSuspendFromTower{
@@ -184,37 +175,4 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	}
 	// del from conn manager
 	tw.connManager.Del(connData.UUID)
-}
-
-func (tw *Tower) json_TowerList(w http.ResponseWriter, r *http.Request) {
-	// baseurl := "http://localhost"
-	baseurl := tw.sconfig.ServiceHostBase
-	cu, err := towerwsurl.MakeWebsocketURL(baseurl, tw.sconfig.ServicePort, 0)
-	if err != nil {
-		tw.log.Warn("fail to MakeWebsocketURL %v", err)
-		http.Error(w, "fail to MakeWebsocketURL", 404)
-		return
-	}
-
-	tl := []towerlist4client.TowerInfo2Enter{
-		towerlist4client.TowerInfo2Enter{
-			Name:       tw.sconfig.TowerName,
-			ConnectURL: cu,
-		},
-	}
-	weblib.ServeJSON2HTTP(tl, w)
-}
-
-func (tw *Tower) json_HighScore(w http.ResponseWriter, r *http.Request) {
-	allActiveObj := aoexpsort.ByExp(tw.aoExpRanking)
-	aoLen := len(allActiveObj)
-	if aoLen >= groundconst.HighScoreLen {
-		aoLen = groundconst.HighScoreLen
-	}
-	aol := make([]*aoscore.ActiveObjScore, aoLen)
-	for i := 0; i < aoLen; i++ {
-		aol[i] = allActiveObj[i].To_ActiveObjScore()
-	}
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	weblib.ServeJSON2HTTP(aol, w)
 }
