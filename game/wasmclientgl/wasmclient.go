@@ -15,6 +15,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"sync"
 	"syscall/js"
 	"time"
 
@@ -106,12 +107,17 @@ type WasmClient struct {
 
 // call after pageload
 func InitPage() {
+	var wg sync.WaitGroup
+
 	preMakeTileMatGeo()
 	gameOptions = _gameopt // prevent compiler initialize loop
+
+	wg.Add(1)
 	gFontLoader.Call("load", "three.js/examples/fonts/droid/droid_sans_mono_regular.typeface.json",
 		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			gFont_droid_sans_mono_regular = args[0]
 			preMakeActiveObj3DGeo()
+			wg.Done()
 			return nil
 		}),
 	)
@@ -130,26 +136,28 @@ func InitPage() {
 	app.titlescene = NewTitleScene()
 	app.vp = NewGameScene()
 
+	wg.Add(1)
 	gFontLoader.Call("load", "three.js/examples/fonts/helvetiker_regular.typeface.json",
 		js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			gFont_helvetiker_regular = args[0]
 			app.titlescene.addTitle()
 			// hide loading message
 			GetElementById("loadmsg").Get("style").Set("display", "none")
+			wg.Done()
 			return nil
 		}),
 	)
 
 	js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 
-	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		go app.enterTower()
-		return nil
-	}))
-	js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		go clientcookie.ClearSession()
-		return nil
-	}))
+	// js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	// 	go app.enterTower()
+	// 	return nil
+	// }))
+	// js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	// 	go clientcookie.ClearSession()
+	// 	return nil
+	// }))
 	app.registerJSButton()
 
 	clientcookie.InitNickname()
@@ -194,6 +202,9 @@ func InitPage() {
 
 	app.AOUUID2AOClient = make(map[string]*c2t_obj.ActiveObjClient)
 	app.CaObjUUID2CaObjClient = make(map[string]interface{})
+	wg.Wait()
+	go app.enterTower()
+
 }
 
 func (app *WasmClient) makeButtons() string {
