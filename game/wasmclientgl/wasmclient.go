@@ -142,14 +142,14 @@ func InitPage() {
 
 	js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 
-	js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		go app.enterTower(args[0].Int())
-		return nil
-	}))
-	js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		go clientcookie.ClearSession(args[0].Int())
-		return nil
-	}))
+	// js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	// 	go app.enterTower(args[0].Int())
+	// 	return nil
+	// }))
+	// js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	// 	go clientcookie.ClearSession(args[0].Int())
+	// 	return nil
+	// }))
 	app.registerJSButton()
 
 	clientcookie.InitNickname()
@@ -194,6 +194,11 @@ func InitPage() {
 
 	app.AOUUID2AOClient = make(map[string]*c2t_obj.ActiveObjClient)
 	app.CaObjUUID2CaObjClient = make(map[string]interface{})
+
+	// go func() {
+	// 	time.Sleep(3 * time.Second)
+	// 	go app.enterTower(0)
+	// }()
 }
 
 func (app *WasmClient) makeButtons() string {
