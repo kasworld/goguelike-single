@@ -36,7 +36,7 @@ type TowerConfig struct {
 	AdminPort             int     `default:"14201" argname:""`
 	ScriptFilename        string  `default:"start" argname:""`
 	TowerName             string  `default:"Default" argname:""`
-	ConcurrentConnections int     `default:"1" argname:""`
+	ConcurrentConnections int     `default:"10" argname:""`
 	TurnPerSec            float64 `default:"5.0" argname:""`
 	ServiceHostBase       string  `default:"http://localhost" argname:""` // for StandAlone mode
 }

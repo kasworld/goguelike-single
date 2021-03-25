@@ -249,8 +249,6 @@ func (tw *Tower) ServiceInit() error {
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 		tw.sconfig.ServiceHostBase, tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
-	// fmt.Printf("WebClient : %v:%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
-	// fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
 	fmt.Printf("WebClient : %v:%v/\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
 	fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
 
@@ -280,13 +278,11 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 
 	totalaocount := 0
 	for _, f := range tw.floorMan.GetFloorList() {
-		for i := 0; i < f.GetTerrain().GetActiveObjCount(); i++ {
-			totalaocount += f.GetTerrain().GetActiveObjCount()
-		}
+		totalaocount += f.GetTerrain().GetActiveObjCount()
 	}
-	tw.log.Monitor("Total system ActiveObj in tower %v", totalaocount)
+	tw.log.Warn("Total system ActiveObj in tower %v", totalaocount)
 
-	queuesize := totalaocount * int(tw.Config().TurnPerSec)
+	queuesize := totalaocount * 2
 	tw.recvRequestCh = make(chan interface{}, queuesize*2)
 
 	go tw.runTower(ctx)
