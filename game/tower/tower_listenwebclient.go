@@ -32,11 +32,9 @@ import (
 
 func (tw *Tower) initServiceWeb(ctx context.Context) {
 	webMux := http.NewServeMux()
-	if tw.sconfig.StandAlone {
-		webMux.Handle("/",
-			http.FileServer(http.Dir(tw.Config().ClientDataFolder)),
-		)
-	}
+	webMux.Handle("/",
+		http.FileServer(http.Dir(tw.Config().ClientDataFolder)),
+	)
 	webMux.HandleFunc("/TowerInfo", tw.json_TowerInfo)
 	webMux.HandleFunc("/ServiceInfo", tw.json_ServiceInfo)
 	webMux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {

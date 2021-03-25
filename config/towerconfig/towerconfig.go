@@ -38,7 +38,6 @@ type TowerConfig struct {
 	TowerName             string  `default:"Default" argname:""`
 	ConcurrentConnections int     `default:"10000" argname:""`
 	TurnPerSec            float64 `default:"2.0" argname:""`
-	StandAlone            bool    `default:"true" argname:""`
 	ServiceHostBase       string  `default:"http://localhost" argname:""` // for StandAlone mode
 }
 
