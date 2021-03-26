@@ -108,13 +108,6 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 		return
 	}
 
-	if !tw.clientConnLimitStat.Inc() {
-		tw.log.Fatal(
-			"Over limit connect made, cancel %v, continue %v",
-			r,
-			tw.clientConnLimitStat)
-	}
-
 	upgrader := websocket.Upgrader{
 		CheckOrigin: CheckOrigin,
 	}
@@ -144,8 +137,12 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 		tw.errorStat,
 		tw.demuxReq2BytesAPIFnMap,
 	)
-	// add to conn manager
-	tw.connManager.Add(connData.UUID, c2sc)
+
+	// disconnect old conn if exist
+	if oldConn := tw.playerConnection; oldConn != nil {
+		oldConn.Disconnect()
+	}
+	tw.playerConnection = c2sc
 
 	c2sc.StartServeWS(ctx, wsConn,
 		gameconst.ServerPacketReadTimeOutSec*time.Second,
@@ -173,12 +170,8 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	}
 	wsConn.Close()
 
-	if !tw.clientConnLimitStat.Dec() {
-		tw.log.Fatal("Under limit connection delete, continue %v",
-			tw.clientConnLimitStat)
-	}
 	// del from conn manager
-	tw.connManager.Del(connData.UUID)
+	tw.playerConnection = nil
 }
 
 func (tw *Tower) json_HighScore(w http.ResponseWriter, r *http.Request) {

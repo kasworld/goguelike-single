@@ -35,17 +35,16 @@ import (
 	"github.com/kasworld/goguelike-single/game/towerscript"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/loadlines"
-	"github.com/kasworld/goguelike-single/lib/sessionmanager"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_connbytemanager"
+	"github.com/kasworld/goguelike-single/lib/session"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
 	"github.com/kasworld/log/logflags"
-	"github.com/kasworld/rangestat"
 	"github.com/kasworld/recordduration"
 	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/version"
@@ -88,12 +87,16 @@ type Tower struct {
 
 	// for server
 	// limit client connection
-	clientConnLimitStat *rangestat.RangeStat `prettystring:"simple"`
+	// clientConnLimitStat *rangestat.RangeStat `prettystring:"simple"`
 
 	// manage session (playing and played)
-	sessionManager *sessionmanager.SessionManager
+	// sessionManager *sessionmanager.SessionManager
 	// manage connection
-	connManager *c2t_connbytemanager.Manager
+	// connManager *c2t_connbytemanager.Manager
+
+	// single player
+	playerSession    *session.Session
+	playerConnection *c2t_serveconnbyte.ServeConnByte
 
 	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat               *actpersec.ActPerSec                    `prettystring:"simple"`
@@ -148,14 +151,13 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		sconfig: config,
 		log:     g2log.GlobalLogger,
 
-		clientConnLimitStat: rangestat.New("", 0, config.ConcurrentConnections),
-		sendStat:            actpersec.New(),
-		recvStat:            actpersec.New(),
-		protocolStat:        c2t_statserveapi.New(),
-		notiStat:            c2t_statnoti.New(),
-		errorStat:           c2t_statapierror.New(),
-		towerCmdActStat:     actpersec.New(),
-		towerAchieveStat:    new(towerachieve_vector.TowerAchieveVector),
+		sendStat:         actpersec.New(),
+		recvStat:         actpersec.New(),
+		protocolStat:     c2t_statserveapi.New(),
+		notiStat:         c2t_statnoti.New(),
+		errorStat:        c2t_statapierror.New(),
+		towerCmdActStat:  actpersec.New(),
+		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
 	}
 
 	tw.seed = int64(config.Seed)
@@ -163,11 +165,6 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		tw.seed = time.Now().UnixNano()
 	}
 	tw.rnd = g2rand.NewWithSeed(int64(tw.seed))
-
-	tw.connManager = c2t_connbytemanager.New()
-
-	tw.sessionManager = sessionmanager.New("",
-		tw.sconfig.ConcurrentConnections*10, tw.log)
 
 	tw.doClose = func() {
 		tw.log.Fatal("Too early doClose call %v", tw)
@@ -266,7 +263,6 @@ func (tw *Tower) ServiceCleanup() {
 		f.Cleanup()
 	}
 	tw.floorMan.Cleanup()
-	tw.sessionManager.Cleanup()
 }
 
 func (tw *Tower) ServiceMain(mainctx context.Context) {
@@ -325,10 +321,6 @@ func (tw *Tower) runTower(ctx context.Context) {
 	tw.log.TraceService("Start Run %v", tw)
 	defer func() { tw.log.TraceService("End Run %v", tw) }()
 
-	defer func() {
-		tw.log.TraceService("remain connection %v", tw.clientConnLimitStat)
-	}()
-
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
 
@@ -347,7 +339,6 @@ loop:
 			tw.towerCmdActStat.UpdateLap()
 			tw.sendStat.UpdateLap()
 			tw.recvStat.UpdateLap()
-			tw.clientConnLimitStat.UpdateLap()
 			if len(tw.recvRequestCh) > cap(tw.recvRequestCh)/2 {
 				tw.log.Fatal("Tower reqch overloaded %v/%v",
 					len(tw.recvRequestCh), cap(tw.recvRequestCh))

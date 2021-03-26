@@ -134,11 +134,13 @@ func (sman *SessionManager) UpdateOrNew(
 		}
 	}
 	ss := &session.Session{
-		SessionUUID: uuidstr.New(),
-		Create:      now,
-		LastUse:     now,
-		RemoteAddr:  remoteaddr,
-		NickName:    nickname,
+		SessionUUID:   uuidstr.New(),
+		ConnUUID:      "",
+		RemoteAddr:    remoteaddr,
+		Create:        now,
+		LastUse:       now,
+		NickName:      nickname,
+		ActiveObjUUID: "",
 	}
 
 	sman.sessionid2session[ss.SessionUUID] = ss

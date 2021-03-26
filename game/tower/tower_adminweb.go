@@ -27,9 +27,9 @@ import (
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
-	"github.com/kasworld/goguelike-single/lib/sessionmanager"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_connbytemanager"
+	"github.com/kasworld/goguelike-single/lib/session"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
@@ -77,16 +77,7 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFuncAuth("/terrainimageautozoom", tw.web_TerrainImageAutoZoom)
 	webMux.HandleFuncAuth("/terraintile", tw.web_TerrainTile)
 
-	webMux.HandleFuncAuth("/ConnectionList", tw.web_ConnectionList)
-	webMux.HandleFuncAuth("/KickConnection", tw.web_KickConnection)
-	webMux.HandleFuncAuth("/KickActiveObj", tw.web_KickActiveObj)
-	webMux.HandleFuncAuth("/SessionList", tw.web_SessionList)
-	webMux.HandleFuncAuth("/DelSession", tw.web_DelSession)
-
 	webMux.HandleFuncAuth("/Broadcast", tw.web_Broadcast)
-	webMux.HandleFuncAuth("/ListenClientPause", tw.web_ListenClientPause)
-	webMux.HandleFuncAuth("/ListenClientResume", tw.web_ListenClientResume)
-	webMux.HandleFuncAuth("/SetSoftMax_Connection", tw.web_SetSoftMax_Connection)
 
 	webMux.HandleFunc("/Config", tw.json_Config)
 
@@ -119,12 +110,12 @@ func (tw *Tower) GetTowerAchieveStat() *towerachieve_vector.TowerAchieveVector {
 	return tw.towerAchieveStat
 }
 
-func (tw *Tower) GetConnManager() *c2t_connbytemanager.Manager {
-	return tw.connManager
+func (tw *Tower) GetPlayerConnection() *c2t_serveconnbyte.ServeConnByte {
+	return tw.playerConnection
 }
 
-func (tw *Tower) GetSessionManager() *sessionmanager.SessionManager {
-	return tw.sessionManager
+func (tw *Tower) GetPlayerSession() *session.Session {
+	return tw.playerSession
 }
 
 func (tw *Tower) GetStartTime() time.Time {
@@ -267,9 +258,9 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
     <br/>
     <a href="/ActiveObjSuspendedList?page=0" target="_blank">{{.GetID2ActiveObjSuspend}}</a>
     <br/>
-    <a href="/ConnectionList?page=0" target="_blank">Connections:{{.GetConnManager}}</a>
+    <a href="/ConnectionList?page=0" target="_blank">Connections:{{.GetPlayerConnection}}</a>
     <br/>
-    <a href="/SessionList?page=0" target="_blank">{{.GetSessionManager}}</a>
+    <a href="/SessionList?page=0" target="_blank">{{.GetPlayerSession}}</a>
     <br/>
     Listen Client pasuse : {{.IsListenClientPaused}}
     <a href='/ListenClientPause' target="_blank">[Pause]</a>

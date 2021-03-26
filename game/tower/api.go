@@ -13,7 +13,6 @@ package tower
 
 import (
 	"fmt"
-	"runtime"
 	"strings"
 	"time"
 
@@ -23,11 +22,13 @@ import (
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/conndata"
+	"github.com/kasworld/goguelike-single/lib/session"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
+	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/version"
 )
 
@@ -68,32 +69,23 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 
 	connData := c2sc.GetConnData().(*conndata.ConnData)
 
-	ss := tw.sessionManager.UpdateOrNew(
-		robj.SessionUUID,
-		connData.RemoteAddr,
-		tw.Config().NickName,
-	)
+	now := time.Now()
+	tw.playerSession = &session.Session{
+		SessionUUID:   uuidstr.New(),
+		ConnUUID:      connData.UUID,
+		RemoteAddr:    connData.RemoteAddr,
+		Create:        now,
+		LastUse:       now,
+		NickName:      tw.Config().NickName,
+		ActiveObjUUID: "",
+	}
 
-	if oldc2sc := tw.connManager.Get(ss.ConnUUID); oldc2sc != nil {
-		oldc2sc.Disconnect()
-		// wait
-		trycount := 10
-		for tw.connManager.Get(ss.ConnUUID) != nil && trycount > 0 {
-			runtime.Gosched()
-			time.Sleep(time.Millisecond * 100)
-			trycount--
-		}
-	}
-	if tw.connManager.Get(ss.ConnUUID) != nil {
-		tw.log.Fatal("old connection online %v", ss)
-		return rhd, nil, err
-	}
-	ss.ConnUUID = connData.UUID
-	connData.Session = ss
+	connData.Session = tw.playerSession
 
 	oldAO, exist := tw.id2aoSuspend.GetByUUID(connData.Session.ActiveObjUUID)
 	if exist {
 		// connect to exist ao
+		tw.playerSession.ActiveObjUUID = oldAO.GetUUID()
 		oldAO.Resume(c2sc)
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjResumeTower{

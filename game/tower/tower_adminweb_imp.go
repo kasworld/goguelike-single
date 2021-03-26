@@ -44,52 +44,6 @@ func (tw *Tower) web_ErrorStat(w http.ResponseWriter, r *http.Request) {
 	tw.errorStat.ToWeb(w, r)
 }
 
-func (tw *Tower) web_ConnectionList(w http.ResponseWriter, r *http.Request) {
-	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
-	}
-	tw.connManager.ToWeb(w, r)
-}
-
-func (tw *Tower) web_KickConnection(w http.ResponseWriter, r *http.Request) {
-	id := weblib.GetStringByName("id", "", w, r)
-	if id == "" {
-		tw.log.Warn("Invalid id")
-		http.Error(w, "Invalid id", 404)
-		return
-	}
-	ss := tw.sessionManager.GetBySessionID(id)
-	if ss == nil {
-		tw.log.Warn("session not found")
-		http.Error(w, "session not found", 404)
-		return
-	}
-	c2sc := tw.connManager.Get(ss.ConnUUID)
-	if c2sc == nil {
-		tw.log.Warn("connection not found %v", id)
-		http.Error(w, "connection not found", 404)
-		return
-	}
-	c2sc.Disconnect()
-}
-
-func (tw *Tower) web_SessionList(w http.ResponseWriter, r *http.Request) {
-	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
-	}
-	tw.sessionManager.ToWeb(w, r)
-}
-
-func (tw *Tower) web_DelSession(w http.ResponseWriter, r *http.Request) {
-	id := weblib.GetStringByName("id", "", w, r)
-	if id == "" {
-		tw.log.Warn("Invalid id")
-		http.Error(w, "Invalid id", 404)
-		return
-	}
-	tw.sessionManager.DelBySessionID(id)
-}
-
 func (tw *Tower) web_KickActiveObj(w http.ResponseWriter, r *http.Request) {
 	id := weblib.GetStringByName("aoid", "", w, r)
 	if id == "" {
@@ -214,8 +168,7 @@ func (tw *Tower) web_ActiveObjSuspendedList(w http.ResponseWriter, r *http.Reque
 
 func (tw *Tower) web_Broadcast(w http.ResponseWriter, r *http.Request) {
 	msg := weblib.GetStringByName("Msg", "", w, r)
-	connlist := tw.connManager.GetList()
-	for _, aoconn := range connlist {
+	if aoconn := tw.playerConnection; aoconn != nil {
 		aoconn.SendNotiPacket(c2t_idnoti.Broadcast,
 			c2t_obj.NotiBroadcast_data{
 				Msg: msg,
@@ -239,54 +192,11 @@ func (tw *Tower) web_Broadcast(w http.ResponseWriter, r *http.Request) {
 			SendList string
 		}{
 			msg,
-			fmt.Sprintf("%v", len(connlist)),
+			fmt.Sprintf("%v", tw.playerConnection),
 		},
 	); err != nil {
 		tw.log.Error("%v", err)
 	}
-}
-
-func (tw *Tower) web_ListenClientPause(w http.ResponseWriter, r *http.Request) {
-	tw.log.Debug("ListenClient Paused")
-	tw.PauseListenClient()
-
-	var tpl = template.Must(template.New("index").Parse(`
-    <html>
-    <head>
-    <title>ListenClient Paused</title>
-    </head>
-    <body>
-    ListenClient Paused
-    </body>
-    </html>
-    `))
-	tpl.Execute(w, nil)
-}
-
-func (tw *Tower) web_ListenClientResume(w http.ResponseWriter, r *http.Request) {
-	tw.log.Debug("ListenClient Resumed")
-	tw.ResumeListenClient()
-
-	var tpl = template.Must(template.New("index").Parse(`
-    <html>
-    <head>
-    <title>ListenClient Resumed</title>
-    </head>
-    <body>
-    ListenClient Resumed
-    </body>
-    </html>
-    `))
-	tpl.Execute(w, nil)
-}
-
-func (tw *Tower) web_SetSoftMax_Connection(w http.ResponseWriter, r *http.Request) {
-	cur := tw.clientConnLimitStat.GetSoftMax()
-	val := weblib.GetIntByName("SoftMax", cur, w, r)
-	if !tw.clientConnLimitStat.SetSoftMax(val) {
-		http.Error(w, "value out of range", 403)
-	}
-	tw.clientConnLimitStat.ToWeb(w, r)
 }
 
 func (tw *Tower) web_towerStat(w http.ResponseWriter, r *http.Request) {
