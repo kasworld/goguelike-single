@@ -14,10 +14,8 @@ package clientcookie
 import (
 	"fmt"
 	"net/http"
-	"syscall/js"
 	"time"
 
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/gowasmlib/wasmcookie"
 )
 
@@ -41,21 +39,4 @@ func SetSession(sessionkey string, nick string) {
 		Path:    "/",
 		Expires: time.Now().AddDate(1, 0, 0),
 	})
-	wasmcookie.Set(&http.Cookie{
-		Name:    "nickname",
-		Value:   nick,
-		Path:    "/",
-		Expires: time.Now().AddDate(1, 0, 0),
-	})
-}
-
-func InitNickname() {
-	ck := wasmcookie.GetMap()
-	var nickname string
-	if oldnick, exist := ck["nickname"]; exist {
-		nickname = oldnick
-	} else {
-		nickname = fmt.Sprintf("unnamed_%x", g2rand.New().Uint32())
-	}
-	js.Global().Get("document").Call("getElementById", "nickname").Set("value", nickname)
 }

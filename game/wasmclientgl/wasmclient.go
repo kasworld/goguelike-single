@@ -150,17 +150,7 @@ func InitPage() {
 
 	js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
 
-	// js.Global().Set("enterTower", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// 	go app.enterTower()
-	// 	return nil
-	// }))
-	// js.Global().Set("clearSession", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-	// 	go clientcookie.ClearSession()
-	// 	return nil
-	// }))
 	app.registerJSButton()
-
-	clientcookie.InitNickname()
 
 	GetElementById("centerinfo").Set("innerHTML",
 		clientinitdata.MakeClientInfoHTML()+
