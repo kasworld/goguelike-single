@@ -71,7 +71,8 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	ss := tw.sessionManager.UpdateOrNew(
 		robj.SessionUUID,
 		connData.RemoteAddr,
-		robj.NickName)
+		tw.Config().NickName,
+	)
 
 	if oldc2sc := tw.connManager.Get(ss.ConnUUID); oldc2sc != nil {
 		oldc2sc.Disconnect()
@@ -103,11 +104,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	} else {
 		// new ao
 		var homeFloor gamei.FloorI
-		if strings.HasPrefix(robj.NickName, "MC_") {
-			homeFloor = tw.GetFloorManager().GetFloorByIndex(tw.rnd.Intn(tw.GetFloorManager().GetFloorCount()))
-		} else {
-			homeFloor = tw.GetFloorManager().GetStartFloor()
-		}
+		homeFloor = tw.GetFloorManager().GetStartFloor()
 		newAO := activeobject.NewUserActiveObj(
 			tw.rnd.Int63(),
 			homeFloor,

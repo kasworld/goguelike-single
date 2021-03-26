@@ -248,9 +248,9 @@ func (tw *Tower) ServiceInit() error {
 	tw.log.TraceService("%v", tw.towerInfo.StringForm())
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
-		tw.sconfig.ServiceHostBase, tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
-	fmt.Printf("WebClient : %v:%v/\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort)
-	fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n", tw.sconfig.ServiceHostBase, tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
+		"http://localhost", tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
+	fmt.Printf("WebClient : %v:%v/\n", "http://localhost", tw.sconfig.ServicePort)
+	fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n", "http://localhost", tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
 
 	return nil
 }

@@ -20,6 +20,9 @@ import (
 )
 
 type TowerConfig struct {
+	// player
+	NickName string `default:"Player" argname:""`
+
 	// common to all tower
 	LogLevel         g2log.LL_Type `default:"7" argname:""`
 	SplitLogLevel    g2log.LL_Type `default:"0" argname:""`
@@ -38,7 +41,6 @@ type TowerConfig struct {
 	TowerName             string  `default:"Default" argname:""`
 	ConcurrentConnections int     `default:"10" argname:""`
 	TurnPerSec            float64 `default:"5.0" argname:""`
-	ServiceHostBase       string  `default:"http://localhost" argname:""` // for StandAlone mode
 }
 
 func (config *TowerConfig) MakeLogDir() string {

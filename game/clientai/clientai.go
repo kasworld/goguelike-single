@@ -118,7 +118,6 @@ func (cai *ClientAI) Run(mainctx context.Context) {
 
 	if err := cai.reqLogin(
 		cai.config.SessionUUID,
-		cai.config.Nickname,
 		cai.config.Auth,
 	); err != nil {
 		cai.runResult = err
