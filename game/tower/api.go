@@ -70,22 +70,17 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	connData := c2sc.GetConnData().(*conndata.ConnData)
 
 	now := time.Now()
-	tw.playerSession = &session.Session{
-		SessionUUID:   uuidstr.New(),
-		ConnUUID:      connData.UUID,
-		RemoteAddr:    connData.RemoteAddr,
-		Create:        now,
-		LastUse:       now,
-		NickName:      tw.Config().NickName,
-		ActiveObjUUID: "",
-	}
 
-	connData.Session = tw.playerSession
-
-	oldAO, exist := tw.id2aoSuspend.GetByUUID(connData.Session.ActiveObjUUID)
-	if exist {
-		// connect to exist ao
-		tw.playerSession.ActiveObjUUID = oldAO.GetUUID()
+	// if reconnect
+	if tw.playerSession != nil {
+		// update exist session
+		tw.playerSession.ConnUUID = connData.UUID
+		tw.playerSession.RemoteAddr = connData.RemoteAddr
+		tw.playerSession.LastUse = now
+		oldAO, exist := tw.id2aoSuspend.GetByUUID(tw.playerSession.ActiveObjUUID)
+		if !exist {
+			panic("no exist ao")
+		}
 		oldAO.Resume(c2sc)
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjResumeTower{
@@ -94,17 +89,27 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		}
 		err = <-rspCh
 	} else {
+		// new session
+		tw.playerSession = &session.Session{
+			SessionUUID:   uuidstr.New(),
+			ConnUUID:      connData.UUID,
+			RemoteAddr:    connData.RemoteAddr,
+			Create:        now,
+			LastUse:       now,
+			NickName:      tw.Config().NickName,
+			ActiveObjUUID: "",
+		}
 		// new ao
 		var homeFloor gamei.FloorI
 		homeFloor = tw.GetFloorManager().GetStartFloor()
 		newAO := activeobject.NewUserActiveObj(
 			tw.rnd.Int63(),
 			homeFloor,
-			connData.Session.NickName,
+			tw.Config().NickName,
 			tw.log,
 			tw.towerAchieveStat,
 			c2sc)
-		connData.Session.ActiveObjUUID = newAO.GetUUID()
+		tw.playerSession.ActiveObjUUID = newAO.GetUUID()
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjEnterTower{
 			ActiveObj: newAO,
@@ -113,13 +118,15 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		err = <-rspCh
 	}
 
+	connData.Session = tw.playerSession
+
 	if err != nil {
 		return rhd, nil, err
 	} else {
 		acinfo := &c2t_obj.AccountInfo{
-			SessionUUID:   connData.Session.GetUUID(),
-			ActiveObjUUID: connData.Session.ActiveObjUUID,
-			NickName:      connData.Session.NickName,
+			SessionUUID:   tw.playerSession.GetUUID(),
+			ActiveObjUUID: tw.playerSession.ActiveObjUUID,
+			NickName:      tw.playerSession.NickName,
 			CmdList:       *c2sc.GetAuthorCmdList(),
 		}
 		return rhd, &c2t_obj.RspLogin_data{

@@ -85,15 +85,6 @@ type Tower struct {
 	serviceInfo *c2t_obj.ServiceInfo
 	towerInfo   *c2t_obj.TowerInfo
 
-	// for server
-	// limit client connection
-	// clientConnLimitStat *rangestat.RangeStat `prettystring:"simple"`
-
-	// manage session (playing and played)
-	// sessionManager *sessionmanager.SessionManager
-	// manage connection
-	// connManager *c2t_connbytemanager.Manager
-
 	// single player
 	playerSession    *session.Session
 	playerConnection *c2t_serveconnbyte.ServeConnByte
