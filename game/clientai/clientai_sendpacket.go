@@ -39,7 +39,6 @@ func (cai *ClientAI) reqLogin(authkey string) error {
 
 			rpk := robj.(*c2t_obj.RspLogin_data)
 
-			cai.config.SessionUUID = rpk.AccountInfo.SessionUUID
 			cai.ServiceInfo = rpk.ServiceInfo
 			cai.AccountInfo = rpk.AccountInfo
 

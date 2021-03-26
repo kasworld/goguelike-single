@@ -14,21 +14,17 @@ package tower
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/lib/conndata"
-	"github.com/kasworld/goguelike-single/lib/session"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
-	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/version"
 )
 
@@ -67,16 +63,8 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		return rhd, nil, err
 	}
 
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-
-	now := time.Now()
-
 	// if reconnect
-	if tw.playerSession != nil {
-		// update exist session
-		tw.playerSession.ConnUUID = connData.UUID
-		tw.playerSession.RemoteAddr = connData.RemoteAddr
-		tw.playerSession.LastUse = now
+	if tw.playerAO != nil {
 		tw.playerAO.Resume(c2sc)
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.PlayerAOResumeTower{
@@ -84,16 +72,6 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		}
 		err = <-rspCh
 	} else {
-		// new session
-		tw.playerSession = &session.Session{
-			SessionUUID:   uuidstr.New(),
-			ConnUUID:      connData.UUID,
-			RemoteAddr:    connData.RemoteAddr,
-			Create:        now,
-			LastUse:       now,
-			NickName:      tw.Config().NickName,
-			ActiveObjUUID: "",
-		}
 		// new ao
 		var homeFloor gamei.FloorI
 		homeFloor = tw.GetFloorManager().GetStartFloor()
@@ -105,7 +83,6 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 			tw.towerAchieveStat,
 			c2sc)
 		tw.playerAO = newAO
-		tw.playerSession.ActiveObjUUID = newAO.GetUUID()
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjEnterTower{
 			ActiveObj: newAO,
@@ -114,15 +91,12 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		err = <-rspCh
 	}
 
-	connData.Session = tw.playerSession
-
 	if err != nil {
 		return rhd, nil, err
 	} else {
 		acinfo := &c2t_obj.AccountInfo{
-			SessionUUID:   tw.playerSession.GetUUID(),
-			ActiveObjUUID: tw.playerSession.ActiveObjUUID,
-			NickName:      tw.playerSession.NickName,
+			ActiveObjUUID: tw.playerAO.GetUUID(),
+			NickName:      tw.Config().NickName,
 			CmdList:       *c2sc.GetAuthorCmdList(),
 		}
 		return rhd, &c2t_obj.RspLogin_data{

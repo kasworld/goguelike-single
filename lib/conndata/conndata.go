@@ -11,12 +11,7 @@
 
 package conndata
 
-import (
-	"github.com/kasworld/goguelike-single/lib/session"
-)
-
 type ConnData struct {
 	UUID       string
 	RemoteAddr string
-	Session    *session.Session
 }

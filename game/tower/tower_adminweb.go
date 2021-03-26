@@ -27,7 +27,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
-	"github.com/kasworld/goguelike-single/lib/session"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
@@ -111,10 +110,6 @@ func (tw *Tower) GetTowerAchieveStat() *towerachieve_vector.TowerAchieveVector {
 
 func (tw *Tower) GetPlayerConnection() *c2t_serveconnbyte.ServeConnByte {
 	return tw.playerConnection
-}
-
-func (tw *Tower) GetPlayerSession() *session.Session {
-	return tw.playerSession
 }
 
 func (tw *Tower) GetStartTime() time.Time {

@@ -12,25 +12,9 @@
 package tower
 
 import (
-	"fmt"
-
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/lib/conndata"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 )
 
 func (tw *Tower) api_me2ao(me interface{}) (gamei.ActiveObjectI, error) {
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		return nil, fmt.Errorf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me)
-	}
-	connData := c2sc.GetConnData().(*conndata.ConnData)
-	if connData.Session == nil {
-		return nil, fmt.Errorf("no session %#v", connData)
-	}
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		return nil, fmt.Errorf("ao not found %v", connData)
-	}
-	return ao, nil
+	return tw.playerAO, nil
 }

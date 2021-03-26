@@ -35,7 +35,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/towerscript"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/loadlines"
-	"github.com/kasworld/goguelike-single/lib/session"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
@@ -84,7 +83,6 @@ type Tower struct {
 	towerInfo   *c2t_obj.TowerInfo
 
 	// single player
-	playerSession    *session.Session
 	playerConnection *c2t_serveconnbyte.ServeConnByte
 	playerAO         *activeobject.ActiveObject
 
