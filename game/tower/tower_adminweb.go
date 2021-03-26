@@ -66,7 +66,6 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFuncAuth("/ActiveObj", tw.web_ActiveObjInfo)
 	webMux.HandleFuncAuth("/ActiveObjVisitImgae", tw.web_ActiveObjVisitFloorImage)
 	webMux.HandleFuncAuth("/ActiveObjRankingList", tw.web_ActiveObjRankingList)
-	webMux.HandleFuncAuth("/ActiveObjSuspendedList", tw.web_ActiveObjSuspendedList)
 	webMux.HandleFuncAuth("/StatServeAPI", tw.web_ProtocolStat)
 	webMux.HandleFuncAuth("/StatNotification", tw.web_NotiStat)
 	webMux.HandleFuncAuth("/StatAPIError", tw.web_ErrorStat)
@@ -124,10 +123,6 @@ func (tw *Tower) GetStartTime() time.Time {
 
 func (tw *Tower) GetID2ActiveObj() *aoid2activeobject.ActiveObjID2ActiveObject {
 	return tw.id2ao
-}
-
-func (tw *Tower) GetID2ActiveObjSuspend() *aoid2activeobject.ActiveObjID2ActiveObject {
-	return tw.id2aoSuspend
 }
 
 func (tw *Tower) GetSendStat() *actpersec.ActPerSec {
@@ -256,16 +251,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
     <br/>
     <a href="/ActiveObjRankingList?page=0" target="_blank">{{.GetID2ActiveObj}}</a>
     <br/>
-    <a href="/ActiveObjSuspendedList?page=0" target="_blank">{{.GetID2ActiveObjSuspend}}</a>
-    <br/>
-    <a href="/ConnectionList?page=0" target="_blank">Connections:{{.GetPlayerConnection}}</a>
-    <br/>
-    <a href="/SessionList?page=0" target="_blank">{{.GetPlayerSession}}</a>
-    <br/>
-    Listen Client pasuse : {{.IsListenClientPaused}}
-    <a href='/ListenClientPause' target="_blank">[Pause]</a>
-    <a href='/ListenClientResume' target="_blank">[Resume]</a>
-    <a href='/SetSoftMax_Connection?SoftMax=' target="_blank">[SetSoftMax]</a>
     <form action="/Broadcast" target="_blank">
 		Broadcast Message: 
 		<input type="text" name="Msg" value="" size="64">

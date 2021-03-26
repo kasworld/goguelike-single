@@ -75,12 +75,10 @@ type Tower struct {
 	biasFactor [3]int64  `prettystring:"simple"`
 	startTime  time.Time `prettystring:"simple"`
 
-	floorMan              *floormanager.FloorManager                  `prettystring:"simple"`
-	ao2Floor              *aoid2floor.ActiveObjID2Floor               `prettystring:"simple"`
-	id2ao                 *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
-	id2aoSuspend          *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
-	aoExpRankingSuspended aoexpsort.ByExp                             `prettystring:"simple"`
-	aoExpRanking          aoexpsort.ByExp                             `prettystring:"simple"`
+	floorMan     *floormanager.FloorManager                  `prettystring:"simple"`
+	ao2Floor     *aoid2floor.ActiveObjID2Floor               `prettystring:"simple"`
+	id2ao        *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
+	aoExpRanking aoexpsort.ByExp                             `prettystring:"simple"`
 
 	serviceInfo *c2t_obj.ServiceInfo
 	towerInfo   *c2t_obj.TowerInfo
@@ -88,6 +86,7 @@ type Tower struct {
 	// single player
 	playerSession    *session.Session
 	playerConnection *c2t_serveconnbyte.ServeConnByte
+	playerAO         *activeobject.ActiveObject
 
 	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat               *actpersec.ActPerSec                    `prettystring:"simple"`
@@ -135,9 +134,8 @@ func New(config *towerconfig.TowerConfig) *Tower {
 	}
 
 	tw := &Tower{
-		uuid:         uuidstr.New(),
-		id2ao:        aoid2activeobject.New("ActiveObject working"),
-		id2aoSuspend: aoid2activeobject.New("ActiveObject suspended"),
+		uuid:  uuidstr.New(),
+		id2ao: aoid2activeobject.New("ActiveObject working"),
 
 		sconfig: config,
 		log:     g2log.GlobalLogger,
@@ -344,8 +342,6 @@ loop:
 
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
-			go tw.makeActiveObjExpRankSuspended()
-
 		}
 	}
 }
@@ -357,11 +353,6 @@ func (tw *Tower) makeActiveObjExpRank() {
 	}
 	aoexpsort.ByExp(rtn).Sort()
 	tw.aoExpRanking = rtn
-}
-func (tw *Tower) makeActiveObjExpRankSuspended() {
-	rtn := tw.id2aoSuspend.GetAllList()
-	aoexpsort.ByExp(rtn).Sort()
-	tw.aoExpRankingSuspended = rtn
 }
 
 func (tw *Tower) NewRandFactor() [3]int64 {

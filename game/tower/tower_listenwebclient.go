@@ -162,9 +162,8 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	if ao != nil && ao.GetActiveObjType() == aotype.User {
 		ao.Suspend()
 		rspCh := make(chan error, 1)
-		tw.GetReqCh() <- &cmd2tower.ActiveObjSuspendFromTower{
-			ActiveObj: ao,
-			RspCh:     rspCh,
+		tw.GetReqCh() <- &cmd2tower.PlayerAOSuspendFromTower{
+			RspCh: rspCh,
 		}
 		<-rspCh
 	}

@@ -77,15 +77,10 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		tw.playerSession.ConnUUID = connData.UUID
 		tw.playerSession.RemoteAddr = connData.RemoteAddr
 		tw.playerSession.LastUse = now
-		oldAO, exist := tw.id2aoSuspend.GetByUUID(tw.playerSession.ActiveObjUUID)
-		if !exist {
-			panic("no exist ao")
-		}
-		oldAO.Resume(c2sc)
+		tw.playerAO.Resume(c2sc)
 		rspCh := make(chan error, 1)
-		tw.GetReqCh() <- &cmd2tower.ActiveObjResumeTower{
-			ActiveObj: oldAO,
-			RspCh:     rspCh,
+		tw.GetReqCh() <- &cmd2tower.PlayerAOResumeTower{
+			RspCh: rspCh,
 		}
 		err = <-rspCh
 	} else {
@@ -109,6 +104,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 			tw.log,
 			tw.towerAchieveStat,
 			c2sc)
+		tw.playerAO = newAO
 		tw.playerSession.ActiveObjUUID = newAO.GetUUID()
 		rspCh := make(chan error, 1)
 		tw.GetReqCh() <- &cmd2tower.ActiveObjEnterTower{

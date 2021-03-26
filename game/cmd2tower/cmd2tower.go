@@ -31,26 +31,20 @@ func (cet ActiveObjEnterTower) String() string {
 	)
 }
 
-type ActiveObjSuspendFromTower struct {
-	ActiveObj gamei.ActiveObjectI
-	RspCh     chan<- error
+type PlayerAOSuspendFromTower struct {
+	RspCh chan<- error
 }
 
-func (cet ActiveObjSuspendFromTower) String() string {
-	return fmt.Sprintf("ActiveObjSuspendFromTower[%v]",
-		cet.ActiveObj,
-	)
+func (cet PlayerAOSuspendFromTower) String() string {
+	return fmt.Sprintf("PlayerAOSuspendFromTower[]")
 }
 
-type ActiveObjResumeTower struct {
-	ActiveObj gamei.ActiveObjectI
-	RspCh     chan<- error
+type PlayerAOResumeTower struct {
+	RspCh chan<- error
 }
 
-func (cet ActiveObjResumeTower) String() string {
-	return fmt.Sprintf("ActiveObjResumeTower[%v]",
-		cet.ActiveObj,
-	)
+func (cet PlayerAOResumeTower) String() string {
+	return fmt.Sprintf("PlayerAOResumeTower[]")
 }
 
 type ActiveObjLeaveTower struct {

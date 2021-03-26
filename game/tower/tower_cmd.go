@@ -30,11 +30,11 @@ func (tw *Tower) processCmd2Tower(data interface{}) {
 	case *cmd2tower.ActiveObjEnterTower:
 		pk.RspCh <- tw.Call_ActiveObjEnterTower(pk.ActiveObj)
 
-	case *cmd2tower.ActiveObjResumeTower:
-		pk.RspCh <- tw.Call_ActiveObjResumeTower(pk.ActiveObj)
+	case *cmd2tower.PlayerAOResumeTower:
+		pk.RspCh <- tw.Call_PlayerAOResumeTower()
 
-	case *cmd2tower.ActiveObjSuspendFromTower:
-		pk.RspCh <- tw.Call_ActiveObjSuspendFromTower(pk.ActiveObj)
+	case *cmd2tower.PlayerAOSuspendFromTower:
+		pk.RspCh <- tw.Call_PlayerAOSuspendFromTower()
 
 	case *cmd2tower.ActiveObjLeaveTower:
 		pk.RspCh <- tw.Call_ActiveObjLeaveTower(pk.ActiveObjUUID)
@@ -83,7 +83,8 @@ func (tw *Tower) Call_ActiveObjEnterTower(ao gamei.ActiveObjectI) error {
 	return nil // continue login
 }
 
-func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
+func (tw *Tower) Call_PlayerAOResumeTower() error {
+	ao := tw.playerAO
 	f := ao.GetCurrentFloor()
 	if f == nil {
 		f = ao.GetHomeFloor()
@@ -91,10 +92,6 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 	if err := tw.ao2Floor.ActiveObjResumeToFloor(f, ao); err != nil {
 		tw.log.Fatal("%v", err)
 		return err
-	}
-	_, err := tw.id2aoSuspend.DelByUUID(ao.GetUUID())
-	if err != nil {
-		tw.log.Fatal("%v", err)
 	}
 	if err := tw.id2ao.Add(ao); err != nil {
 		tw.log.Fatal("%v", err)
@@ -118,16 +115,13 @@ func (tw *Tower) Call_ActiveObjResumeTower(ao gamei.ActiveObjectI) error {
 	return nil // continue login
 }
 
-func (tw *Tower) Call_ActiveObjSuspendFromTower(ao gamei.ActiveObjectI) error {
-	ao, err := tw.id2ao.DelByUUID(ao.GetUUID())
+func (tw *Tower) Call_PlayerAOSuspendFromTower() error {
+	ao, err := tw.id2ao.DelByUUID(tw.playerAO.GetUUID())
 	if err != nil {
 		tw.log.Fatal("%v", err)
 		return nil
 	}
 	tw.ao2Floor.ActiveObjLeaveFloor(ao)
-	if err := tw.id2aoSuspend.Add(ao); err != nil {
-		tw.log.Fatal("%v", err)
-	}
 	return nil
 }
 

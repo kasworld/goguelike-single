@@ -141,31 +141,6 @@ func (tw *Tower) web_ActiveObjRankingList(w http.ResponseWriter, r *http.Request
 	weblib.WebFormEnd(w, r)
 }
 
-func (tw *Tower) web_ActiveObjSuspendedList(w http.ResponseWriter, r *http.Request) {
-	allActiveObj := tw.aoExpRankingSuspended
-	page := weblib.GetPage(w, r)
-	listActiveObj := allActiveObj.GetPage(page, 40)
-	weblib.WebFormBegin("activeobject suspended list", w, r)
-
-	pList := make([]bool, len(allActiveObj)/40+1)
-
-	tplIndex, err := template.New("index").Parse(`
-		{{range $i, $v := .}}
-		<a href="/ActiveObjSuspendedList?page={{$i}}">{{$i}}</a>
-		{{end}}
-	`)
-	if err != nil {
-		tw.log.Error("%v", err)
-	}
-	if err := tplIndex.Execute(w, pList); err != nil {
-		tw.log.Error("%v", err)
-	}
-
-	listActiveObj.ToWebMid(w, r)
-	// aolist.ActiveObjList(listActiveObj).ToWebMid(w, r)
-	weblib.WebFormEnd(w, r)
-}
-
 func (tw *Tower) web_Broadcast(w http.ResponseWriter, r *http.Request) {
 	msg := weblib.GetStringByName("Msg", "", w, r)
 	if aoconn := tw.playerConnection; aoconn != nil {
