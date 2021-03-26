@@ -35,8 +35,7 @@ type RspInvalid_data struct {
 
 // Login
 type ReqLogin_data struct {
-	SessionUUID string
-	AuthKey     string
+	AuthKey string
 }
 type RspLogin_data struct {
 	ServiceInfo *ServiceInfo

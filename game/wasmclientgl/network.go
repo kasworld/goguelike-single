@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike-single/enum/way9type"
-	"github.com/kasworld/goguelike-single/game/clientcookie"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_connwasm"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
@@ -30,7 +29,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
 	"github.com/kasworld/gowasmlib/jslog"
-	"github.com/kasworld/gowasmlib/wasmcookie"
 	"github.com/kasworld/gowasmlib/wrapspan"
 )
 
@@ -63,16 +61,13 @@ func (app *WasmClient) NetInit(ctx context.Context) error {
 		}
 	}()
 	authkey := GetQuery().Get("authkey")
-	ck := wasmcookie.GetMap()
-	sessionkey := string(ck[clientcookie.SessionKeyName()])
 	wg.Wait()
 
 	wg.Add(1)
 	app.ReqWithRspFn(
 		c2t_idcmd.Login,
 		&c2t_obj.ReqLogin_data{
-			SessionUUID: sessionkey,
-			AuthKey:     authkey,
+			AuthKey: authkey,
 		},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			rpk := rsp.(*c2t_obj.RspLogin_data)

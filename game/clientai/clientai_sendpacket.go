@@ -24,12 +24,11 @@ import (
 	"github.com/kasworld/version"
 )
 
-func (cai *ClientAI) reqLogin(sessionUUID string, authkey string) error {
+func (cai *ClientAI) reqLogin(authkey string) error {
 	return cai.ReqWithRspFn(
 		c2t_idcmd.Login,
 		&c2t_obj.ReqLogin_data{
-			SessionUUID: sessionUUID,
-			AuthKey:     authkey,
+			AuthKey: authkey,
 		},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))

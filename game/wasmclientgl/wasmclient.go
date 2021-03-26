@@ -25,7 +25,6 @@ import (
 	"github.com/kasworld/goguelike-single/enum/clientcontroltype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/game/clientcookie"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/game/clientinitdata"
 	"github.com/kasworld/goguelike-single/game/soundmap"
@@ -253,8 +252,6 @@ func (app *WasmClient) enterTower() {
 		jslog.Errorf("ProtocolVersion mismatch client %v server %v",
 			c2t_version.ProtocolVersion, gInitData.ServiceInfo.ProtocolVersion)
 	}
-
-	clientcookie.SetSession(string(gInitData.AccountInfo.SessionUUID), gInitData.AccountInfo.NickName)
 
 	if gInitData.CanUseCmd(c2t_idcmd.AIPlay) {
 		app.reqAIPlay(true)
