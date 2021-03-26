@@ -20,7 +20,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
 	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
@@ -154,19 +153,13 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 
 	// end play
 
-	// connData changed in user play
-	ao, exist := tw.id2ao.GetByUUID(connData.Session.ActiveObjUUID)
-	if !exist {
-		panic(fmt.Sprintf("ao not found %v", connData))
+	// TODO not only suspend ao but also pause tower and floor
+	tw.playerAO.Suspend()
+	rspCh := make(chan error, 1)
+	tw.GetReqCh() <- &cmd2tower.PlayerAOSuspendFromTower{
+		RspCh: rspCh,
 	}
-	if ao != nil && ao.GetActiveObjType() == aotype.User {
-		ao.Suspend()
-		rspCh := make(chan error, 1)
-		tw.GetReqCh() <- &cmd2tower.PlayerAOSuspendFromTower{
-			RspCh: rspCh,
-		}
-		<-rspCh
-	}
+	<-rspCh
 	wsConn.Close()
 
 	// del from conn manager
