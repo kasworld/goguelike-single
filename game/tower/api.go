@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
-	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -73,8 +72,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		err = <-rspCh
 	} else {
 		// new ao
-		var homeFloor gamei.FloorI
-		homeFloor = tw.GetFloorManager().GetStartFloor()
+		homeFloor := tw.GetFloorManager().GetStartFloor()
 		newAO := activeobject.NewUserActiveObj(
 			tw.rnd.Int63(),
 			homeFloor,

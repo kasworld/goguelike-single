@@ -162,7 +162,6 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	<-rspCh
 	wsConn.Close()
 
-	// del from conn manager
 	tw.playerConnection = nil
 }
 
