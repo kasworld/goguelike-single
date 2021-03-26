@@ -67,14 +67,14 @@ mkdir -ErrorAction SilentlyContinue "${BIN_DIR}"
 $BUILD_VER="${DATESTR}_${GITSTR}_release_windows"
 echo "Build Version: ${BUILD_VER}"
 echo ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
-go build -o "${BIN_DIR}\towerserver.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserverwin.go"
+go build -o "${BIN_DIR}\goguelike-single.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\goguelike-single.go"
 go build -o "${BIN_DIR}\textclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\textclient.go"
 
 $BUILD_VER="${DATESTR}_${GITSTR}_release_linux"
 echo "Build Version: ${BUILD_VER}"
 echo ${BUILD_VER} > ${BIN_DIR}/BUILD_linux
 $env:GOOS="linux" 
-go build -o "${BIN_DIR}\towerserver" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\towerserver.go"
+go build -o "${BIN_DIR}\goguelike-single" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\goguelike-single.go"
 go build -o "${BIN_DIR}\textclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\textclient.go"
 $env:GOOS=""
 
