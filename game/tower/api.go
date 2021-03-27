@@ -54,6 +54,11 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 
+	if c2sc.WebConnData().Logined {
+		// double login try
+		return hd, nil, fmt.Errorf("connection already logined", r)
+	}
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -61,6 +66,12 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	if err := authdata.UpdateByAuthKey(c2sc.GetAuthorCmdList(), robj.AuthKey); err != nil {
 		return rhd, nil, err
 	}
+
+	// disconnect old conn if exist
+	if oldConn := tw.playerConnection; oldConn != nil {
+		oldConn.Disconnect()
+	}
+	tw.playerConnection = c2sc
 
 	// if reconnect
 	if tw.playerAO != nil {
@@ -88,7 +99,8 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		}
 		err = <-rspCh
 	}
-
+	// connection logined
+	c2sc.WebConnData().Logined = true
 	if err != nil {
 		return rhd, nil, err
 	} else {

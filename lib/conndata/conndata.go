@@ -12,6 +12,6 @@
 package conndata
 
 type ConnData struct {
-	UUID       string
 	RemoteAddr string
+	Logined    bool
 }

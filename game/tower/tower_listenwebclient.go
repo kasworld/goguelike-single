@@ -28,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
-	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/weblib"
 )
 
@@ -123,7 +122,6 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	}()
 
 	connData := &conndata.ConnData{
-		UUID:       uuidstr.New(),
 		RemoteAddr: r.RemoteAddr,
 	}
 	c2sc := c2t_serveconnbyte.NewWithStats(
@@ -137,12 +135,6 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 		tw.demuxReq2BytesAPIFnMap,
 	)
 
-	// disconnect old conn if exist
-	if oldConn := tw.playerConnection; oldConn != nil {
-		oldConn.Disconnect()
-	}
-	tw.playerConnection = c2sc
-
 	c2sc.StartServeWS(ctx, wsConn,
 		gameconst.ServerPacketReadTimeOutSec*time.Second,
 		gameconst.ServerPacketWriteTimeoutSec*time.Second,
@@ -154,15 +146,17 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	// end play
 
 	// TODO not only suspend ao but also pause tower and floor
-	tw.playerAO.Suspend()
-	rspCh := make(chan error, 1)
-	tw.GetReqCh() <- &cmd2tower.PlayerAOSuspendFromTower{
-		RspCh: rspCh,
-	}
-	<-rspCh
-	wsConn.Close()
 
-	tw.playerConnection = nil
+	if connData.Logined {
+		tw.playerAO.Suspend()
+		rspCh := make(chan error, 1)
+		tw.GetReqCh() <- &cmd2tower.PlayerAOSuspendFromTower{
+			RspCh: rspCh,
+		}
+		<-rspCh
+		wsConn.Close()
+		tw.playerConnection = nil
+	}
 }
 
 func (tw *Tower) json_HighScore(w http.ResponseWriter, r *http.Request) {
