@@ -30,7 +30,7 @@ var attrib = [CommandID_Count]struct {
 }{
 	Invalid:           {false, false, 0},
 	Login:             {false, false, 0},
-	Heartbeat:         {false, true, 0},
+	Heartbeat:         {false, false, 0},
 	Chat:              {false, false, 0},
 	AchieveInfo:       {false, false, 0},
 	Rebirth:           {false, true, 0},

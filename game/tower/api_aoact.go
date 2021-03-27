@@ -30,6 +30,9 @@ func (tw *Tower) bytesAPIFn_ReqMeditate(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspMeditate_data{}
 
 	ao.SetReq2Handle(&aoactreqrsp.Act{
@@ -48,6 +51,9 @@ func (tw *Tower) bytesAPIFn_ReqKillSelf(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.KillSelf,
 	})
@@ -68,6 +74,9 @@ func (tw *Tower) bytesAPIFn_ReqMove(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspMove_data{}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -98,6 +107,9 @@ func (tw *Tower) bytesAPIFn_ReqAttack(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspAttack_data{}
 
 	ao.SetReq2Handle(&aoactreqrsp.Act{
@@ -125,6 +137,9 @@ func (tw *Tower) bytesAPIFn_ReqAttackWide(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspAttackWide_data{}
 
 	ao.SetReq2Handle(&aoactreqrsp.Act{
@@ -152,6 +167,9 @@ func (tw *Tower) bytesAPIFn_ReqAttackLong(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspAttackLong_data{}
 
 	ao.SetReq2Handle(&aoactreqrsp.Act{
@@ -179,6 +197,9 @@ func (tw *Tower) bytesAPIFn_ReqPickup(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspPickup_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Pickup,
@@ -205,6 +226,9 @@ func (tw *Tower) bytesAPIFn_ReqDrop(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspDrop_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Drop,
@@ -231,6 +255,9 @@ func (tw *Tower) bytesAPIFn_ReqEquip(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspEquip_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Equip,
@@ -257,6 +284,9 @@ func (tw *Tower) bytesAPIFn_ReqUnEquip(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspUnEquip_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.UnEquip,
@@ -283,6 +313,9 @@ func (tw *Tower) bytesAPIFn_ReqDrinkPotion(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspDrinkPotion_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.DrinkPotion,
@@ -309,6 +342,9 @@ func (tw *Tower) bytesAPIFn_ReqReadScroll(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspReadScroll_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.ReadScroll,
@@ -335,6 +371,9 @@ func (tw *Tower) bytesAPIFn_ReqRecycle(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	spacket := &c2t_obj.RspRecycle_data{}
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act:  c2t_idcmd.Recycle,
@@ -354,6 +393,9 @@ func (tw *Tower) bytesAPIFn_ReqEnterPortal(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.EnterPortal,
 	})
@@ -371,6 +413,9 @@ func (tw *Tower) bytesAPIFn_ReqActTeleport(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.SetReq2Handle(&aoactreqrsp.Act{
 		Act: c2t_idcmd.ActTeleport,
 	})

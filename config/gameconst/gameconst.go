@@ -64,7 +64,7 @@ const (
 	RebirthHPRate = 0.8
 	RebirthSPRate = 0.8
 
-	ActiveObjRebirthWaitTurn = 30
+	ActiveObjRebirthWaitTurn = 10
 
 	// carryingobject weight, price
 	MoneyGram     = 0.1

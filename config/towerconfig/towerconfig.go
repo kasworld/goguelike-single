@@ -39,7 +39,7 @@ type TowerConfig struct {
 	AdminPort      int     `default:"14201" argname:""`
 	ScriptFilename string  `default:"start" argname:""`
 	TowerName      string  `default:"Default" argname:""`
-	TurnPerSec     float64 `default:"5.0" argname:""`
+	TurnPerSec     float64 `default:"1.0" argname:""`
 }
 
 func (config *TowerConfig) MakeLogDir() string {

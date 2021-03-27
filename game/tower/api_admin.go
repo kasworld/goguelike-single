@@ -25,6 +25,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 )
@@ -40,6 +41,7 @@ func AdminCmd(ao gamei.ActiveObjectI, cmdline string) c2t_error.ErrorCode {
 	if !exist {
 		return c2t_error.ActionCanceled
 	}
+
 	_, name2value, err := scriptparse.Split2ListMap(argLine, " ", "=")
 	if err != nil {
 		return c2t_error.ActionCanceled
@@ -103,6 +105,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminTowerCmd{
 		ActiveObj:  ao,
@@ -131,6 +136,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -168,6 +176,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	return c2t_packet.Header{
 		ErrorCode: ao.DoAdminCmd(robj.Cmd, robj.Arg),
 	}, &c2t_obj.RspAdminActiveObjCmd_data{}, nil
@@ -189,6 +200,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rspCh := make(chan c2t_error.ErrorCode, 1)
 	tw.GetReqCh() <- &cmd2tower.AdminFloorMove{
 		ActiveObj:  ao,
@@ -213,7 +227,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
-
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -221,6 +234,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	f := ao.GetCurrentFloor()
 	if f == nil {
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
@@ -249,8 +265,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddExp(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
 	}
-	_ = recvBody
-
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -258,6 +272,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddExp(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.AddBattleExp(float64(recvBody.Exp))
 	sendBody := &c2t_obj.RspAdminAddExp_data{}
 	return sendHeader, sendBody, nil
@@ -275,8 +292,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminPotionEffect(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
 	}
-	_ = recvBody
-
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -284,6 +299,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminPotionEffect(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.GetBuffManager().Add(recvBody.Potion.String(), false, false,
 		potiontype.GetBuffByPotionType(recvBody.Potion),
 	)
@@ -304,8 +322,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminScrollEffect(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
 	}
-	_ = recvBody
-
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -313,6 +329,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminScrollEffect(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.GetBuffManager().Add(recvBody.Scroll.String(), false, false,
 		scrolltype.GetBuffByScrollType(recvBody.Scroll),
 	)
@@ -332,7 +351,6 @@ func (tw *Tower) bytesAPIFn_ReqAdminCondition(
 	if !ok {
 		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
 	}
-	_ = recvBody
 
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -341,6 +359,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminCondition(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	buff2add := statusoptype.Repeat(100,
 		statusoptype.OpArg{statusoptype.SetCondition, recvBody.Condition},
 	)
@@ -373,6 +394,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddPotion(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	pt := carryingobject.NewPotion(recvBody.Potion)
 	ao.GetInven().AddToBag(pt)
 	sendBody := &c2t_obj.RspAdminAddPotion_data{}
@@ -400,6 +424,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddScroll(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	pt := carryingobject.NewScroll(recvBody.Scroll)
 	ao.GetInven().AddToBag(pt)
 	sendBody := &c2t_obj.RspAdminAddScroll_data{}
@@ -427,6 +454,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddMoney(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	ao.GetInven().AddToWallet(carryingobject.NewMoney(float64(recvBody.Money)))
 	ao.GetAchieveStat().Add(achievetype.MoneyGet, float64(recvBody.Money))
 
@@ -455,6 +485,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddEquip(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	eq := carryingobject.NewEquipByFactionSlot("admin",
 		recvBody.Faction, recvBody.Equip,
 		tw.rnd,
@@ -485,6 +518,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminForgetFloor(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	f := ao.GetCurrentFloor()
 	if f == nil {
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
@@ -518,6 +554,9 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMap(
 	if err != nil {
 		return sendHeader, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	f := ao.GetCurrentFloor()
 	if f == nil {
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)

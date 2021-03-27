@@ -315,6 +315,7 @@ func (tw *Tower) runTower(ctx context.Context) {
 	defer rankMakeTk.Stop()
 
 	turnDur := time.Duration(float64(time.Second) / tw.Config().TurnPerSec)
+	// turnDur := time.Duration(time.Second)
 	timerTurnTk := time.NewTicker(turnDur)
 	defer timerTurnTk.Stop()
 

@@ -21,6 +21,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
@@ -130,6 +131,8 @@ func (tw *Tower) bytesAPIFn_ReqHeartbeat(
 		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
 	}
 
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -155,6 +158,9 @@ func (tw *Tower) bytesAPIFn_ReqChat(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -180,6 +186,9 @@ func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -206,6 +215,9 @@ func (tw *Tower) bytesAPIFn_ReqRebirth(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -241,6 +253,9 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 		ActiveObj: ao,
 		FloorName: robj.UUID,
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	return c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}, spacket, nil
@@ -262,6 +277,9 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
@@ -287,6 +305,9 @@ func (tw *Tower) bytesAPIFn_ReqVisitFloorList(
 	if err != nil {
 		return hd, nil, err
 	}
+
+	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
 	}
