@@ -351,7 +351,10 @@ loop:
 			go tw.makeActiveObjExpRank()
 
 		case <-timerTurnTk.C:
-			tw.TurnAllFloors()
+			if tw.playerConnection != nil {
+				// only player online
+				tw.TurnAllFloors()
+			}
 		}
 	}
 }
