@@ -13,6 +13,7 @@ package floor
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike-single/game/bias"
@@ -36,6 +37,10 @@ func (f *Floor) GetName() string {
 
 func (f *Floor) GetReqCh() chan<- interface{} {
 	return f.recvRequestCh
+}
+
+func (f *Floor) GetTurnTriggerCh() chan<- time.Time {
+	return f.turnTriggerCh
 }
 
 func (f *Floor) ReqChState() string {

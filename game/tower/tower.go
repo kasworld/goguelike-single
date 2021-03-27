@@ -314,6 +314,10 @@ func (tw *Tower) runTower(ctx context.Context) {
 	rankMakeTk := time.NewTicker(1 * time.Second)
 	defer rankMakeTk.Stop()
 
+	turnDur := time.Duration(float64(time.Second) / tw.Config().TurnPerSec)
+	timerTurnTk := time.NewTicker(turnDur)
+	defer timerTurnTk.Stop()
+
 loop:
 	for {
 		select {
@@ -340,8 +344,24 @@ loop:
 
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
+
+		case <-timerTurnTk.C:
+			tw.TurnAllFloors()
 		}
 	}
+}
+
+func (tw *Tower) TurnAllFloors() {
+	var wg sync.WaitGroup
+	now := time.Now()
+	for _, f := range tw.floorMan.GetFloorList() {
+		wg.Add(1)
+		go func(f gamei.FloorI) {
+			f.GetTurnTriggerCh() <- now
+			wg.Done()
+		}(f)
+	}
+	wg.Wait()
 }
 
 func (tw *Tower) makeActiveObjExpRank() {

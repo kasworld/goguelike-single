@@ -66,6 +66,7 @@ type Floor struct {
 
 	// for actturn data
 	recvRequestCh chan interface{}
+	turnTriggerCh chan time.Time
 
 	aiWG sync.WaitGroup // for ai run
 }
@@ -125,17 +126,12 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	defer func() { f.log.TraceService("End Run %v", f) }()
 
 	f.recvRequestCh = make(chan interface{}, queuesize)
+	f.turnTriggerCh = make(chan time.Time)
 
 	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
-	remainTurn2Age := turnPerAge
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
-
-	turnDur := time.Duration(
-		float64(time.Second) / f.tower.Config().TurnPerSec / f.terrain.ActTurnBoost)
-	timerTurnTk := time.NewTicker(turnDur)
-	defer timerTurnTk.Stop()
 
 loop:
 	for {
@@ -159,19 +155,13 @@ loop:
 			f.floorCmdActStat.Inc()
 			f.processCmd2Floor(data)
 
-		case turnTime := <-timerTurnTk.C:
+		case turnTime := <-f.turnTriggerCh:
 			if turnPerAge > 0 {
-				remainTurn2Age--
-				if remainTurn2Age <= 0 {
-					remainTurn2Age = turnPerAge
+				if f.interDur.GetCount()%int(turnPerAge) == 0 {
 					go f.processAgeing()
 				}
 			}
 			f.processTurn(turnTime)
-			lastTurnDur := f.interDur.GetDuration().GetLastDuration()
-			if lastTurnDur > turnDur {
-				// 	f.log.Monitor("%v %v slow %v > %v", f.GetName(), f, lastTurnDur, turnDur)
-			}
 		}
 	}
 }

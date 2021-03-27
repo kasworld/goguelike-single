@@ -14,6 +14,7 @@ package gamei
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike-single/game/bias"
@@ -47,6 +48,7 @@ type FloorI interface {
 	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 
 	GetReqCh() chan<- interface{}
+	GetTurnTriggerCh() chan<- time.Time
 	Run(ctx context.Context, queuesize int)
 
 	TotalActiveObjCount() int
