@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/kasworld/actpersec"
@@ -67,6 +68,9 @@ type Tower struct {
 	log     *g2log.LogBase `prettystring:"hide"`
 
 	recvRequestCh chan interface{}
+
+	// async turn one at a time
+	inTurn int32
 
 	sconfig    *towerconfig.TowerConfig
 	seed       int64
@@ -353,16 +357,21 @@ loop:
 }
 
 func (tw *Tower) TurnAllFloors() {
-	var wg sync.WaitGroup
-	now := time.Now()
-	for _, f := range tw.floorMan.GetFloorList() {
-		wg.Add(1)
-		go func(f gamei.FloorI) {
-			f.GetTurnTriggerCh() <- now
-			wg.Done()
-		}(f)
+	if atomic.CompareAndSwapInt32(&tw.inTurn, 0, 1) {
+		defer atomic.AddInt32(&tw.inTurn, -1)
+		var wg sync.WaitGroup
+		now := time.Now()
+		for _, f := range tw.floorMan.GetFloorList() {
+			wg.Add(1)
+			go func(f gamei.FloorI) {
+				f.GetTurnTriggerCh() <- now
+				wg.Done()
+			}(f)
+		}
+		wg.Wait()
+	} else {
+		tw.log.Fatal("TurnAllFloors skipped %v", tw)
 	}
-	wg.Wait()
 }
 
 func (tw *Tower) makeActiveObjExpRank() {
