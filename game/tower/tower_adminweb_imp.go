@@ -12,14 +12,11 @@
 package tower
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/weblib"
 )
 
@@ -139,39 +136,6 @@ func (tw *Tower) web_ActiveObjRankingList(w http.ResponseWriter, r *http.Request
 	listActiveObj.ToWebMid(w, r)
 	// aolist.ActiveObjList(listActiveObj).ToWebMid(w, r)
 	weblib.WebFormEnd(w, r)
-}
-
-func (tw *Tower) web_Broadcast(w http.ResponseWriter, r *http.Request) {
-	msg := weblib.GetStringByName("Msg", "", w, r)
-	if aoconn := tw.playerConnection; aoconn != nil {
-		aoconn.SendNotiPacket(c2t_idnoti.Broadcast,
-			c2t_obj.NotiBroadcast_data{
-				Msg: msg,
-			},
-		)
-	}
-
-	tplIndex, err := template.New("index").Parse(`
-	<html> <head>
-	<title>Broadcast</title>
-	</head>
-	<body>
-	{{.}}
-	</body> </html> `)
-	if err != nil {
-		tw.log.Error("%v %v", tw, err)
-	}
-	if err := tplIndex.Execute(w,
-		struct {
-			Msg      string
-			SendList string
-		}{
-			msg,
-			fmt.Sprintf("%v", tw.playerConnection),
-		},
-	); err != nil {
-		tw.log.Error("%v", err)
-	}
 }
 
 func (tw *Tower) web_towerStat(w http.ResponseWriter, r *http.Request) {

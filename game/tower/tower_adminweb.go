@@ -28,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
@@ -75,8 +74,6 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFuncAuth("/terrainimageautozoom", tw.web_TerrainImageAutoZoom)
 	webMux.HandleFuncAuth("/terraintile", tw.web_TerrainTile)
 
-	webMux.HandleFuncAuth("/Broadcast", tw.web_Broadcast)
-
 	webMux.HandleFunc("/Config", tw.json_Config)
 
 	authdata.AddAllActionName(tw.sconfig.WebAdminID)
@@ -106,10 +103,6 @@ func (tw *Tower) WrapInfo() string {
 
 func (tw *Tower) GetTowerAchieveStat() *towerachieve_vector.TowerAchieveVector {
 	return tw.towerAchieveStat
-}
-
-func (tw *Tower) GetPlayerConnection() *c2t_serveconnbyte.ServeConnByte {
-	return tw.playerConnection
 }
 
 func (tw *Tower) GetStartTime() time.Time {
@@ -246,11 +239,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
     <br/>
     <a href="/ActiveObjRankingList?page=0" target="_blank">{{.GetID2ActiveObj}}</a>
     <br/>
-    <form action="/Broadcast" target="_blank">
-		Broadcast Message: 
-		<input type="text" name="Msg" value="" size="64">
-		<input type="submit" value="Broadcast">
-    </form>
 	<table border=1 style="border-collapse:collapse;">
 	` + floor_HTML_header + `
 	{{range $i, $v := .GetFloorManager.GetFloorList}}

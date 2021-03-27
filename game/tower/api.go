@@ -71,7 +71,6 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	if oldConn := tw.playerConnection; oldConn != nil {
 		oldConn.Disconnect()
 	}
-	tw.playerConnection = c2sc
 
 	// if reconnect
 	if tw.playerAO != nil {
@@ -100,7 +99,9 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 		err = <-rspCh
 	}
 	// connection logined
+	tw.playerConnection = c2sc
 	c2sc.WebConnData().Logined = true
+
 	if err != nil {
 		return rhd, nil, err
 	} else {
