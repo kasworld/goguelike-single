@@ -19,51 +19,52 @@ func (cmd CommandID) NeedTurn() float64 {
 	return attrib[cmd].needTurn
 }
 
+func (cmd CommandID) TriggerTurn() bool {
+	return attrib[cmd].triggerTurn
+}
+
 var attrib = [CommandID_Count]struct {
 	sleepCancel bool
+	triggerTurn bool
 	needTurn    float64
 }{
-	Invalid:     {false, 0},
-	Login:       {false, 0},
-	Heartbeat:   {false, 0},
-	Chat:        {false, 0},
-	AchieveInfo: {false, 0},
-
-	Rebirth:        {false, 0},
-	MoveFloor:      {false, 1}, // need check need turn
-	AIPlay:         {false, 0},
-	VisitFloorList: {false, 0},
-
-	Meditate:    {false, 1},
-	KillSelf:    {false, 1},
-	Move:        {true, 1},
-	Attack:      {true, 1.5},
-	AttackWide:  {true, 3},
-	AttackLong:  {true, 3},
-	Pickup:      {true, 1},
-	Drop:        {true, 1},
-	Equip:       {true, 1},
-	UnEquip:     {true, 1},
-	DrinkPotion: {true, 1},
-	ReadScroll:  {true, 1},
-	Recycle:     {true, 1},
-	EnterPortal: {true, 1},
-	ActTeleport: {false, 1},
-
-	AdminTowerCmd:     {false, 0},
-	AdminFloorCmd:     {false, 0},
-	AdminActiveObjCmd: {false, 0},
-	AdminFloorMove:    {false, 0},
-	AdminTeleport:     {false, 0},
-
-	AdminAddExp:       {false, 0},
-	AdminPotionEffect: {false, 0},
-	AdminScrollEffect: {false, 0},
-	AdminCondition:    {false, 0},
-	AdminAddPotion:    {false, 0},
-	AdminAddScroll:    {false, 0},
-	AdminAddMoney:     {false, 0},
-	AdminAddEquip:     {false, 0},
-	AdminForgetFloor:  {false, 0},
-	AdminFloorMap:     {false, 0},
+	Invalid:           {false, false, 0},
+	Login:             {false, false, 0},
+	Heartbeat:         {false, true, 0},
+	Chat:              {false, false, 0},
+	AchieveInfo:       {false, false, 0},
+	Rebirth:           {false, true, 0},
+	MoveFloor:         {false, true, 1}, // need check need turn
+	AIPlay:            {false, true, 0},
+	VisitFloorList:    {false, false, 0},
+	Meditate:          {false, true, 1},
+	KillSelf:          {false, true, 1},
+	Move:              {true, true, 1},
+	Attack:            {true, true, 1.5},
+	AttackWide:        {true, true, 3},
+	AttackLong:        {true, true, 3},
+	Pickup:            {true, true, 1},
+	Drop:              {true, true, 1},
+	Equip:             {true, true, 1},
+	UnEquip:           {true, true, 1},
+	DrinkPotion:       {true, true, 1},
+	ReadScroll:        {true, true, 1},
+	Recycle:           {true, true, 1},
+	EnterPortal:       {true, true, 1},
+	ActTeleport:       {false, true, 1},
+	AdminTowerCmd:     {false, true, 0},
+	AdminFloorCmd:     {false, true, 0},
+	AdminActiveObjCmd: {false, true, 0},
+	AdminFloorMove:    {false, true, 0},
+	AdminTeleport:     {false, true, 0},
+	AdminAddExp:       {false, true, 0},
+	AdminPotionEffect: {false, true, 0},
+	AdminScrollEffect: {false, true, 0},
+	AdminCondition:    {false, true, 0},
+	AdminAddPotion:    {false, true, 0},
+	AdminAddScroll:    {false, true, 0},
+	AdminAddMoney:     {false, true, 0},
+	AdminAddEquip:     {false, true, 0},
+	AdminForgetFloor:  {false, true, 0},
+	AdminFloorMap:     {false, false, 0},
 }
