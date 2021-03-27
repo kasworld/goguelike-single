@@ -373,7 +373,7 @@ func (tw *Tower) TurnAllFloors() {
 		}
 		wg.Wait()
 	} else {
-		tw.log.Fatal("TurnAllFloors skipped %v", tw)
+		tw.log.Warn("TurnAllFloors skipped %v", tw)
 	}
 }
 
