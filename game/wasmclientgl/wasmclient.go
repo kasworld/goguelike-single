@@ -162,20 +162,6 @@ func InitPage() {
 			clientinitdata.MakeHelpTileHTML()+
 			clientinitdata.MakeHelpConditionHTML()+
 			clientinitdata.MakeHelpFieldObjHTML())
-	go func() {
-		str := clientinitdata.LoadHighScoreHTML() +
-			clientinitdata.MakeClientInfoHTML() +
-			clientinitdata.MakeHelpFactionHTML() +
-			MakeHelpInfoHTML() +
-			clientinitdata.MakeHelpCarryObjectHTML() +
-			clientinitdata.MakeHelpPotionHTML() +
-			clientinitdata.MakeHelpScrollHTML() +
-			clientinitdata.MakeHelpMoneyColorHTML() +
-			clientinitdata.MakeHelpTileHTML() +
-			clientinitdata.MakeHelpConditionHTML() +
-			clientinitdata.MakeHelpFieldObjHTML()
-		GetElementById("centerinfo").Set("innerHTML", str)
-	}()
 
 	app.registerKeyboardMouseEvent()
 
