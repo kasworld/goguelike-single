@@ -17,12 +17,11 @@ import (
 
 func (f *Floor) ToPacket_FloorInfo() *c2t_obj.FloorInfo {
 	return &c2t_obj.FloorInfo{
-		Name:       f.terrain.GetName(),
-		W:          f.w,
-		H:          f.h,
-		Tiles:      f.terrain.GetTile2Discover(),
-		Bias:       f.GetBias(),
-		TurnPerSec: f.tower.Config().TurnPerSec / f.terrain.ActTurnBoost,
+		Name:  f.terrain.GetName(),
+		W:     f.w,
+		H:     f.h,
+		Tiles: f.terrain.GetTile2Discover(),
+		Bias:  f.GetBias(),
 	}
 }
 

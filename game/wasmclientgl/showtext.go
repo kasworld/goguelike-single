@@ -420,8 +420,7 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 	fmt.Fprintf(&buf, "%v<br/>", app.ClientJitter)
 	fmt.Fprintf(&buf, "%v<br/>", app.ServerJitter)
 	fmt.Fprintf(&buf, "%v<br/>", app.DispInterDur.GetInterval())
-	fmt.Fprintf(&buf, "floor %.1f actturn/sec display %.1fFPS<br/>",
-		app.CurrentFloor.FloorInfo.TurnPerSec,
+	fmt.Fprintf(&buf, "floor display %.1fFPS<br/>",
 		1.0/app.DispInterDur.GetInterval().GetLastDuration().Seconds())
 	fmt.Fprintf(&buf, "%v<br/>", app.DispInterDur.GetDuration())
 	fmt.Fprintf(&buf, "Display %d<br/>", app.DispInterDur.GetCount())

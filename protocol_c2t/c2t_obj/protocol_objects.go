@@ -69,7 +69,6 @@ type FloorInfo struct {
 	H          int
 	Tiles      int
 	Bias       bias.Bias
-	TurnPerSec float64
 	VisitCount int
 }
 
