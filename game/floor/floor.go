@@ -71,7 +71,6 @@ type Floor struct {
 }
 
 func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
-	// queuesize := int(float64(tw.Config().ConcurrentConnections) * tw.Config().TurnPerSec)
 	f := &Floor{
 		log:               tw.Log(),
 		tower:             tw,
@@ -80,7 +79,6 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 		interDur:          intervalduration.New(""),
 		statPacketObjOver: actpersec.New(),
 		floorCmdActStat:   actpersec.New(),
-		// recvRequestCh:     make(chan interface{}, queuesize),
 	}
 	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder, f.log)
 	return f
@@ -127,16 +125,9 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	defer func() { f.log.TraceService("End Run %v", f) }()
 
 	f.recvRequestCh = make(chan interface{}, queuesize)
-	ageingSec := time.Duration(f.terrain.GetMSPerAgeing()) * time.Millisecond
-	if ageingSec == 0 {
-		ageingSec = time.Hour * 24 * 365
-	}
-	ageingTk := time.NewTicker(ageingSec)
-	if f.terrain.GetMSPerAgeing() == 0 {
-		ageingTk.Stop()
-	} else {
-		defer ageingTk.Stop()
-	}
+
+	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
+	remainTurn2Age := turnPerAge
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
@@ -168,10 +159,14 @@ loop:
 			f.floorCmdActStat.Inc()
 			f.processCmd2Floor(data)
 
-		case <-ageingTk.C:
-			go f.processAgeing()
-
 		case turnTime := <-timerTurnTk.C:
+			if turnPerAge > 0 {
+				remainTurn2Age--
+				if remainTurn2Age <= 0 {
+					remainTurn2Age = turnPerAge
+					go f.processAgeing()
+				}
+			}
 			f.processTurn(turnTime)
 			lastTurnDur := f.interDur.GetDuration().GetLastDuration()
 			if lastTurnDur > turnDur {
