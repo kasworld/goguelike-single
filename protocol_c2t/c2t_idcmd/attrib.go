@@ -11,14 +11,17 @@
 
 package c2t_idcmd
 
+// SleepCancel sleep condition prevent act
 func (cmd CommandID) SleepCancel() bool {
 	return attrib[cmd].sleepCancel
 }
 
+// NeedTurn need turn to act
 func (cmd CommandID) NeedTurn() float64 {
 	return attrib[cmd].needTurn
 }
 
+// TriggerTurn trigger tower/floor turn
 func (cmd CommandID) TriggerTurn() bool {
 	return attrib[cmd].triggerTurn
 }
@@ -37,6 +40,7 @@ var attrib = [CommandID_Count]struct {
 	MoveFloor:         {false, true, 1}, // need check need turn
 	AIPlay:            {false, true, 0},
 	VisitFloorList:    {false, false, 0},
+	PassTurn:          {false, true, 0},
 	Meditate:          {false, true, 1},
 	KillSelf:          {false, true, 1},
 	Move:              {true, true, 1},

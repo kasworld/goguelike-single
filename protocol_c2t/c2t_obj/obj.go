@@ -105,14 +105,27 @@ type RspVisitFloorList_data struct {
 	FloorList []*FloorInfo
 }
 
+// PassTurn no action just trigger turn
+type ReqPassTurn_data struct {
+	Dummy uint8 // change as you need
+}
+
+// PassTurn no action just trigger turn
+type RspPassTurn_data struct {
+	Dummy uint8 // change as you need
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // ao act
 
+// Meditate rest and recover HP,SP
 type ReqMeditate_data struct {
-	Dummy uint8
+	Dummy uint8 // change as you need
 }
+
+// Meditate rest and recover HP,SP
 type RspMeditate_data struct {
-	Dummy uint8
+	Dummy uint8 // change as you need
 }
 
 type ReqKillSelf_data struct {

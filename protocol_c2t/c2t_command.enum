@@ -10,6 +10,7 @@ AIPlay
 VisitFloorList floor info of visited 
 
 # ao action, need turn AP
+PassTurn no action just trigger turn 
 Meditate rest and recover HP,SP
 KillSelf
 Move move 8way near tile
