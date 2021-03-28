@@ -12,6 +12,8 @@
 package floor
 
 import (
+	"time"
+
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
@@ -89,7 +91,9 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 			); err != nil {
 				f.log.Error("%v", err)
 			}
-
+			go func() {
+				f.GetTurnTriggerCh() <- time.Now()
+			}()
 		}
 
 	case *cmd2floor.ReqRebirth2Floor:
