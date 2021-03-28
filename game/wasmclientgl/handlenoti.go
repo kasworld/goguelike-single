@@ -599,9 +599,9 @@ func (app *WasmClient) moveByUserInput() bool {
 	default:
 		jslog.Errorf("invalid ClientColtrolMode %v", app.ClientColtrolMode)
 	case clientcontroltype.Keyboard:
-		if app.sendMovePacketByInput(app.KeyDir) {
-			return true
-		}
+		// if app.sendMovePacketByInput(app.KeyDir) {
+		return true
+		// }
 	case clientcontroltype.FollowMouse:
 		if app.sendMovePacketByInput(app.MouseDir) {
 			return true
