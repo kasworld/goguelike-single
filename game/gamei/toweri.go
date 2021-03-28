@@ -12,6 +12,8 @@
 package gamei
 
 import (
+	"time"
+
 	"github.com/kasworld/goguelike-single/config/towerconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -22,6 +24,8 @@ type TowerI interface {
 	String() string
 
 	GetReqCh() chan<- interface{}
+	GetTurnTriggerCh() chan<- time.Time
+
 	GetBias() bias.Bias
 
 	GetFloorManager() FloorManagerI

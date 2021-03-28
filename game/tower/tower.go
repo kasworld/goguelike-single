@@ -89,6 +89,7 @@ type Tower struct {
 	// single player
 	playerConnection *c2t_serveconnbyte.ServeConnByte
 	playerAO         *activeobject.ActiveObject
+	turnTriggerCh    chan time.Time
 
 	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat               *actpersec.ActPerSec                    `prettystring:"simple"`
@@ -312,16 +313,18 @@ func (tw *Tower) runTower(ctx context.Context) {
 	tw.log.TraceService("Start Run %v", tw)
 	defer func() { tw.log.TraceService("End Run %v", tw) }()
 
+	tw.turnTriggerCh = make(chan time.Time)
+
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
 
 	rankMakeTk := time.NewTicker(1 * time.Second)
 	defer rankMakeTk.Stop()
 
-	turnDur := time.Duration(float64(time.Second) / tw.Config().TurnPerSec)
-	// turnDur := time.Duration(time.Second)
-	timerTurnTk := time.NewTicker(turnDur)
-	defer timerTurnTk.Stop()
+	// turnDur := time.Duration(float64(time.Second) / tw.Config().TurnPerSec)
+	// // turnDur := time.Duration(time.Second)
+	// timerTurnTk := time.NewTicker(turnDur)
+	// defer timerTurnTk.Stop()
 
 loop:
 	for {
@@ -350,20 +353,20 @@ loop:
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
 
-		case <-timerTurnTk.C:
+		// case <-timerTurnTk.C:
+		case now := <-tw.turnTriggerCh:
 			if tw.playerConnection != nil {
 				// only player online
-				tw.TurnAllFloors()
+				tw.turnAllFloors(now)
 			}
 		}
 	}
 }
 
-func (tw *Tower) TurnAllFloors() {
+func (tw *Tower) turnAllFloors(now time.Time) {
 	if atomic.CompareAndSwapInt32(&tw.inTurn, 0, 1) {
 		defer atomic.AddInt32(&tw.inTurn, -1)
 		var wg sync.WaitGroup
-		now := time.Now()
 		for _, f := range tw.floorMan.GetFloorList() {
 			wg.Add(1)
 			go func(f gamei.FloorI) {
@@ -373,7 +376,7 @@ func (tw *Tower) TurnAllFloors() {
 		}
 		wg.Wait()
 	} else {
-		tw.log.Warn("TurnAllFloors skipped %v", tw)
+		tw.log.Warn("turnAllFloors skipped %v", tw)
 	}
 }
 

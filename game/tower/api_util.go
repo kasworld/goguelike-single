@@ -12,6 +12,8 @@
 package tower
 
 import (
+	"time"
+
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
@@ -22,6 +24,8 @@ func (tw *Tower) api_me2ao(me interface{}) (gamei.ActiveObjectI, error) {
 
 func (tw *Tower) triggerTurnByCmd(cmd c2t_idcmd.CommandID) {
 	if cmd.TriggerTurn() {
-		go tw.TurnAllFloors()
+		go func() {
+			tw.GetTurnTriggerCh() <- time.Now()
+		}()
 	}
 }

@@ -38,6 +38,10 @@ func (tw *Tower) GetReqCh() chan<- interface{} {
 	return tw.recvRequestCh
 }
 
+func (tw *Tower) GetTurnTriggerCh() chan<- time.Time {
+	return tw.turnTriggerCh
+}
+
 func (tw *Tower) ReqChState() string {
 	return fmt.Sprintf("%v/%v", len(tw.recvRequestCh), cap(tw.recvRequestCh))
 }
