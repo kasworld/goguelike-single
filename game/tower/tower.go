@@ -321,17 +321,10 @@ func (tw *Tower) runTower(ctx context.Context) {
 	rankMakeTk := time.NewTicker(1 * time.Second)
 	defer rankMakeTk.Stop()
 
-	// turnDur := time.Duration(float64(time.Second) / tw.Config().TurnPerSec)
-	// // turnDur := time.Duration(time.Second)
-	// timerTurnTk := time.NewTicker(turnDur)
-	// defer timerTurnTk.Stop()
-
 loop:
 	for {
 		select {
 		case <-ctx.Done():
-			tw.log.TraceService("AdminWeb Close %v", tw.adminWeb.Close())
-			tw.log.TraceService("ClientWeb Close %v", tw.clientWeb.Close())
 			break loop
 
 		case <-timerInfoTk.C:
@@ -353,7 +346,6 @@ loop:
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
 
-		// case <-timerTurnTk.C:
 		case now := <-tw.turnTriggerCh:
 			if tw.playerConnection != nil {
 				// only player online
@@ -361,6 +353,7 @@ loop:
 			}
 		}
 	}
+	tw.doClose()
 }
 
 func (tw *Tower) turnAllFloors(now time.Time) {
