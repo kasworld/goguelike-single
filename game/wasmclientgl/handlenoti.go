@@ -419,10 +419,15 @@ func objRecvNotiFn_VPObjList(recvobj interface{}, header c2t_packet.Header, obj 
 		jslog.Warnf("ao pos out of floor %v [%v %v]", app.CurrentFloor, playerX, playerY)
 		return nil
 	}
+
+	if autoActs.GetByIDBase("AutoPlay").State == 0 {
+		go app.sendPacket(c2t_idcmd.PassTurn,
+			&c2t_obj.ReqPassTurn_data{},
+		)
+	}
 	if newOLNotiData.ActiveObj.AP > 0 {
 		app.actByControlMode()
 	}
-
 	return nil
 }
 
