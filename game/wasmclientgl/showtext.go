@@ -426,9 +426,6 @@ func (app *WasmClient) makeDebugInfoHTML() string {
 	fmt.Fprintf(&buf, "Display %d<br/>", app.DispInterDur.GetCount())
 	fmt.Fprintf(&buf, "Known ActiveObj %d<br/>", len(app.AOUUID2AOClient))
 	fmt.Fprintf(&buf, "Known CarryObj %d<br/>", len(app.CaObjUUID2CaObjClient))
-	fmt.Fprintf(&buf, "Sent move packet lastTurn %d<br/>", app.movePacketPerTurn)
-	fmt.Fprintf(&buf, "Sent act packet lastTurn %d<br/>", app.actPacketPerTurn)
-
 	fmt.Fprintf(&buf, "%v<br/>", gPoolColorMaterial)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolCarryObj3DGeo)
 	fmt.Fprintf(&buf, "%v<br/>", gPoolFieldObj3D)

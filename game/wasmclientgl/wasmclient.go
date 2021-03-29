@@ -82,14 +82,12 @@ type WasmClient struct {
 	olNotiData     *c2t_obj.NotiVPObjList_data
 	lastOLNotiData *c2t_obj.NotiVPObjList_data
 
-	movePacketPerTurn int32
-	actPacketPerTurn  int32
-	lastEffBias       bias.Bias
-	onFieldObj        *c2t_obj.FieldObjClient
-	OverLoadRate      float64
-	HPdiff            int
-	SPdiff            int
-	level             int
+	lastEffBias  bias.Bias
+	onFieldObj   *c2t_obj.FieldObjClient
+	OverLoadRate float64
+	HPdiff       int
+	SPdiff       int
+	level        int
 
 	// debug
 	taNotiHeader c2t_packet.Header

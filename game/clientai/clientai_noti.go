@@ -13,7 +13,6 @@ package clientai
 
 import (
 	"fmt"
-	"sync/atomic"
 	"time"
 
 	"github.com/kasworld/goguelike-single/config/leveldata"
@@ -180,8 +179,6 @@ func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byt
 	newOLNotiData := pkbody
 	cai.onFieldObj = nil
 
-	atomic.StoreInt32(&cai.movePacketPerTurn, 0)
-	// cai.SentAction = nil
 	cai.ServerJitter.ActByValue(pkbody.Time)
 
 	c2t_obj.EquipClientByUUID(pkbody.ActiveObj.EquipBag).Sort()

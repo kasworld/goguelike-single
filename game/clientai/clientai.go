@@ -50,7 +50,6 @@ type ClientAI struct {
 	pid2recv *c2t_pid2rspfn.PID2RspFn
 
 	// turn data
-	movePacketPerTurn     int32
 	OLNotiData            *c2t_obj.NotiVPObjList_data
 	playerActiveObjClient *c2t_obj.ActiveObjClient
 	onFieldObj            *c2t_obj.FieldObjClient

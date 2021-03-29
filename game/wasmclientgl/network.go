@@ -17,7 +17,6 @@ import (
 	"fmt"
 	"net/url"
 	"sync"
-	"sync/atomic"
 	"syscall/js"
 	"time"
 
@@ -190,9 +189,6 @@ func (app *WasmClient) updateFloorInfoList() {
 }
 
 func (app *WasmClient) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
-	if cmd.NeedTurn() != 0 { // is act?
-		atomic.AddInt32(&app.actPacketPerTurn, 1)
-	}
 	app.ReqWithRspFnWithAuth(
 		cmd, arg,
 		func(hd c2t_packet.Header, rsp interface{}) error {
@@ -206,7 +202,6 @@ func (app *WasmClient) sendMovePacketByInput(tryDir way9type.Way9Type) bool {
 	playerX, playerY := app.GetPlayerXY()
 	moveDir := cf.FindMovableDir(playerX, playerY, tryDir)
 	if moveDir != way9type.Center {
-		atomic.AddInt32(&app.movePacketPerTurn, 1)
 		go app.sendPacket(c2t_idcmd.Move,
 			&c2t_obj.ReqMove_data{Dir: moveDir},
 		)

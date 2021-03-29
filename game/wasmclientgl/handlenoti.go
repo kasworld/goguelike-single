@@ -13,7 +13,6 @@ package wasmclientgl
 
 import (
 	"fmt"
-	"sync/atomic"
 	"syscall/js"
 	"time"
 
@@ -415,8 +414,6 @@ func objRecvNotiFn_VPObjList(recvobj interface{}, header c2t_packet.Header, obj 
 	}
 
 	app.DisplayTextInfo()
-	atomic.StoreInt32(&app.movePacketPerTurn, 0)
-	atomic.StoreInt32(&app.actPacketPerTurn, 0)
 
 	if !app.CurrentFloor.IsValidPos(playerX, playerY) {
 		jslog.Warnf("ao pos out of floor %v [%v %v]", app.CurrentFloor, playerX, playerY)
