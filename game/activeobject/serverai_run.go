@@ -65,7 +65,7 @@ func (ao *ActiveObject) actTurn(sai *ServerAIState, turnTime time.Time) {
 
 	aox, aoy, exist := ao.currentFloor.GetActiveObjPosMan().GetXYByUUID(ao.GetUUID())
 	if !exist {
-		ao.log.Error("ao not in currentfloor %v %v", ao, ao.currentFloor)
+		// ao.log.Error("ao not in currentfloor %v %v", ao, ao.currentFloor)
 		return
 	}
 	sai.aox, sai.aoy = aox, aoy
