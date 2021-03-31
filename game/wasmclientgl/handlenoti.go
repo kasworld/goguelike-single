@@ -13,16 +13,12 @@ package wasmclientgl
 
 import (
 	"fmt"
-	"syscall/js"
 	"time"
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/leveldata"
-	"github.com/kasworld/goguelike-single/enum/clientcontroltype"
 	"github.com/kasworld/goguelike-single/enum/condition"
-	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
-	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/game/soundmap"
@@ -258,14 +254,6 @@ func objRecvNotiFn_VPObjList(recvobj interface{}, header c2t_packet.Header, obj 
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
 	}
 
-	defer func() {
-		app.waitObjList = false
-		if app.needRefreshSet {
-			app.needRefreshSet = false
-			js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))
-		}
-	}()
-
 	app.ServerClientTimeDiff = robj.Time.Sub(time.Now())
 	app.olNotiHeader = header
 
@@ -419,15 +407,7 @@ func objRecvNotiFn_VPObjList(recvobj interface{}, header c2t_packet.Header, obj 
 		jslog.Warnf("ao pos out of floor %v [%v %v]", app.CurrentFloor, playerX, playerY)
 		return nil
 	}
-
-	if autoActs.GetByIDBase("AutoPlay").State == 0 {
-		go app.sendPacket(c2t_idcmd.PassTurn,
-			&c2t_obj.ReqPassTurn_data{},
-		)
-	}
-	if newOLNotiData.ActiveObj.AP > 0 {
-		app.actByControlMode()
-	}
+	app.actPlayView()
 	return nil
 }
 
@@ -563,83 +543,6 @@ func (app *WasmClient) processTurnResult(v c2t_obj.TurnResultClient) {
 	}
 }
 
-// from noti obj list
-func (app *WasmClient) actByControlMode() {
-	if app.olNotiData == nil || app.olNotiData.ActiveObj.HP <= 0 {
-		return
-	}
-
-	switch gameOptions.GetByIDBase("ViewMode").State {
-	case 0: // play viewpot mode
-		if app.moveByUserInput() {
-			return
-		}
-	case 1: // floor viewport mode
-	}
-
-	if fo := app.onFieldObj; fo == nil ||
-		(fo != nil && fieldobjacttype.ClientData[fo.ActType].ActOn) {
-		for i, v := range autoActs.ButtonList {
-			if v.State == 0 {
-				if tryAutoActFn[i](app, v) {
-					return
-				}
-			}
-		}
-	}
-}
-
-func (app *WasmClient) moveByUserInput() bool {
-	cf := app.CurrentFloor
-	playerX, playerY := app.GetPlayerXY()
-	if !cf.IsValidPos(playerX, playerY) {
-		jslog.Errorf("ao out of floor %v %v", app.olNotiData.ActiveObj, cf)
-		return false
-	}
-	w, h := cf.Tiles.GetXYLen()
-	switch app.ClientColtrolMode {
-	default:
-		jslog.Errorf("invalid ClientColtrolMode %v", app.ClientColtrolMode)
-	case clientcontroltype.Keyboard:
-		// if app.sendMovePacketByInput(app.KeyDir) {
-		return true
-		// }
-	case clientcontroltype.FollowMouse:
-		if app.sendMovePacketByInput(app.MouseDir) {
-			return true
-		}
-	case clientcontroltype.MoveToDest:
-		playerPos := [2]int{playerX, playerY}
-		if app.Path2dst == nil || len(app.Path2dst) == 0 {
-			app.ClientColtrolMode = clientcontroltype.Keyboard
-			return false
-		}
-		for i := len(app.Path2dst) - 1; i >= 0; i-- {
-			nextPos := app.Path2dst[i]
-			isContact, dir := way9type.CalcContactDirWrapped(playerPos, nextPos, w, h)
-			if isContact {
-				if dir == way9type.Center {
-					// arrived
-					app.Path2dst = nil
-					app.vp.ClearMovePath()
-					app.ClientColtrolMode = clientcontroltype.Keyboard
-					return false
-				} else {
-					go app.sendPacket(c2t_idcmd.Move,
-						&c2t_obj.ReqMove_data{Dir: dir},
-					)
-					return true
-				}
-			}
-		}
-		// fail to path2dest
-		app.Path2dst = nil
-		app.vp.ClearMovePath()
-		app.ClientColtrolMode = clientcontroltype.Keyboard
-	}
-	return false
-}
-
 func SoundByActResult(ar *aoactreqrsp.ActReqRsp) {
 	if ar != nil && ar.IsSuccess() {
 		soundmap.PlayByAct(ar.Done.Act)
@@ -654,10 +557,6 @@ func objRecvNotiFn_VPTiles(recvobj interface{}, header c2t_packet.Header, obj in
 	app, ok := recvobj.(*WasmClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", recvobj)
-	}
-
-	if !app.waitObjList {
-		app.waitObjList = true
 	}
 
 	app.taNotiHeader = header

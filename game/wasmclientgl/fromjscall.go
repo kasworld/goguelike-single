@@ -334,7 +334,6 @@ func (app *WasmClient) jsHandleKeyDown(this js.Value, args []js.Value) interface
 		if kcode != "" {
 			app.KeyboardPressedMap.KeyDown(kcode)
 		}
-		app.actByKeyPressMap(kcode)
 	}
 	return nil
 }
@@ -343,45 +342,9 @@ func (app *WasmClient) jsHandleKeyPress(this js.Value, args []js.Value) interfac
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
 		evt.Call("preventDefault")
-
-		kcode := evt.Get("key").String()
-		app.actByKeyPressMap(kcode)
+		app.actViewportView()
 	}
 	return nil
-}
-
-func (app *WasmClient) actByKeyPressMap(kcode string) bool {
-	oldDir := app.KeyDir
-	dx, dy := app.KeyboardPressedMap.SumMoveDxDy(Key2Dir)
-	app.KeyDir = way9type.RemoteDxDy2Way9(dx, dy)
-
-	switch gameOptions.GetByIDBase("ViewMode").State {
-	case 0: // play viewpot mode
-		if app.KeyDir != way9type.Center {
-			app.ClientColtrolMode = clientcontroltype.Keyboard
-			app.Path2dst = nil
-			app.vp.ClearMovePath()
-			autoPlayButton := autoActs.GetByIDBase("AutoPlay")
-			if autoPlayButton.State == 0 {
-				autoPlayButton.JSFn(js.Null(), nil)
-			}
-			if oldDir != app.KeyDir {
-				app.sendMovePacketByInput(app.KeyDir)
-			}
-			return true
-		}
-	case 1: // floor viewport mode
-		if app.KeyDir != way9type.Center {
-			app.ClientColtrolMode = clientcontroltype.Keyboard
-			app.Path2dst = nil
-			app.vp.ClearMovePath()
-			dir := app.KeyDir
-			app.floorVPPosX += dir.Dx()
-			app.floorVPPosY += dir.Dy()
-			return true
-		}
-	}
-	return false
 }
 
 func (app *WasmClient) jsHandleKeyUp(this js.Value, args []js.Value) interface{} {

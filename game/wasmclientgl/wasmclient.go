@@ -74,10 +74,6 @@ type WasmClient struct {
 	KeyDir   way9type.Way9Type
 	MouseDir way9type.Way9Type
 
-	// for turn
-	waitObjList    bool
-	needRefreshSet bool
-
 	taNotiData     *c2t_obj.NotiVPTiles_data
 	olNotiData     *c2t_obj.NotiVPObjList_data
 	lastOLNotiData *c2t_obj.NotiVPObjList_data
@@ -268,10 +264,10 @@ loop:
 }
 
 func (app *WasmClient) renderGLFrame(this js.Value, args []js.Value) interface{} {
-	if app.waitObjList {
-		app.needRefreshSet = true
-		return nil
-	}
+	// if app.waitObjList {
+	// 	app.needRefreshSet = true
+	// 	return nil
+	// }
 
 	defer func() {
 		js.Global().Call("requestAnimationFrame", js.FuncOf(app.renderGLFrame))

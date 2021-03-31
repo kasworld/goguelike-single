@@ -31,7 +31,7 @@ type TowerConfig struct {
 	ClientDataFolder string        `default:"./clientdata" argname:""`
 	WebAdminID       string        `default:"root" argname:""`
 	WebAdminPass     string        `default:"password" argname:"" prettystring:"hidevalue"`
-	AdminAuthKey     string        `default:"6e9456cf-ab29-99b2-f223-1459e00cfcd5" argname:"" prettystring:"hidevalue"`
+	AdminAuthKey     string        `default:"debug" argname:"" prettystring:"hidevalue"`
 
 	// config for each tower
 	Seed           int     `default:"0" argname:""` // <=0 time seed
