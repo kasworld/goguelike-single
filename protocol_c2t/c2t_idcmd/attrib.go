@@ -37,7 +37,7 @@ var attrib = [CommandID_Count]struct {
 	Chat:              {false, false, 0},
 	AchieveInfo:       {false, false, 0},
 	Rebirth:           {false, true, 0},
-	MoveFloor:         {false, true, 1}, // need check need turn
+	MoveFloor:         {false, true, 1},
 	AIPlay:            {false, true, 0},
 	VisitFloorList:    {false, false, 0},
 	PassTurn:          {false, true, 0},

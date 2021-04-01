@@ -22,9 +22,10 @@ import (
 	"github.com/kasworld/gowasmlib/jslog"
 )
 
-func (app *WasmClient) actViewportView() {
+func (app *WasmClient) actFloorView() {
+	jslog.Infof("actFloorView")
 	if gameOptions.GetByIDBase("ViewMode").State != 1 {
-		// if not viewportview
+		// if not actFloorView
 		return
 	}
 	dx, dy := app.KeyboardPressedMap.SumMoveDxDy(Key2Dir)
@@ -44,29 +45,32 @@ func (app *WasmClient) actViewportView() {
 
 // from noti obj list
 func (app *WasmClient) actPlayView() {
+	jslog.Infof("actPlayView")
 	if gameOptions.GetByIDBase("ViewMode").State != 0 {
 		// if not playview
 		return
+	}
+
+	dx, dy := app.KeyboardPressedMap.SumMoveDxDy(Key2Dir)
+	app.KeyDir = way9type.RemoteDxDy2Way9(dx, dy)
+	if app.KeyDir != way9type.Center {
+		app.ClientColtrolMode = clientcontroltype.Keyboard
+		app.Path2dst = nil
+		app.vp.ClearMovePath()
+		autoPlayButton := autoActs.GetByIDBase("AutoPlay")
+		if autoPlayButton.State == 0 {
+			autoPlayButton.JSFn(js.Null(), nil)
+		}
 	}
 
 	if app.olNotiData.ActiveObj.AP > 0 {
 		if app.olNotiData == nil || app.olNotiData.ActiveObj.HP <= 0 {
 			return
 		}
-		dx, dy := app.KeyboardPressedMap.SumMoveDxDy(Key2Dir)
-		app.KeyDir = way9type.RemoteDxDy2Way9(dx, dy)
-		if app.KeyDir != way9type.Center {
-			app.ClientColtrolMode = clientcontroltype.Keyboard
-			app.Path2dst = nil
-			app.vp.ClearMovePath()
-			autoPlayButton := autoActs.GetByIDBase("AutoPlay")
-			if autoPlayButton.State == 0 {
-				autoPlayButton.JSFn(js.Null(), nil)
-			}
-		}
 		if app.moveByUserInput() {
 			return
 		}
+		// do auto act
 		if fo := app.onFieldObj; fo == nil ||
 			(fo != nil && fieldobjacttype.ClientData[fo.ActType].ActOn) {
 			for i, v := range autoActs.ButtonList {
@@ -77,6 +81,10 @@ func (app *WasmClient) actPlayView() {
 				}
 			}
 		}
+	} else {
+		app.sendPacket(c2t_idcmd.PassTurn,
+			&c2t_obj.ReqPassTurn_data{},
+		)
 	}
 }
 

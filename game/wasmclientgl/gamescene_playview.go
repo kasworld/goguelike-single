@@ -217,6 +217,9 @@ func (vp *GameScene) UpdatePlayViewFrame(
 ) {
 	playerUUID := gInitData.AccountInfo.ActiveObjUUID
 
+	if olNoti == nil {
+		return
+	}
 	// activeobj animate
 	for _, ao := range olNoti.ActiveObjList {
 		aod, exist := vp.jsSceneAOs[ao.UUID]

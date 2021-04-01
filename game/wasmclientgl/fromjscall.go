@@ -342,7 +342,7 @@ func (app *WasmClient) jsHandleKeyPress(this js.Value, args []js.Value) interfac
 	if evt.Get("target").Equal(jsInputTarget) {
 		evt.Call("stopPropagation")
 		evt.Call("preventDefault")
-		app.actViewportView()
+		app.actFloorView()
 	}
 	return nil
 }

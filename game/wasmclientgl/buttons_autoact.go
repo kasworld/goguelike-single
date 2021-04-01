@@ -75,7 +75,6 @@ func cmdToggleAutoRecycleEquip(obj interface{}, v *htmlbutton.HTMLButton) {
 }
 
 var tryAutoActFn = []func(app *WasmClient, v *htmlbutton.HTMLButton) bool{
-	tryAutoPlay,
 	tryAutoRebirth,
 	tryAutoBattle,
 	tryAutoPickup,
@@ -83,10 +82,13 @@ var tryAutoActFn = []func(app *WasmClient, v *htmlbutton.HTMLButton) bool{
 	tryAutoUsePotionScroll,
 	tryAutoRecyclePotionScroll,
 	tryAutoRecycleEquip,
+	tryAutoPlay,
 }
 
 func tryAutoPlay(app *WasmClient, v *htmlbutton.HTMLButton) bool {
-	// not ai fn
+	app.sendPacket(c2t_idcmd.PassTurn,
+		&c2t_obj.ReqPassTurn_data{},
+	)
 	return false
 }
 func cmdToggleServerAI(obj interface{}, v *htmlbutton.HTMLButton) {
