@@ -23,7 +23,6 @@ type TextClientConfig struct {
 	PidFilename   string        `default:"/tmp/textclient.pid" argname:""`
 
 	ConnectToTower string `default:"localhost:14101" argname:""`
-	PlayerName     string `default:"Player" argname:""`
 }
 
 func (config *TextClientConfig) StringForm() string {

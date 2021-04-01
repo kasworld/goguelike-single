@@ -21,10 +21,6 @@ func (cai *ClientAI) GetRunResult() error {
 	return cai.runResult
 }
 
-func (cai *ClientAI) String() string {
-	return cai.config.Nickname
-}
-
 func (cai *ClientAI) GetArg() interface{} {
 	return cai.config
 }

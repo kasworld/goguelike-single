@@ -13,7 +13,6 @@ package clientai
 
 type ClientAIConfig struct {
 	ConnectToTower    string
-	Nickname          string
 	DisconnectOnDeath bool
 	Auth              string
 }

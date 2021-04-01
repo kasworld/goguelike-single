@@ -58,9 +58,8 @@ func main() {
 
 	aiconfig := clientai.ClientAIConfig{
 		ConnectToTower:    config.ConnectToTower,
-		Nickname:          config.PlayerName,
 		DisconnectOnDeath: false,
-		Auth:              "6e9456cf-ab29-99b2-f223-1459e00cfcd5",
+		Auth:              "debug",
 	}
 	app := clientai.New(
 		aiconfig,
