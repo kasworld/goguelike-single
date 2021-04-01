@@ -23,7 +23,6 @@ import (
 )
 
 func (app *WasmClient) actFloorView() {
-	jslog.Infof("actFloorView")
 	if gameOptions.GetByIDBase("ViewMode").State != 1 {
 		// if not actFloorView
 		return
@@ -45,7 +44,6 @@ func (app *WasmClient) actFloorView() {
 
 // from noti obj list
 func (app *WasmClient) actPlayView() {
-	jslog.Infof("actPlayView")
 	if gameOptions.GetByIDBase("ViewMode").State != 0 {
 		// if not playview
 		return

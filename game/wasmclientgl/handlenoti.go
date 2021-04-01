@@ -192,7 +192,7 @@ func objRecvNotiFn_ReadyToRebirth(recvobj interface{}, header c2t_packet.Header,
 	app.NotiMessage.AppendTf(tcsInfo,
 		"Ready to rebirth")
 	if autoActs.GetByIDBase("AutoRebirth").State == 0 {
-		go app.sendPacket(c2t_idcmd.Rebirth,
+		app.sendPacket(c2t_idcmd.Rebirth,
 			&c2t_obj.ReqRebirth_data{},
 		)
 	} else {
