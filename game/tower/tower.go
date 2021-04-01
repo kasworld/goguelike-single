@@ -230,7 +230,6 @@ func (tw *Tower) ServiceInit() error {
 		Name:          tw.sconfig.TowerName,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
-		TurnPerSec:    tw.sconfig.TurnPerSec,
 	}
 
 	tw.log.TraceService("%v", tw.towerInfo.StringForm())

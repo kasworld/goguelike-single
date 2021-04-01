@@ -14,7 +14,6 @@ package towerdata
 type TowerData struct {
 	TowerName      string
 	ScriptFilename string
-	TurnPerSec     float64
 	AutoStart      bool
 }
 

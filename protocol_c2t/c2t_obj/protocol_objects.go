@@ -56,7 +56,6 @@ type TowerInfo struct {
 	Factor        [3]int64 `prettystring:"simple"`
 	TotalFloorNum int
 	StartTime     time.Time `prettystring:"simple"`
-	TurnPerSec    float64
 }
 
 func (info *TowerInfo) StringForm() string {
