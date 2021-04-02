@@ -299,33 +299,14 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 
 	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, tw.log, "serveAdminWeb")
 	go retrylistenandserve.RetryListenAndServe(tw.clientWeb, tw.log, "serveServiceWeb")
-loop:
-	for {
-		select {
-		case <-ctx.Done():
-			break loop
-		}
-	}
-}
-
-func (tw *Tower) runTower(ctx context.Context) {
-	tw.log.TraceService("Start Run %v", tw)
-	defer func() { tw.log.TraceService("End Run %v", tw) }()
-
-	tw.turnTriggerCh = make(chan time.Time)
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
-
-	rankMakeTk := time.NewTicker(1 * time.Second)
-	defer rankMakeTk.Stop()
-
 loop:
 	for {
 		select {
 		case <-ctx.Done():
 			break loop
-
 		case <-timerInfoTk.C:
 			tw.towerCmdActStat.UpdateLap()
 			tw.sendStat.UpdateLap()
@@ -337,6 +318,24 @@ loop:
 			if len(tw.recvRequestCh) >= cap(tw.recvRequestCh) {
 				break loop
 			}
+		}
+	}
+}
+
+func (tw *Tower) runTower(ctx context.Context) {
+	tw.log.TraceService("Start Run %v", tw)
+	defer func() { tw.log.TraceService("End Run %v", tw) }()
+
+	tw.turnTriggerCh = make(chan time.Time)
+
+	rankMakeTk := time.NewTicker(1 * time.Second)
+	defer rankMakeTk.Stop()
+
+loop:
+	for {
+		select {
+		case <-ctx.Done():
+			break loop
 
 		case data := <-tw.recvRequestCh:
 			tw.towerCmdActStat.Inc()
