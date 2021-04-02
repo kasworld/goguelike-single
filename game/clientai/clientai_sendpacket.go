@@ -12,6 +12,7 @@
 package clientai
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/kasworld/goguelike-single/config/dataversion"
@@ -20,9 +21,40 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
 	"github.com/kasworld/version"
 )
+
+func (cai *ClientAI) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
+	fn c2t_pid2rspfn.HandleRspFn) error {
+
+	pid := cai.pid2recv.NewPID(fn)
+	spk := c2t_packet.Packet{
+		Header: c2t_packet.Header{
+			Cmd:      uint16(cmd),
+			ID:       pid,
+			FlowType: c2t_packet.Request,
+		},
+		Body: body,
+	}
+	if err := cai.towerConn.EnqueueSendPacket(&spk); err != nil {
+		cai.log.Error("End %s %v %+v %v",
+			cai, spk.Header, spk.Body, err)
+		cai.sendRecvStop()
+		return fmt.Errorf("send fail %v %v:%v %v",
+			cai, cmd, pid, err)
+	}
+	return nil
+}
+
+func (cai *ClientAI) ReqWithRspFnWithAuth(cmd c2t_idcmd.CommandID, body interface{},
+	fn c2t_pid2rspfn.HandleRspFn) error {
+	if !cai.CanUseCmd(cmd) {
+		return fmt.Errorf("cmd not allowed %v", cmd)
+	}
+	return cai.ReqWithRspFn(cmd, body, fn)
+}
 
 func (cai *ClientAI) reqLogin(authkey string) error {
 	return cai.ReqWithRspFn(
@@ -71,7 +103,7 @@ func (cai *ClientAI) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
 func (cai *ClientAI) reqAIPlay(onoff bool) error {
 	return cai.ReqWithRspFnWithAuth(
 		c2t_idcmd.AIPlay,
-		&c2t_obj.ReqAIPlay_data{onoff},
+		&c2t_obj.ReqAIPlay_data{On: onoff},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			return nil
 		},

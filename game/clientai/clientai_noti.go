@@ -45,13 +45,13 @@ var DemuxNoti2ByteFnMap = [...]func(me interface{}, hd c2t_packet.Header, rbody 
 }
 
 func bytesRecvNotiFn_Invalid(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	return fmt.Errorf("Not implemented %v", hd)
+	return fmt.Errorf("not implemented %v", hd)
 }
 
 func bytesRecvNotiFn_EnterTower(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiEnterTower_data)
 	if !ok {
@@ -68,7 +68,7 @@ func bytesRecvNotiFn_EnterTower(me interface{}, hd c2t_packet.Header, rbody []by
 func bytesRecvNotiFn_LeaveTower(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiLeaveTower_data)
 	if !ok {
@@ -86,7 +86,7 @@ func bytesRecvNotiFn_LeaveTower(me interface{}, hd c2t_packet.Header, rbody []by
 func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiEnterFloor_data)
 	if !ok {
@@ -107,7 +107,7 @@ func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []by
 func bytesRecvNotiFn_LeaveFloor(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiLeaveFloor_data)
 	if !ok {
@@ -162,7 +162,7 @@ func bytesRecvNotiFn_Broadcast(me interface{}, hd c2t_packet.Header, rbody []byt
 func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiVPObjList_data)
 	if !ok {
@@ -228,7 +228,7 @@ func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byt
 func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiVPTiles_data)
 	if !ok {
@@ -265,7 +265,7 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiFloorTiles_data)
 	if !ok {
@@ -292,7 +292,7 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiFieldObjList_data)
 	if !ok {
@@ -313,7 +313,7 @@ func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []
 func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiFoundFieldObj_data)
 	if !ok {
@@ -336,7 +336,7 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiForgetFloor_data)
 	if !ok {
@@ -357,7 +357,7 @@ func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []b
 func bytesRecvNotiFn_ActivateTrap(me interface{}, hd c2t_packet.Header, rbody []byte) error {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return fmt.Errorf("Packet type miss match %v", rbody)
+		return fmt.Errorf("packet type miss match %v", rbody)
 	}
 	pkbody, ok := robj.(*c2t_obj.NotiActivateTrap_data)
 	if !ok {

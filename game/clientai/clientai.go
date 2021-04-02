@@ -26,7 +26,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_connwsgorilla"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
@@ -183,7 +182,7 @@ func (cai *ClientAI) handleRecvPacket(header c2t_packet.Header, body []byte) err
 	cai.log.TraceClient("recv %v", header)
 	switch header.FlowType {
 	default:
-		return fmt.Errorf("Invalid packet type %v %v", header, body)
+		return fmt.Errorf("invalid packet type %v %v", header, body)
 	case c2t_packet.Response:
 		if err := cai.pid2recv.HandleRsp(header, body); err != nil {
 			cai.sendRecvStop()
@@ -199,34 +198,4 @@ func (cai *ClientAI) handleRecvPacket(header c2t_packet.Header, body []byte) err
 		}
 	}
 	return nil
-}
-
-func (cai *ClientAI) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
-	fn c2t_pid2rspfn.HandleRspFn) error {
-
-	pid := cai.pid2recv.NewPID(fn)
-	spk := c2t_packet.Packet{
-		Header: c2t_packet.Header{
-			Cmd:      uint16(cmd),
-			ID:       pid,
-			FlowType: c2t_packet.Request,
-		},
-		Body: body,
-	}
-	if err := cai.towerConn.EnqueueSendPacket(&spk); err != nil {
-		cai.log.Error("End %s %v %+v %v",
-			cai, spk.Header, spk.Body, err)
-		cai.sendRecvStop()
-		return fmt.Errorf("Send fail %s %v:%v %v",
-			cai, cmd, pid, err)
-	}
-	return nil
-}
-
-func (cai *ClientAI) ReqWithRspFnWithAuth(cmd c2t_idcmd.CommandID, body interface{},
-	fn c2t_pid2rspfn.HandleRspFn) error {
-	if !cai.CanUseCmd(cmd) {
-		return fmt.Errorf("Cmd not allowed %v", cmd)
-	}
-	return cai.ReqWithRspFn(cmd, body, fn)
 }
