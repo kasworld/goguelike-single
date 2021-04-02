@@ -61,10 +61,9 @@ func (app *WasmClient) actPlayView() {
 		}
 	}
 
-	if app.olNotiData.ActiveObj.AP > 0 {
-		if app.olNotiData == nil || app.olNotiData.ActiveObj.HP <= 0 {
-			return
-		}
+	if app.olNotiData != nil &&
+		app.olNotiData.ActiveObj.AP > 0 &&
+		app.olNotiData.ActiveObj.HP > 0 {
 		if app.moveByUserInput() {
 			return
 		}
@@ -79,11 +78,10 @@ func (app *WasmClient) actPlayView() {
 				}
 			}
 		}
-	} else {
-		app.sendPacket(c2t_idcmd.PassTurn,
-			&c2t_obj.ReqPassTurn_data{},
-		)
 	}
+	app.sendPacket(c2t_idcmd.PassTurn,
+		&c2t_obj.ReqPassTurn_data{},
+	)
 }
 
 func (app *WasmClient) moveByUserInput() bool {

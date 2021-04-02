@@ -220,8 +220,8 @@ func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byt
 	playerX, playerY := cai.GetPlayerXY()
 	if cai.playerActiveObjClient != nil && cai.CurrentFloor.IsValidPos(playerX, playerY) {
 		cai.onFieldObj = cai.CurrentFloor.GetFieldObjAt(playerX, playerY)
-		cai.actByControlMode()
 	}
+	cai.actByControlMode()
 	return nil
 }
 

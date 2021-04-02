@@ -35,14 +35,18 @@ var tryAutoActFn = []func(cai *ClientAI) bool{
 }
 
 func (cai *ClientAI) actByControlMode() {
-	if cai.OLNotiData == nil || cai.OLNotiData.ActiveObj.HP <= 0 {
-		return
-	}
-	for _, v := range tryAutoActFn {
-		if v(cai) {
-			return
+	if cai.OLNotiData != nil &&
+		cai.OLNotiData.ActiveObj.AP > 0 &&
+		cai.OLNotiData.ActiveObj.HP > 0 {
+		for _, v := range tryAutoActFn {
+			if v(cai) {
+				return
+			}
 		}
 	}
+	cai.sendPacket(c2t_idcmd.PassTurn,
+		&c2t_obj.ReqPassTurn_data{},
+	)
 }
 
 func tryAutoBattle(cai *ClientAI) bool {

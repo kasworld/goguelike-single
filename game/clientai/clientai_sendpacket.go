@@ -59,6 +59,15 @@ func (cai *ClientAI) reqLogin(authkey string) error {
 	)
 }
 
+func (cai *ClientAI) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
+	cai.ReqWithRspFnWithAuth(
+		cmd, arg,
+		func(hd c2t_packet.Header, rsp interface{}) error {
+			return nil
+		},
+	)
+}
+
 func (cai *ClientAI) reqAIPlay(onoff bool) error {
 	return cai.ReqWithRspFnWithAuth(
 		c2t_idcmd.AIPlay,
