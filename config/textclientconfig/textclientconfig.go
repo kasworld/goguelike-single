@@ -12,19 +12,34 @@
 package textclientconfig
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/prettystring"
 )
 
 type TextClientConfig struct {
-	LogDir        string        `default:"/tmp/textclient.logfile" argname:""`
-	LogLevel      g2log.LL_Type `argname:""`
-	SplitLogLevel g2log.LL_Type `argname:""`
-	PidFilename   string        `default:"/tmp/textclient.pid" argname:""`
-
-	ConnectToTower string `default:"localhost:14101" argname:""`
+	BaseLogDir        string        `default:"/tmp/textclient.logfile" argname:""`
+	LogLevel          g2log.LL_Type `argname:""`
+	SplitLogLevel     g2log.LL_Type `argname:""`
+	ConnectToTower    string        `default:"localhost:14101" argname:""`
+	DisconnectOnDeath bool          `default:"false" argname:""`
+	Auth              string        `default:"debug" argname:""`
 }
 
 func (config *TextClientConfig) StringForm() string {
 	return prettystring.PrettyString(config, 4)
+}
+
+func (config *TextClientConfig) MakeLogDir() string {
+	rstr := filepath.Join(config.BaseLogDir,
+		"goguelike_textclient.logfiles",
+	)
+	rtn, err := filepath.Abs(rstr)
+	if err != nil {
+		fmt.Println(rstr, rtn, err.Error())
+		return rstr
+	}
+	return rtn
 }

@@ -20,6 +20,7 @@ import (
 	"github.com/kasworld/actjitter"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
+	"github.com/kasworld/goguelike-single/config/textclientconfig"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -29,13 +30,14 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
+	"github.com/kasworld/log/logflags"
 )
 
 type ClientAI struct {
 	log          *g2log.LogBase `prettystring:"hide"`
 	sendRecvStop func()         `prettystring:"hide"`
 
-	config    ClientAIConfig
+	config    *textclientconfig.TextClientConfig
 	runResult error
 
 	towerConn         *c2t_connwsgorilla.Connection
@@ -61,10 +63,36 @@ type ClientAI struct {
 	ServerJitter          *actjitter.ActJitter
 }
 
-func New(config ClientAIConfig, l *g2log.LogBase) *ClientAI {
+func New(config *textclientconfig.TextClientConfig) *ClientAI {
+	fmt.Printf("%v\n", config.StringForm())
+
+	if config.BaseLogDir != "" {
+		log, err := g2log.NewWithDstDir(
+			"textclient",
+			config.MakeLogDir(),
+			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
+			config.LogLevel,
+			config.SplitLogLevel,
+		)
+		if err == nil {
+			g2log.GlobalLogger = log
+		} else {
+			fmt.Printf("%v\n", err)
+			g2log.GlobalLogger.SetFlags(
+				g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+			g2log.GlobalLogger.SetLevel(
+				config.LogLevel)
+		}
+	} else {
+		g2log.GlobalLogger.SetFlags(
+			g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+		g2log.GlobalLogger.SetLevel(
+			config.LogLevel)
+	}
+
 	cai := &ClientAI{
 		config:            config,
-		log:               l,
+		log:               g2log.GlobalLogger,
 		ServerJitter:      actjitter.New("Server"),
 		wg:                new(sync.WaitGroup),
 		pid2recv:          c2t_pid2rspfn.New(),

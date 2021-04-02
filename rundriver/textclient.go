@@ -14,15 +14,12 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 
 	"github.com/kasworld/argdefault"
 	"github.com/kasworld/configutil"
 	"github.com/kasworld/goguelike-single/config/textclientconfig"
 	"github.com/kasworld/goguelike-single/game/clientai"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/log/logflags"
-	"github.com/kasworld/prettystring"
 	"github.com/kasworld/version"
 )
 
@@ -49,22 +46,8 @@ func main() {
 		}
 	}
 	ads.ApplyFlagTo(config)
-	fmt.Println(prettystring.PrettyString(config, 4))
 
-	g2log.GlobalLogger.SetFlags(
-		g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
-	g2log.GlobalLogger.SetLevel(
-		config.LogLevel)
-
-	aiconfig := clientai.ClientAIConfig{
-		ConnectToTower:    config.ConnectToTower,
-		DisconnectOnDeath: false,
-		Auth:              "debug",
-	}
-	app := clientai.New(
-		aiconfig,
-		g2log.GlobalLogger,
-	)
+	app := clientai.New(config)
 	app.Run(context.Background())
 	g2log.Error("%v", app.GetRunResult())
 }
