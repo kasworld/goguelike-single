@@ -20,7 +20,7 @@ import (
 )
 
 type TextClientConfig struct {
-	BaseLogDir        string        `default:"/tmp/textclient.logfile" argname:""`
+	BaseLogDir        string        `default:"" argname:""`
 	LogLevel          g2log.LL_Type `argname:""`
 	SplitLogLevel     g2log.LL_Type `argname:""`
 	ConnectToTower    string        `default:"localhost:14101" argname:""`
