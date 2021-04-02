@@ -347,7 +347,7 @@ loop:
 		case now := <-tw.turnTriggerCh:
 			if tw.playerConnection != nil {
 				// only player online
-				tw.turnAllFloors(now)
+				go tw.turnAllFloors(now)
 			}
 		}
 	}

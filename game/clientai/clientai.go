@@ -137,7 +137,7 @@ func (cai *ClientAI) Run(mainctx context.Context) {
 
 		if err != nil {
 			cai.runResult = err
-			cai.log.Error("%v %v", cai, err)
+			cai.log.Error("%v", err)
 		}
 		cai.sendRecvStop()
 	}()
