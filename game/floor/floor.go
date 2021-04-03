@@ -38,8 +38,9 @@ func (f *Floor) String() string {
 }
 
 type Floor struct {
-	rnd *g2rand.G2Rand `prettystring:"hide"`
-	log *g2log.LogBase `prettystring:"hide"`
+	mutexTurn sync.Mutex
+	rnd       *g2rand.G2Rand `prettystring:"hide"`
+	log       *g2log.LogBase `prettystring:"hide"`
 
 	tower       gamei.TowerI
 	w           int
@@ -130,6 +131,20 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
 
+	go func() {
+	loop:
+		for {
+			select {
+			case <-ctx.Done():
+				break loop
+			case data := <-f.cmdCh:
+				f.mutexTurn.Lock()
+				f.processCmd(data)
+				f.mutexTurn.Unlock()
+			}
+		}
+	}()
+
 loop:
 	for {
 		select {
@@ -148,10 +163,17 @@ loop:
 					f.GetName(), len(f.cmdCh), cap(f.cmdCh))
 				break loop
 			}
-
-		case data := <-f.cmdCh:
-			f.processCmd(data)
 		}
+	}
+}
+
+func (f *Floor) TurnLocked(now time.Time) {
+	f.mutexTurn.Lock()
+	f.processTurn(now)
+	f.mutexTurn.Unlock()
+	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
+	if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
+		f.processAgeing()
 	}
 }
 

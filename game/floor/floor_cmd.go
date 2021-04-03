@@ -117,12 +117,6 @@ func (f *Floor) processCmd(data interface{}) {
 	case *cmd2floor.APIAdminCmd2Floor:
 		pk.RspCh <- f.Call_APIAdminCmd2Floor(pk.ActiveObj, pk.ReqPk)
 
-	case *cmd2floor.Turn:
-		f.processTurn(pk.Now)
-		turnPerAge := f.terrain.GetMSPerAgeing() / 1000
-		if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
-			f.processAgeing()
-		}
 	}
 }
 

@@ -12,8 +12,6 @@
 package cmd2floor
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -43,8 +41,4 @@ type APIAdminCmd2Floor struct {
 	ActiveObj gamei.ActiveObjectI
 	ReqPk     *c2t_obj.ReqAdminFloorCmd_data
 	RspCh     chan<- c2t_error.ErrorCode
-}
-
-type Turn struct {
-	Now time.Time
 }

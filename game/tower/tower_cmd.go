@@ -14,7 +14,6 @@ package tower
 import (
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
-	"github.com/kasworld/goguelike-single/game/cmd2floor"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
@@ -60,15 +59,7 @@ func (tw *Tower) processCmd(data interface{}) {
 		tw.Call_ActiveObjRebirth(pk.ActiveObj)
 
 	case *cmd2tower.Turn:
-		// for _, f := range tw.floorMan.GetFloorList() {
-		// 	if f.CmdChRate() > 0.5 {
-		// 		tw.log.Error("%v overload skip turn", f)
-		// 		return
-		// 	}
-		// }
-		for _, f := range tw.floorMan.GetFloorList() {
-			f.GetCmdCh() <- &cmd2floor.Turn{Now: pk.Now}
-		}
+		tw.Turn(pk.Now)
 	}
 }
 

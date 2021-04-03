@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/kasworld/actpersec"
@@ -263,7 +264,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	}
 	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
-	queuesize := totalaocount * 100
+	queuesize := totalaocount * 10
 	tw.cmdCh = make(chan interface{}, queuesize)
 	if tw.cmdCh == nil {
 		tw.log.Fatal("fail to make cmdCh %v", queuesize)
@@ -342,6 +343,18 @@ loop:
 		}
 	}
 	tw.doClose()
+}
+
+func (tw *Tower) Turn(now time.Time) {
+	var ws sync.WaitGroup
+	for _, f := range tw.floorMan.GetFloorList() {
+		ws.Add(1)
+		go func(f gamei.FloorI) {
+			f.TurnLocked(now)
+			ws.Done()
+		}(f)
+	}
+	ws.Wait()
 }
 
 func (tw *Tower) makeActiveObjExpRank() {

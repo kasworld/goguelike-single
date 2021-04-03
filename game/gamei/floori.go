@@ -14,6 +14,7 @@ package gamei
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike-single/game/bias"
@@ -48,6 +49,7 @@ type FloorI interface {
 
 	GetCmdCh() chan<- interface{}
 	CmdChRate() float64
+	TurnLocked(now time.Time)
 	Run(ctx context.Context, queuesize int)
 
 	TotalActiveObjCount() int
