@@ -61,7 +61,7 @@ func (tw *Tower) processCmd(data interface{}) {
 
 	case *cmd2tower.Turn:
 		for _, f := range tw.floorMan.GetFloorList() {
-			f.GetReqCh() <- &cmd2floor.Turn{Now: pk.Now}
+			f.GetCmdCh() <- &cmd2floor.Turn{Now: pk.Now}
 		}
 	}
 }

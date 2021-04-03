@@ -152,7 +152,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			ao.GetAchieveStat().Inc(achievetype.EnterPortal)
 			ao.GetFieldObjActStat().Inc(p2.ActType)
-			f.tower.GetReqCh() <- &cmd2tower.ActiveObjUsePortal{
+			f.tower.GetCmdCh() <- &cmd2tower.ActiveObjUsePortal{
 				SrcFloor:  f,
 				ActiveObj: ao,
 				P1:        p1,
@@ -160,7 +160,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 
 		case fieldobjacttype.Teleport:
-			f.tower.GetReqCh() <- &cmd2tower.ActiveObjTrapTeleport{
+			f.tower.GetCmdCh() <- &cmd2tower.ActiveObjTrapTeleport{
 				SrcFloor:     f,
 				ActiveObj:    ao,
 				DstFloorName: p.DstFloorName,
@@ -514,7 +514,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			ao.GetFieldObjActStat().Inc(p1.ActType)
 			ao.GetFieldObjActStat().Inc(p2.ActType)
 			ao.SetNeedTANoti()
-			f.tower.GetReqCh() <- &cmd2tower.ActiveObjUsePortal{
+			f.tower.GetCmdCh() <- &cmd2tower.ActiveObjUsePortal{
 				SrcFloor:  f,
 				ActiveObj: ao,
 				P1:        p1,

@@ -151,7 +151,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	if connData.Logined {
 		tw.playerAO.Suspend()
 		rspCh := make(chan error, 1)
-		tw.GetReqCh() <- &cmd2tower.PlayerAOSuspendFromTower{
+		tw.GetCmdCh() <- &cmd2tower.PlayerAOSuspendFromTower{
 			RspCh: rspCh,
 		}
 		<-rspCh

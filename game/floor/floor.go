@@ -65,7 +65,7 @@ type Floor struct {
 	cmdActStat        *actpersec.ActPerSec               `prettystring:"simple"`
 
 	// for actturn data
-	recvRequestCh chan interface{}
+	cmdCh chan interface{}
 
 	aiWG sync.WaitGroup // for ai run
 }
@@ -124,7 +124,7 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	f.log.TraceService("start Run %v", f)
 	defer func() { f.log.TraceService("End Run %v", f) }()
 
-	f.recvRequestCh = make(chan interface{}, queuesize)
+	f.cmdCh = make(chan interface{}, queuesize)
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
@@ -138,16 +138,16 @@ loop:
 		case <-timerInfoTk.C:
 			f.statPacketObjOver.UpdateLap()
 			f.cmdActStat.UpdateLap()
-			if len(f.recvRequestCh) > cap(f.recvRequestCh)/2 {
+			if len(f.cmdCh) > cap(f.cmdCh)/2 {
 				f.log.Fatal("Floor %v %v reqch overloaded %v/%v",
 					f.terrain.Name, f.GetName(),
-					len(f.recvRequestCh), cap(f.recvRequestCh))
+					len(f.cmdCh), cap(f.cmdCh))
 			}
-			if len(f.recvRequestCh) >= cap(f.recvRequestCh) {
+			if len(f.cmdCh) >= cap(f.cmdCh) {
 				break loop
 			}
 
-		case data := <-f.recvRequestCh:
+		case data := <-f.cmdCh:
 			f.processCmd(data)
 
 		}

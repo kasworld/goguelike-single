@@ -46,7 +46,7 @@ type FloorI interface {
 	GetCarryObjPosMan() uuidposmani.UUIDPosManI
 	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 
-	GetReqCh() chan<- interface{}
+	GetCmdCh() chan<- interface{}
 	Run(ctx context.Context, queuesize int)
 
 	TotalActiveObjCount() int

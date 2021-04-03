@@ -34,12 +34,12 @@ func (tw *Tower) GetExpRanking() []gamei.ActiveObjectI {
 
 // attribute get/set
 
-func (tw *Tower) GetReqCh() chan<- interface{} {
-	return tw.recvRequestCh
+func (tw *Tower) GetCmdCh() chan<- interface{} {
+	return tw.cmdCh
 }
 
-func (tw *Tower) ReqChState() string {
-	return fmt.Sprintf("%v/%v", len(tw.recvRequestCh), cap(tw.recvRequestCh))
+func (tw *Tower) CmdChState() string {
+	return fmt.Sprintf("%v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 }
 
 func (tw *Tower) GetUUID() string {

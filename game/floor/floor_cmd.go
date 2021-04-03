@@ -93,7 +93,7 @@ func (f *Floor) processCmd(data interface{}) {
 				f.log.Error("%v", err)
 			}
 			go func() {
-				f.GetReqCh() <- &cmd2floor.Turn{Now: time.Now()}
+				f.GetCmdCh() <- &cmd2floor.Turn{Now: time.Now()}
 			}()
 		}
 

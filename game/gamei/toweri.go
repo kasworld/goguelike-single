@@ -21,7 +21,7 @@ type TowerI interface {
 	GetUUID() string
 	String() string
 
-	GetReqCh() chan<- interface{}
+	GetCmdCh() chan<- interface{}
 
 	GetBias() bias.Bias
 

@@ -109,7 +109,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
 	rspCh := make(chan c2t_error.ErrorCode, 1)
-	tw.GetReqCh() <- &cmd2tower.AdminTowerCmd{
+	tw.GetCmdCh() <- &cmd2tower.AdminTowerCmd{
 		ActiveObj:  ao,
 		RecvPacket: robj,
 		RspCh:      rspCh,
@@ -149,7 +149,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
-	f.GetReqCh() <- &cmd2floor.APIAdminCmd2Floor{
+	f.GetCmdCh() <- &cmd2floor.APIAdminCmd2Floor{
 		ActiveObj: ao,
 		ReqPk:     robj,
 		RspCh:     rspCh,
@@ -204,7 +204,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
 	rspCh := make(chan c2t_error.ErrorCode, 1)
-	tw.GetReqCh() <- &cmd2tower.AdminFloorMove{
+	tw.GetCmdCh() <- &cmd2tower.AdminFloorMove{
 		ActiveObj:  ao,
 		RecvPacket: robj,
 		RspCh:      rspCh,
@@ -242,7 +242,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	rspCh := make(chan c2t_error.ErrorCode, 1)
-	f.GetReqCh() <- &cmd2floor.APIAdminTeleport2Floor{
+	f.GetCmdCh() <- &cmd2floor.APIAdminTeleport2Floor{
 		ActiveObj: ao,
 		ReqPk:     robj,
 		RspCh:     rspCh,

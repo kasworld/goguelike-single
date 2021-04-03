@@ -66,7 +66,7 @@ type Tower struct {
 	rnd     *g2rand.G2Rand `prettystring:"hide"`
 	log     *g2log.LogBase `prettystring:"hide"`
 
-	recvRequestCh chan interface{}
+	cmdCh chan interface{}
 
 	// async turn one at a time
 	inTurn int32
@@ -269,7 +269,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
 	queuesize := totalaocount * 2
-	tw.recvRequestCh = make(chan interface{}, queuesize*2)
+	tw.cmdCh = make(chan interface{}, queuesize*2)
 
 	go tw.runTower(ctx)
 	for _, f := range tw.floorMan.GetFloorList() {
@@ -309,11 +309,11 @@ loop:
 			tw.cmdActStat.UpdateLap()
 			tw.sendStat.UpdateLap()
 			tw.recvStat.UpdateLap()
-			if len(tw.recvRequestCh) > cap(tw.recvRequestCh)/2 {
+			if len(tw.cmdCh) > cap(tw.cmdCh)/2 {
 				tw.log.Fatal("Tower reqch overloaded %v/%v",
-					len(tw.recvRequestCh), cap(tw.recvRequestCh))
+					len(tw.cmdCh), cap(tw.cmdCh))
 			}
-			if len(tw.recvRequestCh) >= cap(tw.recvRequestCh) {
+			if len(tw.cmdCh) >= cap(tw.cmdCh) {
 				break loop
 			}
 		}
@@ -333,7 +333,7 @@ loop:
 		case <-ctx.Done():
 			break loop
 
-		case data := <-tw.recvRequestCh:
+		case data := <-tw.cmdCh:
 			tw.processCmd(data)
 
 		case <-rankMakeTk.C:

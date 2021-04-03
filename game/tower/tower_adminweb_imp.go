@@ -50,7 +50,7 @@ func (tw *Tower) web_KickActiveObj(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rspCh := make(chan error, 1)
-	tw.GetReqCh() <- &cmd2tower.ActiveObjLeaveTower{
+	tw.GetCmdCh() <- &cmd2tower.ActiveObjLeaveTower{
 		ActiveObjUUID: id,
 		RspCh:         rspCh,
 	}

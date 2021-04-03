@@ -78,7 +78,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	if tw.playerAO != nil {
 		tw.playerAO.Resume(c2sc)
 		rspCh := make(chan error, 1)
-		tw.GetReqCh() <- &cmd2tower.PlayerAOResumeTower{
+		tw.GetCmdCh() <- &cmd2tower.PlayerAOResumeTower{
 			RspCh: rspCh,
 		}
 		err = <-rspCh
@@ -94,7 +94,7 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 			c2sc)
 		tw.playerAO = newAO
 		rspCh := make(chan error, 1)
-		tw.GetReqCh() <- &cmd2tower.ActiveObjEnterTower{
+		tw.GetCmdCh() <- &cmd2tower.ActiveObjEnterTower{
 			ActiveObj: newAO,
 			RspCh:     rspCh,
 		}
@@ -250,7 +250,7 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 	}
 	spacket := &c2t_obj.RspMoveFloor_data{}
 
-	tw.GetReqCh() <- &cmd2tower.FloorMove{
+	tw.GetCmdCh() <- &cmd2tower.FloorMove{
 		ActiveObj: ao,
 		FloorName: robj.UUID,
 	}

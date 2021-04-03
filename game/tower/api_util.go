@@ -25,6 +25,6 @@ func (tw *Tower) api_me2ao(me interface{}) (gamei.ActiveObjectI, error) {
 
 func (tw *Tower) triggerTurnByCmd(cmd c2t_idcmd.CommandID) {
 	if cmd.TriggerTurn() {
-		tw.GetReqCh() <- &cmd2tower.Turn{Now: time.Now()}
+		tw.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
 	}
 }

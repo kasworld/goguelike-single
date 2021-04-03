@@ -229,7 +229,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	<a href= "/towerStat" target="_blank">Tower Achieve</a>
     <br/>
-	TowerCmd act : {{.ReqChState}} {{.GetTowerCmdActStat}}
+	TowerCmd act : {{.CmdChState}} {{.GetTowerCmdActStat}}
     <br/>
     <a href="/StatServeAPI" target="_blank">{{.GetProtocolStat}}</a>
     <br/>
@@ -284,7 +284,7 @@ const (
 		{{$v.GetName}}
 	</a>
 	</td>
-	<td>{{$v.ReqChState}} {{$v.GetCmdFloorActStat}}
+	<td>{{$v.CmdChState}} {{$v.GetCmdFloorActStat}}
 	</td>
 	<td>
 	<a href= "/terrain?floorname={{$v.GetName}}" target="_blank">

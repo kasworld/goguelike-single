@@ -34,13 +34,13 @@ func (f *Floor) GetName() string {
 	return f.terrain.GetName()
 }
 
-func (f *Floor) GetReqCh() chan<- interface{} {
-	return f.recvRequestCh
+func (f *Floor) GetCmdCh() chan<- interface{} {
+	return f.cmdCh
 }
 
-func (f *Floor) ReqChState() string {
+func (f *Floor) CmdChState() string {
 	return fmt.Sprintf("%v/%v",
-		len(f.recvRequestCh), cap(f.recvRequestCh),
+		len(f.cmdCh), cap(f.cmdCh),
 	)
 }
 
