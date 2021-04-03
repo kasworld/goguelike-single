@@ -17,6 +17,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
+	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
@@ -92,9 +93,8 @@ func (f *Floor) processCmd(data interface{}) {
 			); err != nil {
 				f.log.Error("%v", err)
 			}
-			go func() {
-				f.GetCmdCh() <- &cmd2floor.Turn{Now: time.Now()}
-			}()
+
+			f.tower.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
 		}
 
 	case *cmd2floor.ReqRebirth2Floor:

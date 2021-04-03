@@ -263,7 +263,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	}
 	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
-	queuesize := totalaocount * 2
+	queuesize := totalaocount * 4
 	tw.cmdCh = make(chan interface{}, queuesize*2)
 
 	go tw.runTower(ctx)
