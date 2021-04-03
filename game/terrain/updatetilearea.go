@@ -31,7 +31,7 @@ func (tr *Terrain) openBlockedDoor() {
 			if t.CannotPlaceObj() {
 				if tr.roomManager.GetRoomByPos(x, y) != nil {
 					tr.serviceTileArea[x][y].OverrideBits(tile.Door)
-					tr.log.Warn("wall blocked door found %v [%v %v], change to door", tr, x, y)
+					tr.log.Debug("wall blocked door found %v [%v %v], change to door", tr, x, y)
 				}
 			}
 		}

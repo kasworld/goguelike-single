@@ -47,7 +47,7 @@ func cmdAddRecyclerRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddRecyclerRand add insufficient")
+		tr.log.Debug("AddRecyclerRand add insufficient")
 	}
 	return nil
 }
@@ -69,7 +69,7 @@ func cmdAddRecyclerRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddRecyclerRand add insufficient")
+		tr.log.Debug("AddRecyclerRand add insufficient")
 	}
 	return nil
 }

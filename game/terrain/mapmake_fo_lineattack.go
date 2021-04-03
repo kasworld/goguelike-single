@@ -54,7 +54,7 @@ func cmdAddRotateLineAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddRotateLineAttackRand add insufficient")
+		tr.log.Debug("AddRotateLineAttackRand add insufficient")
 	}
 	return nil
 }
@@ -79,7 +79,7 @@ func cmdAddRotateLineAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) erro
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddRotateLineAttackRand add insufficient")
+		tr.log.Debug("AddRotateLineAttackRand add insufficient")
 	}
 	return nil
 }

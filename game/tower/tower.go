@@ -268,7 +268,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	for _, f := range tw.floorMan.GetFloorList() {
 		totalaocount += f.GetTerrain().GetActiveObjCount()
 	}
-	tw.log.Warn("Total system ActiveObj in tower %v", totalaocount)
+	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
 	queuesize := totalaocount * 2
 	tw.recvRequestCh = make(chan interface{}, queuesize*2)

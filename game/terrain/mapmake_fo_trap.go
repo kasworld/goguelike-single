@@ -50,7 +50,7 @@ func cmdAddTrapRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddTrapRand add insufficient")
+		tr.log.Debug("AddTrapRand add insufficient")
 	}
 	return nil
 }
@@ -73,7 +73,7 @@ func cmdAddTrapRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddTrapRand add insufficient")
+		tr.log.Debug("AddTrapRand add insufficient")
 	}
 	return nil
 }

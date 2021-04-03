@@ -70,7 +70,7 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 	for try := 1; ; {
 		_, notvisitedRoom := tr.findNotConnectedRooms(roomGraph)
 		if len(notvisitedRoom) != 0 {
-			tr.log.Warn("%v rooms not fully connected %v, try more",
+			tr.log.Debug("%v rooms not fully connected %v, try more",
 				len(notvisitedRoom), tr)
 		} else {
 			break
