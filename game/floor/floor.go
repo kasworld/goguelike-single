@@ -34,10 +34,7 @@ import (
 var _ gamei.FloorI = &Floor{}
 
 func (f *Floor) String() string {
-	return fmt.Sprintf("Floor[%v Seed:%v]",
-		f.GetName(),
-		f.seed,
-	)
+	return fmt.Sprintf("Floor[%v]", f.GetName())
 }
 
 type Floor struct {

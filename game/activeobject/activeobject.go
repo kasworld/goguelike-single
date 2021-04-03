@@ -56,9 +56,8 @@ var SysAOIDMaker = idu64str.New("SysAOID")
 var _ gamei.ActiveObjectI = &ActiveObject{}
 
 func (ao *ActiveObject) String() string {
-	return fmt.Sprintf("ActiveObject[%v %v %v]",
+	return fmt.Sprintf("ActiveObject[%v %v]",
 		ao.nickName,
-		ao.aoType,
 		ao.uuid,
 	)
 }
