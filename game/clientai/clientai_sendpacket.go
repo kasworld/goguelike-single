@@ -39,11 +39,11 @@ func (cai *ClientAI) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 		Body: body,
 	}
 	if err := cai.towerConn.EnqueueSendPacket(&spk); err != nil {
-		cai.log.Error("End %s %v %+v %v",
-			cai, spk.Header, spk.Body, err)
+		cai.log.Error("End %v %+v %v",
+			spk.Header, spk.Body, err)
 		cai.sendRecvStop()
-		return fmt.Errorf("send fail %v %v:%v %v",
-			cai, cmd, pid, err)
+		return fmt.Errorf("send fail %v:%v %v",
+			cmd, pid, err)
 	}
 	return nil
 }
@@ -65,7 +65,7 @@ func (cai *ClientAI) reqLogin(authkey string) error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				cai.log.Fatal("%v %v %v %v", cai, hd, rsp, err)
+				cai.log.Fatal("%v %v %v", hd, rsp, err)
 				return err
 			}
 
@@ -117,7 +117,7 @@ func (cai *ClientAI) reqAchieveInfo() error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				cai.log.Fatal("%v %v %v %v", cai, hd, rsp, err)
+				cai.log.Fatal("%v %v %v", hd, rsp, err)
 				return err
 			}
 			rpk := robj.(*c2t_obj.RspAchieveInfo_data)
