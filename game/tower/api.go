@@ -49,16 +49,16 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqLogin_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 
 	if c2sc.WebConnData().Logined {
 		// double login try
-		return hd, nil, fmt.Errorf("connection already logined", r)
+		return hd, nil, fmt.Errorf("connection already logined %v", r)
 	}
 
 	rhd := c2t_packet.Header{
@@ -125,11 +125,11 @@ func (tw *Tower) bytesAPIFn_ReqHeartbeat(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqHeartbeat_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 
 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
@@ -149,11 +149,11 @@ func (tw *Tower) bytesAPIFn_ReqChat(
 	c2t_packet.Header, interface{}, error) {
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqChat_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -238,11 +238,11 @@ func (tw *Tower) bytesAPIFn_ReqMoveFloor(
 	c2t_packet.Header, interface{}, error) {
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqMoveFloor_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -268,11 +268,11 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqAIPlay_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {

@@ -16,7 +16,6 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
-	"sync"
 	"time"
 
 	"github.com/kasworld/actpersec"
@@ -61,15 +60,11 @@ func (tw *Tower) String() string {
 }
 
 type Tower struct {
-	mutex   sync.RWMutex   `prettystring:"hide"`
 	doClose func()         `prettystring:"hide"`
 	rnd     *g2rand.G2Rand `prettystring:"hide"`
 	log     *g2log.LogBase `prettystring:"hide"`
 
 	cmdCh chan interface{}
-
-	// async turn one at a time
-	inTurn int32
 
 	sconfig    *towerconfig.TowerConfig
 	seed       int64
