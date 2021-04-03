@@ -310,14 +310,15 @@ loop:
 			tw.sendStat.UpdateLap()
 			tw.recvStat.UpdateLap()
 			if len(tw.cmdCh) > cap(tw.cmdCh)/2 {
-				tw.log.Fatal("Tower reqch overloaded %v/%v",
-					len(tw.cmdCh), cap(tw.cmdCh))
+				tw.log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 			}
 			if len(tw.cmdCh) >= cap(tw.cmdCh) {
+				tw.log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 				break loop
 			}
 		}
 	}
+	tw.doClose()
 }
 
 func (tw *Tower) runTower(ctx context.Context) {

@@ -139,17 +139,17 @@ loop:
 			f.statPacketObjOver.UpdateLap()
 			f.cmdActStat.UpdateLap()
 			if len(f.cmdCh) > cap(f.cmdCh)/2 {
-				f.log.Fatal("Floor %v %v reqch overloaded %v/%v",
-					f.terrain.Name, f.GetName(),
-					len(f.cmdCh), cap(f.cmdCh))
+				f.log.Fatal("Floor %v cmdch overloaded %v/%v",
+					f.GetName(), len(f.cmdCh), cap(f.cmdCh))
 			}
 			if len(f.cmdCh) >= cap(f.cmdCh) {
+				f.log.Fatal("Floor %v cmdch overloaded %v/%v",
+					f.GetName(), len(f.cmdCh), cap(f.cmdCh))
 				break loop
 			}
 
 		case data := <-f.cmdCh:
 			f.processCmd(data)
-
 		}
 	}
 }
