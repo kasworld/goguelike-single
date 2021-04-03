@@ -263,8 +263,12 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	}
 	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
-	queuesize := totalaocount * 4
-	tw.cmdCh = make(chan interface{}, queuesize*2)
+	queuesize := totalaocount * 100
+	tw.cmdCh = make(chan interface{}, queuesize)
+	if tw.cmdCh == nil {
+		tw.log.Fatal("fail to make cmdCh %v", queuesize)
+		return
+	}
 
 	go tw.runTower(ctx)
 	for _, f := range tw.floorMan.GetFloorList() {

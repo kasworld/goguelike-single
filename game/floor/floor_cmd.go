@@ -121,7 +121,7 @@ func (f *Floor) processCmd(data interface{}) {
 		f.processTurn(pk.Now)
 		turnPerAge := f.terrain.GetMSPerAgeing() / 1000
 		if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
-			go f.processAgeing()
+			f.processAgeing()
 		}
 	}
 }

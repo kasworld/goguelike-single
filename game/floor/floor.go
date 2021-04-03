@@ -122,6 +122,10 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	defer func() { f.log.TraceService("End Run %v", f) }()
 
 	f.cmdCh = make(chan interface{}, queuesize)
+	if f.cmdCh == nil {
+		f.log.Fatal("%v fail to make cmdCh %v", f, queuesize)
+		return
+	}
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
