@@ -95,11 +95,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqAdminTowerCmd_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -126,11 +126,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorCmd(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqAdminFloorCmd_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -166,11 +166,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminActiveObjCmd(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqAdminActiveObjCmd_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -190,11 +190,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMove(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqAdminFloorMove_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	ao, err := tw.api_me2ao(me)
 	if err != nil {
@@ -221,11 +221,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminTeleport(
 
 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	robj, ok := r.(*c2t_obj.ReqAdminTeleport_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", r)
+		return hd, nil, fmt.Errorf("packet type miss match %v", r)
 	}
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -259,11 +259,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddExp(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminAddExp_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -286,11 +286,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminPotionEffect(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminPotionEffect_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -316,11 +316,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminScrollEffect(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminScrollEffect_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	sendHeader := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
@@ -345,11 +345,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminCondition(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminCondition_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 
 	sendHeader := c2t_packet.Header{
@@ -379,11 +379,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddPotion(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminAddPotion_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	_ = recvBody
 
@@ -409,11 +409,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddScroll(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminAddScroll_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	_ = recvBody
 
@@ -439,11 +439,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddMoney(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminAddMoney_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	_ = recvBody
 
@@ -470,11 +470,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminAddEquip(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminAddEquip_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	_ = recvBody
 
@@ -503,11 +503,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminForgetFloor(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminForgetFloor_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	_ = recvBody
 
@@ -539,11 +539,11 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMap(
 	c2t_packet.Header, interface{}, error) {
 	robj, err := c2t_gob.UnmarshalPacket(hd, rbody)
 	if err != nil {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", rbody)
+		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
 	recvBody, ok := robj.(*c2t_obj.ReqAdminFloorMap_data)
 	if !ok {
-		return hd, nil, fmt.Errorf("Packet type miss match %v", robj)
+		return hd, nil, fmt.Errorf("packet type miss match %v", robj)
 	}
 	_ = recvBody
 
