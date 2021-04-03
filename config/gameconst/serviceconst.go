@@ -13,12 +13,12 @@ package gameconst
 
 // service const
 const (
-	ServerPacketReadTimeOutSec  = 6
-	ServerPacketWriteTimeoutSec = 3
+	ServerPacketReadTimeOutSec  = 60
+	ServerPacketWriteTimeoutSec = 30
 
 	// for client
-	ClientReadTimeoutSec  = 6
-	ClientWriteTimeoutSec = 3
+	ClientReadTimeoutSec  = 60
+	ClientWriteTimeoutSec = 30
 
 	TileAreaSplitSize = 0x10000
 )
