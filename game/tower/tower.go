@@ -264,7 +264,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	}
 	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
-	queuesize := totalaocount * 10
+	queuesize := totalaocount * 2
 	tw.cmdCh = make(chan interface{}, queuesize)
 	if tw.cmdCh == nil {
 		tw.log.Fatal("fail to make cmdCh %v", queuesize)
