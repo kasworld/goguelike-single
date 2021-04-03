@@ -38,6 +38,10 @@ func (f *Floor) GetCmdCh() chan<- interface{} {
 	return f.cmdCh
 }
 
+func (f *Floor) CmdChRate() float64 {
+	return float64(len(f.cmdCh)) / float64(cap(f.cmdCh))
+}
+
 func (f *Floor) CmdChState() string {
 	return fmt.Sprintf("%v/%v",
 		len(f.cmdCh), cap(f.cmdCh),

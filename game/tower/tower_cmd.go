@@ -61,6 +61,12 @@ func (tw *Tower) processCmd(data interface{}) {
 
 	case *cmd2tower.Turn:
 		for _, f := range tw.floorMan.GetFloorList() {
+			if f.CmdChRate() > 0.5 {
+				tw.log.Error("%v overload skip turn", f)
+				return
+			}
+		}
+		for _, f := range tw.floorMan.GetFloorList() {
 			f.GetCmdCh() <- &cmd2floor.Turn{Now: pk.Now}
 		}
 	}

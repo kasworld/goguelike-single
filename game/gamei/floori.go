@@ -47,6 +47,7 @@ type FloorI interface {
 	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 
 	GetCmdCh() chan<- interface{}
+	CmdChRate() float64
 	Run(ctx context.Context, queuesize int)
 
 	TotalActiveObjCount() int
