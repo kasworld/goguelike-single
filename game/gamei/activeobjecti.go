@@ -29,7 +29,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/floor4client"
-	"github.com/kasworld/goguelike-single/lib/scriptparse"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -139,7 +138,6 @@ type ActiveObjectI interface {
 	MakeFloorComplete(f FloorI) error
 
 	DoAdminCmd(cmd, args string) c2t_error.ErrorCode
-	DoParsedAdminCmd(ca *scriptparse.CmdArgs) error
 }
 
 const (

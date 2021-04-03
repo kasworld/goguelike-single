@@ -85,10 +85,6 @@ func init() {
 	}
 }
 
-func adminActiveObjCmd(ao gamei.ActiveObjectI, ca *scriptparse.CmdArgs) error {
-	return ao.DoParsedAdminCmd(ca)
-}
-
 func (tw *Tower) bytesAPIFn_ReqAdminTowerCmd(
 	me interface{}, hd c2t_packet.Header, rbody []byte) (
 	c2t_packet.Header, interface{}, error) {
