@@ -14,6 +14,7 @@ package tower
 import (
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
+	"github.com/kasworld/goguelike-single/game/cmd2floor"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
@@ -22,7 +23,8 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
-func (tw *Tower) processCmd2Tower(data interface{}) {
+func (tw *Tower) processCmd(data interface{}) {
+	tw.cmdActStat.Inc()
 	switch pk := data.(type) {
 	default:
 		tw.log.Fatal("unknown tower cmd %#v", data)
@@ -56,6 +58,11 @@ func (tw *Tower) processCmd2Tower(data interface{}) {
 
 	case *cmd2tower.ActiveObjRebirth:
 		tw.Call_ActiveObjRebirth(pk.ActiveObj)
+
+	case *cmd2tower.Turn:
+		for _, f := range tw.floorMan.GetFloorList() {
+			f.GetReqCh() <- &cmd2floor.Turn{Now: pk.Now}
+		}
 	}
 }
 

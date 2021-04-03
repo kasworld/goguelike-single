@@ -69,7 +69,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 		}
 	}
-	f.floorCmdActStat.Add(len(ao2ActReqRsp))
+	f.cmdActStat.Add(len(ao2ActReqRsp))
 
 	f.log.Monitor("%v ActiveObj:%v Alive:%v Acted:%v",
 		f,

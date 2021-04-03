@@ -14,6 +14,7 @@ package tower
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/gameconst"
@@ -320,6 +321,7 @@ func (tw *Tower) bytesAPIFn_ReqPassTurn(
 	c2t_packet.Header, interface{}, error) {
 
 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+	time.Sleep(time.Second / time.Duration(tw.sconfig.TurnPerSec))
 
 	spacket := &c2t_obj.RspPassTurn_data{}
 	return c2t_packet.Header{

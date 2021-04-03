@@ -17,7 +17,6 @@ import (
 	"net/http"
 	"path/filepath"
 	"sync"
-	"sync/atomic"
 	"time"
 
 	"github.com/kasworld/actpersec"
@@ -89,7 +88,6 @@ type Tower struct {
 	// single player
 	playerConnection *c2t_serveconnbyte.ServeConnByte
 	playerAO         *activeobject.ActiveObject
-	turnTriggerCh    chan time.Time
 
 	towerAchieveStat       *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat               *actpersec.ActPerSec                    `prettystring:"simple"`
@@ -103,7 +101,7 @@ type Tower struct {
 		c2t_packet.Header, interface{}, error) `prettystring:"hide"`
 
 	// tower cmd stats
-	towerCmdActStat *actpersec.ActPerSec `prettystring:"simple"`
+	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
 
 	adminWeb  *http.Server `prettystring:"simple"`
 	clientWeb *http.Server `prettystring:"simple"`
@@ -148,7 +146,7 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		protocolStat:     c2t_statserveapi.New(),
 		notiStat:         c2t_statnoti.New(),
 		errorStat:        c2t_statapierror.New(),
-		towerCmdActStat:  actpersec.New(),
+		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
 	}
 
@@ -308,7 +306,7 @@ loop:
 		case <-ctx.Done():
 			break loop
 		case <-timerInfoTk.C:
-			tw.towerCmdActStat.UpdateLap()
+			tw.cmdActStat.UpdateLap()
 			tw.sendStat.UpdateLap()
 			tw.recvStat.UpdateLap()
 			if len(tw.recvRequestCh) > cap(tw.recvRequestCh)/2 {
@@ -326,8 +324,6 @@ func (tw *Tower) runTower(ctx context.Context) {
 	tw.log.TraceService("Start Run %v", tw)
 	defer func() { tw.log.TraceService("End Run %v", tw) }()
 
-	tw.turnTriggerCh = make(chan time.Time)
-
 	rankMakeTk := time.NewTicker(1 * time.Second)
 	defer rankMakeTk.Stop()
 
@@ -338,37 +334,14 @@ loop:
 			break loop
 
 		case data := <-tw.recvRequestCh:
-			tw.towerCmdActStat.Inc()
-			go tw.processCmd2Tower(data)
+			tw.processCmd(data)
 
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
 
-		case now := <-tw.turnTriggerCh:
-			if tw.playerConnection != nil {
-				// only player online
-				go tw.turnAllFloors(now)
-			}
 		}
 	}
 	tw.doClose()
-}
-
-func (tw *Tower) turnAllFloors(now time.Time) {
-	if atomic.CompareAndSwapInt32(&tw.inTurn, 0, 1) {
-		defer atomic.AddInt32(&tw.inTurn, -1)
-		var wg sync.WaitGroup
-		for _, f := range tw.floorMan.GetFloorList() {
-			wg.Add(1)
-			go func(f gamei.FloorI) {
-				f.GetTurnTriggerCh() <- now
-				wg.Done()
-			}(f)
-		}
-		wg.Wait()
-	} else {
-		tw.log.Warn("turnAllFloors skipped %v", tw)
-	}
 }
 
 func (tw *Tower) makeActiveObjExpRank() {

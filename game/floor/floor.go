@@ -62,11 +62,10 @@ type Floor struct {
 
 	interDur          *intervalduration.IntervalDuration `prettystring:"simple"`
 	statPacketObjOver *actpersec.ActPerSec               `prettystring:"simple"`
-	floorCmdActStat   *actpersec.ActPerSec               `prettystring:"simple"`
+	cmdActStat        *actpersec.ActPerSec               `prettystring:"simple"`
 
 	// for actturn data
 	recvRequestCh chan interface{}
-	turnTriggerCh chan time.Time
 
 	aiWG sync.WaitGroup // for ai run
 }
@@ -79,7 +78,7 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 		rnd:               g2rand.NewWithSeed(seed),
 		interDur:          intervalduration.New(""),
 		statPacketObjOver: actpersec.New(),
-		floorCmdActStat:   actpersec.New(),
+		cmdActStat:        actpersec.New(),
 	}
 	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder, f.log)
 	return f
@@ -126,9 +125,6 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	defer func() { f.log.TraceService("End Run %v", f) }()
 
 	f.recvRequestCh = make(chan interface{}, queuesize)
-	f.turnTriggerCh = make(chan time.Time)
-
-	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
@@ -141,7 +137,7 @@ loop:
 
 		case <-timerInfoTk.C:
 			f.statPacketObjOver.UpdateLap()
-			f.floorCmdActStat.UpdateLap()
+			f.cmdActStat.UpdateLap()
 			if len(f.recvRequestCh) > cap(f.recvRequestCh)/2 {
 				f.log.Fatal("Floor %v %v reqch overloaded %v/%v",
 					f.terrain.Name, f.GetName(),
@@ -152,16 +148,8 @@ loop:
 			}
 
 		case data := <-f.recvRequestCh:
-			f.floorCmdActStat.Inc()
-			f.processCmd2Floor(data)
+			f.processCmd(data)
 
-		case turnTime := <-f.turnTriggerCh:
-			if turnPerAge > 0 {
-				if f.interDur.GetCount()%int(turnPerAge) == 0 {
-					go f.processAgeing()
-				}
-			}
-			f.processTurn(turnTime)
 		}
 	}
 }

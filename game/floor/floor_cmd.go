@@ -24,7 +24,8 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
-func (f *Floor) processCmd2Floor(data interface{}) {
+func (f *Floor) processCmd(data interface{}) {
+	f.cmdActStat.Inc()
 	switch pk := data.(type) {
 	default:
 		f.log.Fatal("unknown pk recv %v %#v", f, data)
@@ -92,7 +93,7 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 				f.log.Error("%v", err)
 			}
 			go func() {
-				f.GetTurnTriggerCh() <- time.Now()
+				f.GetReqCh() <- &cmd2floor.Turn{Now: time.Now()}
 			}()
 		}
 
@@ -116,6 +117,12 @@ func (f *Floor) processCmd2Floor(data interface{}) {
 	case *cmd2floor.APIAdminCmd2Floor:
 		pk.RspCh <- f.Call_APIAdminCmd2Floor(pk.ActiveObj, pk.ReqPk)
 
+	case *cmd2floor.Turn:
+		f.processTurn(pk.Now)
+		turnPerAge := f.terrain.GetMSPerAgeing() / 1000
+		if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
+			go f.processAgeing()
+		}
 	}
 }
 

@@ -137,7 +137,7 @@ func (tw *Tower) GetTowerInfo() *c2t_obj.TowerInfo {
 }
 
 func (tw *Tower) GetTowerCmdActStat() *actpersec.ActPerSec {
-	return tw.towerCmdActStat
+	return tw.cmdActStat
 }
 
 func (tw *Tower) SysAOID() string {

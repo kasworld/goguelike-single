@@ -13,6 +13,7 @@ package cmd2tower
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
@@ -128,4 +129,8 @@ func (pk ActiveObjRebirth) String() string {
 		"ActiveObjRebirth[%v]",
 		pk.ActiveObj,
 	)
+}
+
+type Turn struct {
+	Now time.Time
 }

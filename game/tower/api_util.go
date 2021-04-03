@@ -14,6 +14,7 @@ package tower
 import (
 	"time"
 
+	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
@@ -24,9 +25,6 @@ func (tw *Tower) api_me2ao(me interface{}) (gamei.ActiveObjectI, error) {
 
 func (tw *Tower) triggerTurnByCmd(cmd c2t_idcmd.CommandID) {
 	if cmd.TriggerTurn() {
-		go func() {
-			time.Sleep(time.Second / time.Duration(tw.sconfig.TurnPerSec))
-			tw.GetTurnTriggerCh() <- time.Now()
-		}()
+		tw.GetReqCh() <- &cmd2tower.Turn{Now: time.Now()}
 	}
 }
