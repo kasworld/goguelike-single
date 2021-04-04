@@ -33,7 +33,7 @@ func init() {
 }
 
 func printVersion() {
-	fmt.Println("Goguelike service tower")
+	fmt.Println("Goguelike-single")
 	fmt.Println("Build     ", version.GetVersion())
 	fmt.Println("Data      ", dataversion.DataVersion)
 	fmt.Println("Protocol  ", c2t_version.ProtocolVersion)
@@ -76,5 +76,4 @@ func main() {
 	if profile.IsMem() {
 		profile.WriteHeapProfile()
 	}
-
 }
