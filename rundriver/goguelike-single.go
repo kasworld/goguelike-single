@@ -12,6 +12,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
@@ -22,7 +23,6 @@ import (
 	"github.com/kasworld/goguelike-single/config/towerconfig"
 	"github.com/kasworld/goguelike-single/game/tower"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
-	"github.com/kasworld/signalhandlewin"
 	"github.com/kasworld/version"
 )
 
@@ -44,7 +44,6 @@ func main() {
 	printVersion()
 
 	configurl := flag.String("i", "", "server config file or url")
-	signalhandlewin.AddArgs()
 	profile.AddArgs()
 
 	ads := argdefault.New(&towerconfig.TowerConfig{})
@@ -67,9 +66,14 @@ func main() {
 	}
 
 	tw := tower.New(config)
-	if err := signalhandlewin.StartByArgs(tw); err != nil {
+	if err := tw.ServiceInit(); err != nil {
 		fmt.Printf("%v\n", err)
+	} else {
+		tw.ServiceMain(context.Background())
+		tw.ServiceCleanup()
 	}
+	tw.ServiceMain(context.Background())
+	tw.ServiceCleanup()
 
 	if profile.IsMem() {
 		profile.WriteHeapProfile()
