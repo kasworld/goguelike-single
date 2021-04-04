@@ -30,14 +30,13 @@ func init() {
 }
 
 func main() {
-	configurl := flag.String("i", "", "client config file or url")
+	configurl := flag.String("i", "", "config file or url")
 
 	ads := argdefault.New(&textclientconfig.TextClientConfig{})
 	ads.RegisterFlag()
 	flag.Parse()
 	config := &textclientconfig.TextClientConfig{
-		LogLevel:      g2log.LL_All,
-		SplitLogLevel: 0,
+		LogLevel: g2log.LL_All,
 	}
 	ads.SetDefaultToNonZeroField(config)
 	if *configurl != "" {

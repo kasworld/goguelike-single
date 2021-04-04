@@ -43,7 +43,7 @@ func printVersion() {
 func main() {
 	printVersion()
 
-	configurl := flag.String("i", "", "server config file or url")
+	configurl := flag.String("i", "", "config file or url")
 	profile.AddArgs()
 
 	ads := argdefault.New(&towerconfig.TowerConfig{})
@@ -52,13 +52,11 @@ func main() {
 	config := &towerconfig.TowerConfig{}
 	ads.SetDefaultToNonZeroField(config)
 	if *configurl != "" {
-		// fmt.Printf("load ini %v\n", *configurl)
 		if err := configutil.LoadIni(*configurl, &config); err != nil {
 			fmt.Printf("%v\n", err)
 		}
 	}
 	ads.ApplyFlagTo(config)
-	// fmt.Println("after ApplyArgsTo", prettystring.PrettyString(config, 4))
 
 	if profile.IsCpu() {
 		fn := profile.StartCPUProfile()

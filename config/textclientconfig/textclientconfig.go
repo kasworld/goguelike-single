@@ -22,7 +22,7 @@ import (
 type TextClientConfig struct {
 	BaseLogDir        string        `default:"" argname:""`
 	LogLevel          g2log.LL_Type `argname:""`
-	SplitLogLevel     g2log.LL_Type `argname:""`
+	SplitLogLevel     g2log.LL_Type `default:"0" argname:""`
 	ConnectToTower    string        `default:"localhost:14101" argname:""`
 	DisconnectOnDeath bool          `default:"false" argname:""`
 	Auth              string        `default:"debug" argname:""`
