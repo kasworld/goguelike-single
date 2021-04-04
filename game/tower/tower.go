@@ -53,10 +53,8 @@ import (
 var _ gamei.TowerI = &Tower{}
 
 func (tw *Tower) String() string {
-	return fmt.Sprintf("Tower[%v Seed:%v %v]",
-		tw.sconfig.TowerName,
-		tw.seed,
-		tw.uuid,
+	return fmt.Sprintf("Tower[Seed:%v %v]",
+		tw.seed, tw.uuid,
 	)
 }
 
@@ -108,7 +106,7 @@ func New(config *towerconfig.TowerConfig) *Tower {
 
 	if config.BaseLogDir != "" {
 		log, err := g2log.NewWithDstDir(
-			config.TowerName,
+			config.ScriptFilename,
 			config.MakeLogDir(),
 			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
 			config.LogLevel,
@@ -221,7 +219,7 @@ func (tw *Tower) ServiceInit() error {
 	tw.towerInfo = &c2t_obj.TowerInfo{
 		StartTime:     tw.startTime,
 		UUID:          tw.uuid,
-		Name:          tw.sconfig.TowerName,
+		Name:          tw.sconfig.ScriptFilename,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
 	}
@@ -265,6 +263,9 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
 	queuesize := totalaocount * 2
+	if queuesize <= 0 {
+		queuesize = 100
+	}
 	tw.cmdCh = make(chan interface{}, queuesize)
 	if tw.cmdCh == nil {
 		tw.log.Fatal("fail to make cmdCh %v", queuesize)

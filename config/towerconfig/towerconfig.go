@@ -38,14 +38,13 @@ type TowerConfig struct {
 	ServicePort    int     `default:"14101" argname:""`
 	AdminPort      int     `default:"14201" argname:""`
 	ScriptFilename string  `default:"start" argname:""`
-	TowerName      string  `default:"Default" argname:""`
 	TurnPerSec     float64 `default:"10.0" argname:""`
 }
 
 func (config *TowerConfig) MakeLogDir() string {
 	rstr := filepath.Join(config.BaseLogDir,
 		fmt.Sprintf("goguelike_tower_%v.logfiles",
-			config.TowerName),
+			config.ScriptFilename),
 	)
 	rtn, err := filepath.Abs(rstr)
 	if err != nil {
@@ -58,7 +57,7 @@ func (config *TowerConfig) MakeLogDir() string {
 func (config *TowerConfig) MakePIDFileFullpath() string {
 	rstr := filepath.Join(config.BaseLogDir,
 		fmt.Sprintf("goguelike_tower_%v.pid",
-			config.TowerName),
+			config.ScriptFilename),
 	)
 	rtn, err := filepath.Abs(rstr)
 	if err != nil {
@@ -81,7 +80,7 @@ func (config *TowerConfig) MakeTowerFileFullpath() string {
 
 func (config *TowerConfig) MakeOutfileFullpath() string {
 	rstr := fmt.Sprintf("goguelike_tower_%v.out",
-		config.TowerName)
+		config.ScriptFilename)
 	rtn, err := filepath.Abs(rstr)
 	if err != nil {
 		fmt.Println(rstr, rtn, err.Error())
