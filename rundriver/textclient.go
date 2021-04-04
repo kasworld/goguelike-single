@@ -35,9 +35,7 @@ func main() {
 	ads := argdefault.New(&textclientconfig.TextClientConfig{})
 	ads.RegisterFlag()
 	flag.Parse()
-	config := &textclientconfig.TextClientConfig{
-		LogLevel: g2log.LL_All,
-	}
+	config := &textclientconfig.TextClientConfig{}
 	ads.SetDefaultToNonZeroField(config)
 	if *configurl != "" {
 		if err := configutil.LoadIni(*configurl, config); err != nil {
