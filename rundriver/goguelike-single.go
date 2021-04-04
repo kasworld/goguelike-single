@@ -72,8 +72,6 @@ func main() {
 		tw.ServiceMain(context.Background())
 		tw.ServiceCleanup()
 	}
-	tw.ServiceMain(context.Background())
-	tw.ServiceCleanup()
 
 	if profile.IsMem() {
 		profile.WriteHeapProfile()
