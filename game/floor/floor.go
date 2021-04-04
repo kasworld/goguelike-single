@@ -131,6 +131,7 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
 
+	// split ch loop for blocked ch handle
 	go func() {
 	loop:
 		for {

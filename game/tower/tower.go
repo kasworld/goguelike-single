@@ -271,7 +271,20 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		return
 	}
 
-	go tw.runTower(ctx)
+	// start tower
+	go func() {
+	loop:
+		for {
+			select {
+			case <-ctx.Done():
+				break loop
+			case data := <-tw.cmdCh:
+				tw.processCmd(data)
+			}
+		}
+	}()
+
+	// start floor
 	for _, f := range tw.floorMan.GetFloorList() {
 		go func(f gamei.FloorI) {
 			f.Run(ctx, queuesize)
@@ -279,6 +292,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		}(f)
 	}
 
+	// add ao to tower/floor
 	for _, f := range tw.floorMan.GetFloorList() {
 		for i := 0; i < f.GetTerrain().GetActiveObjCount(); i++ {
 			ao := activeobject.NewSystemActiveObj(tw.rnd.Int63(), f, tw.log, tw.towerAchieveStat)
@@ -300,6 +314,8 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
+	rankMakeTk := time.NewTicker(1 * time.Second)
+	defer rankMakeTk.Stop()
 loop:
 	for {
 		select {
@@ -316,30 +332,8 @@ loop:
 				tw.log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 				break loop
 			}
-		}
-	}
-	tw.doClose()
-}
-
-func (tw *Tower) runTower(ctx context.Context) {
-	tw.log.TraceService("Start Run %v", tw)
-	defer func() { tw.log.TraceService("End Run %v", tw) }()
-
-	rankMakeTk := time.NewTicker(1 * time.Second)
-	defer rankMakeTk.Stop()
-
-loop:
-	for {
-		select {
-		case <-ctx.Done():
-			break loop
-
-		case data := <-tw.cmdCh:
-			tw.processCmd(data)
-
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
-
 		}
 	}
 	tw.doClose()
