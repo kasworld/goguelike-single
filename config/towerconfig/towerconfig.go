@@ -34,11 +34,10 @@ type TowerConfig struct {
 	AdminAuthKey     string        `default:"debug" argname:"" prettystring:"hidevalue"`
 
 	// config for each tower
-	Seed           int     `default:"0" argname:""` // <=0 time seed
-	ServicePort    int     `default:"14101" argname:""`
-	AdminPort      int     `default:"14201" argname:""`
-	ScriptFilename string  `default:"start" argname:""`
-	TurnPerSec     float64 `default:"10.0" argname:""`
+	Seed           int    `default:"0" argname:""` // <=0 time seed
+	ServicePort    int    `default:"14101" argname:""`
+	AdminPort      int    `default:"14201" argname:""`
+	ScriptFilename string `default:"start" argname:""`
 }
 
 func (config *TowerConfig) MakeLogDir() string {
