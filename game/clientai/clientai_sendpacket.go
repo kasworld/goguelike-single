@@ -56,12 +56,10 @@ func (cai *ClientAI) ReqWithRspFnWithAuth(cmd c2t_idcmd.CommandID, body interfac
 	return cai.ReqWithRspFn(cmd, body, fn)
 }
 
-func (cai *ClientAI) reqLogin(authkey string) error {
+func (cai *ClientAI) reqLogin() error {
 	return cai.ReqWithRspFn(
 		c2t_idcmd.Login,
-		&c2t_obj.ReqLogin_data{
-			AuthKey: authkey,
-		},
+		&c2t_obj.ReqLogin_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {

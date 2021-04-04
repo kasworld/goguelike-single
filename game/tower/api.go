@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
@@ -50,10 +49,10 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 	if err != nil {
 		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
 	}
-	robj, ok := r.(*c2t_obj.ReqLogin_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("packet type miss match %v", r)
-	}
+	// robj, ok := r.(*c2t_obj.ReqLogin_data)
+	// if !ok {
+	// 	return hd, nil, fmt.Errorf("packet type miss match %v", r)
+	// }
 
 	if c2sc.WebConnData().Logined {
 		// double login try
@@ -62,10 +61,6 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 
 	rhd := c2t_packet.Header{
 		ErrorCode: c2t_error.None,
-	}
-
-	if err := authdata.UpdateByAuthKey(c2sc.GetAuthorCmdList(), robj.AuthKey); err != nil {
-		return rhd, nil, err
 	}
 
 	// disconnect old conn if exist

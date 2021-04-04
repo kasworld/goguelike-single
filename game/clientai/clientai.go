@@ -142,9 +142,7 @@ func (cai *ClientAI) Run(mainctx context.Context) {
 		cai.sendRecvStop()
 	}()
 
-	if err := cai.reqLogin(
-		cai.config.Auth,
-	); err != nil {
+	if err := cai.reqLogin(); err != nil {
 		cai.runResult = err
 		cai.log.Error("%v", cai.runResult)
 		return

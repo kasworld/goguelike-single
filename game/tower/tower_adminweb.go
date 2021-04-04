@@ -41,11 +41,11 @@ func (tw *Tower) web_FaviconIco(w http.ResponseWriter, r *http.Request) {
 }
 
 func (tw *Tower) initAdminWeb() {
-	authdata := weblib.NewAuthData("tower")
-	authdata.ReLoadUserData([][2]string{
+	authData := weblib.NewAuthData("tower")
+	authData.ReLoadUserData([][2]string{
 		{tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass},
 	})
-	webMux := weblib.NewAuthMux(authdata, tw.log)
+	webMux := weblib.NewAuthMux(authData, tw.log)
 
 	if !version.IsRelease() {
 		webprofile.AddWebProfile(webMux)
@@ -76,7 +76,7 @@ func (tw *Tower) initAdminWeb() {
 
 	webMux.HandleFunc("/Config", tw.json_Config)
 
-	authdata.AddAllActionName(tw.sconfig.WebAdminID)
+	authData.AddAllActionName(tw.sconfig.WebAdminID)
 	tw.log.TraceService("%v", webMux)
 
 	tw.adminWeb = &http.Server{

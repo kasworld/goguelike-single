@@ -59,15 +59,12 @@ func (app *WasmClient) NetInit(ctx context.Context) error {
 			app.DoClose()
 		}
 	}()
-	authkey := GetQuery().Get("authkey")
 	wg.Wait()
 
 	wg.Add(1)
 	app.ReqWithRspFn(
 		c2t_idcmd.Login,
-		&c2t_obj.ReqLogin_data{
-			AuthKey: authkey,
-		},
+		&c2t_obj.ReqLogin_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			rpk := rsp.(*c2t_obj.RspLogin_data)
 			gInitData.ServiceInfo = rpk.ServiceInfo

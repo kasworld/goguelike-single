@@ -21,7 +21,6 @@ import (
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
-	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/config/gamedata"
 	"github.com/kasworld/goguelike-single/config/towerconfig"
@@ -158,7 +157,6 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		ProtocolVersion: c2t_version.ProtocolVersion,
 		DataVersion:     dataversion.DataVersion,
 	}
-	authdata.AddAdminKey(config.AdminAuthKey)
 	return tw
 }
 
@@ -230,8 +228,6 @@ func (tw *Tower) ServiceInit() error {
 		"http://localhost", tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
 	fmt.Printf("WebClient : %v:%v/\n",
 		"http://localhost", tw.sconfig.ServicePort)
-	fmt.Printf("WebClient with authkey : %v:%v/?authkey=%v\n",
-		"http://localhost", tw.sconfig.ServicePort, tw.sconfig.AdminAuthKey)
 
 	return nil
 }

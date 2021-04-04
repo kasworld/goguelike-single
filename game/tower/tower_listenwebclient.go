@@ -18,12 +18,12 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/kasworld/goguelike-single/config/authdata"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
 	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/lib/conndata"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_authorize"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
@@ -128,7 +128,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	c2sc := c2t_serveconnbyte.NewWithStats(
 		connData,
 		tw.floorMan.GetSendBufferSize(),
-		authdata.NewPreLoginAuthorCmdIDList(),
+		c2t_authorize.NewAllSet(),
 		tw.sendStat, tw.recvStat,
 		tw.protocolStat,
 		tw.notiStat,

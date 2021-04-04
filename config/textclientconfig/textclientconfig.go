@@ -25,7 +25,6 @@ type TextClientConfig struct {
 	SplitLogLevel     g2log.LL_Type `default:"0" argname:""`
 	ConnectToTower    string        `default:"localhost:14101" argname:""`
 	DisconnectOnDeath bool          `default:"false" argname:""`
-	Auth              string        `default:"debug" argname:""`
 }
 
 func (config *TextClientConfig) StringForm() string {
