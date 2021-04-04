@@ -363,7 +363,9 @@ func ai_actPlanRechargeCan(ao *ActiveObject, sai *ServerAIState) bool {
 	if ao.overloadRate(sai) > 1.0 {
 		return false
 	}
-	tl := ao.currentFloor.GetTerrain().GetTiles()[sai.aox][sai.aoy]
+	ter := ao.currentFloor.GetTerrain()
+	x, y := ter.WrapXY(sai.aox, sai.aoy)
+	tl := ter.GetTiles()[x][y]
 	if tl.Meditateable() {
 		if ao.GetHPRate() > 0.7 && ao.GetSPRate() > 0.7 {
 			// plan change to other
