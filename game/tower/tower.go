@@ -160,15 +160,6 @@ func New(config *towerconfig.TowerConfig) *Tower {
 	return tw
 }
 
-// return implement signalhandle.LoggerI
-func (tw *Tower) GetLogger() interface{} {
-	return tw.log
-}
-
-func (tw *Tower) GetServiceLockFilename() string {
-	return tw.sconfig.MakePIDFileFullpath()
-}
-
 func (tw *Tower) ServiceInit() error {
 	rd := recordduration.New(tw.String())
 

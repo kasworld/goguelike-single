@@ -52,33 +52,10 @@ func (config *TowerConfig) MakeLogDir() string {
 	return rtn
 }
 
-func (config *TowerConfig) MakePIDFileFullpath() string {
-	rstr := filepath.Join(config.BaseLogDir,
-		fmt.Sprintf("goguelike_tower_%v.pid",
-			config.ScriptFilename),
-	)
-	rtn, err := filepath.Abs(rstr)
-	if err != nil {
-		fmt.Println(rstr, rtn, err.Error())
-		return rstr
-	}
-	return rtn
-}
 func (config *TowerConfig) MakeTowerFileFullpath() string {
 	rstr := filepath.Join(config.DataFolder,
 		fmt.Sprintf("%v.tower", config.ScriptFilename),
 	)
-	rtn, err := filepath.Abs(rstr)
-	if err != nil {
-		fmt.Println(rstr, rtn, err.Error())
-		return rstr
-	}
-	return rtn
-}
-
-func (config *TowerConfig) MakeOutfileFullpath() string {
-	rstr := fmt.Sprintf("goguelike_tower_%v.out",
-		config.ScriptFilename)
 	rtn, err := filepath.Abs(rstr)
 	if err != nil {
 		fmt.Println(rstr, rtn, err.Error())
