@@ -30,7 +30,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/wasmclientgl/jsobj"
 	"github.com/kasworld/goguelike-single/game/wasmclientgl/soundmap"
 	"github.com/kasworld/goguelike-single/lib/canvastext"
-	"github.com/kasworld/goguelike-single/lib/jskeypressmap"
+	"github.com/kasworld/goguelike-single/lib/keypressmap"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_connwasm"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
@@ -52,7 +52,7 @@ type WasmClient struct {
 	systemMessage textncount.TextNCountList
 	NotiMessage   canvastext.CanvasTextList
 
-	KeyboardPressedMap *jskeypressmap.KeyPressMap
+	KeyboardPressedMap *keypressmap.KeyPressMap
 	Path2dst           [][2]int
 	ClientColtrolMode  clientcontroltype.ClientControlType
 
@@ -119,7 +119,7 @@ func InitPage() {
 		rnd:                g2rand.New(),
 		ServerJitter:       actjitter.New("Server"),
 		systemMessage:      make(textncount.TextNCountList, 0),
-		KeyboardPressedMap: jskeypressmap.New(),
+		KeyboardPressedMap: keypressmap.New(),
 		DispInterDur:       intervalduration.New("Display"),
 		ClientJitter:       actjitter.New("Client"),
 
