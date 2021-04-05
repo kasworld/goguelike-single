@@ -22,7 +22,9 @@ import (
 	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/config/towerconfig"
 	"github.com/kasworld/goguelike-single/game/tower"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
+	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/version"
 )
 
@@ -61,6 +63,23 @@ func main() {
 	if profile.IsCpu() {
 		fn := profile.StartCPUProfile()
 		defer fn()
+	}
+
+	g2log.GlobalLogger.SetFlags(g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+	g2log.GlobalLogger.SetLevel(config.LogLevel)
+	if config.BaseLogDir != "" {
+		log, err := g2log.NewWithDstDir(
+			config.ScriptFilename,
+			config.MakeLogDir(),
+			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
+			config.LogLevel,
+			config.SplitLogLevel,
+		)
+		if err == nil {
+			g2log.GlobalLogger = log
+		} else {
+			fmt.Printf("%v\n", err)
+		}
 	}
 
 	tw := tower.New(config)

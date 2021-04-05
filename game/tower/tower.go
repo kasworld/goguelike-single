@@ -42,7 +42,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
-	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/recordduration"
 	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/version"
@@ -102,30 +101,6 @@ type Tower struct {
 
 func New(config *towerconfig.TowerConfig) *Tower {
 	fmt.Printf("%v\n", config.StringForm())
-
-	if config.BaseLogDir != "" {
-		log, err := g2log.NewWithDstDir(
-			config.ScriptFilename,
-			config.MakeLogDir(),
-			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
-			config.LogLevel,
-			config.SplitLogLevel,
-		)
-		if err == nil {
-			g2log.GlobalLogger = log
-		} else {
-			fmt.Printf("%v\n", err)
-			g2log.GlobalLogger.SetFlags(
-				g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
-			g2log.GlobalLogger.SetLevel(
-				config.LogLevel)
-		}
-	} else {
-		g2log.GlobalLogger.SetFlags(
-			g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
-		g2log.GlobalLogger.SetLevel(
-			config.LogLevel)
-	}
 
 	tw := &Tower{
 		uuid:  uuidstr.New(),

@@ -29,7 +29,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
-	"github.com/kasworld/log/logflags"
 )
 
 type GLClient struct {
@@ -64,30 +63,6 @@ type GLClient struct {
 
 func New(config *glclientconfig.GLClientConfig) *GLClient {
 	fmt.Printf("%v\n", config.StringForm())
-
-	if config.BaseLogDir != "" {
-		log, err := g2log.NewWithDstDir(
-			"glclient",
-			config.MakeLogDir(),
-			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
-			config.LogLevel,
-			config.SplitLogLevel,
-		)
-		if err == nil {
-			g2log.GlobalLogger = log
-		} else {
-			fmt.Printf("%v\n", err)
-			g2log.GlobalLogger.SetFlags(
-				g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
-			g2log.GlobalLogger.SetLevel(
-				config.LogLevel)
-		}
-	} else {
-		g2log.GlobalLogger.SetFlags(
-			g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
-		g2log.GlobalLogger.SetLevel(
-			config.LogLevel)
-	}
 
 	app := &GLClient{
 		config:            config,

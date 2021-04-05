@@ -14,12 +14,14 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 
 	"github.com/kasworld/argdefault"
 	"github.com/kasworld/configutil"
 	"github.com/kasworld/goguelike-single/config/glclientconfig"
 	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/lib/g2log"
+	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/version"
 )
 
@@ -44,6 +46,22 @@ func main() {
 	}
 	ads.ApplyFlagTo(config)
 
+	g2log.GlobalLogger.SetFlags(g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+	g2log.GlobalLogger.SetLevel(config.LogLevel)
+	if config.BaseLogDir != "" {
+		log, err := g2log.NewWithDstDir(
+			"glclient",
+			config.MakeLogDir(),
+			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
+			config.LogLevel,
+			config.SplitLogLevel,
+		)
+		if err == nil {
+			g2log.GlobalLogger = log
+		} else {
+			fmt.Printf("%v\n", err)
+		}
+	}
 	app := glclient.New(config)
 	app.Run(context.Background())
 	g2log.Error("%v", app.GetRunResult())
