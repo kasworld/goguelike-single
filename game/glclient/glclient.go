@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/actjitter"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/config/textclientconfig"
+	"github.com/kasworld/goguelike-single/config/glclientconfig"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -32,11 +32,11 @@ import (
 	"github.com/kasworld/log/logflags"
 )
 
-type ClientAI struct {
+type GLClient struct {
 	log          *g2log.LogBase `prettystring:"hide"`
 	sendRecvStop func()         `prettystring:"hide"`
 
-	config    *textclientconfig.TextClientConfig
+	config    *glclientconfig.GLClientConfig
 	runResult error
 
 	towerConn         *c2t_connwsgorilla.Connection
@@ -62,7 +62,7 @@ type ClientAI struct {
 	ServerJitter          *actjitter.ActJitter
 }
 
-func New(config *textclientconfig.TextClientConfig) *ClientAI {
+func New(config *glclientconfig.GLClientConfig) *GLClient {
 	fmt.Printf("%v\n", config.StringForm())
 
 	if config.BaseLogDir != "" {
@@ -89,7 +89,7 @@ func New(config *textclientconfig.TextClientConfig) *ClientAI {
 			config.LogLevel)
 	}
 
-	cai := &ClientAI{
+	app := &GLClient{
 		config:            config,
 		log:               g2log.GlobalLogger,
 		ServerJitter:      actjitter.New("Server"),
@@ -97,54 +97,54 @@ func New(config *textclientconfig.TextClientConfig) *ClientAI {
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
-	cai.sendRecvStop = func() {
-		cai.log.Error("Too early sendRecvStop call %v", cai)
+	app.sendRecvStop = func() {
+		app.log.Error("Too early sendRecvStop call %v", app)
 	}
-	cai.towerConn = c2t_connwsgorilla.New(10)
-	return cai
+	app.towerConn = c2t_connwsgorilla.New(10)
+	return app
 }
 
-func (cai *ClientAI) Cleanup() {
-	cai.wg.Wait()
-	if tc := cai.towerConn; tc != nil {
+func (app *GLClient) Cleanup() {
+	app.wg.Wait()
+	if tc := app.towerConn; tc != nil {
 		tc.Cleanup()
 	}
-	cai.ServerJitter = nil
+	app.ServerJitter = nil
 }
 
-func (cai *ClientAI) Run(mainctx context.Context) {
-	defer cai.Cleanup()
+func (app *GLClient) Run(mainctx context.Context) {
+	defer app.Cleanup()
 
 	ctx, closeCtx := context.WithCancel(mainctx)
-	cai.sendRecvStop = closeCtx
-	defer cai.sendRecvStop()
+	app.sendRecvStop = closeCtx
+	defer app.sendRecvStop()
 
-	if err := cai.towerConn.ConnectTo(cai.config.ConnectToTower); err != nil {
-		cai.runResult = err
-		cai.log.Error("%v", cai.runResult)
+	if err := app.towerConn.ConnectTo(app.config.ConnectToTower); err != nil {
+		app.runResult = err
+		app.log.Error("%v", app.runResult)
 		return
 	}
-	cai.wg.Add(1)
+	app.wg.Add(1)
 	go func() {
-		defer cai.wg.Done()
-		err := cai.towerConn.Run(ctx,
+		defer app.wg.Done()
+		err := app.towerConn.Run(ctx,
 			gameconst.ClientReadTimeoutSec*time.Second,
 			gameconst.ClientWriteTimeoutSec*time.Second,
 			c2t_gob.MarshalBodyFn,
-			cai.handleRecvPacket,
-			cai.handleSentPacket,
+			app.handleRecvPacket,
+			app.handleSentPacket,
 		)
 
 		if err != nil {
-			cai.runResult = err
-			cai.log.Error("%v", err)
+			app.runResult = err
+			app.log.Error("%v", err)
 		}
-		cai.sendRecvStop()
+		app.sendRecvStop()
 	}()
 
-	if err := cai.reqLogin(); err != nil {
-		cai.runResult = err
-		cai.log.Error("%v", cai.runResult)
+	if err := app.reqLogin(); err != nil {
+		app.runResult = err
+		app.log.Error("%v", app.runResult)
 		return
 	}
 
@@ -158,40 +158,40 @@ loop:
 			break loop
 
 		case <-timerPingTk.C:
-			cai.wg.Add(1)
+			app.wg.Add(1)
 			go func() {
-				defer cai.wg.Done()
-				err := cai.reqHeartbeat()
+				defer app.wg.Done()
+				err := app.reqHeartbeat()
 				if err != nil {
-					cai.runResult = err
-					cai.log.Error("%v", cai.runResult)
+					app.runResult = err
+					app.log.Error("%v", app.runResult)
 				}
 			}()
 		}
 	}
 }
 
-func (cai *ClientAI) handleSentPacket(pk *c2t_packet.Packet) error {
-	cai.log.TraceClient("sent %v", pk.Header)
+func (app *GLClient) handleSentPacket(pk *c2t_packet.Packet) error {
+	app.log.TraceClient("sent %v", pk.Header)
 	return nil
 }
 
-func (cai *ClientAI) handleRecvPacket(header c2t_packet.Header, body []byte) error {
-	cai.log.TraceClient("recv %v", header)
+func (app *GLClient) handleRecvPacket(header c2t_packet.Header, body []byte) error {
+	app.log.TraceClient("recv %v", header)
 	switch header.FlowType {
 	default:
 		return fmt.Errorf("invalid packet type %v %v", header, body)
 	case c2t_packet.Response:
-		if err := cai.pid2recv.HandleRsp(header, body); err != nil {
-			cai.sendRecvStop()
-			cai.log.Fatal("%v %v %v %v", cai, header, body, err)
+		if err := app.pid2recv.HandleRsp(header, body); err != nil {
+			app.sendRecvStop()
+			app.log.Fatal("%v %v %v %v", app, header, body, err)
 			return err
 		}
 	case c2t_packet.Notification:
 		fn := DemuxNoti2ByteFnMap[header.Cmd]
-		if err := fn(cai, header, body); err != nil {
-			cai.sendRecvStop()
-			cai.log.Fatal("%v %v %v %v", cai, header, body, err)
+		if err := fn(app, header, body); err != nil {
+			app.sendRecvStop()
+			app.log.Fatal("%v %v %v %v", app, header, body, err)
 			return err
 		}
 	}

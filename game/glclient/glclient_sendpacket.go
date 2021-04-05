@@ -26,10 +26,10 @@ import (
 	"github.com/kasworld/version"
 )
 
-func (cai *ClientAI) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
+func (app *GLClient) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 	fn c2t_pid2rspfn.HandleRspFn) error {
 
-	pid := cai.pid2recv.NewPID(fn)
+	pid := app.pid2recv.NewPID(fn)
 	spk := c2t_packet.Packet{
 		Header: c2t_packet.Header{
 			Cmd:      uint16(cmd),
@@ -38,59 +38,59 @@ func (cai *ClientAI) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 		},
 		Body: body,
 	}
-	if err := cai.towerConn.EnqueueSendPacket(&spk); err != nil {
-		cai.log.Error("End %v %+v %v",
+	if err := app.towerConn.EnqueueSendPacket(&spk); err != nil {
+		app.log.Error("End %v %+v %v",
 			spk.Header, spk.Body, err)
-		cai.sendRecvStop()
+		app.sendRecvStop()
 		return fmt.Errorf("send fail %v:%v %v",
 			cmd, pid, err)
 	}
 	return nil
 }
 
-func (cai *ClientAI) ReqWithRspFnWithAuth(cmd c2t_idcmd.CommandID, body interface{},
+func (app *GLClient) ReqWithRspFnWithAuth(cmd c2t_idcmd.CommandID, body interface{},
 	fn c2t_pid2rspfn.HandleRspFn) error {
-	if !cai.CanUseCmd(cmd) {
+	if !app.CanUseCmd(cmd) {
 		return fmt.Errorf("cmd not allowed %v", cmd)
 	}
-	return cai.ReqWithRspFn(cmd, body, fn)
+	return app.ReqWithRspFn(cmd, body, fn)
 }
 
-func (cai *ClientAI) reqLogin() error {
-	return cai.ReqWithRspFn(
+func (app *GLClient) reqLogin() error {
+	return app.ReqWithRspFn(
 		c2t_idcmd.Login,
 		&c2t_obj.ReqLogin_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				cai.log.Fatal("%v %v %v", hd, rsp, err)
+				app.log.Fatal("%v %v %v", hd, rsp, err)
 				return err
 			}
 
 			rpk := robj.(*c2t_obj.RspLogin_data)
 
-			cai.ServiceInfo = rpk.ServiceInfo
-			cai.AccountInfo = rpk.AccountInfo
+			app.ServiceInfo = rpk.ServiceInfo
+			app.AccountInfo = rpk.AccountInfo
 
-			if !version.IsSame(cai.ServiceInfo.Version) {
-				cai.log.Error("Version mismatch client %v server %v",
-					version.GetVersion(), cai.ServiceInfo.Version)
+			if !version.IsSame(app.ServiceInfo.Version) {
+				app.log.Error("Version mismatch client %v server %v",
+					version.GetVersion(), app.ServiceInfo.Version)
 			}
-			if dataversion.DataVersion != cai.ServiceInfo.DataVersion {
-				cai.log.Error("DataVersion mismatch client %v server %v",
-					dataversion.DataVersion, cai.ServiceInfo.DataVersion)
+			if dataversion.DataVersion != app.ServiceInfo.DataVersion {
+				app.log.Error("DataVersion mismatch client %v server %v",
+					dataversion.DataVersion, app.ServiceInfo.DataVersion)
 			}
-			if c2t_version.ProtocolVersion != cai.ServiceInfo.ProtocolVersion {
-				cai.log.Error("ProtocolVersion mismatch client %v server %v",
-					c2t_version.ProtocolVersion, cai.ServiceInfo.ProtocolVersion)
+			if c2t_version.ProtocolVersion != app.ServiceInfo.ProtocolVersion {
+				app.log.Error("ProtocolVersion mismatch client %v server %v",
+					c2t_version.ProtocolVersion, app.ServiceInfo.ProtocolVersion)
 			}
-			return cai.reqAIPlay(true)
+			return app.reqAIPlay(true)
 		},
 	)
 }
 
-func (cai *ClientAI) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
-	cai.ReqWithRspFnWithAuth(
+func (app *GLClient) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
+	app.ReqWithRspFnWithAuth(
 		cmd, arg,
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			return nil
@@ -98,8 +98,8 @@ func (cai *ClientAI) sendPacket(cmd c2t_idcmd.CommandID, arg interface{}) {
 	)
 }
 
-func (cai *ClientAI) reqAIPlay(onoff bool) error {
-	return cai.ReqWithRspFnWithAuth(
+func (app *GLClient) reqAIPlay(onoff bool) error {
+	return app.ReqWithRspFnWithAuth(
 		c2t_idcmd.AIPlay,
 		&c2t_obj.ReqAIPlay_data{On: onoff},
 		func(hd c2t_packet.Header, rsp interface{}) error {
@@ -108,29 +108,29 @@ func (cai *ClientAI) reqAIPlay(onoff bool) error {
 	)
 }
 
-func (cai *ClientAI) reqAchieveInfo() error {
-	return cai.ReqWithRspFnWithAuth(
+func (app *GLClient) reqAchieveInfo() error {
+	return app.ReqWithRspFnWithAuth(
 		c2t_idcmd.AchieveInfo,
 		&c2t_obj.ReqAchieveInfo_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				cai.log.Fatal("%v %v %v", hd, rsp, err)
+				app.log.Fatal("%v %v %v", hd, rsp, err)
 				return err
 			}
 			rpk := robj.(*c2t_obj.RspAchieveInfo_data)
-			cai.log.Debug("=================================")
+			app.log.Debug("=================================")
 			for i, v := range rpk.AchieveStat {
-				cai.log.Debug("%v : %v", achievetype.AchieveType(i).String(), v)
+				app.log.Debug("%v : %v", achievetype.AchieveType(i).String(), v)
 			}
-			cai.log.Debug("Achieve list ====================")
+			app.log.Debug("Achieve list ====================")
 			return nil
 		},
 	)
 }
 
-func (cai *ClientAI) reqHeartbeat() error {
-	return cai.ReqWithRspFnWithAuth(
+func (app *GLClient) reqHeartbeat() error {
+	return app.ReqWithRspFnWithAuth(
 		c2t_idcmd.Heartbeat,
 		&c2t_obj.ReqHeartbeat_data{
 			Time: time.Now(),
@@ -138,12 +138,12 @@ func (cai *ClientAI) reqHeartbeat() error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				cai.log.Fatal("%v %v %v %v", cai, hd, rsp, err)
+				app.log.Fatal("%v %v %v %v", app, hd, rsp, err)
 				return err
 			}
 			rpk := robj.(*c2t_obj.RspHeartbeat_data)
 			PingDur := time.Now().Sub(rpk.Time)
-			cai.log.Monitor("Ping %v", PingDur)
+			app.log.Monitor("Ping %v", PingDur)
 			return nil
 		},
 	)

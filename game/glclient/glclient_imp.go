@@ -17,33 +17,33 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
-func (cai *ClientAI) GetRunResult() error {
-	return cai.runResult
+func (app *GLClient) GetRunResult() error {
+	return app.runResult
 }
 
-func (cai *ClientAI) GetArg() interface{} {
-	return cai.config
+func (app *GLClient) GetArg() interface{} {
+	return app.config
 }
 
-func (cai *ClientAI) TowerBias() bias.Bias {
-	if cai.OLNotiData == nil {
+func (app *GLClient) TowerBias() bias.Bias {
+	if app.OLNotiData == nil {
 		return bias.Bias{}
 	}
-	ft := cai.TowerInfo.Factor
-	dur := cai.OLNotiData.Time.Sub(cai.TowerInfo.StartTime)
+	ft := app.TowerInfo.Factor
+	dur := app.OLNotiData.Time.Sub(app.TowerInfo.StartTime)
 	return bias.MakeBiasByProgress(ft, dur.Seconds(), gameconst.TowerBaseBiasLen)
 }
 
-func (cai *ClientAI) GetPlayerXY() (int, int) {
-	ao := cai.playerActiveObjClient
+func (app *GLClient) GetPlayerXY() (int, int) {
+	ao := app.playerActiveObjClient
 	if ao != nil {
 		return ao.X, ao.Y
 	}
 	return 0, 0
 }
 
-func (cai *ClientAI) CanUseCmd(cmd c2t_idcmd.CommandID) bool {
-	if acinfo := cai.AccountInfo; acinfo != nil {
+func (app *GLClient) CanUseCmd(cmd c2t_idcmd.CommandID) bool {
+	if acinfo := app.AccountInfo; acinfo != nil {
 		return acinfo.CmdList[cmd]
 	}
 	return false

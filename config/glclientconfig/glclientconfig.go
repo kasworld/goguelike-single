@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package textclientconfig
+package glclientconfig
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/prettystring"
 )
 
-type TextClientConfig struct {
+type GLClientConfig struct {
 	BaseLogDir        string        `default:"" argname:""`
 	LogLevel          g2log.LL_Type `default:"7" argname:""`
 	SplitLogLevel     g2log.LL_Type `default:"0" argname:""`
@@ -27,11 +27,11 @@ type TextClientConfig struct {
 	DisconnectOnDeath bool          `default:"false" argname:""`
 }
 
-func (config *TextClientConfig) StringForm() string {
+func (config *GLClientConfig) StringForm() string {
 	return prettystring.PrettyString(config, 4)
 }
 
-func (config *TextClientConfig) MakeLogDir() string {
+func (config *GLClientConfig) MakeLogDir() string {
 	rstr := filepath.Join(config.BaseLogDir,
 		"goguelike_textclient.logfiles",
 	)

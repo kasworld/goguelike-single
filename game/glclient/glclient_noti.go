@@ -57,11 +57,11 @@ func bytesRecvNotiFn_EnterTower(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cai.TowerInfo = pkbody.TowerInfo
+	app.TowerInfo = pkbody.TowerInfo
 
 	return nil
 }
@@ -75,11 +75,11 @@ func bytesRecvNotiFn_LeaveTower(me interface{}, hd c2t_packet.Header, rbody []by
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
 	_ = pkbody
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	_ = cai
+	_ = app
 	return nil
 }
 
@@ -92,15 +92,15 @@ func bytesRecvNotiFn_EnterFloor(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
-		cai.CurrentFloor = clientfloor.New(pkbody.FI)
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
+		app.CurrentFloor = clientfloor.New(pkbody.FI)
 	}
 
-	cai.CurrentFloor.EnterFloor()
+	app.CurrentFloor.EnterFloor()
 
 	return nil
 }
@@ -114,11 +114,11 @@ func bytesRecvNotiFn_LeaveFloor(me interface{}, hd c2t_packet.Header, rbody []by
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
 	_ = pkbody
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	_ = cai
+	_ = app
 	return nil
 }
 
@@ -127,23 +127,23 @@ func bytesRecvNotiFn_Ageing(me interface{}, hd c2t_packet.Header, rbody []byte) 
 }
 
 func bytesRecvNotiFn_Death(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	_ = cai
-	if cai.config.DisconnectOnDeath {
-		cai.sendRecvStop()
+	_ = app
+	if app.config.DisconnectOnDeath {
+		app.sendRecvStop()
 	}
 	return nil
 }
 
 func bytesRecvNotiFn_ReadyToRebirth(me interface{}, hd c2t_packet.Header, rbody []byte) error {
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	go cai.ReqWithRspFnWithAuth(c2t_idcmd.Rebirth,
+	go app.ReqWithRspFnWithAuth(c2t_idcmd.Rebirth,
 		&c2t_obj.ReqRebirth_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			return nil
@@ -168,60 +168,60 @@ func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byt
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	cai.OLNotiData = pkbody
-	cai.ServerClientTimeDiff = pkbody.Time.Sub(time.Now())
-	oldOLNotiData := cai.OLNotiData
-	cai.OLNotiData = pkbody
+	app.OLNotiData = pkbody
+	app.ServerClientTimeDiff = pkbody.Time.Sub(time.Now())
+	oldOLNotiData := app.OLNotiData
+	app.OLNotiData = pkbody
 	newOLNotiData := pkbody
-	cai.onFieldObj = nil
+	app.onFieldObj = nil
 
-	cai.ServerJitter.ActByValue(pkbody.Time)
+	app.ServerJitter.ActByValue(pkbody.Time)
 
 	c2t_obj.EquipClientByUUID(pkbody.ActiveObj.EquipBag).Sort()
 	c2t_obj.PotionClientByUUID(pkbody.ActiveObj.PotionBag).Sort()
 	c2t_obj.ScrollClientByUUID(pkbody.ActiveObj.ScrollBag).Sort()
 
 	if oldOLNotiData != nil {
-		cai.HPdiff = newOLNotiData.ActiveObj.HP - oldOLNotiData.ActiveObj.HP
-		cai.SPdiff = newOLNotiData.ActiveObj.SP - oldOLNotiData.ActiveObj.SP
+		app.HPdiff = newOLNotiData.ActiveObj.HP - oldOLNotiData.ActiveObj.HP
+		app.SPdiff = newOLNotiData.ActiveObj.SP - oldOLNotiData.ActiveObj.SP
 	}
 	newLevel := int(leveldata.CalcLevelFromExp(float64(newOLNotiData.ActiveObj.Exp)))
 
-	cai.playerActiveObjClient = nil
-	if ainfo := cai.AccountInfo; ainfo != nil {
+	app.playerActiveObjClient = nil
+	if ainfo := app.AccountInfo; ainfo != nil {
 		for _, v := range pkbody.ActiveObjList {
-			if v.UUID == cai.AccountInfo.ActiveObjUUID {
-				cai.playerActiveObjClient = v
+			if v.UUID == app.AccountInfo.ActiveObjUUID {
+				app.playerActiveObjClient = v
 			}
 		}
 	}
 
-	cai.IsOverLoad = newOLNotiData.ActiveObj.CalcWeight() >= leveldata.WeightLimit(newLevel)
+	app.IsOverLoad = newOLNotiData.ActiveObj.CalcWeight() >= leveldata.WeightLimit(newLevel)
 
-	if cai.CurrentFloor.FloorInfo == nil {
-		cai.log.Error("cai.CurrentFloor.FloorInfo not set")
+	if app.CurrentFloor.FloorInfo == nil {
+		app.log.Error("app.CurrentFloor.FloorInfo not set")
 		return nil
 	}
-	if cai.CurrentFloor.FloorInfo.Name != newOLNotiData.FloorName {
-		cai.log.Error("not current floor objlist data %v %v",
-			cai.CurrentFloor.FloorInfo.Name, newOLNotiData.FloorName,
+	if app.CurrentFloor.FloorInfo.Name != newOLNotiData.FloorName {
+		app.log.Error("not current floor objlist data %v %v",
+			app.CurrentFloor.FloorInfo.Name, newOLNotiData.FloorName,
 		)
 		return nil
 	}
 
 	for _, v := range newOLNotiData.FieldObjList {
-		cai.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+		app.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
 	}
 
-	playerX, playerY := cai.GetPlayerXY()
-	if cai.playerActiveObjClient != nil && cai.CurrentFloor.IsValidPos(playerX, playerY) {
-		cai.onFieldObj = cai.CurrentFloor.GetFieldObjAt(playerX, playerY)
+	playerX, playerY := app.GetPlayerXY()
+	if app.playerActiveObjClient != nil && app.CurrentFloor.IsValidPos(playerX, playerY) {
+		app.onFieldObj = app.CurrentFloor.GetFieldObjAt(playerX, playerY)
 	}
-	cai.actByControlMode()
+	app.actByControlMode()
 	return nil
 }
 
@@ -234,28 +234,28 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 
-	if cai.CurrentFloor.FloorInfo == nil {
-		cai.log.Warn("OrangeRed cai.CurrentFloor.FloorInfo not set")
+	if app.CurrentFloor.FloorInfo == nil {
+		app.log.Warn("OrangeRed app.CurrentFloor.FloorInfo not set")
 		return nil
 	}
-	if cai.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
-		cai.log.Warn("not current floor vptile data %v %v",
-			cai.CurrentFloor.FloorInfo.Name, pkbody.FloorName,
+	if app.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
+		app.log.Warn("not current floor vptile data %v %v",
+			app.CurrentFloor.FloorInfo.Name, pkbody.FloorName,
 		)
 		return nil
 	}
 
-	oldComplete := cai.CurrentFloor.Visited.IsComplete()
-	if err := cai.CurrentFloor.UpdateFromViewportTile(pkbody, cai.ViewportXYLenList); err != nil {
-		cai.log.Warn("%v", err)
+	oldComplete := app.CurrentFloor.Visited.IsComplete()
+	if err := app.CurrentFloor.UpdateFromViewportTile(pkbody, app.ViewportXYLenList); err != nil {
+		app.log.Warn("%v", err)
 		return nil
 	}
-	if !oldComplete && cai.CurrentFloor.Visited.IsComplete() {
+	if !oldComplete && app.CurrentFloor.Visited.IsComplete() {
 		// just completed
 	}
 
@@ -271,18 +271,18 @@ func bytesRecvNotiFn_FloorTiles(me interface{}, hd c2t_packet.Header, rbody []by
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
 		// new floor
-		cai.CurrentFloor = clientfloor.New(pkbody.FI)
+		app.CurrentFloor = clientfloor.New(pkbody.FI)
 	}
 
-	oldComplete := cai.CurrentFloor.Visited.IsComplete()
-	cai.CurrentFloor.ReplaceFloorTiles(pkbody)
-	if !oldComplete && cai.CurrentFloor.Visited.IsComplete() {
+	oldComplete := app.CurrentFloor.Visited.IsComplete()
+	app.CurrentFloor.ReplaceFloorTiles(pkbody)
+	if !oldComplete && app.CurrentFloor.Visited.IsComplete() {
 		// floor complete
 	}
 	return nil
@@ -298,15 +298,15 @@ func bytesRecvNotiFn_FieldObjList(me interface{}, hd c2t_packet.Header, rbody []
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != pkbody.FI.Name {
 		// new floor
-		cai.CurrentFloor = clientfloor.New(pkbody.FI)
+		app.CurrentFloor = clientfloor.New(pkbody.FI)
 	}
-	cai.CurrentFloor.UpdateFieldObjList(pkbody.FOList)
+	app.CurrentFloor.UpdateFieldObjList(pkbody.FOList)
 	return nil
 }
 
@@ -319,16 +319,16 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
-		cai.log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
+		app.log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
 		return fmt.Errorf("FoundFieldObj unknonw floor %v", pkbody)
 	}
-	if cai.CurrentFloor.FieldObjPosMan.Get1stObjAt(pkbody.FieldObj.X, pkbody.FieldObj.Y) == nil {
-		cai.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(pkbody.FieldObj, pkbody.FieldObj.X, pkbody.FieldObj.Y)
+	if app.CurrentFloor.FieldObjPosMan.Get1stObjAt(pkbody.FieldObj.X, pkbody.FieldObj.Y) == nil {
+		app.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(pkbody.FieldObj, pkbody.FieldObj.X, pkbody.FieldObj.Y)
 	}
 	return nil
 }
@@ -342,14 +342,14 @@ func bytesRecvNotiFn_ForgetFloor(me interface{}, hd c2t_packet.Header, rbody []b
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 
-	if cai.CurrentFloor == nil || cai.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
+	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
 	} else {
-		cai.CurrentFloor.Forget()
+		app.CurrentFloor.Forget()
 	}
 	return nil
 }
@@ -363,11 +363,11 @@ func bytesRecvNotiFn_ActivateTrap(me interface{}, hd c2t_packet.Header, rbody []
 	if !ok {
 		return fmt.Errorf("packet mismatch %v", robj)
 	}
-	cai, ok := me.(*ClientAI)
+	app, ok := me.(*GLClient)
 	if !ok {
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
-	_ = cai
+	_ = app
 	_ = pkbody
 	// g2log.Debug("%v", robj)
 	return nil

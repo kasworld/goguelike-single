@@ -17,7 +17,7 @@ import (
 
 	"github.com/kasworld/argdefault"
 	"github.com/kasworld/configutil"
-	"github.com/kasworld/goguelike-single/config/textclientconfig"
+	"github.com/kasworld/goguelike-single/config/glclientconfig"
 	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/version"
@@ -32,10 +32,10 @@ func init() {
 func main() {
 	configurl := flag.String("i", "", "config file or url")
 
-	ads := argdefault.New(&textclientconfig.TextClientConfig{})
+	ads := argdefault.New(&glclientconfig.GLClientConfig{})
 	ads.RegisterFlag()
 	flag.Parse()
-	config := &textclientconfig.TextClientConfig{}
+	config := &glclientconfig.GLClientConfig{}
 	ads.SetDefaultToNonZeroField(config)
 	if *configurl != "" {
 		if err := configutil.LoadIni(*configurl, config); err != nil {
