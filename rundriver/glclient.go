@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/argdefault"
 	"github.com/kasworld/configutil"
 	"github.com/kasworld/goguelike-single/config/textclientconfig"
-	"github.com/kasworld/goguelike-single/game/clientai"
+	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/version"
 )
@@ -44,7 +44,7 @@ func main() {
 	}
 	ads.ApplyFlagTo(config)
 
-	app := clientai.New(config)
+	app := glclient.New(config)
 	app.Run(context.Background())
 	g2log.Error("%v", app.GetRunResult())
 }

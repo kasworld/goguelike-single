@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clientai
+package glclient
 
 import (
 	"context"
