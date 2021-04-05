@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
-	"github.com/kasworld/goguelike-single/game/soundmap"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/soundmap"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"

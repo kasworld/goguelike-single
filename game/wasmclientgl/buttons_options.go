@@ -15,9 +15,9 @@ import (
 	"fmt"
 	"syscall/js"
 
-	"github.com/kasworld/goguelike-single/game/clientinitdata"
-	"github.com/kasworld/goguelike-single/game/soundmap"
-	"github.com/kasworld/goguelike-single/lib/htmlbutton"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/clientinitdata"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/htmlbutton"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/soundmap"
 	"github.com/kasworld/gowasmlib/jslog"
 )
 

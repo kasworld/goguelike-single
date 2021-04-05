@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/clientcontroltype"
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
-	"github.com/kasworld/goguelike-single/lib/jsobj"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/jsobj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"

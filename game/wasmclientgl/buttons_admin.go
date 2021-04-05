@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
-	"github.com/kasworld/goguelike-single/lib/htmlbutton"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/htmlbutton"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"

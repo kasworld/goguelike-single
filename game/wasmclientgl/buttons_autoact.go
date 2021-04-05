@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/attackcheck"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/lib/htmlbutton"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/htmlbutton"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/gowasmlib/jslog"

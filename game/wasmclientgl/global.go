@@ -21,7 +21,7 @@ import (
 	"github.com/kasworld/go-abs"
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/game/clientinitdata"
+	"github.com/kasworld/goguelike-single/game/wasmclientgl/clientinitdata"
 )
 
 const (
