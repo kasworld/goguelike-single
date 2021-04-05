@@ -67,7 +67,7 @@ func New(config *glclientconfig.GLClientConfig) *GLClient {
 
 	if config.BaseLogDir != "" {
 		log, err := g2log.NewWithDstDir(
-			"textclient",
+			"glclient",
 			config.MakeLogDir(),
 			logflags.DefaultValue(false).BitClear(logflags.LF_functionname),
 			config.LogLevel,

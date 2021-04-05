@@ -33,7 +33,7 @@ func (config *GLClientConfig) StringForm() string {
 
 func (config *GLClientConfig) MakeLogDir() string {
 	rstr := filepath.Join(config.BaseLogDir,
-		"goguelike_textclient.logfiles",
+		"goguelike_glclient.logfiles",
 	)
 	rtn, err := filepath.Abs(rstr)
 	if err != nil {
