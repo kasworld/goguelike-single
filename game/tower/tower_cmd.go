@@ -17,6 +17,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -26,7 +27,7 @@ func (tw *Tower) processCmd(data interface{}) {
 	tw.cmdActStat.Inc()
 	switch pk := data.(type) {
 	default:
-		tw.log.Fatal("unknown tower cmd %#v", data)
+		g2log.Fatal("unknown tower cmd %#v", data)
 
 	case *cmd2tower.ActiveObjEnterTower:
 		pk.RspCh <- tw.Call_ActiveObjEnterTower(pk.ActiveObj)
@@ -65,15 +66,15 @@ func (tw *Tower) processCmd(data interface{}) {
 
 func (tw *Tower) Call_ActiveObjEnterTower(ao gamei.ActiveObjectI) error {
 	if err := tw.ao2Floor.ActiveObjEnterTower(ao.GetHomeFloor(), ao); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 		return err
 	}
 	if err := tw.id2ao.Add(ao); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 	}
 	aocon := ao.GetClientConn()
 	if aocon == nil {
-		tw.log.Fatal("ao connection nil %v", ao)
+		g2log.Fatal("ao connection nil %v", ao)
 		return nil
 	}
 	if err := aocon.SendNotiPacket(c2t_idnoti.EnterTower,
@@ -81,7 +82,7 @@ func (tw *Tower) Call_ActiveObjEnterTower(ao gamei.ActiveObjectI) error {
 			TowerInfo: tw.towerInfo,
 		},
 	); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 	}
 
 	return nil // continue login
@@ -94,16 +95,16 @@ func (tw *Tower) Call_PlayerAOResumeTower() error {
 		f = ao.GetHomeFloor()
 	}
 	if err := tw.ao2Floor.ActiveObjResumeToFloor(f, ao); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 		return err
 	}
 	if err := tw.id2ao.Add(ao); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 	}
 	// send noti visitarea in ao
 	aocon := ao.GetClientConn()
 	if aocon == nil {
-		tw.log.Fatal("ao connection nil %v", ao)
+		g2log.Fatal("ao connection nil %v", ao)
 		return nil
 	}
 	if err := aocon.SendNotiPacket(c2t_idnoti.EnterTower,
@@ -111,7 +112,7 @@ func (tw *Tower) Call_PlayerAOResumeTower() error {
 			TowerInfo: tw.towerInfo,
 		},
 	); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 	}
 
 	// TODO need visited floor small info send to client, not full info
@@ -122,7 +123,7 @@ func (tw *Tower) Call_PlayerAOResumeTower() error {
 func (tw *Tower) Call_PlayerAOSuspendFromTower() error {
 	ao, err := tw.id2ao.DelByUUID(tw.playerAO.GetUUID())
 	if err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 		return nil
 	}
 	tw.ao2Floor.ActiveObjLeaveFloor(ao)
@@ -132,7 +133,7 @@ func (tw *Tower) Call_PlayerAOSuspendFromTower() error {
 func (tw *Tower) Call_ActiveObjLeaveTower(ActiveObjUUID string) error {
 	ao, err := tw.id2ao.DelByUUID(ActiveObjUUID)
 	if err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 		return nil
 	}
 	tw.ao2Floor.ActiveObjLeaveFloor(ao)
@@ -148,16 +149,16 @@ func (tw *Tower) Call_AdminFloorMove(
 		aoFloor := tw.ao2Floor.GetFloorByActiveObjID(ActiveObj.GetUUID())
 		aoFloorIndex, err := tw.floorMan.GetFloorIndexByName(aoFloor.GetName())
 		if err != nil {
-			tw.log.Error("floor not found %v", aoFloor)
+			g2log.Error("floor not found %v", aoFloor)
 			return c2t_error.ObjectNotFound
 		}
 		dstFloor := tw.floorMan.GetFloorByIndexWrap(aoFloorIndex - 1)
 		x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 		if err != nil {
-			tw.log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
+			g2log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
 		}
 		if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
-			tw.log.Fatal("%v", err)
+			g2log.Fatal("%v", err)
 			return c2t_error.ActionProhibited
 		}
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
@@ -166,16 +167,16 @@ func (tw *Tower) Call_AdminFloorMove(
 		aoFloor := tw.ao2Floor.GetFloorByActiveObjID(ActiveObj.GetUUID())
 		aoFloorIndex, err := tw.floorMan.GetFloorIndexByName(aoFloor.GetName())
 		if err != nil {
-			tw.log.Error("floor not found %v", aoFloor)
+			g2log.Error("floor not found %v", aoFloor)
 			return c2t_error.ObjectNotFound
 		}
 		dstFloor := tw.floorMan.GetFloorByIndexWrap(aoFloorIndex + 1)
 		x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 		if err != nil {
-			tw.log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
+			g2log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
 		}
 		if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
-			tw.log.Fatal("%v", err)
+			g2log.Fatal("%v", err)
 			return c2t_error.ActionProhibited
 		}
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
@@ -183,15 +184,15 @@ func (tw *Tower) Call_AdminFloorMove(
 	default:
 		dstFloor := tw.floorMan.GetFloorByName(cmd)
 		if dstFloor == nil {
-			tw.log.Error("floor not found %v", cmd)
+			g2log.Error("floor not found %v", cmd)
 			return c2t_error.ObjectNotFound
 		}
 		x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 		if err != nil {
-			tw.log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
+			g2log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
 		}
 		if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
-			tw.log.Fatal("%v", err)
+			g2log.Fatal("%v", err)
 			return c2t_error.ActionProhibited
 		}
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
@@ -204,15 +205,15 @@ func (tw *Tower) Call_FloorMove(
 
 	dstFloor := tw.floorMan.GetFloorByName(FloorName)
 	if dstFloor == nil {
-		tw.log.Error("floor not found %v", FloorName)
+		g2log.Error("floor not found %v", FloorName)
 		return c2t_error.ObjectNotFound
 	}
 	x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 	if err != nil {
-		tw.log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
+		g2log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
 	}
 	if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 		return c2t_error.ActionProhibited
 	}
 	return c2t_error.None
@@ -220,7 +221,7 @@ func (tw *Tower) Call_FloorMove(
 
 func (tw *Tower) Call_AdminTowerCmd(ActiveObj gamei.ActiveObjectI,
 	RecvPacket *c2t_obj.ReqAdminTowerCmd_data) c2t_error.ErrorCode {
-	tw.log.Debug("%v %v", ActiveObj, RecvPacket)
+	g2log.Debug("%v %v", ActiveObj, RecvPacket)
 	return c2t_error.None
 }
 
@@ -231,28 +232,28 @@ func (tw *Tower) Call_ActiveObjUsePortal(
 ) {
 	srcPosMan := SrcFloor.GetActiveObjPosMan()
 	if srcPosMan == nil {
-		tw.log.Warn("pos man nil %v", SrcFloor)
+		g2log.Warn("pos man nil %v", SrcFloor)
 		return
 	}
 	if srcPosMan.GetByUUID(ActiveObj.GetUUID()) == nil {
-		tw.log.Warn("ActiveObj not in floor %v %v", ActiveObj, SrcFloor)
+		g2log.Warn("ActiveObj not in floor %v %v", ActiveObj, SrcFloor)
 		return
 	}
 	dstFloor := tw.floorMan.GetFloorByName(P2.FloorName)
 	if dstFloor == nil {
-		tw.log.Fatal("dstFloor not found %v", P2.FloorName)
+		g2log.Fatal("dstFloor not found %v", P2.FloorName)
 		return
 	}
-	tw.log.Debug("ActiveObjUsePortal %v %v to %v", ActiveObj, SrcFloor, dstFloor)
+	g2log.Debug("ActiveObjUsePortal %v %v to %v", ActiveObj, SrcFloor, dstFloor)
 
 	x, y, exist := dstFloor.GetFieldObjPosMan().GetXYByUUID(P2.GetUUID())
 	if !exist {
-		tw.log.Fatal("fieldobj not found %v", P2)
+		g2log.Fatal("fieldobj not found %v", P2)
 		return
 	}
 
 	if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 	}
 }
 
@@ -263,29 +264,29 @@ func (tw *Tower) Call_ActiveObjTrapTeleport(
 ) {
 	dstFloor := tw.floorMan.GetFloorByName(DstFloorName)
 	if dstFloor == nil {
-		tw.log.Fatal("dstFloor not found %v", DstFloorName)
+		g2log.Fatal("dstFloor not found %v", DstFloorName)
 		return
 	}
-	tw.log.Debug("ActiveObjTrapTeleport %v to %v", ActiveObj, dstFloor)
+	g2log.Debug("ActiveObjTrapTeleport %v to %v", ActiveObj, dstFloor)
 	x, y, err := dstFloor.SearchRandomActiveObjPos()
 	if err != nil {
-		tw.log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
+		g2log.Error("fail to find rand pos %v %v %v", dstFloor, ActiveObj, err)
 	}
 	if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 	}
 }
 
 func (tw *Tower) Call_ActiveObjRebirth(ao gamei.ActiveObjectI) {
 	if ao.IsAlive() {
-		tw.log.Fatal("ao is alive %v HP:%v/%v",
+		g2log.Fatal("ao is alive %v HP:%v/%v",
 			ao, ao.GetHP(), ao.GetTurnData().HPMax)
 	}
 	var dstFloor gamei.FloorI
 
 	switch ao.GetRespawnType() {
 	default:
-		tw.log.Fatal("invalid respawntype %v %v", ao, ao.GetRespawnType())
+		g2log.Fatal("invalid respawntype %v %v", ao, ao.GetRespawnType())
 	case respawntype.ToCurrentFloor:
 		dstFloor = ao.GetCurrentFloor()
 	case respawntype.ToHomeFloor:
@@ -294,8 +295,8 @@ func (tw *Tower) Call_ActiveObjRebirth(ao gamei.ActiveObjectI) {
 		dstFloor = tw.floorMan.GetFloorList()[tw.rnd.Intn(tw.floorMan.GetFloorCount())]
 	}
 	if err := tw.ao2Floor.ActiveObjRebirthToFloor(dstFloor, ao); err != nil {
-		tw.log.Fatal("%v", err)
+		g2log.Fatal("%v", err)
 		return
 	}
-	tw.log.Debug("ActiveObjRebirth %v to %v", ao, dstFloor)
+	g2log.Debug("ActiveObjRebirth %v to %v", ao, dstFloor)
 }

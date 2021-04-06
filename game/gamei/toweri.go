@@ -14,7 +14,6 @@ package gamei
 import (
 	"github.com/kasworld/goguelike-single/config/towerconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 type TowerI interface {
@@ -29,5 +28,4 @@ type TowerI interface {
 	GetExpRanking() []ActiveObjectI
 
 	Config() *towerconfig.TowerConfig
-	Log() *g2log.LogBase
 }

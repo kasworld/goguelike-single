@@ -14,26 +14,22 @@ package tower
 import (
 	"net/http"
 
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/weblib"
 )
 
 func (tw *Tower) web_Service(w http.ResponseWriter, r *http.Request) {
 	cmd := weblib.GetStringByName("cmd", "", w, r)
 	if cmd == "" {
-		tw.log.Warn("Invalid cmd")
+		g2log.Warn("Invalid cmd")
 		http.Error(w, "Invalid cmd", 404)
 		return
 	}
 	switch cmd {
 	default:
-		tw.log.Fatal("invalid service cmd %v", cmd)
+		g2log.Fatal("invalid service cmd %v", cmd)
 	case "stop":
-		tw.log.Fatal("service stop by web cmd")
+		g2log.Fatal("service stop by web cmd")
 		tw.doClose()
-	case "logreopen":
-		err := tw.log.Reload()
-		if err != nil {
-			tw.log.Fatal("fail to logreopen %v", err)
-		}
 	}
 }

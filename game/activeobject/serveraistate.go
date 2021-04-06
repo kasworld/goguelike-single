@@ -25,6 +25,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/intervalduration"
@@ -245,7 +246,7 @@ func (ao *ActiveObject) aoAttackLast(sai *ServerAIState) gamei.ActiveObjectI {
 			dstObj := v.GetDstObj()
 			switch o := dstObj.(type) {
 			default:
-				ao.log.Fatal("unknown dstao %v", v)
+				g2log.Fatal("unknown dstao %v", v)
 			case gamei.ActiveObjectI:
 				if o.IsAlive() {
 					return o

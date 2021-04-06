@@ -17,6 +17,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/tile_flag"
 	"github.com/kasworld/goguelike-single/game/terrain/corridor"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 )
 
@@ -55,10 +56,10 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 				if err := tr.makeCorridor(v, nearRoom, ttile, way8); err == nil {
 					addRoomGraph(roomGraph, v, nearRoom)
 				} else {
-					tr.log.Warn("%v %v", err, tr)
+					g2log.Warn("%v %v", err, tr)
 				}
 			} else {
-				tr.log.Warn("fail to find near room %v %v", v, tr)
+				g2log.Warn("fail to find near room %v %v", v, tr)
 			}
 		}
 	}
@@ -70,7 +71,7 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 	for try := 1; ; {
 		_, notvisitedRoom := tr.findNotConnectedRooms(roomGraph)
 		if len(notvisitedRoom) != 0 {
-			tr.log.Debug("%v rooms not fully connected %v, try more",
+			g2log.Debug("%v rooms not fully connected %v, try more",
 				len(notvisitedRoom), tr)
 		} else {
 			break
@@ -84,10 +85,10 @@ func (tr *Terrain) connectRooms(connectCount int, allConnect bool, ttile tile_fl
 					addRoomGraph(roomGraph, v, nearRoom)
 					break
 				} else {
-					tr.log.Warn("%v %v", err, tr)
+					g2log.Warn("%v %v", err, tr)
 				}
 			} else {
-				tr.log.Warn("fail to find near room %v %v", v, tr)
+				g2log.Warn("fail to find near room %v %v", v, tr)
 			}
 		}
 	}

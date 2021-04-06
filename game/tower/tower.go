@@ -59,7 +59,6 @@ func (tw *Tower) String() string {
 type Tower struct {
 	doClose func()         `prettystring:"hide"`
 	rnd     *g2rand.G2Rand `prettystring:"hide"`
-	log     *g2log.LogBase `prettystring:"hide"`
 
 	cmdCh chan interface{}
 
@@ -107,7 +106,6 @@ func New(config *towerconfig.TowerConfig) *Tower {
 		id2ao: aoid2activeobject.New("ActiveObject working"),
 
 		sconfig: config,
-		log:     g2log.GlobalLogger,
 
 		sendStat:         actpersec.New(),
 		recvStat:         actpersec.New(),
@@ -125,7 +123,7 @@ func New(config *towerconfig.TowerConfig) *Tower {
 	tw.rnd = g2rand.NewWithSeed(int64(tw.seed))
 
 	tw.doClose = func() {
-		tw.log.Fatal("Too early doClose call %v", tw)
+		g2log.Fatal("Too early doClose call %v", tw)
 	}
 	tw.serviceInfo = &c2t_obj.ServiceInfo{
 		Version:         version.GetVersion(),
@@ -138,14 +136,14 @@ func New(config *towerconfig.TowerConfig) *Tower {
 func (tw *Tower) ServiceInit() error {
 	rd := recordduration.New(tw.String())
 
-	tw.log.TraceService("Start ServiceInit %v %v", tw, rd)
+	g2log.TraceService("Start ServiceInit %v %v", tw, rd)
 	defer func() {
-		tw.log.TraceService("End ServiceInit %v %v", tw, rd)
+		g2log.TraceService("End ServiceInit %v %v", tw, rd)
 		fmt.Println(rd)
 	}()
 
-	tw.log.TraceService("%v", tw.serviceInfo.StringForm())
-	tw.log.TraceService("%v", tw.sconfig.StringForm())
+	g2log.TraceService("%v", tw.serviceInfo.StringForm())
+	g2log.TraceService("%v", tw.sconfig.StringForm())
 
 	var err error
 
@@ -153,7 +151,7 @@ func (tw *Tower) ServiceInit() error {
 		filepath.Join(tw.Config().DataFolder, "ainames.txt"),
 	)
 	if err != nil {
-		tw.log.Fatal("load ainame fail %v", err)
+		g2log.Fatal("load ainame fail %v", err)
 		return err
 	}
 
@@ -161,7 +159,7 @@ func (tw *Tower) ServiceInit() error {
 		filepath.Join(tw.Config().DataFolder, "chatdata.txt"),
 	)
 	if err != nil {
-		tw.log.Fatal("load chatdata fail %v", err)
+		g2log.Fatal("load chatdata fail %v", err)
 		return err
 	}
 
@@ -188,7 +186,7 @@ func (tw *Tower) ServiceInit() error {
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
 	}
 
-	tw.log.TraceService("%v", tw.towerInfo.StringForm())
+	g2log.TraceService("%v", tw.towerInfo.StringForm())
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 		"http://localhost", tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
@@ -199,8 +197,8 @@ func (tw *Tower) ServiceInit() error {
 }
 
 func (tw *Tower) ServiceCleanup() {
-	tw.log.TraceService("Start ServiceCleanup %v", tw)
-	defer func() { tw.log.TraceService("End ServiceCleanup %v", tw) }()
+	g2log.TraceService("Start ServiceCleanup %v", tw)
+	defer func() { g2log.TraceService("End ServiceCleanup %v", tw) }()
 
 	tw.id2ao.Cleanup()
 	tw.ao2Floor.Cleanup()
@@ -211,8 +209,8 @@ func (tw *Tower) ServiceCleanup() {
 }
 
 func (tw *Tower) ServiceMain(mainctx context.Context) {
-	tw.log.TraceService("Start ServiceMain %v", tw)
-	defer func() { tw.log.TraceService("End ServiceMain %v", tw) }()
+	g2log.TraceService("Start ServiceMain %v", tw)
+	defer func() { g2log.TraceService("End ServiceMain %v", tw) }()
 	ctx, closeCtx := context.WithCancel(mainctx)
 	tw.doClose = closeCtx
 
@@ -222,7 +220,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	for _, f := range tw.floorMan.GetFloorList() {
 		totalaocount += f.GetTerrain().GetActiveObjCount()
 	}
-	tw.log.Debug("Total system ActiveObj in tower %v", totalaocount)
+	g2log.Debug("Total system ActiveObj in tower %v", totalaocount)
 
 	queuesize := totalaocount * 2
 	if queuesize <= 0 {
@@ -230,7 +228,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	}
 	tw.cmdCh = make(chan interface{}, queuesize)
 	if tw.cmdCh == nil {
-		tw.log.Fatal("fail to make cmdCh %v", queuesize)
+		g2log.Fatal("fail to make cmdCh %v", queuesize)
 		return
 	}
 
@@ -258,13 +256,13 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	// add ao to tower/floor
 	for _, f := range tw.floorMan.GetFloorList() {
 		for i := 0; i < f.GetTerrain().GetActiveObjCount(); i++ {
-			ao := activeobject.NewSystemActiveObj(tw.rnd.Int63(), f, tw.log, tw.towerAchieveStat)
+			ao := activeobject.NewSystemActiveObj(tw.rnd.Int63(), f, tw.towerAchieveStat)
 			if err := tw.ao2Floor.ActiveObjEnterTower(f, ao); err != nil {
-				tw.log.Error("%v", err)
+				g2log.Error("%v", err)
 				continue
 			}
 			if err := tw.id2ao.Add(ao); err != nil {
-				tw.log.Error("%v", err)
+				g2log.Error("%v", err)
 			}
 		}
 	}
@@ -272,8 +270,8 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	tw.initAdminWeb()
 	tw.initServiceWeb(ctx)
 
-	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, tw.log, "serveAdminWeb")
-	go retrylistenandserve.RetryListenAndServe(tw.clientWeb, tw.log, "serveServiceWeb")
+	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, g2log.GlobalLogger, "serveAdminWeb")
+	go retrylistenandserve.RetryListenAndServe(tw.clientWeb, g2log.GlobalLogger, "serveServiceWeb")
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
@@ -289,10 +287,10 @@ loop:
 			tw.sendStat.UpdateLap()
 			tw.recvStat.UpdateLap()
 			if len(tw.cmdCh) > cap(tw.cmdCh)/2 {
-				tw.log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
+				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 			}
 			if len(tw.cmdCh) >= cap(tw.cmdCh) {
-				tw.log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
+				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 				break loop
 			}
 		case <-rankMakeTk.C:

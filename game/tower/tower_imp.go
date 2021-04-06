@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike-single/config/towerconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 // managers
@@ -57,9 +56,6 @@ func (tw *Tower) GetBias() bias.Bias {
 
 func (tw *Tower) Config() *towerconfig.TowerConfig {
 	return tw.sconfig
-}
-func (tw *Tower) Log() *g2log.LogBase {
-	return tw.log
 }
 
 func (tw *Tower) PauseListenClient() {

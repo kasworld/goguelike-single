@@ -17,6 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/enum/resourcetype"
 	"github.com/kasworld/goguelike-single/game/terrain/resourcetile"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/maze2"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 	"github.com/kasworld/walk2d"
@@ -191,7 +192,7 @@ func cmdResourceFromPNG(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		return err
 	}
 	if err := tr.resourceTileArea.FromImage(filepath.Join(tr.dataDir, name)); err != nil {
-		tr.log.Fatal("%v %v", tr, err)
+		g2log.Fatal("%v %v", tr, err)
 		return err
 	}
 	return nil

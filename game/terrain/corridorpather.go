@@ -15,6 +15,7 @@ import (
 	"math"
 
 	"github.com/kasworld/goguelike-single/enum/way9type"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	astar "github.com/kasworld/goguelike-single/lib/go-astar"
 )
 
@@ -68,7 +69,7 @@ func (crp *CorridorPather) PathNeighborCost(to astar.Pather) float64 {
 	contact, dir := way9type.CalcContactDirWrappedXY(
 		crp.X, crp.Y, toftp.X, toftp.Y, w, h)
 	if !contact {
-		crp.FF.log.Warn("invalid neighbor %v %v", crp, toftp)
+		g2log.Warn("invalid neighbor %v %v", crp, toftp)
 	}
 	return dir.Len()
 }

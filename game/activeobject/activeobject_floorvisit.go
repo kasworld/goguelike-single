@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -39,7 +40,7 @@ func (ao *ActiveObject) UpdateVisitAreaBySightMat2(
 	sightMat *viewportdata.ViewportSight2, sight float32) {
 	f4c, exist := ao.floor4ClientMan.GetByName(f.GetName())
 	if !exist {
-		ao.log.Fatal("floor not visited %v %v", ao, f.GetName())
+		g2log.Fatal("floor not visited %v %v", ao, f.GetName())
 		f4c = ao.floor4ClientMan.Add(f)
 	}
 	f4c.Visit.UpdateBySightMat2(

@@ -24,6 +24,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
@@ -32,7 +33,7 @@ func (f *Floor) checkAttackSrc(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 	atkdir := arr.Req.Dir
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 	if !exist {
-		f.log.Error("ao not in currentfloor %v %v", f, ao)
+		g2log.Error("ao not in currentfloor %v %v", f, ao)
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionProhibited)
 		return aox, aoy, atkdir
@@ -71,7 +72,7 @@ func (f *Floor) addAttackWide(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 		if err := f.doPosMan.AddToXY(
 			dangerobject.NewAOAttact(ao, dangertype.WideAttack, aox, aoy),
 			dstX, dstY); err != nil {
-			f.log.Fatal("fail to AddToXY %v", err)
+			g2log.Fatal("fail to AddToXY %v", err)
 			continue
 		}
 	}
@@ -94,7 +95,7 @@ func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 		if err := f.doPosMan.AddToXY(
 			dangerobject.NewAOAttact(ao, dangertype.LongAttack, aox, aoy),
 			dstX, dstY); err != nil {
-			f.log.Fatal("fail to AddToXY %v", err)
+			g2log.Fatal("fail to AddToXY %v", err)
 			continue
 		}
 	}
@@ -117,7 +118,7 @@ func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 	if err := f.doPosMan.AddToXY(
 		dangerobject.NewAOAttact(ao, dangertype.BasicAttack, aox, aoy),
 		dstX, dstY); err != nil {
-		f.log.Fatal("fail to AddToXY %v", err)
+		g2log.Fatal("fail to AddToXY %v", err)
 		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
 			c2t_error.ActionCanceled)
 		return

@@ -31,6 +31,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
@@ -40,10 +41,10 @@ import (
 
 func (f *Floor) processTurn(turnTime time.Time) error {
 	act := f.interDur.BeginAct()
-	f.log.Monitor("Start Turn %v %v", f, f.interDur)
+	g2log.Monitor("Start Turn %v %v", f, f.interDur)
 	defer func() {
 		act.End()
-		f.log.Monitor("End Turn %v %v", f, f.interDur)
+		g2log.Monitor("End Turn %v %v", f, f.interDur)
 	}()
 
 	// wait ai run last turn
@@ -71,7 +72,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 	f.cmdActStat.Add(len(ao2ActReqRsp))
 
-	f.log.Monitor("%v ActiveObj:%v Alive:%v Acted:%v",
+	g2log.Monitor("%v ActiveObj:%v Alive:%v Acted:%v",
 		f,
 		len(aoListToProcessInTurn),
 		len(aoAliveInFloorAtStart),
@@ -92,7 +93,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
-			f.log.Error("ao not in currentfloor %v %v", f, ao)
+			g2log.Error("ao not in currentfloor %v %v", f, ao)
 			continue
 		}
 
@@ -117,7 +118,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 						FieldObj:  p.ToPacket_FieldObjClient(aox, aoy),
 					},
 				); err != nil {
-					f.log.Error("%v %v %v", f, ao, err)
+					g2log.Error("%v %v %v", f, ao, err)
 				}
 			}
 			if p.ActType.TrapNoti() {
@@ -127,7 +128,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 						Triggered:   triggered,
 					},
 				); err != nil {
-					f.log.Error("%v %v %v", f, ao, err)
+					g2log.Error("%v %v %v", f, ao, err)
 				}
 			}
 		}
@@ -147,7 +148,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case fieldobjacttype.PortalAutoIn:
 			p1, p2, err := f.FindUsablePortalPairAt(aox, aoy)
 			if err != nil {
-				f.log.Error("fail to use portal %v %v %v %v", f, p, ao, err)
+				g2log.Error("fail to use portal %v %v %v %v", f, p, ao, err)
 				continue
 			}
 			ao.GetAchieveStat().Inc(achievetype.EnterPortal)
@@ -214,7 +215,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		do := o.(*dangerobject.DangerObject)
 		return !do.Live1Turn() // del if no remainturn
 	}); err != nil {
-		f.log.Fatal("fail to delete dangerobject %v", err)
+		g2log.Fatal("fail to delete dangerobject %v", err)
 	}
 
 	// add areaattack fieldobj dangerobj
@@ -280,7 +281,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			do := o.(*dangerobject.DangerObject)
 			switch do.DangerType {
 			default:
-				f.log.Fatal("not supported type %v", do.DangerType)
+				g2log.Fatal("not supported type %v", do.DangerType)
 			case dangertype.BasicAttack, dangertype.LongAttack, dangertype.WideAttack:
 				owner := do.Owner.(gamei.ActiveObjectI)
 				srcTile := f.terrain.GetTiles()[do.OwnerX][do.OwnerY]
@@ -307,7 +308,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
-			f.log.Error("ao not in currentfloor %v %v", f, ao)
+			g2log.Error("ao not in currentfloor %v %v", f, ao)
 			arr.SetDone(
 				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
 				c2t_error.ActionProhibited)
@@ -316,11 +317,11 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 		switch arr.Req.Act {
 		default:
-			f.log.Fatal("unknown aoact %v %v", f, arr)
+			g2log.Fatal("unknown aoact %v %v", f, arr)
 
 		case c2t_idcmd.Attack, c2t_idcmd.AttackWide, c2t_idcmd.AttackLong:
 			// must be acted
-			f.log.Fatal("already acted %v %v", f, arr)
+			g2log.Fatal("already acted %v %v", f, arr)
 
 		case c2t_idcmd.Meditate:
 			arr.SetDone(
@@ -342,7 +343,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			obj, err := f.poPosMan.GetByXYAndUUID(arr.Req.UUID, aox, aoy)
 			if err != nil {
-				f.log.Debug("Pickup obj not found %v %v %v", f, ao, err)
+				g2log.Debug("Pickup obj not found %v %v %v", f, ao, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -350,21 +351,21 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			po, ok := obj.(gamei.CarryingObjectI)
 			if !ok {
-				f.log.Fatal("obj not carryingobject %v", po)
+				g2log.Fatal("obj not carryingobject %v", po)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			if err := f.poPosMan.Del(po); err != nil {
-				f.log.Fatal("remove po fail %v %v %v", f, po, err)
+				g2log.Fatal("remove po fail %v %v %v", f, po, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			if err := ao.DoPickup(po); err != nil {
-				f.log.Error("%v %v %v", f, po, err)
+				g2log.Error("%v %v %v", f, po, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -377,7 +378,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case c2t_idcmd.Drop:
 			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if err := f.aoDropCarryObj(ao, aox, aoy, po); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Drop, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -389,7 +390,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 		case c2t_idcmd.Equip:
 			if err := ao.DoEquip(arr.Req.UUID); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Equip, UUID: arr.Req.UUID},
 					c2t_error.ActionProhibited)
@@ -401,7 +402,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 		case c2t_idcmd.UnEquip:
 			if err := ao.DoUnEquip(arr.Req.UUID); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -414,14 +415,14 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case c2t_idcmd.DrinkPotion:
 			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if po == nil {
-				f.log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
+				g2log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
 				continue
 			}
 			if err := ao.DoUseCarryObj(arr.Req.UUID); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -435,7 +436,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		case c2t_idcmd.ReadScroll:
 			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if po == nil {
-				f.log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
+				g2log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -447,7 +448,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 					arr.SetDone(
 						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 						c2t_error.ActionCanceled)
-					f.log.Fatal("fail to teleport %v %v %v", f, ao, err)
+					g2log.Fatal("fail to teleport %v %v %v", f, ao, err)
 					continue
 				}
 				arr.SetDone(
@@ -458,7 +459,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				ao.GetScrollStat().Inc(scrolltype.Teleport)
 			} else {
 				if err := ao.DoUseCarryObj(arr.Req.UUID); err != nil {
-					f.log.Error("%v %v %v", f, ao, err)
+					g2log.Error("%v %v %v", f, ao, err)
 					arr.SetDone(
 						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
 						c2t_error.ObjectNotFound)
@@ -479,14 +480,14 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			_, ok := f.foPosMan.Get1stObjAt(aox, aoy).(*fieldobject.FieldObject)
 			if !ok {
-				f.log.Error("not at Recycler FieldObj %v %v", f, ao)
+				g2log.Error("not at Recycler FieldObj %v %v", f, ao)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
 					c2t_error.ActionProhibited)
 				continue
 			}
 			if err := ao.DoRecycleCarryObj(arr.Req.UUID); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
 					c2t_error.ObjectNotFound)
@@ -524,7 +525,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				aoactreqrsp.Act{Act: c2t_idcmd.EnterPortal},
 				c2t_error.None)
 			aoMapSkipTurn[ao.GetUUID()] = true
-			f.log.Debug("manual in portal %v %v", f, ao)
+			g2log.Debug("manual in portal %v %v", f, ao)
 
 		case c2t_idcmd.ActTeleport:
 			if !ao.GetFloor4Client(f.GetName()).Visit.IsComplete() {
@@ -538,7 +539,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
 					c2t_error.ActionCanceled)
-				f.log.Fatal("fail to teleport %v %v %v", f, ao, err)
+				g2log.Fatal("fail to teleport %v %v %v", f, ao, err)
 			} else {
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
@@ -601,7 +602,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				continue
 			}
 			if err := f.aoDropCarryObj(ao, aox, aoy, co2drop); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 			ao.AppendTurnResult(turnresult.New(turnresulttype.DropCarryObj, co2drop, 0))
 		}
@@ -619,7 +620,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
-			f.log.Error("ao not in currentfloor %v %v", f, ao)
+			g2log.Error("ao not in currentfloor %v %v", f, ao)
 			continue
 		}
 		act := c2t_idcmd.Meditate
@@ -649,17 +650,17 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
-			f.log.Fatal("ao not in currentfloor %v %v", f, ao)
+			g2log.Fatal("ao not in currentfloor %v %v", f, ao)
 		}
 		if err := f.ActiveObjDropCarryObjByDie(ao, aox, aoy); err != nil {
-			f.log.Error("%v %v %v", f, ao, err)
+			g2log.Error("%v %v %v", f, ao, err)
 		}
 		ao.Death(f) // set rebirth count
 		if aoconn := ao.GetClientConn(); aoconn != nil {
 			if err := aoconn.SendNotiPacket(c2t_idnoti.Death,
 				&c2t_obj.NotiDeath_data{},
 			); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 		}
 	}
@@ -689,11 +690,11 @@ func (f *Floor) processCarryObj2floor() {
 	for _, v := range f.poPosMan.GetAllList() {
 		po, ok := v.(gamei.CarryingObjectI)
 		if !ok {
-			f.log.Fatal("invalid po in poPosMan %v", v)
+			g2log.Fatal("invalid po in poPosMan %v", v)
 		}
 		if po.DecRemainTurnInFloor() == 0 {
 			if err := f.poPosMan.Del(po); err != nil {
-				f.log.Warn("remove po fail %v %v %v, maybe already removed",
+				g2log.Warn("remove po fail %v %v %v, maybe already removed",
 					f, po, err)
 			}
 		}
@@ -707,7 +708,7 @@ func (f *Floor) processCarryObj2floor() {
 		}
 	}
 	if poFailCount > 0 {
-		f.log.Monitor("addNewRandCarryObj2Floor fail %v %v/%v", f, poFailCount, poNeed)
+		g2log.Monitor("addNewRandCarryObj2Floor fail %v %v/%v", f, poFailCount, poNeed)
 	}
 }
 
@@ -726,7 +727,7 @@ func (f *Floor) sendViewportNoti(
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 		if !exist {
-			f.log.Warn("ao not in currentfloor %v %v, skip tile, obj noti", f, ao)
+			g2log.Warn("ao not in currentfloor %v %v, skip tile, obj noti", f, ao)
 			continue
 		}
 
@@ -754,7 +755,7 @@ func (f *Floor) sendViewportNoti(
 						VPTiles:   f.makeViewportTiles2(aox, aoy, sightMat, sight),
 					},
 				); err != nil {
-					f.log.Error("%v %v %v", f, ao, err)
+					g2log.Error("%v %v %v", f, ao, err)
 				}
 			}
 		}
@@ -777,7 +778,7 @@ func (f *Floor) sendViewportNoti(
 					DangerObjList: dOs,
 				},
 			); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 		}
 	}

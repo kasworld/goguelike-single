@@ -17,6 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
@@ -203,11 +204,11 @@ func bytesRecvNotiFn_VPObjList(me interface{}, hd c2t_packet.Header, rbody []byt
 	app.IsOverLoad = newOLNotiData.ActiveObj.CalcWeight() >= leveldata.WeightLimit(newLevel)
 
 	if app.CurrentFloor.FloorInfo == nil {
-		app.log.Error("app.CurrentFloor.FloorInfo not set")
+		g2log.Error("app.CurrentFloor.FloorInfo not set")
 		return nil
 	}
 	if app.CurrentFloor.FloorInfo.Name != newOLNotiData.FloorName {
-		app.log.Error("not current floor objlist data %v %v",
+		g2log.Error("not current floor objlist data %v %v",
 			app.CurrentFloor.FloorInfo.Name, newOLNotiData.FloorName,
 		)
 		return nil
@@ -240,11 +241,11 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 	}
 
 	if app.CurrentFloor.FloorInfo == nil {
-		app.log.Warn("OrangeRed app.CurrentFloor.FloorInfo not set")
+		g2log.Warn("OrangeRed app.CurrentFloor.FloorInfo not set")
 		return nil
 	}
 	if app.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
-		app.log.Warn("not current floor vptile data %v %v",
+		g2log.Warn("not current floor vptile data %v %v",
 			app.CurrentFloor.FloorInfo.Name, pkbody.FloorName,
 		)
 		return nil
@@ -252,7 +253,7 @@ func bytesRecvNotiFn_VPTiles(me interface{}, hd c2t_packet.Header, rbody []byte)
 
 	oldComplete := app.CurrentFloor.Visited.IsComplete()
 	if err := app.CurrentFloor.UpdateFromViewportTile(pkbody, app.ViewportXYLenList); err != nil {
-		app.log.Warn("%v", err)
+		g2log.Warn("%v", err)
 		return nil
 	}
 	if !oldComplete && app.CurrentFloor.Visited.IsComplete() {
@@ -324,7 +325,7 @@ func bytesRecvNotiFn_FoundFieldObj(me interface{}, hd c2t_packet.Header, rbody [
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != pkbody.FloorName {
-		app.log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
+		g2log.Fatal("FoundFieldObj unknonw floor %v", pkbody)
 		return fmt.Errorf("FoundFieldObj unknonw floor %v", pkbody)
 	}
 	if app.CurrentFloor.FieldObjPosMan.Get1stObjAt(pkbody.FieldObj.X, pkbody.FieldObj.Y) == nil {

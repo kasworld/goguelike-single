@@ -25,8 +25,7 @@ func (taom *ActiveObjID2Floor) String() string {
 }
 
 type ActiveObjID2Floor struct {
-	mutex      sync.RWMutex   `prettystring:"hide"`
-	log        *g2log.LogBase `prettystring:"hide"`
+	mutex      sync.RWMutex `prettystring:"hide"`
 	tower      gamei.TowerI
 	aoID2Floor map[string]gamei.FloorI
 }
@@ -35,7 +34,6 @@ func New(tw gamei.TowerI) *ActiveObjID2Floor {
 	toam := &ActiveObjID2Floor{
 		aoID2Floor: make(map[string]gamei.FloorI),
 		tower:      tw,
-		log:        tw.Log(),
 	}
 	return toam
 }
@@ -57,7 +55,7 @@ func (toam *ActiveObjID2Floor) ActiveObjEnterTower(
 
 	oldfloor := toam.aoID2Floor[ao.GetUUID()]
 	if oldfloor != nil {
-		toam.log.Fatal("ao in other floor %v %v %v", toam, dstFloor, ao)
+		g2log.Fatal("ao in other floor %v %v %v", toam, dstFloor, ao)
 		toam.aoLeaveFloorNolock(ao, oldfloor)
 	}
 	toam.aoEnterFloorNolock(dstFloor, ao, x, y)
@@ -109,7 +107,7 @@ func (toam *ActiveObjID2Floor) ActiveObjRebirthToFloor(
 	}
 	x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 	if err != nil {
-		toam.log.Fatal("%v %v %v", err, dstFloor, ao)
+		g2log.Fatal("%v %v %v", err, dstFloor, ao)
 	}
 	if oldfloor != nil && oldfloor != dstFloor {
 		toam.aoEnterFloorNolock(dstFloor, ao, x, y)

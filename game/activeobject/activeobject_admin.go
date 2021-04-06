@@ -12,17 +12,18 @@
 package activeobject
 
 import (
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 )
 
 func (ao *ActiveObject) DoAdminCmd(cmd, args string) c2t_error.ErrorCode {
-	ao.log.AdminAudit("$c %v %v", ao, cmd, args)
+	g2log.AdminAudit("$c %v %v", ao, cmd, args)
 
 	ec := c2t_error.None
 
 	switch cmd {
 	default:
-		ao.log.Error("unknown admin ao cmd %v %v", cmd, args)
+		g2log.Error("unknown admin ao cmd %v %v", cmd, args)
 		ec = c2t_error.ActionProhibited
 
 	}

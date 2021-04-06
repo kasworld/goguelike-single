@@ -15,20 +15,21 @@ import (
 	"net/http"
 
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/weblib"
 )
 
 func (tw *Tower) getFloorFromHTTPArg(w http.ResponseWriter, r *http.Request) gamei.FloorI {
 	floorname := weblib.GetStringByName("floorname", "", w, r)
 	if floorname == "" {
-		tw.log.Warn("Invalid floorname")
+		g2log.Warn("Invalid floorname")
 		http.Error(w, "Invalid floorname", 404)
 		return nil
 	}
 
 	f := tw.floorMan.GetFloorByName(floorname)
 	if f == nil {
-		tw.log.Warn("floor not found %v", floorname)
+		g2log.Warn("floor not found %v", floorname)
 		http.Error(w, "floor not found", 404)
 		return nil
 	}
@@ -38,7 +39,7 @@ func (tw *Tower) getFloorFromHTTPArg(w http.ResponseWriter, r *http.Request) gam
 func (tw *Tower) web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 	floorname := weblib.GetStringByName("floorname", "", w, r)
 	if floorname == "" {
-		tw.log.Warn("Invalid floorname")
+		g2log.Warn("Invalid floorname")
 		http.Error(w, "Invalid floorname", 404)
 		return
 	}
@@ -58,18 +59,18 @@ func (tw *Tower) web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 		f = tw.floorMan.GetFloorByName(floorname)
 	}
 	if err != nil {
-		tw.log.Warn("floor not found %v", err)
+		g2log.Warn("floor not found %v", err)
 		http.Error(w, "floor not found", 404)
 		return
 	}
 
 	if f == nil {
-		tw.log.Warn("floor not found %v", floorname)
+		g2log.Warn("floor not found %v", floorname)
 		http.Error(w, "floor not found", 404)
 		return
 	}
 	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	f.Web_FloorInfo(w, r)
 }

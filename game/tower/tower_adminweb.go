@@ -27,6 +27,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
@@ -45,7 +46,7 @@ func (tw *Tower) initAdminWeb() {
 	authData.ReLoadUserData([][2]string{
 		{tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass},
 	})
-	webMux := weblib.NewAuthMux(authData, tw.log)
+	webMux := weblib.NewAuthMux(authData, g2log.GlobalLogger)
 
 	if !version.IsRelease() {
 		webprofile.AddWebProfile(webMux)
@@ -77,7 +78,7 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFunc("/Config", tw.json_Config)
 
 	authData.AddAllActionName(tw.sconfig.WebAdminID)
-	tw.log.TraceService("%v", webMux)
+	g2log.TraceService("%v", webMux)
 
 	tw.adminWeb = &http.Server{
 		Handler: webMux,
@@ -172,8 +173,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	</head>
 	<body>
 
-	service cmd <a href= "/service?cmd=logreopen" target="_blank">logreopen</a> 
-	<br/>
 	service cmd <a href= "/service?cmd=stop" target="_blank">stop</a> 
 	<hr/>
 
@@ -256,13 +255,13 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	</body> </html> 
 	`)
 	if err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	if err := tplIndex.Execute(w, tw); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 

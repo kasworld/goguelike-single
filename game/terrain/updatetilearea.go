@@ -13,6 +13,7 @@ package terrain
 
 import (
 	"github.com/kasworld/goguelike-single/enum/tile"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 func (tr *Terrain) resource2View() {
@@ -31,7 +32,7 @@ func (tr *Terrain) openBlockedDoor() {
 			if t.CannotPlaceObj() {
 				if tr.roomManager.GetRoomByPos(x, y) != nil {
 					tr.serviceTileArea[x][y].OverrideBits(tile.Door)
-					tr.log.Debug("wall blocked door found %v [%v %v], change to door", tr, x, y)
+					g2log.Debug("wall blocked door found %v [%v %v], change to door", tr, x, y)
 				}
 			}
 		}

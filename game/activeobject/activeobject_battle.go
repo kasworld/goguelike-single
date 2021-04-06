@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 // follow floor env bias
@@ -64,7 +65,7 @@ func (ao *ActiveObject) ApplyDamageFromDangerObj() bool {
 				dstObj := v.GetDstObj()
 				switch o := dstObj.(type) {
 				default:
-					ao.log.Fatal("unknown dstao %v", v)
+					g2log.Fatal("unknown dstao %v", v)
 				case *ActiveObject:
 					o.Kill(ao)
 				case *fieldobject.FieldObject:

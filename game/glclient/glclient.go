@@ -32,8 +32,7 @@ import (
 )
 
 type GLClient struct {
-	log          *g2log.LogBase `prettystring:"hide"`
-	sendRecvStop func()         `prettystring:"hide"`
+	sendRecvStop func() `prettystring:"hide"`
 
 	config    *glclientconfig.GLClientConfig
 	runResult error
@@ -66,14 +65,13 @@ func New(config *glclientconfig.GLClientConfig) *GLClient {
 
 	app := &GLClient{
 		config:            config,
-		log:               g2log.GlobalLogger,
 		ServerJitter:      actjitter.New("Server"),
 		wg:                new(sync.WaitGroup),
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
 	app.sendRecvStop = func() {
-		app.log.Error("Too early sendRecvStop call %v", app)
+		g2log.Error("Too early sendRecvStop call %v", app)
 	}
 	app.towerConn = c2t_connwsgorilla.New(10)
 	return app
@@ -96,7 +94,7 @@ func (app *GLClient) Run(mainctx context.Context) {
 
 	if err := app.towerConn.ConnectTo(app.config.ConnectToTower); err != nil {
 		app.runResult = err
-		app.log.Error("%v", app.runResult)
+		g2log.Error("%v", app.runResult)
 		return
 	}
 	app.wg.Add(1)
@@ -112,14 +110,14 @@ func (app *GLClient) Run(mainctx context.Context) {
 
 		if err != nil {
 			app.runResult = err
-			app.log.Error("%v", err)
+			g2log.Error("%v", err)
 		}
 		app.sendRecvStop()
 	}()
 
 	if err := app.reqLogin(); err != nil {
 		app.runResult = err
-		app.log.Error("%v", app.runResult)
+		g2log.Error("%v", app.runResult)
 		return
 	}
 
@@ -139,7 +137,7 @@ loop:
 				err := app.reqHeartbeat()
 				if err != nil {
 					app.runResult = err
-					app.log.Error("%v", app.runResult)
+					g2log.Error("%v", app.runResult)
 				}
 			}()
 		}
@@ -147,26 +145,26 @@ loop:
 }
 
 func (app *GLClient) handleSentPacket(pk *c2t_packet.Packet) error {
-	app.log.TraceClient("sent %v", pk.Header)
+	g2log.TraceClient("sent %v", pk.Header)
 	return nil
 }
 
 func (app *GLClient) handleRecvPacket(header c2t_packet.Header, body []byte) error {
-	app.log.TraceClient("recv %v", header)
+	g2log.TraceClient("recv %v", header)
 	switch header.FlowType {
 	default:
 		return fmt.Errorf("invalid packet type %v %v", header, body)
 	case c2t_packet.Response:
 		if err := app.pid2recv.HandleRsp(header, body); err != nil {
 			app.sendRecvStop()
-			app.log.Fatal("%v %v %v %v", app, header, body, err)
+			g2log.Fatal("%v %v %v %v", app, header, body, err)
 			return err
 		}
 	case c2t_packet.Notification:
 		fn := DemuxNoti2ByteFnMap[header.Cmd]
 		if err := fn(app, header, body); err != nil {
 			app.sendRecvStop()
-			app.log.Fatal("%v %v %v %v", app, header, body, err)
+			g2log.Fatal("%v %v %v %v", app, header, body, err)
 			return err
 		}
 	}

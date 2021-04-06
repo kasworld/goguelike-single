@@ -20,6 +20,7 @@ import (
 	"net/http"
 
 	"github.com/kasworld/goguelike-single/game/fieldobject"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/weblib"
@@ -112,10 +113,10 @@ func (f *Floor) Web_FloorInfo(w http.ResponseWriter, r *http.Request) {
 	</table>
 	</body> </html> `)
 	if err != nil {
-		f.log.Error("%v %v", f, err)
+		g2log.Error("%v %v", f, err)
 	}
 	if err := tplIndex.Execute(w, f); err != nil {
-		f.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 
@@ -132,7 +133,7 @@ func (f *Floor) MakeImage(zoom int) *image.RGBA {
 			} else if po := f.poPosMan.Get1stObjAt(srcX, srcY); po != nil {
 				switch po.(type) {
 				default:
-					f.log.Error("unknown carryingobj %v", po)
+					g2log.Error("unknown carryingobj %v", po)
 				case gamei.EquipObjI:
 					r, g, b := po.(gamei.EquipObjI).GetBias().ToRGB()
 					co = color.RGBA{r, g, b, 0xff}
@@ -145,7 +146,7 @@ func (f *Floor) MakeImage(zoom int) *image.RGBA {
 			} else if fo := f.foPosMan.Get1stObjAt(srcX, srcY); fo != nil {
 				ww, ok := fo.(*fieldobject.FieldObject)
 				if !ok {
-					f.log.Fatal("not *fieldobject.FieldObject %v", fo)
+					g2log.Fatal("not *fieldobject.FieldObject %v", fo)
 					continue
 				}
 				oco := ww.GetActType().Color24()
@@ -180,7 +181,7 @@ func (f *Floor) Web_FloorImageAutoZoom(w http.ResponseWriter, r *http.Request) {
 	img := f.MakeImage(zoom)
 	err := png.Encode(w, img)
 	if err != nil {
-		f.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 
@@ -189,7 +190,7 @@ func (f *Floor) Web_FloorImageZoom(w http.ResponseWriter, r *http.Request) {
 	img := f.MakeImage(zoom)
 	err := png.Encode(w, img)
 	if err != nil {
-		f.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 
@@ -197,7 +198,7 @@ func (f *Floor) Web_TileInfo(w http.ResponseWriter, r *http.Request) {
 	x := weblib.GetIntByName("x", -1, w, r)
 	y := weblib.GetIntByName("y", -1, w, r)
 	if x == -1 || y == -1 {
-		f.log.Error("invalid pos %v", r.RequestURI)
+		g2log.Error("invalid pos %v", r.RequestURI)
 		return
 	}
 	zoom := f.calcZoom()

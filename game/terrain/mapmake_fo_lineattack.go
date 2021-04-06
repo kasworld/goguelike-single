@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/roomsort"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 )
 
@@ -54,7 +55,7 @@ func cmdAddRotateLineAttackRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Debug("AddRotateLineAttackRand add insufficient")
+		g2log.Debug("AddRotateLineAttackRand add insufficient")
 	}
 	return nil
 }
@@ -79,7 +80,7 @@ func cmdAddRotateLineAttackRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) erro
 		}
 	}
 	if try == 0 {
-		tr.log.Debug("AddRotateLineAttackRand add insufficient")
+		g2log.Debug("AddRotateLineAttackRand add insufficient")
 	}
 	return nil
 }

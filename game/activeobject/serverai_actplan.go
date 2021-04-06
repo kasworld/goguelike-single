@@ -24,6 +24,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/attackcheck"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
@@ -213,7 +214,7 @@ func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 	fl := ao.currentFloor
 	inPortal, outPortal, err := fl.FindUsablePortalPairAt(sai.aox, sai.aoy)
 	if err != nil {
-		ao.log.Error("%v %v %v", fl, ao, err)
+		g2log.Error("%v %v %v", fl, ao, err)
 		return false
 	}
 	sai.fieldObjUseTime[outPortal.ID] = sai.turnTime

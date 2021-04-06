@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/roomsort"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 )
 
@@ -50,7 +51,7 @@ func cmdAddMineRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Debug("AddMineRand add insufficient")
+		g2log.Debug("AddMineRand add insufficient")
 	}
 	return nil
 }
@@ -73,7 +74,7 @@ func cmdAddMineRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Debug("AddMineRand add insufficient")
+		g2log.Debug("AddMineRand add insufficient")
 	}
 	return nil
 }

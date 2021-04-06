@@ -22,6 +22,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
@@ -522,7 +523,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminForgetFloor(
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	if err := ao.ForgetFloorByName(f.GetName()); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 
 	sendBody := &c2t_obj.RspAdminForgetFloor_data{}
@@ -558,7 +559,7 @@ func (tw *Tower) bytesAPIFn_ReqAdminFloorMap(
 		return sendHeader, nil, fmt.Errorf("user not in floor %v", me)
 	}
 	if err := ao.MakeFloorComplete(f); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 
 	sendBody := &c2t_obj.RspAdminFloorMap_data{}

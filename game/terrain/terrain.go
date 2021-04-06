@@ -42,7 +42,6 @@ type Terrain struct {
 	dataDir       string
 	terrainScript []string
 	rnd           *g2rand.G2Rand `prettystring:"hide"`
-	log           *g2log.LogBase `prettystring:"hide"`
 
 	oriTiles resourcetilearea.ResourceTileArea `prettystring:"simple"`
 
@@ -89,11 +88,10 @@ type Terrain struct {
 	Tile2Discover     int
 }
 
-func New(seed int64, script []string, dataDir string, l *g2log.LogBase) *Terrain {
+func New(seed int64, script []string, dataDir string) *Terrain {
 	tr := &Terrain{
 		dataDir:       dataDir,
 		terrainScript: script,
-		log:           l,
 	}
 	tr.viewportCache = viewportcache.New(tr)
 	tr.seed = seed
@@ -101,15 +99,15 @@ func New(seed int64, script []string, dataDir string, l *g2log.LogBase) *Terrain
 	return tr
 }
 func (tr *Terrain) Cleanup() {
-	tr.log.TraceService("Start Cleanup Terrain %v", tr.Name)
-	defer func() { tr.log.TraceService("End Cleanup Terrain %v", tr.Name) }()
+	g2log.TraceService("Start Cleanup Terrain %v", tr.Name)
+	defer func() { g2log.TraceService("End Cleanup Terrain %v", tr.Name) }()
 	tr.foPosMan.Cleanup()
 }
 
 func (tr *Terrain) Init() error {
 	for i, cmdline := range tr.terrainScript {
 		if err := tr.Execute1Cmdline(cmdline); err != nil {
-			tr.log.Fatal(
+			g2log.Fatal(
 				"fail to exec terrain %v %v:%v %v", tr, i, cmdline, err)
 			return err
 		}
@@ -171,19 +169,19 @@ func (tr *Terrain) renderServiceTileArea() {
 	for _, o := range tr.foPosMan.GetAllList() {
 		fo, ok := o.(*fieldobject.FieldObject)
 		if !ok {
-			tr.log.Fatal("not *fieldobject.FieldObject %v", o)
+			g2log.Fatal("not *fieldobject.FieldObject %v", o)
 			continue
 		}
 		x, y, exist := tr.foPosMan.GetXYByUUID(o.GetUUID())
 		if !exist {
-			tr.log.Fatal("fieldobj not found %v", o)
+			g2log.Fatal("fieldobj not found %v", o)
 			continue
 		}
 		if !tr.serviceTileArea[x][y].CharPlaceable() {
 			if fo.ActType.MustCharPlaceable() {
-				tr.log.Fatal("fieldobj placed at NonCharPlaceable tile %v", fo)
+				g2log.Fatal("fieldobj placed at NonCharPlaceable tile %v", fo)
 			} else {
-				tr.log.Warn("fieldobj placed at NonCharPlaceable tile %v", fo)
+				g2log.Warn("fieldobj placed at NonCharPlaceable tile %v", fo)
 			}
 		}
 	}

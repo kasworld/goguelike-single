@@ -17,6 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -39,7 +40,7 @@ func (app *GLClient) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 		Body: body,
 	}
 	if err := app.towerConn.EnqueueSendPacket(&spk); err != nil {
-		app.log.Error("End %v %+v %v",
+		g2log.Error("End %v %+v %v",
 			spk.Header, spk.Body, err)
 		app.sendRecvStop()
 		return fmt.Errorf("send fail %v:%v %v",
@@ -63,7 +64,7 @@ func (app *GLClient) reqLogin() error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				app.log.Fatal("%v %v %v", hd, rsp, err)
+				g2log.Fatal("%v %v %v", hd, rsp, err)
 				return err
 			}
 
@@ -73,15 +74,15 @@ func (app *GLClient) reqLogin() error {
 			app.AccountInfo = rpk.AccountInfo
 
 			if !version.IsSame(app.ServiceInfo.Version) {
-				app.log.Error("Version mismatch client %v server %v",
+				g2log.Error("Version mismatch client %v server %v",
 					version.GetVersion(), app.ServiceInfo.Version)
 			}
 			if dataversion.DataVersion != app.ServiceInfo.DataVersion {
-				app.log.Error("DataVersion mismatch client %v server %v",
+				g2log.Error("DataVersion mismatch client %v server %v",
 					dataversion.DataVersion, app.ServiceInfo.DataVersion)
 			}
 			if c2t_version.ProtocolVersion != app.ServiceInfo.ProtocolVersion {
-				app.log.Error("ProtocolVersion mismatch client %v server %v",
+				g2log.Error("ProtocolVersion mismatch client %v server %v",
 					c2t_version.ProtocolVersion, app.ServiceInfo.ProtocolVersion)
 			}
 			return app.reqAIPlay(true)
@@ -115,15 +116,15 @@ func (app *GLClient) reqAchieveInfo() error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				app.log.Fatal("%v %v %v", hd, rsp, err)
+				g2log.Fatal("%v %v %v", hd, rsp, err)
 				return err
 			}
 			rpk := robj.(*c2t_obj.RspAchieveInfo_data)
-			app.log.Debug("=================================")
+			g2log.Debug("=================================")
 			for i, v := range rpk.AchieveStat {
-				app.log.Debug("%v : %v", achievetype.AchieveType(i).String(), v)
+				g2log.Debug("%v : %v", achievetype.AchieveType(i).String(), v)
 			}
-			app.log.Debug("Achieve list ====================")
+			g2log.Debug("Achieve list ====================")
 			return nil
 		},
 	)
@@ -138,12 +139,12 @@ func (app *GLClient) reqHeartbeat() error {
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			robj, err := c2t_gob.UnmarshalPacket(hd, rsp.([]byte))
 			if err != nil {
-				app.log.Fatal("%v %v %v %v", app, hd, rsp, err)
+				g2log.Fatal("%v %v %v %v", app, hd, rsp, err)
 				return err
 			}
 			rpk := robj.(*c2t_obj.RspHeartbeat_data)
 			PingDur := time.Now().Sub(rpk.Time)
-			app.log.Monitor("Ping %v", PingDur)
+			g2log.Monitor("Ping %v", PingDur)
 			return nil
 		},
 	)

@@ -16,6 +16,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/enum/tile_flag"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 	"github.com/kasworld/rect"
 )
@@ -67,7 +68,7 @@ func cmdAddRandRooms(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Debug("Room add %v insufficient %v", count, tr)
+		g2log.Debug("Room add %v insufficient %v", count, tr)
 		// return false
 	}
 	return nil

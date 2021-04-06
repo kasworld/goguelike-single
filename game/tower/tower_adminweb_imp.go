@@ -17,26 +17,27 @@ import (
 
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/weblib"
 )
 
 func (tw *Tower) web_ProtocolStat(w http.ResponseWriter, r *http.Request) {
 	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	tw.protocolStat.ToWeb(w, r)
 }
 
 func (tw *Tower) web_NotiStat(w http.ResponseWriter, r *http.Request) {
 	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	tw.notiStat.ToWeb(w, r)
 }
 
 func (tw *Tower) web_ErrorStat(w http.ResponseWriter, r *http.Request) {
 	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	tw.errorStat.ToWeb(w, r)
 }
@@ -44,7 +45,7 @@ func (tw *Tower) web_ErrorStat(w http.ResponseWriter, r *http.Request) {
 func (tw *Tower) web_KickActiveObj(w http.ResponseWriter, r *http.Request) {
 	id := weblib.GetStringByName("aoid", "", w, r)
 	if id == "" {
-		tw.log.Warn("Invalid id")
+		g2log.Warn("Invalid id")
 		http.Error(w, "Invalid id", 404)
 		return
 	}
@@ -60,25 +61,25 @@ func (tw *Tower) web_KickActiveObj(w http.ResponseWriter, r *http.Request) {
 func (tw *Tower) web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {
 	aoid := weblib.GetStringByName("aoid", "", w, r)
 	if aoid == "" {
-		tw.log.Warn("Invalid aoid")
+		g2log.Warn("Invalid aoid")
 		http.Error(w, "Invalid aoid", 404)
 		return
 	}
 	f := tw.ao2Floor.GetFloorByActiveObjID(aoid)
 	if f == nil {
-		tw.log.Warn("floor not found %v", aoid)
+		g2log.Warn("floor not found %v", aoid)
 		http.Error(w, "floor not found", 404)
 		return
 	}
 
 	ao, ok := f.GetActiveObjPosMan().GetByUUID(aoid).(*activeobject.ActiveObject)
 	if !ok {
-		tw.log.Warn("Invalid aoid %v", aoid)
+		g2log.Warn("Invalid aoid %v", aoid)
 		http.Error(w, "Invalid aoid", 404)
 		return
 	}
 	if err := weblib.SetFresh(w, r); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	ao.Web_ActiveObjInfo(w, r)
 }
@@ -86,27 +87,27 @@ func (tw *Tower) web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {
 func (tw *Tower) web_ActiveObjVisitFloorImage(w http.ResponseWriter, r *http.Request) {
 	aoid := weblib.GetStringByName("aoid", "", w, r)
 	if aoid == "" {
-		tw.log.Warn("Invalid aoid")
+		g2log.Warn("Invalid aoid")
 		http.Error(w, "Invalid aoid", 404)
 		return
 	}
 
 	visitfloorid := weblib.GetStringByName("floorname", "", w, r)
 	if visitfloorid == "" {
-		tw.log.Warn("Invalid visitfloorname")
+		g2log.Warn("Invalid visitfloorname")
 		http.Error(w, "Invalid floor name", 404)
 		return
 	}
 
 	f := tw.ao2Floor.GetFloorByActiveObjID(aoid)
 	if f == nil {
-		tw.log.Warn("floor not found %v", aoid)
+		g2log.Warn("floor not found %v", aoid)
 		http.Error(w, "floor not found", 404)
 		return
 	}
 	ao, ok := f.GetActiveObjPosMan().GetByUUID(aoid).(*activeobject.ActiveObject)
 	if !ok {
-		tw.log.Warn("Invalid aoid %v", aoid)
+		g2log.Warn("Invalid aoid %v", aoid)
 		http.Error(w, "Invalid aoid", 404)
 		return
 	}
@@ -127,10 +128,10 @@ func (tw *Tower) web_ActiveObjRankingList(w http.ResponseWriter, r *http.Request
 		{{end}}
 	`)
 	if err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 	if err := tplIndex.Execute(w, pList); err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 
 	listActiveObj.ToWebMid(w, r)
@@ -141,6 +142,6 @@ func (tw *Tower) web_ActiveObjRankingList(w http.ResponseWriter, r *http.Request
 func (tw *Tower) web_towerStat(w http.ResponseWriter, r *http.Request) {
 	err := tw.GetTowerAchieveStat().ToWeb(w, r)
 	if err != nil {
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }

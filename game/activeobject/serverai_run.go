@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike-single/enum/aiplan"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 func (ao *ActiveObject) IsAIUse() bool {
@@ -40,7 +41,7 @@ func (ao *ActiveObject) ActTurn(sai *ServerAIState, turnTime time.Time) {
 		defer atomic.AddInt32(&sai.isAIRunning, -1)
 		ao.actTurn(sai, turnTime)
 	} else {
-		ao.log.Warn("skip ai Turn %v %v", ao, sai.isAIRunning)
+		g2log.Warn("skip ai Turn %v %v", ao, sai.isAIRunning)
 	}
 }
 
@@ -65,7 +66,7 @@ func (ao *ActiveObject) actTurn(sai *ServerAIState, turnTime time.Time) {
 
 	aox, aoy, exist := ao.currentFloor.GetActiveObjPosMan().GetXYByUUID(ao.GetUUID())
 	if !exist {
-		// ao.log.Error("ao not in currentfloor %v %v", ao, ao.currentFloor)
+		// g2log.Error("ao not in currentfloor %v %v", ao, ao.currentFloor)
 		return
 	}
 	sai.aox, sai.aoy = aox, aoy

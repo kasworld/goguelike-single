@@ -23,6 +23,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
 	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 )
 
@@ -214,11 +215,11 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	</body> </html> 
 	`)
 	if err != nil {
-		ao.log.Error("%v", err)
+		g2log.Error("%v", err)
 		fmt.Println(err)
 	}
 	if err := tplIndex.Execute(w, ao); err != nil {
-		ao.log.Error("%v", err)
+		g2log.Error("%v", err)
 		fmt.Println(err)
 	}
 }

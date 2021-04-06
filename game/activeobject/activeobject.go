@@ -41,7 +41,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/floor4clientman"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/game/inventory"
-	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
@@ -66,7 +65,6 @@ func (ao *ActiveObject) String() string {
 type ActiveObject struct {
 	// mutex sync.RWMutex   `prettystring:"hide"`
 	rnd *g2rand.G2Rand `prettystring:"hide"`
-	log *g2log.LogBase `prettystring:"hide"`
 
 	uuid        string // aouuid
 	nickName    string
@@ -118,13 +116,11 @@ type ActiveObject struct {
 func newActiveObj(
 	seed int64,
 	homefloor gamei.FloorI,
-	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
 
 	ao := &ActiveObject{
 		rnd:              g2rand.NewWithSeed(seed),
-		log:              l,
 		towerAchieveStat: towerAchieveStat,
 		homefloor:        homefloor,
 
@@ -142,11 +138,10 @@ func newActiveObj(
 }
 
 func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
-	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 	conn *c2t_serveconnbyte.ServeConnByte) *ActiveObject {
 
-	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
+	ao := newActiveObj(seed, homefloor, towerAchieveStat)
 	ao.uuid = uuidstr.New()
 	// ao.uuid = UserAOIDMaker.New()
 	ao.nickName = nickname
@@ -163,10 +158,9 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 }
 
 func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
-	l *g2log.LogBase,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
 ) *ActiveObject {
-	ao := newActiveObj(seed, homefloor, l, towerAchieveStat)
+	ao := newActiveObj(seed, homefloor, towerAchieveStat)
 	ao.uuid = SysAOIDMaker.New()
 	ao.nickName = gamedata.ActiveObjNameList[ao.rnd.Intn(len(gamedata.ActiveObjNameList))]
 	ao.isAIInUse = true

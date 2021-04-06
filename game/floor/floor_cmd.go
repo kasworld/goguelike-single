@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
@@ -29,11 +30,11 @@ func (f *Floor) processCmd(data interface{}) {
 	f.cmdActStat.Inc()
 	switch pk := data.(type) {
 	default:
-		f.log.Fatal("unknown pk recv %v %#v", f, data)
+		g2log.Fatal("unknown pk recv %v %#v", f, data)
 
 	case *cmd2floor.ReqLeaveFloor:
 		if err := f.aoPosMan.Del(pk.ActiveObj); err != nil {
-			f.log.Fatal("%v %v", f, err)
+			g2log.Fatal("%v %v", f, err)
 		}
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
 			if err := conn.SendNotiPacket(c2t_idnoti.LeaveFloor,
@@ -41,14 +42,14 @@ func (f *Floor) processCmd(data interface{}) {
 					FI: f.ToPacket_FloorInfo(),
 				},
 			); err != nil {
-				f.log.Error("%v %v", f, err)
+				g2log.Error("%v %v", f, err)
 			}
 		}
 
 	case *cmd2floor.ReqEnterFloor:
 		err := f.aoPosMan.AddOrUpdateToXY(pk.ActiveObj, pk.X, pk.Y)
 		if err != nil {
-			f.log.Fatal("%v %v", f, err)
+			g2log.Fatal("%v %v", f, err)
 		}
 		pk.ActiveObj.EnterFloor(f)
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
@@ -57,7 +58,7 @@ func (f *Floor) processCmd(data interface{}) {
 					FI: f.ToPacket_FloorInfo(),
 				},
 			); err != nil {
-				f.log.Error("%v %v", f, err)
+				g2log.Error("%v %v", f, err)
 			}
 			// send known tile area
 			f4c := pk.ActiveObj.GetFloor4Client(f.GetName())
@@ -74,7 +75,7 @@ func (f *Floor) processCmd(data interface{}) {
 					},
 				)
 				if err != nil {
-					f.log.Error("%v", err)
+					g2log.Error("%v", err)
 				}
 			}
 
@@ -91,7 +92,7 @@ func (f *Floor) processCmd(data interface{}) {
 					FOList: fol,
 				},
 			); err != nil {
-				f.log.Error("%v", err)
+				g2log.Error("%v", err)
 			}
 
 			f.tower.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
@@ -100,14 +101,14 @@ func (f *Floor) processCmd(data interface{}) {
 	case *cmd2floor.ReqRebirth2Floor:
 		err := f.aoPosMan.AddOrUpdateToXY(pk.ActiveObj, pk.X, pk.Y)
 		if err != nil {
-			f.log.Fatal("%v %v", f, err)
+			g2log.Fatal("%v %v", f, err)
 		}
 		pk.ActiveObj.Rebirth()
 		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
 			if err := conn.SendNotiPacket(c2t_idnoti.Rebirthed,
 				&c2t_obj.NotiRebirthed_data{},
 			); err != nil {
-				f.log.Error("%v %v %v", f, pk.ActiveObj, err)
+				g2log.Error("%v %v %v", f, pk.ActiveObj, err)
 			}
 		}
 
@@ -124,17 +125,17 @@ func (f *Floor) Call_APIAdminTeleport2Floor(
 	ActiveObj gamei.ActiveObjectI, ReqPk *c2t_obj.ReqAdminTeleport_data) c2t_error.ErrorCode {
 
 	if f.aoPosMan.GetByUUID(ActiveObj.GetUUID()) == nil {
-		f.log.Warn("ActiveObj not in floor %v %v", f, ActiveObj)
+		g2log.Warn("ActiveObj not in floor %v %v", f, ActiveObj)
 		return c2t_error.ActionProhibited
 	}
 	x, y, err := f.SearchRandomActiveObjPos()
 	if err != nil {
-		f.log.Error("fail to teleport %v %v %v", f, ActiveObj, err)
+		g2log.Error("fail to teleport %v %v %v", f, ActiveObj, err)
 		return c2t_error.ActionCanceled
 	}
 	x, y = f.terrain.WrapXY(x, y)
 	if err := f.aoPosMan.UpdateToXY(ActiveObj, x, y); err != nil {
-		f.log.Fatal("move ao fail %v %v %v", f, ActiveObj, err)
+		g2log.Fatal("move ao fail %v %v %v", f, ActiveObj, err)
 		return c2t_error.ActionCanceled
 	}
 	ActiveObj.SetNeedTANoti()

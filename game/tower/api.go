@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
@@ -83,7 +84,6 @@ func (tw *Tower) bytesAPIFn_ReqLogin(
 			tw.rnd.Int63(),
 			homeFloor,
 			tw.Config().NickName,
-			tw.log,
 			tw.towerAchieveStat,
 			c2sc)
 		tw.playerAO = newAO
@@ -221,7 +221,7 @@ func (tw *Tower) bytesAPIFn_ReqRebirth(
 	err = ao.TryRebirth()
 	if err != nil {
 		rhd.ErrorCode = c2t_error.ActionProhibited
-		tw.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 
 	return rhd, spacket, nil
@@ -279,7 +279,7 @@ func (tw *Tower) bytesAPIFn_ReqAIPlay(
 		ErrorCode: c2t_error.None,
 	}
 	if err := ao.DoAIOnOff(robj.On); err != nil {
-		tw.log.Error("fail to AIOn %v %v", me)
+		g2log.Error("fail to AIOn %v %v", me)
 	}
 	return rhd, &c2t_obj.RspAIPlay_data{}, nil
 }

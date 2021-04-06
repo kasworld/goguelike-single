@@ -33,8 +33,7 @@ func (fm *FloorManager) String() string {
 }
 
 type FloorManager struct {
-	mutex         sync.RWMutex   `prettystring:"hide"`
-	log           *g2log.LogBase `prettystring:"hide"`
+	mutex         sync.RWMutex `prettystring:"hide"`
 	tower         gamei.TowerI
 	terrainScript towerscript.TowerScript
 
@@ -49,7 +48,6 @@ type FloorManager struct {
 
 func New(terrainScript towerscript.TowerScript, tw gamei.TowerI) *FloorManager {
 	fm := &FloorManager{
-		log:             tw.Log(),
 		tower:           tw,
 		terrainScript:   terrainScript,
 		floorList:       make([]gamei.FloorI, 0, len(terrainScript)),
@@ -72,7 +70,7 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 			defer wg.Done()
 			f := floor.New(rnd.Int63(), v, fm.tower)
 			if err := f.Init(); err != nil {
-				fm.log.Fatal("floor init fail, %v", err)
+				g2log.Fatal("floor init fail, %v", err)
 			}
 			tmpFloorList[i] = f
 		}(i, v)
@@ -82,16 +80,16 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 	for i, f := range tmpFloorList {
 		if !f.Initialized() {
 			if len(fm.terrainScript[i]) > 0 {
-				fm.log.Warn("skip not initialized floor %v", fm.terrainScript[i][0])
+				g2log.Warn("skip not initialized floor %v", fm.terrainScript[i][0])
 			} else {
-				fm.log.Warn("skip not initialized floor No.%v", i)
+				g2log.Warn("skip not initialized floor No.%v", i)
 			}
 			continue
 		}
 		if fm.startFloor == nil {
 			fm.startFloor = f
 		}
-		fm.log.TraceService("Floor generated %v", f)
+		g2log.TraceService("Floor generated %v", f)
 
 		if oldFloor, exist := fm.floorName2Floor[f.GetName()]; exist {
 			return fmt.Errorf("floor name duplicate %v %v", oldFloor, f)
@@ -102,7 +100,7 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 		for _, o := range f.GetTerrain().GetFieldObjPosMan().GetAllList() {
 			pt, ok := o.(*fieldobject.FieldObject)
 			if !ok {
-				fm.log.Fatal("not *fieldobject.FieldObject %v", o)
+				g2log.Fatal("not *fieldobject.FieldObject %v", o)
 				continue
 			}
 			if pt.ActType == fieldobjacttype.PortalInOut ||

@@ -40,7 +40,6 @@ func (f *Floor) String() string {
 type Floor struct {
 	mutexTurn sync.Mutex
 	rnd       *g2rand.G2Rand `prettystring:"hide"`
-	log       *g2log.LogBase `prettystring:"hide"`
 
 	tower       gamei.TowerI
 	w           int
@@ -70,7 +69,6 @@ type Floor struct {
 
 func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 	f := &Floor{
-		log:               tw.Log(),
 		tower:             tw,
 		seed:              seed,
 		rnd:               g2rand.NewWithSeed(seed),
@@ -78,13 +76,13 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 		statPacketObjOver: actpersec.New(),
 		cmdActStat:        actpersec.New(),
 	}
-	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder, f.log)
+	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder)
 	return f
 }
 
 func (f *Floor) Cleanup() {
-	f.log.TraceService("Start Cleanup Floor %v", f.GetName())
-	defer func() { f.log.TraceService("End Cleanup Floor %v", f.GetName()) }()
+	g2log.TraceService("Start Cleanup Floor %v", f.GetName())
+	defer func() { g2log.TraceService("End Cleanup Floor %v", f.GetName()) }()
 
 	f.aoPosMan.Cleanup()
 	f.poPosMan.Cleanup()
@@ -94,8 +92,8 @@ func (f *Floor) Cleanup() {
 
 // Init bi need for randomness
 func (f *Floor) Init() error {
-	f.log.TraceService("Start Init %v", f)
-	defer func() { f.log.TraceService("End Init %v", f) }()
+	g2log.TraceService("Start Init %v", f)
+	defer func() { g2log.TraceService("End Init %v", f) }()
 
 	if err := f.terrain.Init(); err != nil {
 		return fmt.Errorf("fail to make terrain %v", err)
@@ -119,12 +117,12 @@ func (f *Floor) Init() error {
 }
 
 func (f *Floor) Run(ctx context.Context, queuesize int) {
-	f.log.TraceService("start Run %v", f)
-	defer func() { f.log.TraceService("End Run %v", f) }()
+	g2log.TraceService("start Run %v", f)
+	defer func() { g2log.TraceService("End Run %v", f) }()
 
 	f.cmdCh = make(chan interface{}, queuesize)
 	if f.cmdCh == nil {
-		f.log.Fatal("%v fail to make cmdCh %v", f, queuesize)
+		g2log.Fatal("%v fail to make cmdCh %v", f, queuesize)
 		return
 	}
 
@@ -156,11 +154,11 @@ loop:
 			f.statPacketObjOver.UpdateLap()
 			f.cmdActStat.UpdateLap()
 			if len(f.cmdCh) > cap(f.cmdCh)/2 {
-				f.log.Fatal("Floor %v cmdch overloaded %v/%v",
+				g2log.Fatal("Floor %v cmdch overloaded %v/%v",
 					f.GetName(), len(f.cmdCh), cap(f.cmdCh))
 			}
 			if len(f.cmdCh) >= cap(f.cmdCh) {
-				f.log.Fatal("Floor %v cmdch overloaded %v/%v",
+				g2log.Fatal("Floor %v cmdch overloaded %v/%v",
 					f.GetName(), len(f.cmdCh), cap(f.cmdCh))
 				break loop
 			}
@@ -185,7 +183,7 @@ func (f *Floor) processAgeing() {
 		var err error
 		err = f.terrain.Ageing()
 		if err != nil {
-			f.log.Fatal("%v %v", f, err)
+			g2log.Fatal("%v %v", f, err)
 			return
 		}
 		NotiAgeing := f.ToPacket_NotiAgeing()
@@ -197,11 +195,11 @@ func (f *Floor) processAgeing() {
 				if err := aoconn.SendNotiPacket(c2t_idnoti.Ageing,
 					NotiAgeing,
 				); err != nil {
-					f.log.Error("%v %v %v", f, ao, err)
+					g2log.Error("%v %v %v", f, ao, err)
 				}
 			}
 		}
 	} else {
-		f.log.Fatal("processAgeing skipped %v", f)
+		g2log.Fatal("processAgeing skipped %v", f)
 	}
 }

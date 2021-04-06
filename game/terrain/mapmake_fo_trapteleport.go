@@ -16,6 +16,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/roomsort"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/scriptparse"
 )
 
@@ -47,7 +48,7 @@ func cmdAddTrapTeleportRand(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddTrapTeleportRand add insufficient")
+		g2log.Warn("AddTrapTeleportRand add insufficient")
 	}
 	return nil
 }
@@ -70,7 +71,7 @@ func cmdAddTrapTeleportRandInRoom(tr *Terrain, ca *scriptparse.CmdArgs) error {
 		}
 	}
 	if try == 0 {
-		tr.log.Warn("AddTrapTeleportRandInRoom add insufficient")
+		g2log.Warn("AddTrapTeleportRandInRoom add insufficient")
 	}
 	return nil
 }

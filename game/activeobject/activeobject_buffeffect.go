@@ -18,6 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/statusoptype"
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/bias"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 // apply status effect one time
@@ -27,7 +28,7 @@ func (ao *ActiveObject) applyOpArg(
 	oparg statusoptype.OpArg) {
 	switch oparg.Op {
 	default:
-		ao.log.Error("unknown statusop %v, %v", oparg.Op, oparg.Arg)
+		g2log.Error("unknown statusop %v, %v", oparg.Op, oparg.Arg)
 
 	case statusoptype.None:
 		// ignore None effect
@@ -35,7 +36,7 @@ func (ao *ActiveObject) applyOpArg(
 	case statusoptype.AddHP:
 		arg, ok := oparg.Arg.(float64)
 		if !ok {
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		}
@@ -44,7 +45,7 @@ func (ao *ActiveObject) applyOpArg(
 	case statusoptype.AddSP:
 		arg, ok := oparg.Arg.(float64)
 		if !ok {
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		}
@@ -53,7 +54,7 @@ func (ao *ActiveObject) applyOpArg(
 	case statusoptype.AddHPRate:
 		arg, ok := oparg.Arg.(float64)
 		if !ok {
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		}
@@ -62,7 +63,7 @@ func (ao *ActiveObject) applyOpArg(
 	case statusoptype.AddSPRate:
 		arg, ok := oparg.Arg.(float64)
 		if !ok {
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		}
@@ -78,7 +79,7 @@ func (ao *ActiveObject) applyOpArg(
 	case statusoptype.IncFaction:
 		arg, ok := oparg.Arg.(int)
 		if !ok {
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		}
@@ -91,7 +92,7 @@ func (ao *ActiveObject) applyOpArg(
 	case statusoptype.SetFaction:
 		switch arg := oparg.Arg.(type) {
 		default:
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		case factiontype.FactionType:
@@ -122,18 +123,18 @@ func (ao *ActiveObject) applyOpArg(
 
 	case statusoptype.ForgetFloor:
 		if err := ao.ForgetFloorByName(ao.currentFloor.GetName()); err != nil {
-			ao.log.Fatal("%v", err)
+			g2log.Fatal("%v", err)
 		}
 
 	case statusoptype.ForgetOneFloor:
 		if err := ao.forgetAnyFloor(); err != nil {
-			ao.log.Fatal("%v", err)
+			g2log.Fatal("%v", err)
 		}
 
 	case statusoptype.ModSight:
 		arg, ok := oparg.Arg.(float64)
 		if !ok {
-			ao.log.Fatal("invalid type arg %v %v %T",
+			g2log.Fatal("invalid type arg %v %v %T",
 				oparg.Op, oparg.Arg, oparg.Arg)
 			return
 		}

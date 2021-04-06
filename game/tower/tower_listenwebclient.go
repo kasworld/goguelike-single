@@ -23,6 +23,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/lib/conndata"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_authorize"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
@@ -44,7 +45,7 @@ func (tw *Tower) initServiceWeb(ctx context.Context) {
 	webMux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		tw.serveWebSocketClient(ctx, w, r)
 	})
-	tw.log.TraceService("%v", webMux)
+	g2log.TraceService("%v", webMux)
 	tw.clientWeb = &http.Server{
 		Handler: webMux,
 		Addr:    fmt.Sprintf(":%v", tw.sconfig.ServicePort),
@@ -103,7 +104,7 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	w http.ResponseWriter, r *http.Request) {
 
 	if tw.IsListenClientPaused() {
-		tw.log.Warn("ListenClientPaused %v %v", w, r)
+		g2log.Warn("ListenClientPaused %v %v", w, r)
 		return
 	}
 
@@ -113,13 +114,13 @@ func (tw *Tower) serveWebSocketClient(ctx context.Context,
 
 	wsConn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		tw.log.Error("upgrade %v", err)
+		g2log.Error("upgrade %v", err)
 		return
 	}
 
-	tw.log.TraceClient("Start serveWebSocketClient %v", r.RemoteAddr)
+	g2log.TraceClient("Start serveWebSocketClient %v", r.RemoteAddr)
 	defer func() {
-		tw.log.TraceClient("End serveWebSocketClient %v", r.RemoteAddr)
+		g2log.TraceClient("End serveWebSocketClient %v", r.RemoteAddr)
 	}()
 
 	connData := &conndata.ConnData{

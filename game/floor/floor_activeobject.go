@@ -24,6 +24,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/carryingobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 )
 
@@ -75,7 +76,7 @@ func (f *Floor) searchRandomActiveObjPosInRoom() (int, int, error) {
 	for try := 10; try > 0; try-- {
 		rn := f.rnd.Intn(len(rooms))
 		if rn < 0 {
-			f.log.Fatal("room number %v", rn)
+			g2log.Fatal("room number %v", rn)
 			rn = 0
 		}
 		r := rooms[rn]
@@ -137,7 +138,7 @@ func (f *Floor) aoDieDropCarryObj(ao gamei.ActiveObjectI, aox, aoy int, p gamei.
 	}
 	if err := f.placeCarryObj2FloorAt(aox, aoy, co2Drop); err != nil {
 		// place fail is NOT drop fail
-		f.log.TraceActiveObj("CarryObj place fail po lost, %v %v", f, err)
+		g2log.TraceActiveObj("CarryObj place fail po lost, %v %v", f, err)
 	}
 	ao.GetAchieveStat().Inc(achievetype.DropCarryObj)
 	return nil
@@ -166,7 +167,7 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 				dropRate = minRate
 			}
 			if err := f.aoDieDropCarryObj(ao, aox, aoy, v); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 		}
 	}
@@ -179,7 +180,7 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 				dropRate = minRate
 			}
 			if err := f.aoDieDropCarryObj(ao, aox, aoy, v); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 		}
 	}
@@ -192,7 +193,7 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 				dropRate = minRate
 			}
 			if err := f.aoDieDropCarryObj(ao, aox, aoy, v); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 		}
 	}
@@ -205,7 +206,7 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 				dropRate = minRate
 			}
 			if err := f.aoDieDropCarryObj(ao, aox, aoy, v); err != nil {
-				f.log.Error("%v %v %v", f, ao, err)
+				g2log.Error("%v %v %v", f, ao, err)
 			}
 		}
 	}
@@ -220,7 +221,7 @@ func (f *Floor) ActiveObjDropCarryObjByDie(ao gamei.ActiveObjectI, aox, aoy int)
 	moneyToDrop := ao.GetInven().GetWalletValue() * dropRate
 	if moneyToDrop >= 1 {
 		if err := f.aoDieDropCarryObj(ao, aox, aoy, carryingobject.NewMoney(moneyToDrop)); err != nil {
-			f.log.Error("%v %v %v", f, ao, err)
+			g2log.Error("%v %v %v", f, ao, err)
 		}
 	}
 
@@ -266,7 +267,7 @@ func (f *Floor) aoAct_Move(
 		return mvdir, ec
 	}
 	if err := f.aoPosMan.UpdateToXY(ao, newX, newY); err != nil {
-		f.log.Fatal("move ao fail %v %v %v", f, ao, err)
+		g2log.Fatal("move ao fail %v %v %v", f, ao, err)
 		return mvdir, ec
 	}
 	ao.SetNeedTANoti()
@@ -314,7 +315,7 @@ func (f *Floor) aoDropCarryObj(ao gamei.ActiveObjectI, aox, aoy int, p gamei.Car
 	}
 	if err := f.placeCarryObj2FloorAt(aox, aoy, po); err != nil {
 		// place fail is NOT drop fail
-		f.log.TraceActiveObj("CarryObj place fail po lost, %v %v", f, err)
+		g2log.TraceActiveObj("CarryObj place fail po lost, %v %v", f, err)
 	}
 	ao.GetAchieveStat().Inc(achievetype.DropCarryObj)
 	return nil

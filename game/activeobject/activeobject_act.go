@@ -27,6 +27,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
@@ -144,12 +145,12 @@ func (ao *ActiveObject) ApplyTurnAct() {
 					&c2t_obj.NotiReadyToRebirth_data{},
 				)
 				if err != nil {
-					ao.log.Error("%v", err)
+					g2log.Error("%v", err)
 				}
 			} else {
 				err := ao.TryRebirth()
 				if err != nil {
-					ao.log.Error("%v", err)
+					g2log.Error("%v", err)
 				}
 			}
 			// send noti
@@ -246,12 +247,12 @@ func (ao *ActiveObject) DoUseCarryObj(poid string) error {
 		}
 		switch o.GetScrollType() {
 		default:
-			ao.log.Fatal("unknown scrolltype %v", po)
+			g2log.Fatal("unknown scrolltype %v", po)
 		case scrolltype.Empty:
 		case scrolltype.FloorMap:
 			return ao.MakeFloorComplete(ao.currentFloor)
 		case scrolltype.Teleport:
-			ao.log.Fatal("Scroll_Teleport must processed in floor %v", ao)
+			g2log.Fatal("Scroll_Teleport must processed in floor %v", ao)
 		}
 		return nil
 	}

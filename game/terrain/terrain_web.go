@@ -17,6 +17,7 @@ import (
 	"image/png"
 	"net/http"
 
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/weblib"
 )
 
@@ -35,7 +36,7 @@ func (tr *Terrain) Web_TerrainInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		errstr := fmt.Sprintf("fail to %v", cmd)
-		tr.log.Warn(errstr)
+		g2log.Warn(errstr)
 		http.Error(w, errstr, 404)
 		return
 	}
@@ -137,10 +138,10 @@ func (tr *Terrain) Web_TerrainInfo(w http.ResponseWriter, r *http.Request) {
 	<hr/>
 	</body> </html> `)
 	if err != nil {
-		tr.log.Error("%v %v", tr, err)
+		g2log.Error("%v %v", tr, err)
 	}
 	if err := tplIndex.Execute(w, tr); err != nil {
-		tr.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 
@@ -160,7 +161,7 @@ func (tr *Terrain) Web_TerrainImageZoom(w http.ResponseWriter, r *http.Request) 
 	img := tr.serviceTileArea.ToImage(zoom)
 	err := png.Encode(w, img)
 	if err != nil {
-		tr.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 
@@ -169,7 +170,7 @@ func (tr *Terrain) Web_TerrainImageAutoZoom(w http.ResponseWriter, r *http.Reque
 	img := tr.serviceTileArea.ToImage(zoom)
 	err := png.Encode(w, img)
 	if err != nil {
-		tr.log.Error("%v", err)
+		g2log.Error("%v", err)
 	}
 }
 
@@ -178,7 +179,7 @@ func (tr *Terrain) Web_TileInfo(w http.ResponseWriter, r *http.Request) {
 	x := weblib.GetIntByName("x", -1, w, r)
 	y := weblib.GetIntByName("y", -1, w, r)
 	if x == -1 || y == -1 {
-		tr.log.Error("invalid pos %v", r.RequestURI)
+		g2log.Error("invalid pos %v", r.RequestURI)
 		return
 	}
 	zoom := tr.calcZoom()
