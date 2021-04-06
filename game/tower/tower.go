@@ -275,10 +275,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	//run client
 	go func() {
 		time.Sleep(time.Second)
-		app := glclient.New(tw.config)
-		err := app.Run(ctx)
-		app.Cleanup()
-		if err != nil {
+		if err := glclient.New(tw.config).Run(ctx); err != nil {
 			g2log.Error("%v", err)
 		}
 		tw.doClose()
