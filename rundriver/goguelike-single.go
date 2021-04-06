@@ -17,7 +17,6 @@ import (
 	"fmt"
 
 	"github.com/kasworld/argdefault"
-	"github.com/kasworld/configutil"
 	profile "github.com/kasworld/go-profile"
 	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/config/towerconfig"
@@ -45,7 +44,6 @@ func printVersion() {
 func main() {
 	printVersion()
 
-	configurl := flag.String("i", "", "config file or url")
 	profile.AddArgs()
 
 	ads := argdefault.New(&towerconfig.TowerConfig{})
@@ -53,11 +51,6 @@ func main() {
 	flag.Parse()
 	config := &towerconfig.TowerConfig{}
 	ads.SetDefaultToNonZeroField(config)
-	if *configurl != "" {
-		if err := configutil.LoadIni(*configurl, &config); err != nil {
-			fmt.Printf("%v\n", err)
-		}
-	}
 	ads.ApplyFlagTo(config)
 
 	if profile.IsCpu() {

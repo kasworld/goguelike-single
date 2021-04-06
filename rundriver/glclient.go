@@ -17,7 +17,6 @@ import (
 	"fmt"
 
 	"github.com/kasworld/argdefault"
-	"github.com/kasworld/configutil"
 	"github.com/kasworld/goguelike-single/config/glclientconfig"
 	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -32,18 +31,12 @@ func init() {
 }
 
 func main() {
-	configurl := flag.String("i", "", "config file or url")
 
 	ads := argdefault.New(&glclientconfig.GLClientConfig{})
 	ads.RegisterFlag()
 	flag.Parse()
 	config := &glclientconfig.GLClientConfig{}
 	ads.SetDefaultToNonZeroField(config)
-	if *configurl != "" {
-		if err := configutil.LoadIni(*configurl, config); err != nil {
-			g2log.Error("%v", err)
-		}
-	}
 	ads.ApplyFlagTo(config)
 
 	g2log.GlobalLogger.SetFlags(g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
