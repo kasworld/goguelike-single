@@ -34,8 +34,7 @@ import (
 type GLClient struct {
 	sendRecvStop func() `prettystring:"hide"`
 
-	config    *glclientconfig.GLClientConfig
-	runResult error
+	config *glclientconfig.GLClientConfig
 
 	towerConn         *c2t_connwsgorilla.Connection
 	ServiceInfo       *c2t_obj.ServiceInfo
@@ -85,7 +84,7 @@ func (app *GLClient) Cleanup() {
 	app.ServerJitter = nil
 }
 
-func (app *GLClient) Run(mainctx context.Context) {
+func (app *GLClient) Run(mainctx context.Context) error {
 	defer app.Cleanup()
 
 	ctx, closeCtx := context.WithCancel(mainctx)
@@ -93,10 +92,9 @@ func (app *GLClient) Run(mainctx context.Context) {
 	defer app.sendRecvStop()
 
 	if err := app.towerConn.ConnectTo(app.config.ConnectToTower); err != nil {
-		app.runResult = err
-		g2log.Error("%v", app.runResult)
-		return
+		return err
 	}
+	var rtnerr error
 	app.wg.Add(1)
 	go func() {
 		defer app.wg.Done()
@@ -109,16 +107,13 @@ func (app *GLClient) Run(mainctx context.Context) {
 		)
 
 		if err != nil {
-			app.runResult = err
-			g2log.Error("%v", err)
+			rtnerr = err
 		}
 		app.sendRecvStop()
 	}()
 
 	if err := app.reqLogin(); err != nil {
-		app.runResult = err
-		g2log.Error("%v", app.runResult)
-		return
+		return err
 	}
 
 	timerPingTk := time.NewTicker(time.Second * gameconst.ServerPacketReadTimeOutSec / 2)
@@ -136,12 +131,13 @@ loop:
 				defer app.wg.Done()
 				err := app.reqHeartbeat()
 				if err != nil {
-					app.runResult = err
-					g2log.Error("%v", app.runResult)
+					rtnerr = err
+					app.sendRecvStop()
 				}
 			}()
 		}
 	}
+	return rtnerr
 }
 
 func (app *GLClient) handleSentPacket(pk *c2t_packet.Packet) error {

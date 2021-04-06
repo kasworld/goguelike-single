@@ -17,10 +17,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
-func (app *GLClient) GetRunResult() error {
-	return app.runResult
-}
-
 func (app *GLClient) GetArg() interface{} {
 	return app.config
 }

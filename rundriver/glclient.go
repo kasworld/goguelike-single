@@ -63,6 +63,9 @@ func main() {
 		}
 	}
 	app := glclient.New(config)
-	app.Run(context.Background())
-	g2log.Error("%v", app.GetRunResult())
+	err := app.Run(context.Background())
+	app.Cleanup()
+	if err != nil {
+		g2log.Error("%v", err)
+	}
 }
