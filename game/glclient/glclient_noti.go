@@ -133,9 +133,6 @@ func bytesRecvNotiFn_Death(me interface{}, hd c2t_packet.Header, rbody []byte) e
 		return fmt.Errorf("recvobj type mismatch %v", me)
 	}
 	_ = app
-	if app.config.DisconnectOnDeath {
-		app.sendRecvStop()
-	}
 	return nil
 }
 

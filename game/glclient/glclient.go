@@ -14,13 +14,12 @@ package glclient
 import (
 	"context"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/kasworld/actjitter"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/config/glclientconfig"
+	"github.com/kasworld/goguelike-single/config/towerconfig"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -34,7 +33,7 @@ import (
 type GLClient struct {
 	sendRecvStop func() `prettystring:"hide"`
 
-	config *glclientconfig.GLClientConfig
+	config *towerconfig.TowerConfig
 
 	towerConn         *c2t_connwsgorilla.Connection
 	ServiceInfo       *c2t_obj.ServiceInfo
@@ -44,7 +43,6 @@ type GLClient struct {
 	FloorInfoList     []*c2t_obj.FloorInfo
 	CurrentFloor      *clientfloor.ClientFloor
 
-	wg       *sync.WaitGroup
 	pid2recv *c2t_pid2rspfn.PID2RspFn
 
 	// turn data
@@ -59,13 +57,12 @@ type GLClient struct {
 	ServerJitter          *actjitter.ActJitter
 }
 
-func New(config *glclientconfig.GLClientConfig) *GLClient {
+func New(config *towerconfig.TowerConfig) *GLClient {
 	fmt.Printf("%v\n", config.StringForm())
 
 	app := &GLClient{
 		config:            config,
 		ServerJitter:      actjitter.New("Server"),
-		wg:                new(sync.WaitGroup),
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 	}
@@ -77,7 +74,6 @@ func New(config *glclientconfig.GLClientConfig) *GLClient {
 }
 
 func (app *GLClient) Cleanup() {
-	app.wg.Wait()
 	if tc := app.towerConn; tc != nil {
 		tc.Cleanup()
 	}
@@ -91,13 +87,11 @@ func (app *GLClient) Run(mainctx context.Context) error {
 	app.sendRecvStop = closeCtx
 	defer app.sendRecvStop()
 
-	if err := app.towerConn.ConnectTo(app.config.ConnectToTower); err != nil {
+	if err := app.towerConn.ConnectTo(app.config.ConnectToTower()); err != nil {
 		return err
 	}
 	var rtnerr error
-	app.wg.Add(1)
 	go func() {
-		defer app.wg.Done()
 		err := app.towerConn.Run(ctx,
 			gameconst.ClientReadTimeoutSec*time.Second,
 			gameconst.ClientWriteTimeoutSec*time.Second,
@@ -126,9 +120,7 @@ loop:
 			break loop
 
 		case <-timerPingTk.C:
-			app.wg.Add(1)
 			go func() {
-				defer app.wg.Done()
 				err := app.reqHeartbeat()
 				if err != nil {
 					rtnerr = err

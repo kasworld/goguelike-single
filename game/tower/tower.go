@@ -190,8 +190,6 @@ func (tw *Tower) ServiceInit() error {
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 		"http://localhost", tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
-	fmt.Printf("WebClient : %v:%v/\n",
-		"http://localhost", tw.sconfig.ServicePort)
 
 	return nil
 }

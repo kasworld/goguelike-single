@@ -68,7 +68,7 @@ $BUILD_VER="${DATESTR}_${GITSTR}_release_windows"
 echo "Build Version: ${BUILD_VER}"
 echo ${BUILD_VER} > ${BIN_DIR}/BUILD_windows
 go build -o "${BIN_DIR}\goguelike-single.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\goguelike-single.go"
-go build -o "${BIN_DIR}\glclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\glclient.go"
+# go build -o "${BIN_DIR}\glclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\glclient.go"
 
 
 # $BUILD_VER="${DATESTR}_${GITSTR}_release_linux"
@@ -79,10 +79,10 @@ go build -o "${BIN_DIR}\glclient.exe" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC
 # go build -o "${BIN_DIR}\glclient" -ldflags "-X main.Ver=${BUILD_VER}" "${SRC_DIR}\glclient.go"
 # $env:GOOS=""
 
-$BUILD_VER="${DATESTR}_${GITSTR}_release_wasm"
-cd rundriver
-./genwasmclient.ps1 ${BUILD_VER}
-cd ..
+# $BUILD_VER="${DATESTR}_${GITSTR}_release_wasm"
+# cd rundriver
+# ./genwasmclient.ps1 ${BUILD_VER}
+# cd ..
 
 echo "cp -r rundriver/serverdata ${BIN_DIR}"
 Copy-Item -Force -r rundriver/serverdata ${BIN_DIR}

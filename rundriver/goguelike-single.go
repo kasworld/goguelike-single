@@ -15,11 +15,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/kasworld/argdefault"
 	profile "github.com/kasworld/go-profile"
 	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/config/towerconfig"
+	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/game/tower"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
@@ -79,8 +81,19 @@ func main() {
 	if err := tw.ServiceInit(); err != nil {
 		fmt.Printf("%v\n", err)
 	} else {
-		tw.ServiceMain(context.Background())
-		tw.ServiceCleanup()
+		ctx := context.Background()
+		go func() {
+			tw.ServiceMain(ctx)
+			tw.ServiceCleanup()
+		}()
+		//run client
+		time.Sleep(time.Second)
+		app := glclient.New(config)
+		err := app.Run(ctx)
+		app.Cleanup()
+		if err != nil {
+			g2log.Error("%v", err)
+		}
 	}
 
 	if profile.IsMem() {

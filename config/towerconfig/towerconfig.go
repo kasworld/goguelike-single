@@ -67,3 +67,7 @@ func (config *TowerConfig) MakeTowerFileFullpath() string {
 func (config *TowerConfig) StringForm() string {
 	return prettystring.PrettyString(config, 4)
 }
+
+func (config *TowerConfig) ConnectToTower() string {
+	return fmt.Sprintf("localhost:%v", config.ServicePort)
+}
