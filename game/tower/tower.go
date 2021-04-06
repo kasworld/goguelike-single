@@ -23,7 +23,7 @@ import (
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/config/gamedata"
-	"github.com/kasworld/goguelike-single/config/towerconfig"
+	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
@@ -62,7 +62,7 @@ type Tower struct {
 
 	cmdCh chan interface{}
 
-	sconfig    *towerconfig.TowerConfig
+	sconfig    *goguelikeconfig.GoguelikeConfig
 	seed       int64
 	uuid       string
 	biasFactor [3]int64  `prettystring:"simple"`
@@ -98,7 +98,7 @@ type Tower struct {
 	clientWeb *http.Server `prettystring:"simple"`
 }
 
-func New(config *towerconfig.TowerConfig) *Tower {
+func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 	fmt.Printf("%v\n", config.StringForm())
 
 	tw := &Tower{

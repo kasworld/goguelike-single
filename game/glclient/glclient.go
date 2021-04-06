@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/actjitter"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/config/towerconfig"
+	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -33,7 +33,7 @@ import (
 type GLClient struct {
 	sendRecvStop func() `prettystring:"hide"`
 
-	config *towerconfig.TowerConfig
+	config *goguelikeconfig.GoguelikeConfig
 
 	towerConn         *c2t_connwsgorilla.Connection
 	ServiceInfo       *c2t_obj.ServiceInfo
@@ -57,7 +57,7 @@ type GLClient struct {
 	ServerJitter          *actjitter.ActJitter
 }
 
-func New(config *towerconfig.TowerConfig) *GLClient {
+func New(config *goguelikeconfig.GoguelikeConfig) *GLClient {
 	fmt.Printf("%v\n", config.StringForm())
 
 	app := &GLClient{

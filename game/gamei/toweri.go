@@ -12,7 +12,7 @@
 package gamei
 
 import (
-	"github.com/kasworld/goguelike-single/config/towerconfig"
+	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
 )
 
@@ -27,5 +27,5 @@ type TowerI interface {
 	GetFloorManager() FloorManagerI
 	GetExpRanking() []ActiveObjectI
 
-	Config() *towerconfig.TowerConfig
+	Config() *goguelikeconfig.GoguelikeConfig
 }

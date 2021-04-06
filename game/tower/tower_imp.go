@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/config/towerconfig"
+	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/gamei"
 )
@@ -54,7 +54,7 @@ func (tw *Tower) GetBias() bias.Bias {
 	return rtn
 }
 
-func (tw *Tower) Config() *towerconfig.TowerConfig {
+func (tw *Tower) Config() *goguelikeconfig.GoguelikeConfig {
 	return tw.sconfig
 }
 

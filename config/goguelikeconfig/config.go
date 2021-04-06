@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package towerconfig
+package goguelikeconfig
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/prettystring"
 )
 
-type TowerConfig struct {
+type GoguelikeConfig struct {
 	// player
 	NickName string `default:"Player" argname:""`
 
@@ -39,7 +39,7 @@ type TowerConfig struct {
 	ScriptFilename string `default:"start" argname:""`
 }
 
-func (config *TowerConfig) MakeLogDir() string {
+func (config *GoguelikeConfig) MakeLogDir() string {
 	rstr := filepath.Join(config.BaseLogDir,
 		fmt.Sprintf("goguelike_tower_%v.logfiles",
 			config.ScriptFilename),
@@ -52,7 +52,7 @@ func (config *TowerConfig) MakeLogDir() string {
 	return rtn
 }
 
-func (config *TowerConfig) MakeTowerFileFullpath() string {
+func (config *GoguelikeConfig) MakeTowerFileFullpath() string {
 	rstr := filepath.Join(config.DataFolder,
 		fmt.Sprintf("%v.tower", config.ScriptFilename),
 	)
@@ -64,10 +64,10 @@ func (config *TowerConfig) MakeTowerFileFullpath() string {
 	return rtn
 }
 
-func (config *TowerConfig) StringForm() string {
+func (config *GoguelikeConfig) StringForm() string {
 	return prettystring.PrettyString(config, 4)
 }
 
-func (config *TowerConfig) ConnectToTower() string {
+func (config *GoguelikeConfig) ConnectToTower() string {
 	return fmt.Sprintf("localhost:%v", config.ServicePort)
 }

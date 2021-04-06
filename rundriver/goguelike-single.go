@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/argdefault"
 	profile "github.com/kasworld/go-profile"
 	"github.com/kasworld/goguelike-single/config/dataversion"
-	"github.com/kasworld/goguelike-single/config/towerconfig"
+	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/game/tower"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -48,10 +48,10 @@ func main() {
 
 	profile.AddArgs()
 
-	ads := argdefault.New(&towerconfig.TowerConfig{})
+	ads := argdefault.New(&goguelikeconfig.GoguelikeConfig{})
 	ads.RegisterFlag()
 	flag.Parse()
-	config := &towerconfig.TowerConfig{}
+	config := &goguelikeconfig.GoguelikeConfig{}
 	ads.SetDefaultToNonZeroField(config)
 	ads.ApplyFlagTo(config)
 
