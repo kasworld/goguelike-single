@@ -40,6 +40,9 @@ Log 패키지 및 커스텀 로그레벨 로거 생성기 : https://github.com/k
     go get github.com/kasworld/log
     install.sh 실행해서 genlog 생성 
 
+go game engine g3n 
+    tag가 예전 버전이라 master 를 써야 합니다. 
+    go get -d github.com/g3n/engine@master
 
 # 소스 코드 설치 
 

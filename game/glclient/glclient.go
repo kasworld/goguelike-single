@@ -110,6 +110,8 @@ func (app *GLClient) Run(mainctx context.Context) error {
 		return err
 	}
 
+	go runGL()
+
 	timerPingTk := time.NewTicker(time.Second * gameconst.ServerPacketReadTimeOutSec / 2)
 	defer timerPingTk.Stop()
 
