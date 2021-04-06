@@ -76,7 +76,7 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 		statPacketObjOver: actpersec.New(),
 		cmdActStat:        actpersec.New(),
 	}
-	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().DataFolder)
+	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().ServerDataFolder)
 	return f
 }
 

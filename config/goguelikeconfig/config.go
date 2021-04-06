@@ -27,7 +27,7 @@ type GoguelikeConfig struct {
 	LogLevel         g2log.LL_Type `default:"7" argname:""`
 	SplitLogLevel    g2log.LL_Type `default:"0" argname:""`
 	BaseLogDir       string        `default:"" argname:""`
-	DataFolder       string        `default:"./serverdata" argname:""`
+	ServerDataFolder string        `default:"./serverdata" argname:""`
 	ClientDataFolder string        `default:"./clientdata" argname:""`
 	WebAdminID       string        `default:"root" argname:""`
 	WebAdminPass     string        `default:"password" argname:"" prettystring:"hidevalue"`
@@ -53,7 +53,7 @@ func (config *GoguelikeConfig) MakeLogDir() string {
 }
 
 func (config *GoguelikeConfig) MakeTowerFileFullpath() string {
-	rstr := filepath.Join(config.DataFolder,
+	rstr := filepath.Join(config.ServerDataFolder,
 		fmt.Sprintf("%v.tower", config.ScriptFilename),
 	)
 	rtn, err := filepath.Abs(rstr)

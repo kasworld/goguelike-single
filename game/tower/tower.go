@@ -149,7 +149,7 @@ func (tw *Tower) ServiceInit() error {
 	var err error
 
 	gamedata.ActiveObjNameList, err = loadlines.LoadLineList(
-		filepath.Join(tw.Config().DataFolder, "ainames.txt"),
+		filepath.Join(tw.Config().ServerDataFolder, "ainames.txt"),
 	)
 	if err != nil {
 		g2log.Fatal("load ainame fail %v", err)
@@ -157,7 +157,7 @@ func (tw *Tower) ServiceInit() error {
 	}
 
 	gamedata.ChatData, err = loadlines.LoadLineList(
-		filepath.Join(tw.Config().DataFolder, "chatdata.txt"),
+		filepath.Join(tw.Config().ServerDataFolder, "chatdata.txt"),
 	)
 	if err != nil {
 		g2log.Fatal("load chatdata fail %v", err)
