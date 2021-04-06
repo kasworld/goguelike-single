@@ -48,7 +48,7 @@ func (tw *Tower) initServiceWeb(ctx context.Context) {
 	g2log.TraceService("%v", webMux)
 	tw.clientWeb = &http.Server{
 		Handler: webMux,
-		Addr:    fmt.Sprintf(":%v", tw.sconfig.ServicePort),
+		Addr:    fmt.Sprintf(":%v", tw.config.ServicePort),
 	}
 	tw.demuxReq2BytesAPIFnMap = [c2t_idcmd.CommandID_Count]func(
 		me interface{}, hd c2t_packet.Header, rbody []byte) (

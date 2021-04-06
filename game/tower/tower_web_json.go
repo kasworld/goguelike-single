@@ -30,5 +30,5 @@ func (tw *Tower) json_ServiceInfo(w http.ResponseWriter, r *http.Request) {
 
 func (tw *Tower) json_Config(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	weblib.ServeJSON2HTTP(tw.sconfig, w)
+	weblib.ServeJSON2HTTP(tw.config, w)
 }

@@ -44,7 +44,7 @@ func (tw *Tower) web_FaviconIco(w http.ResponseWriter, r *http.Request) {
 func (tw *Tower) initAdminWeb() {
 	authData := weblib.NewAuthData("tower")
 	authData.ReLoadUserData([][2]string{
-		{tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass},
+		{tw.config.WebAdminID, tw.config.WebAdminPass},
 	})
 	webMux := weblib.NewAuthMux(authData, g2log.GlobalLogger)
 
@@ -77,12 +77,12 @@ func (tw *Tower) initAdminWeb() {
 
 	webMux.HandleFunc("/Config", tw.json_Config)
 
-	authData.AddAllActionName(tw.sconfig.WebAdminID)
+	authData.AddAllActionName(tw.config.WebAdminID)
 	g2log.TraceService("%v", webMux)
 
 	tw.adminWeb = &http.Server{
 		Handler: webMux,
-		Addr:    fmt.Sprintf(":%v", tw.sconfig.AdminPort),
+		Addr:    fmt.Sprintf(":%v", tw.config.AdminPort),
 	}
 }
 

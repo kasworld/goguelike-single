@@ -31,6 +31,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoid2floor"
 	"github.com/kasworld/goguelike-single/game/floormanager"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/game/towerscript"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/loadlines"
@@ -62,7 +63,7 @@ type Tower struct {
 
 	cmdCh chan interface{}
 
-	sconfig    *goguelikeconfig.GoguelikeConfig
+	config     *goguelikeconfig.GoguelikeConfig
 	seed       int64
 	uuid       string
 	biasFactor [3]int64  `prettystring:"simple"`
@@ -105,7 +106,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		uuid:  uuidstr.New(),
 		id2ao: aoid2activeobject.New("ActiveObject working"),
 
-		sconfig: config,
+		config: config,
 
 		sendStat:         actpersec.New(),
 		recvStat:         actpersec.New(),
@@ -143,7 +144,7 @@ func (tw *Tower) ServiceInit() error {
 	}()
 
 	g2log.TraceService("%v", tw.serviceInfo.StringForm())
-	g2log.TraceService("%v", tw.sconfig.StringForm())
+	g2log.TraceService("%v", tw.config.StringForm())
 
 	var err error
 
@@ -164,7 +165,7 @@ func (tw *Tower) ServiceInit() error {
 	}
 
 	tScript, err := towerscript.LoadJSON(
-		tw.sconfig.MakeTowerFileFullpath(),
+		tw.config.MakeTowerFileFullpath(),
 	)
 	if err != nil {
 		return err
@@ -181,7 +182,7 @@ func (tw *Tower) ServiceInit() error {
 	tw.towerInfo = &c2t_obj.TowerInfo{
 		StartTime:     tw.startTime,
 		UUID:          tw.uuid,
-		Name:          tw.sconfig.ScriptFilename,
+		Name:          tw.config.ScriptFilename,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
 	}
@@ -189,7 +190,7 @@ func (tw *Tower) ServiceInit() error {
 	g2log.TraceService("%v", tw.towerInfo.StringForm())
 	fmt.Printf("%v\n", tw.towerInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
-		"http://localhost", tw.sconfig.AdminPort, tw.sconfig.WebAdminID, tw.sconfig.WebAdminPass)
+		"http://localhost", tw.config.AdminPort, tw.config.WebAdminID, tw.config.WebAdminPass)
 
 	return nil
 }
@@ -270,6 +271,18 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 
 	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, g2log.GlobalLogger, "serveAdminWeb")
 	go retrylistenandserve.RetryListenAndServe(tw.clientWeb, g2log.GlobalLogger, "serveServiceWeb")
+
+	//run client
+	go func() {
+		time.Sleep(time.Second)
+		app := glclient.New(tw.config)
+		err := app.Run(ctx)
+		app.Cleanup()
+		if err != nil {
+			g2log.Error("%v", err)
+		}
+		tw.doClose()
+	}()
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
