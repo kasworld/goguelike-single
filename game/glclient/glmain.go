@@ -29,39 +29,40 @@ import (
 	"github.com/g3n/engine/window"
 )
 
-func runGL() {
+type G3N struct {
+	app   *app.Application
+	scene *core.Node
+	cam   *camera.Camera
+}
 
+var ga *G3N
+
+func newG3N() {
 	// Create application and scene
-	a := app.App()
-	scene := core.NewNode()
+	// a := app.App()
+	ga = new(G3N)
+	ga.app = app.App()
+	ga.scene = core.NewNode()
 
 	// Set the scene to be managed by the gui manager
-	gui.Manager().Set(scene)
+	gui.Manager().Set(ga.scene)
 
 	// Create perspective camera
-	cam := camera.New(1)
-	cam.SetPosition(0, 0, 3)
-	scene.Add(cam)
+	ga.cam = camera.New(1)
+	ga.cam.SetPosition(0, 0, 3)
+	ga.scene.Add(ga.cam)
 
 	// Set up orbit control for the camera
-	camera.NewOrbitControl(cam)
+	camera.NewOrbitControl(ga.cam)
 
-	// Set up callback to update viewport and camera aspect ratio when the window is resized
-	onResize := func(evname string, ev interface{}) {
-		// Get framebuffer size and update viewport accordingly
-		width, height := a.GetSize()
-		a.Gls().Viewport(0, 0, int32(width), int32(height))
-		// Update the camera's aspect ratio
-		cam.SetAspect(float32(width) / float32(height))
-	}
-	a.Subscribe(window.OnWindowSize, onResize)
+	ga.app.Subscribe(window.OnWindowSize, onResize)
 	onResize("", nil)
 
 	// Create a blue torus and add it to the scene
 	geom := geometry.NewTorus(1, .4, 12, 32, math32.Pi*2)
 	mat := material.NewStandard(math32.NewColor("DarkBlue"))
 	mesh := graphic.NewMesh(geom, mat)
-	scene.Add(mesh)
+	ga.scene.Add(mesh)
 
 	// Create and add a button to the scene
 	btn := gui.NewButton("Make Red")
@@ -70,23 +71,32 @@ func runGL() {
 	btn.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		mat.SetColor(math32.NewColor("DarkRed"))
 	})
-	scene.Add(btn)
+	ga.scene.Add(btn)
 
 	// Create and add lights to the scene
-	scene.Add(light.NewAmbient(&math32.Color{1.0, 1.0, 1.0}, 0.8))
+	ga.scene.Add(light.NewAmbient(&math32.Color{1.0, 1.0, 1.0}, 0.8))
 	pointLight := light.NewPoint(&math32.Color{1, 1, 1}, 5.0)
 	pointLight.SetPosition(1, 0, 2)
-	scene.Add(pointLight)
+	ga.scene.Add(pointLight)
 
 	// Create and add an axis helper to the scene
-	scene.Add(helper.NewAxes(0.5))
+	ga.scene.Add(helper.NewAxes(0.5))
 
 	// Set background color to gray
-	a.Gls().ClearColor(0.5, 0.5, 0.5, 1.0)
+	ga.app.Gls().ClearColor(0.5, 0.5, 0.5, 1.0)
+	ga.app.Run(updateGL)
+}
 
-	// Run the application
-	a.Run(func(renderer *renderer.Renderer, deltaTime time.Duration) {
-		a.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
-		renderer.Render(scene, cam)
-	})
+func updateGL(renderer *renderer.Renderer, deltaTime time.Duration) {
+	ga.app.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
+	renderer.Render(ga.scene, ga.cam)
+}
+
+// Set up callback to update viewport and camera aspect ratio when the window is resized
+func onResize(evname string, ev interface{}) {
+	// Get framebuffer size and update viewport accordingly
+	width, height := ga.app.GetSize()
+	ga.app.Gls().Viewport(0, 0, int32(width), int32(height))
+	// Update the camera's aspect ratio
+	ga.cam.SetAspect(float32(width) / float32(height))
 }

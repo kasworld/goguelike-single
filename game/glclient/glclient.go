@@ -16,6 +16,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/g3n/engine/app"
+	"github.com/g3n/engine/camera"
+	"github.com/g3n/engine/core"
 	"github.com/kasworld/actjitter"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
@@ -55,11 +58,15 @@ type GLClient struct {
 	level                 int
 	ServerClientTimeDiff  time.Duration
 	ServerJitter          *actjitter.ActJitter
+
+	// g3n field
+	g3napp *app.Application
+	scene  *core.Node
+	cam    *camera.Camera
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig) *GLClient {
 	fmt.Printf("%v\n", config.StringForm())
-
 	app := &GLClient{
 		config:            config,
 		ServerJitter:      actjitter.New("Server"),
@@ -70,6 +77,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *GLClient {
 		g2log.Error("Too early sendRecvStop call %v", app)
 	}
 	app.towerConn = c2t_connwsgorilla.New(10)
+	go newG3N()
 	return app
 }
 
@@ -109,8 +117,6 @@ func (app *GLClient) Run(mainctx context.Context) error {
 	if err := app.reqLogin(); err != nil {
 		return err
 	}
-
-	go runGL()
 
 	timerPingTk := time.NewTicker(time.Second * gameconst.ServerPacketReadTimeOutSec / 2)
 	defer timerPingTk.Stop()
