@@ -59,19 +59,27 @@ type GLClient struct {
 	ServerClientTimeDiff  time.Duration
 	ServerJitter          *actjitter.ActJitter
 
+	// client to tower packet channel
+	c2tCh chan *c2t_packet.Packet
+	// tower to client packet channel
+	t2cCh chan *c2t_packet.Packet
+
 	// g3n field
 	g3napp *app.Application
 	scene  *core.Node
 	cam    *camera.Camera
 }
 
-func New(config *goguelikeconfig.GoguelikeConfig) *GLClient {
+func New(config *goguelikeconfig.GoguelikeConfig,
+	c2tch, t2cch chan *c2t_packet.Packet) *GLClient {
 	fmt.Printf("%v\n", config.StringForm())
 	app := &GLClient{
 		config:            config,
 		ServerJitter:      actjitter.New("Server"),
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
+		c2tCh:             c2tch,
+		t2cCh:             t2cch,
 	}
 	app.sendRecvStop = func() {
 		g2log.Error("Too early sendRecvStop call %v", app)

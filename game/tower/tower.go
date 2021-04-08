@@ -97,6 +97,11 @@ type Tower struct {
 
 	adminWeb  *http.Server `prettystring:"simple"`
 	clientWeb *http.Server `prettystring:"simple"`
+
+	// client to tower packet channel
+	c2tCh chan *c2t_packet.Packet
+	// tower to client packet channel
+	t2cCh chan *c2t_packet.Packet
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
@@ -231,6 +236,9 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		return
 	}
 
+	tw.c2tCh = make(chan *c2t_packet.Packet, tw.floorMan.GetSendBufferSize())
+	tw.t2cCh = make(chan *c2t_packet.Packet, tw.floorMan.GetSendBufferSize())
+
 	// start tower
 	go func() {
 	loop:
@@ -275,7 +283,8 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	//run client
 	go func() {
 		time.Sleep(time.Second)
-		if err := glclient.New(tw.config).Run(ctx); err != nil {
+		cl := glclient.New(tw.config, tw.c2tCh, tw.t2cCh)
+		if err := cl.Run(ctx); err != nil {
 			g2log.Error("%v", err)
 		}
 		tw.doClose()
