@@ -21,7 +21,7 @@ import (
 
 func (tw *Tower) handle_c2tch() {
 	for rpk := range tw.c2tCh {
-		shd, sbody, serr := tw.handleRecvPacket(rpk)
+		shd, sbody, serr := tw.handleRecvObj(rpk)
 		// process result
 		if serr != nil {
 			// handle error
@@ -35,10 +35,11 @@ func (tw *Tower) handle_c2tch() {
 	}
 }
 
-func (tw *Tower) handleRecvPacket(rpk *c2t_packet.Packet) (c2t_packet.Header, interface{}, error) {
+func (tw *Tower) handleRecvObj(rpk *c2t_packet.Packet) (c2t_packet.Header, interface{}, error) {
 	switch body := rpk.Body.(type) {
 	default:
 		return c2t_packet.Header{}, nil, fmt.Errorf("invalid packet")
+
 	case *c2t_obj.ReqInvalid_data:
 		return tw.objAPIFn_ReqInvalid(rpk.Header, body)
 	case *c2t_obj.ReqLogin_data:
