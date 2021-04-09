@@ -14,21 +14,51 @@ package glclient
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike-single/lib/g2log"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
 )
+
+func (app *GLClient) sendReqObjWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
+	fn c2t_pid2rspfn.HandleRspFn) error {
+	pid := app.pid2recv.NewPID(fn)
+	spk := c2t_packet.Packet{
+		Header: c2t_packet.Header{
+			Cmd:      uint16(cmd),
+			ID:       pid,
+			FlowType: c2t_packet.Request,
+		},
+		Body: body,
+	}
+	app.c2tCh <- &spk
+	return nil
+}
 
 func (app *GLClient) handle_t2ch() {
 	for rpk := range app.t2cCh {
-		serr := app.handleRecvObj(rpk)
-		// process result
-		if serr != nil {
-			// handle error
+		g2log.TraceClient("recv %v", rpk.Header)
+		switch rpk.Header.FlowType {
+		default:
+			g2log.Fatal("invalid packet type %v %v", rpk.Header, rpk.Body)
+		case c2t_packet.Response:
+			if err := app.pid2recv.HandleRsp(rpk.Header, rpk.Body); err != nil {
+				g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
+				return
+			}
+		case c2t_packet.Notification:
+			err := app.handleRecvNotiObj(rpk)
+			// process result
+			if err != nil {
+				g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
+				return
+			}
 		}
 	}
 }
 
-func (app *GLClient) handleRecvObj(rpk *c2t_packet.Packet) error {
+func (app *GLClient) handleRecvNotiObj(rpk *c2t_packet.Packet) error {
 	switch body := rpk.Body.(type) {
 	default:
 		return fmt.Errorf("invalid packet")

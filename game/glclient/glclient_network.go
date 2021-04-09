@@ -27,6 +27,33 @@ import (
 	"github.com/kasworld/version"
 )
 
+func (app *GLClient) handleSentPacket(pk *c2t_packet.Packet) error {
+	g2log.TraceClient("sent %v", pk.Header)
+	return nil
+}
+
+func (app *GLClient) handleRecvPacket(header c2t_packet.Header, body []byte) error {
+	g2log.TraceClient("recv %v", header)
+	switch header.FlowType {
+	default:
+		return fmt.Errorf("invalid packet type %v %v", header, body)
+	case c2t_packet.Response:
+		if err := app.pid2recv.HandleRsp(header, body); err != nil {
+			app.sendRecvStop()
+			g2log.Fatal("%v %v %v %v", app, header, body, err)
+			return err
+		}
+	case c2t_packet.Notification:
+		fn := DemuxNoti2ByteFnMap[header.Cmd]
+		if err := fn(app, header, body); err != nil {
+			app.sendRecvStop()
+			g2log.Fatal("%v %v %v %v", app, header, body, err)
+			return err
+		}
+	}
+	return nil
+}
+
 func (app *GLClient) ReqWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 	fn c2t_pid2rspfn.HandleRspFn) error {
 
