@@ -14,23 +14,65 @@ package tower
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 )
 
+// handle recv req obj
 func (tw *Tower) handle_c2tch() {
 	for rpk := range tw.c2tCh {
-		shd, sbody, serr := tw.handleRecvReqObj(rpk)
-		// process result
-		if serr != nil {
-			// handle error
+
+		tw.recvStat.Inc()
+		if rpk.Header.FlowType != c2t_packet.Request {
+			g2log.Error("Unexpected rpk.Header packet type: %v", rpk.Header)
 		}
+		if int(rpk.Header.Cmd) >= len(tw.demuxReq2BytesAPIFnMap) {
+			g2log.Error("Invalid rpk.Header command %v", rpk.Header)
+		}
+
+		statObj, err := tw.protocolStat.AfterRecvReqHeader(rpk.Header)
+		if err != nil {
+			g2log.Fatal("%v", err)
+			return
+		}
+		if err := tw.pid2ApiStatObj.Add(rpk.Header.ID, statObj); err != nil {
+			g2log.Fatal("%v", err)
+			return
+		}
+		statObj.BeforeAPICall()
+
+		// call api
+		sheader, sbody, apierr := tw.handleRecvReqObj(rpk)
+
+		statObj.AfterAPICall()
+
+		tw.errorStat.Inc(c2t_idcmd.CommandID(rpk.Header.Cmd), sheader.ErrorCode)
+		if apierr != nil {
+			g2log.Fatal("%v", apierr)
+		}
+		if sbody == nil {
+			g2log.Fatal("Response body nil")
+		}
+
+		sheader.FlowType = c2t_packet.Response
+		sheader.Cmd = rpk.Header.Cmd
+		sheader.ID = rpk.Header.ID
 		spk := &c2t_packet.Packet{
-			Header: shd,
+			Header: sheader,
 			Body:   sbody,
 		}
+
+		// send rsp
 		tw.t2cCh <- spk
+		statOjb := tw.pid2ApiStatObj.Del(spk.Header.ID)
+		if statOjb != nil {
+			statOjb.AfterSendRsp(spk.Header)
+		} else {
+			g2log.Error("send StatObj not found %v", spk.Header)
+		}
 
 	}
 }

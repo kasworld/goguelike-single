@@ -102,6 +102,8 @@ type Tower struct {
 	c2tCh chan *c2t_packet.Packet
 	// tower to client packet channel
 	t2cCh chan *c2t_packet.Packet
+
+	pid2ApiStatObj *c2t_statserveapi.PacketID2StatObj
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
@@ -120,6 +122,8 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		errorStat:        c2t_statapierror.New(),
 		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
+
+		pid2ApiStatObj: c2t_statserveapi.NewPacketID2StatObj(),
 	}
 
 	tw.seed = int64(config.Seed)
