@@ -20,11 +20,8 @@ import (
 
 // Floor4Client has floor info for server ai, client
 type Floor4Client struct {
-	Visit         *visitarea.VisitArea
-	FOPosMan      uuidposmani.UUIDPosManI          // must *c2t_obj.FieldObjClient
-	ActiveObjList []*c2t_obj.ActiveObjClient       // changed every turn
-	CarryObjList  []*c2t_obj.CarryObjClientOnFloor // changed every turn
-	DangerObjList []*c2t_obj.DangerObjClient       // changed every turn
+	Visit    *visitarea.VisitArea
+	FOPosMan uuidposmani.UUIDPosManI // must *c2t_obj.FieldObjClient
 }
 
 func New(fi visitarea.FloorI) *Floor4Client {
@@ -41,14 +38,8 @@ func (f4c *Floor4Client) Forget() {
 }
 
 func (f4c *Floor4Client) UpdateObjLists(
-	ActiveObjList []*c2t_obj.ActiveObjClient,
-	CarryObjList []*c2t_obj.CarryObjClientOnFloor,
 	FieldObjList []*c2t_obj.FieldObjClient,
-	DangerObjList []*c2t_obj.DangerObjClient,
 ) {
-	f4c.ActiveObjList = ActiveObjList
-	f4c.CarryObjList = CarryObjList
-	f4c.DangerObjList = DangerObjList
 	for _, fo := range FieldObjList {
 		f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)
 	}

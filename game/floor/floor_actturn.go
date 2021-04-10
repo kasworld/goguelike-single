@@ -733,25 +733,13 @@ func (f *Floor) sendViewportNoti(
 		sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
 		sight := float32(ao.GetTurnData().Sight)
 
-		vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
-			viewportdata.ViewportXYLenList, aox, aoy, gameconst.AOCountInViewportLimit)
-		aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
-
-		vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
-			viewportdata.ViewportXYLenList, aox, aoy, gameconst.COCountInViewportLimit)
-		pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
-
+		// update ai floor4client info
 		vpixyolistsFO := f.foPosMan.GetVPIXYObjByXYLenList(
 			viewportdata.ViewportXYLenList, aox, aoy, gameconst.FOCountInViewportLimit)
 		fOs := f.makeViewportFieldObjs2(vpixyolistsFO, sightMat, sight)
 
-		vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
-			viewportdata.ViewportXYLenList, aox, aoy, gameconst.DOCountInViewportLimit)
-		dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)
-
-		// update ai floor4client info
 		f4c := ao.GetFloor4Client(f.GetName())
-		f4c.UpdateObjLists(aOs, pOs, fOs, dOs)
+		f4c.UpdateObjLists(fOs)
 
 		if ao.GetAndClearNeedTANoti() {
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat, sight)
@@ -769,6 +757,19 @@ func (f *Floor) sendViewportNoti(
 			}
 		}
 		if ao.GetActiveObjType() == aotype.User {
+
+			vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
+				viewportdata.ViewportXYLenList, aox, aoy, gameconst.AOCountInViewportLimit)
+			aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
+
+			vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
+				viewportdata.ViewportXYLenList, aox, aoy, gameconst.COCountInViewportLimit)
+			pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
+
+			vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
+				viewportdata.ViewportXYLenList, aox, aoy, gameconst.DOCountInViewportLimit)
+			dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)
+
 			// make and send NotiVPObjList
 			aoContidion := ao.GetTurnData().Condition
 			if aoContidion.TestByCondition(condition.Blind) ||
