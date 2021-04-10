@@ -103,11 +103,6 @@ func CheckOrigin(r *http.Request) bool {
 func (tw *Tower) serveWebSocketClient(ctx context.Context,
 	w http.ResponseWriter, r *http.Request) {
 
-	if tw.IsListenClientPaused() {
-		g2log.Warn("ListenClientPaused %v %v", w, r)
-		return
-	}
-
 	upgrader := websocket.Upgrader{
 		CheckOrigin: CheckOrigin,
 	}

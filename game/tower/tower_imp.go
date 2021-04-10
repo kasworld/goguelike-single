@@ -57,15 +57,3 @@ func (tw *Tower) GetBias() bias.Bias {
 func (tw *Tower) Config() *goguelikeconfig.GoguelikeConfig {
 	return tw.config
 }
-
-func (tw *Tower) PauseListenClient() {
-	tw.listenClientPaused = true
-}
-
-func (tw *Tower) ResumeListenClient() {
-	tw.listenClientPaused = false
-}
-
-func (tw *Tower) IsListenClientPaused() bool {
-	return tw.listenClientPaused
-}
