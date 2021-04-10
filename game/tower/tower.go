@@ -78,6 +78,7 @@ type Tower struct {
 	// single player
 	playerAO *activeobject.ActiveObject
 
+	turnStat         *actpersec.ActPerSec                    `prettystring:"simple"`
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat         *actpersec.ActPerSec                    `prettystring:"simple"`
 	recvStat         *actpersec.ActPerSec                    `prettystring:"simple"`
@@ -102,11 +103,10 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 	fmt.Printf("%v\n", config.StringForm())
 
 	tw := &Tower{
-		uuid:  uuidstr.New(),
-		id2ao: aoid2activeobject.New("ActiveObject working"),
-
-		config: config,
-
+		uuid:             uuidstr.New(),
+		id2ao:            aoid2activeobject.New("ActiveObject working"),
+		config:           config,
+		turnStat:         actpersec.New(),
 		sendStat:         actpersec.New(),
 		recvStat:         actpersec.New(),
 		protocolStat:     c2t_statserveapi.New(),
@@ -114,8 +114,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		errorStat:        c2t_statapierror.New(),
 		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
-
-		pid2ApiStatObj: c2t_statserveapi.NewPacketID2StatObj(),
+		pid2ApiStatObj:   c2t_statserveapi.NewPacketID2StatObj(),
 	}
 
 	tw.seed = int64(config.Seed)
@@ -313,6 +312,7 @@ loop:
 }
 
 func (tw *Tower) Turn(now time.Time) {
+	tw.turnStat.Inc()
 	var ws sync.WaitGroup
 	for _, f := range tw.floorMan.GetFloorList() {
 		ws.Add(1)

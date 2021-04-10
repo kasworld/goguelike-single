@@ -736,12 +736,15 @@ func (f *Floor) sendViewportNoti(
 		vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
 			viewportdata.ViewportXYLenList, aox, aoy, gameconst.AOCountInViewportLimit)
 		aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
+
 		vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
 			viewportdata.ViewportXYLenList, aox, aoy, gameconst.COCountInViewportLimit)
 		pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
+
 		vpixyolistsFO := f.foPosMan.GetVPIXYObjByXYLenList(
 			viewportdata.ViewportXYLenList, aox, aoy, gameconst.FOCountInViewportLimit)
 		fOs := f.makeViewportFieldObjs2(vpixyolistsFO, sightMat, sight)
+
 		vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
 			viewportdata.ViewportXYLenList, aox, aoy, gameconst.DOCountInViewportLimit)
 		dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)

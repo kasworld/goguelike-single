@@ -114,6 +114,9 @@ func (tw *Tower) GetID2ActiveObj() *aoid2activeobject.ActiveObjID2ActiveObject {
 	return tw.id2ao
 }
 
+func (tw *Tower) GetTurnStat() *actpersec.ActPerSec {
+	return tw.turnStat
+}
 func (tw *Tower) GetSendStat() *actpersec.ActPerSec {
 	return tw.sendStat
 }
@@ -221,6 +224,8 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	global wrapper : {{.WrapInfo}}	
 	<br/>
 	TileCache : {{.TileCacheCount}}
+	<br/>
+	TurnStat : {{.GetTurnStat}}
 	<br/>
 	SendStat : {{.GetSendStat}}
 	<br/>

@@ -35,6 +35,7 @@ import (
 )
 
 func (tw *Tower) SendNoti(cmd c2t_idnoti.NotiID, body interface{}) {
+	tw.sendStat.Inc()
 	spk := c2t_packet.Packet{
 		Header: c2t_packet.Header{
 			Cmd:      uint16(cmd),
@@ -96,6 +97,7 @@ func (tw *Tower) handle_c2tch() {
 		}
 
 		// send rsp
+		tw.sendStat.Inc()
 		tw.t2cCh <- spk
 		statOjb := tw.pid2ApiStatObj.Del(spk.Header.ID)
 		if statOjb != nil {

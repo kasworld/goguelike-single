@@ -18,11 +18,9 @@ import (
 
 	"github.com/kasworld/argdefault"
 	profile "github.com/kasworld/go-profile"
-	"github.com/kasworld/goguelike-single/config/dataversion"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/tower"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
 	"github.com/kasworld/log/logflags"
 	"github.com/kasworld/version"
 )
@@ -33,17 +31,7 @@ func init() {
 	version.Set(Ver)
 }
 
-func printVersion() {
-	fmt.Println("Goguelike-single")
-	fmt.Println("Build     ", version.GetVersion())
-	fmt.Println("Data      ", dataversion.DataVersion)
-	fmt.Println("Protocol  ", c2t_version.ProtocolVersion)
-	fmt.Println()
-}
-
 func main() {
-	printVersion()
-
 	profile.AddArgs()
 
 	ads := argdefault.New(&goguelikeconfig.GoguelikeConfig{})
