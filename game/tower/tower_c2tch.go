@@ -59,7 +59,7 @@ func (tw *Tower) handle_c2tch() {
 		if rpk.Header.FlowType != c2t_packet.Request {
 			g2log.Error("Unexpected rpk.Header packet type: %v", rpk.Header)
 		}
-		if int(rpk.Header.Cmd) >= len(tw.demuxReq2BytesAPIFnMap) {
+		if int(rpk.Header.Cmd) >= c2t_idcmd.CommandID_Count {
 			g2log.Error("Invalid rpk.Header command %v", rpk.Header)
 		}
 

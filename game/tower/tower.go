@@ -35,7 +35,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/towerscript"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/loadlines"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
@@ -85,10 +84,6 @@ type Tower struct {
 	protocolStat     *c2t_statserveapi.StatServeAPI          `prettystring:"simple"`
 	notiStat         *c2t_statnoti.StatNotification          `prettystring:"simple"`
 	errorStat        *c2t_statapierror.StatAPIError          `prettystring:"simple"`
-
-	demuxReq2BytesAPIFnMap [c2t_idcmd.CommandID_Count]func(
-		me interface{}, hd c2t_packet.Header, rbody []byte) (
-		c2t_packet.Header, interface{}, error) `prettystring:"hide"`
 
 	// tower cmd stats
 	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
