@@ -16,6 +16,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/config/contagionarea"
 	"github.com/kasworld/goguelike-single/config/gameconst"
+	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/enum/condition"
@@ -717,7 +718,6 @@ func (f *Floor) sendViewportNoti(
 	aoListToProcessInTurn []gamei.ActiveObjectI,
 	aoMapSkipTurn map[string]bool) {
 
-	vpixyolistcache := f.NewCacheVPIXYOList()
 	for _, ao := range aoListToProcessInTurn {
 		if _, exist := aoMapSkipTurn[ao.GetUUID()]; exist {
 			// skip leaved ao
@@ -730,13 +730,22 @@ func (f *Floor) sendViewportNoti(
 		}
 
 		aox, aoy = f.terrain.WrapXY(aox, aoy)
-		vpixyolists := vpixyolistcache.GetAtByCache(aox, aoy)
 		sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
 		sight := float32(ao.GetTurnData().Sight)
-		aOs := f.makeViewportActiveObjs2(vpixyolists[0], sightMat, sight)
-		pOs := f.makeViewportCarryObjs2(vpixyolists[1], sightMat, sight)
-		fOs := f.makeViewportFieldObjs2(vpixyolists[2], sightMat, sight)
-		dOs := f.makeViewportDangerObjs2(vpixyolists[3], sightMat, sight)
+
+		vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
+			viewportdata.ViewportXYLenList, aox, aoy, gameconst.AOCountInViewportLimit)
+		aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
+		vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
+			viewportdata.ViewportXYLenList, aox, aoy, gameconst.COCountInViewportLimit)
+		pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
+		vpixyolistsFO := f.foPosMan.GetVPIXYObjByXYLenList(
+			viewportdata.ViewportXYLenList, aox, aoy, gameconst.FOCountInViewportLimit)
+		fOs := f.makeViewportFieldObjs2(vpixyolistsFO, sightMat, sight)
+		vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
+			viewportdata.ViewportXYLenList, aox, aoy, gameconst.DOCountInViewportLimit)
+		dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)
+
 		// update ai floor4client info
 		f4c := ao.GetFloor4Client(f.GetName())
 		f4c.UpdateObjLists(aOs, pOs, fOs, dOs)

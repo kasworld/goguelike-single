@@ -47,7 +47,7 @@ func (f *Floor) makeViewportActiveObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.ActiveObjClient {
 
-	maxobj := gameconst.ActiveObjCountInViewportLimit
+	maxobj := gameconst.AOCountInViewportLimit
 	rtn := make([]*c2t_obj.ActiveObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -72,7 +72,7 @@ func (f *Floor) makeViewportCarryObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.CarryObjClientOnFloor {
 
-	maxobj := gameconst.CarryObjCountInViewportLimit
+	maxobj := gameconst.COCountInViewportLimit
 	rtn := make([]*c2t_obj.CarryObjClientOnFloor, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -93,7 +93,7 @@ func (f *Floor) makeViewportFieldObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.FieldObjClient {
 
-	maxobj := gameconst.FieldObjCountInViewportLimit
+	maxobj := gameconst.FOCountInViewportLimit
 	rtn := make([]*c2t_obj.FieldObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -117,7 +117,7 @@ func (f *Floor) makeViewportDangerObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.DangerObjClient {
 
-	maxobj := gameconst.DangerObjCountInViewportLimit
+	maxobj := gameconst.DOCountInViewportLimit
 	rtn := make([]*c2t_obj.DangerObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
