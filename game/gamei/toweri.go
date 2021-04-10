@@ -14,6 +14,7 @@ package gamei
 import (
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
+	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 )
 
 type TowerI interface {
@@ -21,6 +22,7 @@ type TowerI interface {
 	String() string
 
 	GetCmdCh() chan<- interface{}
+	SendNoti(cmd c2t_idnoti.NotiID, body interface{})
 
 	GetBias() bias.Bias
 

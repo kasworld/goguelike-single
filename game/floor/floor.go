@@ -21,6 +21,7 @@ import (
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike-single/config/gameconst"
+	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/game/terrain"
@@ -191,12 +192,11 @@ func (f *Floor) processAgeing() {
 			ao := v.(gamei.ActiveObjectI)
 			ao.SetNeedTANoti()
 			// send ageing noti
-			if aoconn := ao.GetClientConn(); aoconn != nil {
-				if err := aoconn.SendNotiPacket(c2t_idnoti.Ageing,
+			if ao.GetActiveObjType() == aotype.User {
+				f.tower.SendNoti(
+					c2t_idnoti.Ageing,
 					NotiAgeing,
-				); err != nil {
-					g2log.Error("%v %v %v", f, ao, err)
-				}
+				)
 			}
 		}
 	} else {

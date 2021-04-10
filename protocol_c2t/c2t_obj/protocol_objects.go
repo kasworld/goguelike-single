@@ -47,7 +47,6 @@ func (info *ServiceInfo) StringForm() string {
 type AccountInfo struct {
 	ActiveObjUUID string
 	NickName      string
-	CmdList       [c2t_idcmd.CommandID_Count]bool
 }
 
 type TowerInfo struct {

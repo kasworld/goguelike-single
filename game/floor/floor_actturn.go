@@ -17,6 +17,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/contagionarea"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
+	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/enum/condition"
 	"github.com/kasworld/goguelike-single/enum/dangertype"
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
@@ -110,26 +111,24 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		f4c := ao.GetFloor4Client(f.GetName())
 		f4c.FOPosMan.AddOrUpdateToXY(p.ToPacket_FieldObjClient(aox, aoy), aox, aoy)
 
-		if aoconn := ao.GetClientConn(); aoconn != nil {
+		if ao.GetActiveObjType() == aotype.User {
 			if p.DisplayType == fieldobjdisplaytype.None {
-				if err := aoconn.SendNotiPacket(c2t_idnoti.FoundFieldObj,
+				f.tower.SendNoti(
+					c2t_idnoti.FoundFieldObj,
 					&c2t_obj.NotiFoundFieldObj_data{
 						FloorName: f.GetName(),
 						FieldObj:  p.ToPacket_FieldObjClient(aox, aoy),
 					},
-				); err != nil {
-					g2log.Error("%v %v %v", f, ao, err)
-				}
+				)
 			}
 			if p.ActType.TrapNoti() {
-				if err := aoconn.SendNotiPacket(c2t_idnoti.ActivateTrap,
+				f.tower.SendNoti(
+					c2t_idnoti.ActivateTrap,
 					&c2t_obj.NotiActivateTrap_data{
 						FieldObjAct: p.ActType,
 						Triggered:   triggered,
 					},
-				); err != nil {
-					g2log.Error("%v %v %v", f, ao, err)
-				}
+				)
 			}
 		}
 		if !triggered {
@@ -656,12 +655,11 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			g2log.Error("%v %v %v", f, ao, err)
 		}
 		ao.Death(f) // set rebirth count
-		if aoconn := ao.GetClientConn(); aoconn != nil {
-			if err := aoconn.SendNotiPacket(c2t_idnoti.Death,
+		if ao.GetActiveObjType() == aotype.User {
+			f.tower.SendNoti(
+				c2t_idnoti.Death,
 				&c2t_obj.NotiDeath_data{},
-			); err != nil {
-				g2log.Error("%v %v %v", f, ao, err)
-			}
+			)
 		}
 	}
 
@@ -745,21 +743,20 @@ func (f *Floor) sendViewportNoti(
 
 		if ao.GetAndClearNeedTANoti() {
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat, sight)
-			if aoconn := ao.GetClientConn(); aoconn != nil {
+			if ao.GetActiveObjType() == aotype.User {
 				// make and send NotiTileArea
-				if err := aoconn.SendNotiPacket(c2t_idnoti.VPTiles,
+				f.tower.SendNoti(
+					c2t_idnoti.VPTiles,
 					&c2t_obj.NotiVPTiles_data{
 						FloorName: f.GetName(),
 						VPX:       aox,
 						VPY:       aoy,
 						VPTiles:   f.makeViewportTiles2(aox, aoy, sightMat, sight),
 					},
-				); err != nil {
-					g2log.Error("%v %v %v", f, ao, err)
-				}
+				)
 			}
 		}
-		if aoconn := ao.GetClientConn(); aoconn != nil {
+		if ao.GetActiveObjType() == aotype.User {
 			// make and send NotiVPObjList
 			aoContidion := ao.GetTurnData().Condition
 			if aoContidion.TestByCondition(condition.Blind) ||
@@ -767,7 +764,8 @@ func (f *Floor) sendViewportNoti(
 				// if blind, invisible add self
 				aOs = append(aOs, ao.ToPacket_ActiveObjClient(aox, aoy))
 			}
-			if err := aoconn.SendNotiPacket(c2t_idnoti.VPObjList,
+			f.tower.SendNoti(
+				c2t_idnoti.VPObjList,
 				&c2t_obj.NotiVPObjList_data{
 					Time:          turnTime,
 					ActiveObj:     ao.ToPacket_PlayerActiveObjInfo(),
@@ -777,9 +775,7 @@ func (f *Floor) sendViewportNoti(
 					FieldObjList:  fOs,
 					DangerObjList: dOs,
 				},
-			); err != nil {
-				g2log.Error("%v %v %v", f, ao, err)
-			}
+			)
 		}
 	}
 	// fmt.Printf("%v\n", vpixyolistcache)

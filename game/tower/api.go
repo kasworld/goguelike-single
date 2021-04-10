@@ -11,313 +11,296 @@
 
 package tower
 
-import (
-	"fmt"
-	"strings"
+// func (tw *Tower) bytesAPIFn_ReqInvalid(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	"github.com/kasworld/goguelike-single/config/gameconst"
-	"github.com/kasworld/goguelike-single/game/activeobject"
-	"github.com/kasworld/goguelike-single/game/cmd2tower"
-	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
-	"github.com/kasworld/version"
-)
+// 	rhd := c2t_packet.Header{}
+// 	spacket := &c2t_obj.RspInvalid_data{}
+// 	return rhd, spacket, fmt.Errorf("invalid packet")
+// }
 
-func (tw *Tower) bytesAPIFn_ReqInvalid(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// func (tw *Tower) bytesAPIFn_ReqLogin(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	rhd := c2t_packet.Header{}
-	spacket := &c2t_obj.RspInvalid_data{}
-	return rhd, spacket, fmt.Errorf("invalid packet")
-}
+// 	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
+// 	if !ok {
+// 		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqLogin(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+// 	if err != nil {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
+// 	}
+// 	// robj, ok := r.(*c2t_obj.ReqLogin_data)
+// 	// if !ok {
+// 	// 	return hd, nil, fmt.Errorf("packet type miss match %v", r)
+// 	// }
 
-	c2sc, ok := me.(*c2t_serveconnbyte.ServeConnByte)
-	if !ok {
-		panic(fmt.Sprintf("invalid me not c2t_serveconnbyte.ServeConnByte %#v", me))
-	}
+// 	if c2sc.WebConnData().Logined {
+// 		// double login try
+// 		return hd, nil, fmt.Errorf("connection already logined %v", r)
+// 	}
 
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
-	}
-	// robj, ok := r.(*c2t_obj.ReqLogin_data)
-	// if !ok {
-	// 	return hd, nil, fmt.Errorf("packet type miss match %v", r)
-	// }
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
 
-	if c2sc.WebConnData().Logined {
-		// double login try
-		return hd, nil, fmt.Errorf("connection already logined %v", r)
-	}
+// 	// disconnect old conn if exist
+// 	if oldConn := tw.playerConnection; oldConn != nil {
+// 		oldConn.Disconnect()
+// 	}
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
+// 	// if reconnect
+// 	if tw.playerAO != nil {
+// 		tw.playerAO.Resume(c2sc)
+// 		rspCh := make(chan error, 1)
+// 		tw.GetCmdCh() <- &cmd2tower.PlayerAOResumeTower{
+// 			RspCh: rspCh,
+// 		}
+// 		err = <-rspCh
+// 	} else {
+// 		// new ao
+// 		homeFloor := tw.GetFloorManager().GetStartFloor()
+// 		newAO := activeobject.NewUserActiveObj(
+// 			tw.rnd.Int63(),
+// 			homeFloor,
+// 			tw.Config().NickName,
+// 			tw.towerAchieveStat,
+// 			c2sc)
+// 		tw.playerAO = newAO
+// 		rspCh := make(chan error, 1)
+// 		tw.GetCmdCh() <- &cmd2tower.ActiveObjEnterTower{
+// 			ActiveObj: newAO,
+// 			RspCh:     rspCh,
+// 		}
+// 		err = <-rspCh
+// 	}
+// 	// connection logined
+// 	tw.playerConnection = c2sc
+// 	c2sc.WebConnData().Logined = true
 
-	// disconnect old conn if exist
-	if oldConn := tw.playerConnection; oldConn != nil {
-		oldConn.Disconnect()
-	}
+// 	if err != nil {
+// 		return rhd, nil, err
+// 	} else {
+// 		acinfo := &c2t_obj.AccountInfo{
+// 			ActiveObjUUID: tw.playerAO.GetUUID(),
+// 			NickName:      tw.Config().NickName,
+// 			CmdList:       *c2sc.GetAuthorCmdList(),
+// 		}
+// 		return rhd, &c2t_obj.RspLogin_data{
+// 			ServiceInfo: tw.serviceInfo,
+// 			AccountInfo: acinfo,
+// 		}, nil
+// 	}
+// }
 
-	// if reconnect
-	if tw.playerAO != nil {
-		tw.playerAO.Resume(c2sc)
-		rspCh := make(chan error, 1)
-		tw.GetCmdCh() <- &cmd2tower.PlayerAOResumeTower{
-			RspCh: rspCh,
-		}
-		err = <-rspCh
-	} else {
-		// new ao
-		homeFloor := tw.GetFloorManager().GetStartFloor()
-		newAO := activeobject.NewUserActiveObj(
-			tw.rnd.Int63(),
-			homeFloor,
-			tw.Config().NickName,
-			tw.towerAchieveStat,
-			c2sc)
-		tw.playerAO = newAO
-		rspCh := make(chan error, 1)
-		tw.GetCmdCh() <- &cmd2tower.ActiveObjEnterTower{
-			ActiveObj: newAO,
-			RspCh:     rspCh,
-		}
-		err = <-rspCh
-	}
-	// connection logined
-	tw.playerConnection = c2sc
-	c2sc.WebConnData().Logined = true
+// func (tw *Tower) bytesAPIFn_ReqHeartbeat(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	if err != nil {
-		return rhd, nil, err
-	} else {
-		acinfo := &c2t_obj.AccountInfo{
-			ActiveObjUUID: tw.playerAO.GetUUID(),
-			NickName:      tw.Config().NickName,
-			CmdList:       *c2sc.GetAuthorCmdList(),
-		}
-		return rhd, &c2t_obj.RspLogin_data{
-			ServiceInfo: tw.serviceInfo,
-			AccountInfo: acinfo,
-		}, nil
-	}
-}
+// 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+// 	if err != nil {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
+// 	}
+// 	robj, ok := r.(*c2t_obj.ReqHeartbeat_data)
+// 	if !ok {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", r)
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqHeartbeat(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
-	}
-	robj, ok := r.(*c2t_obj.ReqHeartbeat_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("packet type miss match %v", r)
-	}
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
+// 	spacket := &c2t_obj.RspHeartbeat_data{
+// 		Time: robj.Time,
+// 	}
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// 	return rhd, spacket, nil
+// }
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	spacket := &c2t_obj.RspHeartbeat_data{
-		Time: robj.Time,
-	}
+// func (tw *Tower) bytesAPIFn_ReqChat(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
+// 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+// 	if err != nil {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
+// 	}
+// 	robj, ok := r.(*c2t_obj.ReqChat_data)
+// 	if !ok {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", r)
+// 	}
+// 	ao, err := tw.api_me2ao(me)
+// 	if err != nil {
+// 		return hd, nil, err
+// 	}
 
-	return rhd, spacket, nil
-}
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-func (tw *Tower) bytesAPIFn_ReqChat(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
-	}
-	robj, ok := r.(*c2t_obj.ReqChat_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("packet type miss match %v", r)
-	}
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
+// 	robj.Chat = strings.TrimSpace(robj.Chat)
+// 	if !version.IsRelease() && len(robj.Chat) > 1 && robj.Chat[0] == '/' {
+// 		return c2t_packet.Header{
+// 			ErrorCode: AdminCmd(ao, robj.Chat[1:]),
+// 		}, &c2t_obj.RspChat_data{}, nil
+// 	} else {
+// 		if len(robj.Chat) > gameconst.MaxChatLen {
+// 			robj.Chat = robj.Chat[:gameconst.MaxChatLen]
+// 		}
+// 		ao.SetChat(robj.Chat)
+// 		return rhd, &c2t_obj.RspChat_data{}, nil
+// 	}
+// }
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	robj.Chat = strings.TrimSpace(robj.Chat)
-	if !version.IsRelease() && len(robj.Chat) > 1 && robj.Chat[0] == '/' {
-		return c2t_packet.Header{
-			ErrorCode: AdminCmd(ao, robj.Chat[1:]),
-		}, &c2t_obj.RspChat_data{}, nil
-	} else {
-		if len(robj.Chat) > gameconst.MaxChatLen {
-			robj.Chat = robj.Chat[:gameconst.MaxChatLen]
-		}
-		ao.SetChat(robj.Chat)
-		return rhd, &c2t_obj.RspChat_data{}, nil
-	}
-}
+// 	ao, err := tw.api_me2ao(me)
+// 	if err != nil {
+// 		return hd, nil, err
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqAchieveInfo(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
+// 	spacket := &c2t_obj.RspAchieveInfo_data{
+// 		AchieveStat:   *ao.GetAchieveStat(),
+// 		PotionStat:    *ao.GetPotionStat(),
+// 		ScrollStat:    *ao.GetScrollStat(),
+// 		FOActStat:     *ao.GetFieldObjActStat(),
+// 		AOActionStat:  *ao.GetActStat(),
+// 		ConditionStat: *ao.GetConditionStat(),
+// 	}
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// 	// for i, v := range ao.GetAchieveStat() {
+// 	// 	spacket.Achieve[i] = int64(v)
+// 	// }
+// 	return rhd, spacket, nil
+// }
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	spacket := &c2t_obj.RspAchieveInfo_data{
-		AchieveStat:   *ao.GetAchieveStat(),
-		PotionStat:    *ao.GetPotionStat(),
-		ScrollStat:    *ao.GetScrollStat(),
-		FOActStat:     *ao.GetFieldObjActStat(),
-		AOActionStat:  *ao.GetActStat(),
-		ConditionStat: *ao.GetConditionStat(),
-	}
+// func (tw *Tower) bytesAPIFn_ReqRebirth(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	// for i, v := range ao.GetAchieveStat() {
-	// 	spacket.Achieve[i] = int64(v)
-	// }
-	return rhd, spacket, nil
-}
+// 	ao, err := tw.api_me2ao(me)
+// 	if err != nil {
+// 		return hd, nil, err
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqRebirth(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
+// 	spacket := &c2t_obj.RspRebirth_data{}
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// 	err = ao.TryRebirth()
+// 	if err != nil {
+// 		rhd.ErrorCode = c2t_error.ActionProhibited
+// 		g2log.Error("%v", err)
+// 	}
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	spacket := &c2t_obj.RspRebirth_data{}
+// 	return rhd, spacket, nil
+// }
 
-	err = ao.TryRebirth()
-	if err != nil {
-		rhd.ErrorCode = c2t_error.ActionProhibited
-		g2log.Error("%v", err)
-	}
+// func (tw *Tower) bytesAPIFn_ReqMoveFloor(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
+// 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+// 	if err != nil {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
+// 	}
+// 	robj, ok := r.(*c2t_obj.ReqMoveFloor_data)
+// 	if !ok {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", r)
+// 	}
+// 	ao, err := tw.api_me2ao(me)
+// 	if err != nil {
+// 		return hd, nil, err
+// 	}
+// 	spacket := &c2t_obj.RspMoveFloor_data{}
 
-	return rhd, spacket, nil
-}
+// 	tw.GetCmdCh() <- &cmd2tower.FloorMove{
+// 		ActiveObj: ao,
+// 		FloorName: robj.UUID,
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqMoveFloor(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
-	}
-	robj, ok := r.(*c2t_obj.ReqMoveFloor_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("packet type miss match %v", r)
-	}
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
-	spacket := &c2t_obj.RspMoveFloor_data{}
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-	tw.GetCmdCh() <- &cmd2tower.FloorMove{
-		ActiveObj: ao,
-		FloorName: robj.UUID,
-	}
+// 	return c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}, spacket, nil
+// }
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// func (tw *Tower) bytesAPIFn_ReqAIPlay(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	return c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}, spacket, nil
-}
+// 	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
+// 	if err != nil {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
+// 	}
+// 	robj, ok := r.(*c2t_obj.ReqAIPlay_data)
+// 	if !ok {
+// 		return hd, nil, fmt.Errorf("packet type miss match %v", r)
+// 	}
+// 	ao, err := tw.api_me2ao(me)
+// 	if err != nil {
+// 		return hd, nil, err
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqAIPlay(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-	r, err := c2t_gob.UnmarshalPacket(hd, rbody)
-	if err != nil {
-		return hd, nil, fmt.Errorf("packet type miss match %v", rbody)
-	}
-	robj, ok := r.(*c2t_obj.ReqAIPlay_data)
-	if !ok {
-		return hd, nil, fmt.Errorf("packet type miss match %v", r)
-	}
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
+// 	if err := ao.DoAIOnOff(robj.On); err != nil {
+// 		g2log.Error("fail to AIOn %v %v", me)
+// 	}
+// 	return rhd, &c2t_obj.RspAIPlay_data{}, nil
+// }
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// func (tw *Tower) bytesAPIFn_ReqVisitFloorList(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	if err := ao.DoAIOnOff(robj.On); err != nil {
-		g2log.Error("fail to AIOn %v %v", me)
-	}
-	return rhd, &c2t_obj.RspAIPlay_data{}, nil
-}
+// 	ao, err := tw.api_me2ao(me)
+// 	if err != nil {
+// 		return hd, nil, err
+// 	}
 
-func (tw *Tower) bytesAPIFn_ReqVisitFloorList(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-	ao, err := tw.api_me2ao(me)
-	if err != nil {
-		return hd, nil, err
-	}
+// 	rhd := c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}
+// 	floorList := make([]*c2t_obj.FloorInfo, 0)
+// 	for _, f4c := range ao.GetFloor4ClientList() {
+// 		f := tw.floorMan.GetFloorByName(f4c.GetName())
+// 		fi := f.ToPacket_FloorInfo()
+// 		fi.VisitCount = f4c.Visit.GetDiscoveredTileCount()
+// 		floorList = append(floorList, fi)
+// 	}
+// 	return rhd, &c2t_obj.RspVisitFloorList_data{
+// 		FloorList: floorList,
+// 	}, nil
+// }
 
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
+// func (tw *Tower) bytesAPIFn_ReqPassTurn(
+// 	me interface{}, hd c2t_packet.Header, rbody []byte) (
+// 	c2t_packet.Header, interface{}, error) {
 
-	rhd := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	floorList := make([]*c2t_obj.FloorInfo, 0)
-	for _, f4c := range ao.GetFloor4ClientList() {
-		f := tw.floorMan.GetFloorByName(f4c.GetName())
-		fi := f.ToPacket_FloorInfo()
-		fi.VisitCount = f4c.Visit.GetDiscoveredTileCount()
-		floorList = append(floorList, fi)
-	}
-	return rhd, &c2t_obj.RspVisitFloorList_data{
-		FloorList: floorList,
-	}, nil
-}
+// 	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
 
-func (tw *Tower) bytesAPIFn_ReqPassTurn(
-	me interface{}, hd c2t_packet.Header, rbody []byte) (
-	c2t_packet.Header, interface{}, error) {
-
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
-
-	spacket := &c2t_obj.RspPassTurn_data{}
-	return c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}, spacket, nil
-}
+// 	spacket := &c2t_obj.RspPassTurn_data{}
+// 	return c2t_packet.Header{
+// 		ErrorCode: c2t_error.None,
+// 	}, spacket, nil
+// }

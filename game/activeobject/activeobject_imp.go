@@ -32,7 +32,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/floor4client"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 )
 
 func (ao *ActiveObject) GetUUID() string {
@@ -87,11 +86,6 @@ func (ao *ActiveObject) GetAndClearNeedTANoti() bool {
 	rtn := ao.needTANoti
 	ao.needTANoti = false
 	return rtn
-}
-
-// clients conn interface
-func (ao *ActiveObject) GetClientConn() *c2t_serveconnbyte.ServeConnByte {
-	return ao.clientConn
 }
 
 // func (ao *ActiveObject) SetActiveObjType(aot aotype.ActiveObjType) {

@@ -14,7 +14,6 @@ package glclient
 import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
 func (app *GLClient) GetArg() interface{} {
@@ -36,11 +35,4 @@ func (app *GLClient) GetPlayerXY() (int, int) {
 		return ao.X, ao.Y
 	}
 	return 0, 0
-}
-
-func (app *GLClient) CanUseCmd(cmd c2t_idcmd.CommandID) bool {
-	if acinfo := app.AccountInfo; acinfo != nil {
-		return acinfo.CmdList[cmd]
-	}
-	return false
 }

@@ -38,7 +38,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
@@ -78,8 +77,7 @@ type Tower struct {
 	towerInfo   *c2t_obj.TowerInfo
 
 	// single player
-	playerConnection *c2t_serveconnbyte.ServeConnByte
-	playerAO         *activeobject.ActiveObject
+	playerAO *activeobject.ActiveObject
 
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat         *actpersec.ActPerSec                    `prettystring:"simple"`
@@ -95,8 +93,7 @@ type Tower struct {
 	// tower cmd stats
 	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
 
-	adminWeb  *http.Server `prettystring:"simple"`
-	clientWeb *http.Server `prettystring:"simple"`
+	adminWeb *http.Server `prettystring:"simple"`
 
 	// client to tower packet channel
 	c2tCh chan *c2t_packet.Packet
@@ -279,10 +276,9 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	}
 
 	tw.initAdminWeb()
-	tw.initServiceWeb(ctx)
-
 	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, g2log.GlobalLogger, "serveAdminWeb")
-	go retrylistenandserve.RetryListenAndServe(tw.clientWeb, g2log.GlobalLogger, "serveServiceWeb")
+
+	go tw.handle_c2tch()
 
 	//run client
 	go func() {

@@ -13,6 +13,7 @@ package tower
 
 import (
 	"github.com/kasworld/goguelike-single/enum/achievetype"
+	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
@@ -72,18 +73,15 @@ func (tw *Tower) Call_ActiveObjEnterTower(ao gamei.ActiveObjectI) error {
 	if err := tw.id2ao.Add(ao); err != nil {
 		g2log.Fatal("%v", err)
 	}
-	aocon := ao.GetClientConn()
-	if aocon == nil {
+	if ao.GetActiveObjType() != aotype.User {
 		g2log.Fatal("ao connection nil %v", ao)
 		return nil
 	}
-	if err := aocon.SendNotiPacket(c2t_idnoti.EnterTower,
+	tw.SendNoti(c2t_idnoti.EnterTower,
 		&c2t_obj.NotiEnterTower_data{
 			TowerInfo: tw.towerInfo,
 		},
-	); err != nil {
-		g2log.Fatal("%v", err)
-	}
+	)
 
 	return nil // continue login
 }
@@ -102,18 +100,15 @@ func (tw *Tower) Call_PlayerAOResumeTower() error {
 		g2log.Fatal("%v", err)
 	}
 	// send noti visitarea in ao
-	aocon := ao.GetClientConn()
-	if aocon == nil {
+	if ao.GetActiveObjType() != aotype.User {
 		g2log.Fatal("ao connection nil %v", ao)
 		return nil
 	}
-	if err := aocon.SendNotiPacket(c2t_idnoti.EnterTower,
+	tw.SendNoti(c2t_idnoti.EnterTower,
 		&c2t_obj.NotiEnterTower_data{
 			TowerInfo: tw.towerInfo,
 		},
-	); err != nil {
-		g2log.Fatal("%v", err)
-	}
+	)
 
 	// TODO need visited floor small info send to client, not full info
 

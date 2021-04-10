@@ -32,7 +32,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 )
 
 type ActiveObjectI interface {
@@ -47,9 +46,6 @@ type ActiveObjectI interface {
 	// GetSP() float64
 	GetHPRate() float64
 	GetSPRate() float64
-
-	Suspend()
-	Resume(conn *c2t_serveconnbyte.ServeConnByte)
 
 	IsAlive() bool
 
@@ -84,7 +80,6 @@ type ActiveObjectI interface {
 	GetTurnData() *aoturndata.ActiveObjTurnData
 	GetBuffManager() *activebuff.BuffManager
 
-	GetClientConn() *c2t_serveconnbyte.ServeConnByte
 	GetActiveObjType() aotype.ActiveObjType
 	GetRespawnType() respawntype.RespawnType
 

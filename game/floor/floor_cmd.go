@@ -16,6 +16,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
+	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/gamei"
@@ -36,14 +37,13 @@ func (f *Floor) processCmd(data interface{}) {
 		if err := f.aoPosMan.Del(pk.ActiveObj); err != nil {
 			g2log.Fatal("%v %v", f, err)
 		}
-		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(c2t_idnoti.LeaveFloor,
+		if pk.ActiveObj.GetActiveObjType() == aotype.User {
+			f.tower.SendNoti(
+				c2t_idnoti.LeaveFloor,
 				&c2t_obj.NotiLeaveFloor_data{
 					FI: f.ToPacket_FloorInfo(),
 				},
-			); err != nil {
-				g2log.Error("%v %v", f, err)
-			}
+			)
 		}
 
 	case *cmd2floor.ReqEnterFloor:
@@ -52,21 +52,20 @@ func (f *Floor) processCmd(data interface{}) {
 			g2log.Fatal("%v %v", f, err)
 		}
 		pk.ActiveObj.EnterFloor(f)
-		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(c2t_idnoti.EnterFloor,
+		if pk.ActiveObj.GetActiveObjType() == aotype.User {
+			f.tower.SendNoti(
+				c2t_idnoti.EnterFloor,
 				&c2t_obj.NotiEnterFloor_data{
 					FI: f.ToPacket_FloorInfo(),
 				},
-			); err != nil {
-				g2log.Error("%v %v", f, err)
-			}
+			)
 			// send known tile area
 			f4c := pk.ActiveObj.GetFloor4Client(f.GetName())
 			fi := f.ToPacket_FloorInfo()
 			posList, taList := f.GetTerrain().GetTiles().DupWithFilter(
 				f4c.Visit.GetXYNolock).Split(gameconst.TileAreaSplitSize)
 			for i := range posList {
-				err := conn.SendNotiPacket(c2t_idnoti.FloorTiles,
+				f.tower.SendNoti(c2t_idnoti.FloorTiles,
 					&c2t_obj.NotiFloorTiles_data{
 						FI:    fi,
 						X:     posList[i][0],
@@ -74,9 +73,6 @@ func (f *Floor) processCmd(data interface{}) {
 						Tiles: taList[i],
 					},
 				)
-				if err != nil {
-					g2log.Error("%v", err)
-				}
 			}
 
 			// send fieldobj list
@@ -86,14 +82,13 @@ func (f *Floor) processCmd(data interface{}) {
 				fol = append(fol, fo)
 				return false
 			})
-			if err := conn.SendNotiPacket(c2t_idnoti.FieldObjList,
+			f.tower.SendNoti(
+				c2t_idnoti.FieldObjList,
 				&c2t_obj.NotiFieldObjList_data{
 					FI:     fi,
 					FOList: fol,
 				},
-			); err != nil {
-				g2log.Error("%v", err)
-			}
+			)
 
 			f.tower.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
 		}
@@ -104,12 +99,11 @@ func (f *Floor) processCmd(data interface{}) {
 			g2log.Fatal("%v %v", f, err)
 		}
 		pk.ActiveObj.Rebirth()
-		if conn := pk.ActiveObj.GetClientConn(); conn != nil {
-			if err := conn.SendNotiPacket(c2t_idnoti.Rebirthed,
+		if pk.ActiveObj.GetActiveObjType() == aotype.User {
+			f.tower.SendNoti(
+				c2t_idnoti.Rebirthed,
 				&c2t_obj.NotiRebirthed_data{},
-			); err != nil {
-				g2log.Error("%v %v %v", f, pk.ActiveObj, err)
-			}
+			)
 		}
 
 	case *cmd2floor.APIAdminTeleport2Floor:

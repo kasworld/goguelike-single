@@ -16,6 +16,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
+	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -61,8 +62,9 @@ func (ao *ActiveObject) ForgetFloorByName(floorName string) error {
 	if err := ao.floor4ClientMan.Forget(floorName); err != nil {
 		return err
 	}
-	if aoconn := ao.clientConn; aoconn != nil {
-		return ao.clientConn.SendNotiPacket(c2t_idnoti.ForgetFloor,
+	if ao.aoType == aotype.User {
+		ao.homefloor.GetTower().SendNoti(
+			c2t_idnoti.ForgetFloor,
 			&c2t_obj.NotiForgetFloor_data{
 				FloorName: floorName,
 			},
@@ -85,20 +87,19 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 	})
 
 	fi := f.ToPacket_FloorInfo()
-	if aoconn := ao.clientConn; aoconn != nil {
+	if ao.aoType == aotype.User {
 		// send tile area
 		posList, taList := f.GetTerrain().GetTiles().Split(gameconst.TileAreaSplitSize)
 		for i := range posList {
-			if err := ao.clientConn.SendNotiPacket(c2t_idnoti.FloorTiles,
+			ao.homefloor.GetTower().SendNoti(
+				c2t_idnoti.FloorTiles,
 				&c2t_obj.NotiFloorTiles_data{
 					FI:    fi,
 					X:     posList[i][0],
 					Y:     posList[i][1],
 					Tiles: taList[i],
 				},
-			); err != nil {
-				return err
-			}
+			)
 		}
 		// send fieldobj list
 		fol := make([]*c2t_obj.FieldObjClient, 0)
@@ -107,14 +108,13 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 			fol = append(fol, fo)
 			return false
 		})
-		if err := ao.clientConn.SendNotiPacket(c2t_idnoti.FieldObjList,
+		ao.homefloor.GetTower().SendNoti(
+			c2t_idnoti.FieldObjList,
 			&c2t_obj.NotiFieldObjList_data{
 				FI:     fi,
 				FOList: fol,
 			},
-		); err != nil {
-			return err
-		}
+		)
 	}
 	return nil
 }

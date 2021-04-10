@@ -16,9 +16,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/g3n/engine/app"
-	"github.com/g3n/engine/camera"
-	"github.com/g3n/engine/core"
 	"github.com/kasworld/actjitter"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
@@ -26,8 +23,6 @@ import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_connwsgorilla"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_gob"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
@@ -38,7 +33,6 @@ type GLClient struct {
 
 	config *goguelikeconfig.GoguelikeConfig
 
-	towerConn         *c2t_connwsgorilla.Connection
 	ServiceInfo       *c2t_obj.ServiceInfo
 	AccountInfo       *c2t_obj.AccountInfo
 	TowerInfo         *c2t_obj.TowerInfo
@@ -63,11 +57,6 @@ type GLClient struct {
 	c2tCh chan *c2t_packet.Packet
 	// tower to client packet channel
 	t2cCh chan *c2t_packet.Packet
-
-	// g3n field
-	g3napp *app.Application
-	scene  *core.Node
-	cam    *camera.Camera
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig,
@@ -84,15 +73,11 @@ func New(config *goguelikeconfig.GoguelikeConfig,
 	app.sendRecvStop = func() {
 		g2log.Error("Too early sendRecvStop call %v", app)
 	}
-	app.towerConn = c2t_connwsgorilla.New(10)
 	go newG3N()
 	return app
 }
 
 func (app *GLClient) Cleanup() {
-	if tc := app.towerConn; tc != nil {
-		tc.Cleanup()
-	}
 	app.ServerJitter = nil
 }
 
@@ -103,25 +88,9 @@ func (app *GLClient) Run(mainctx context.Context) error {
 	app.sendRecvStop = closeCtx
 	defer app.sendRecvStop()
 
-	if err := app.towerConn.ConnectTo(app.config.ConnectToTower()); err != nil {
-		return err
-	}
+	go app.handle_t2ch()
+
 	var rtnerr error
-	go func() {
-		err := app.towerConn.Run(ctx,
-			gameconst.ClientReadTimeoutSec*time.Second,
-			gameconst.ClientWriteTimeoutSec*time.Second,
-			c2t_gob.MarshalBodyFn,
-			app.handleRecvPacket,
-			app.handleSentPacket,
-		)
-
-		if err != nil {
-			rtnerr = err
-		}
-		app.sendRecvStop()
-	}()
-
 	if err := app.reqLogin(); err != nil {
 		return err
 	}

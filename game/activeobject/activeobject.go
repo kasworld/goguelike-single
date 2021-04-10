@@ -44,7 +44,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/idu64str"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_serveconnbyte"
 	"github.com/kasworld/uuidstr"
 )
 
@@ -71,9 +70,8 @@ type ActiveObject struct {
 	homefloor   gamei.FloorI
 	aoType      aotype.ActiveObjType
 	respawnType respawntype.RespawnType
-	bornFaction factiontype.FactionType          `prettystring:"simple"`
-	clientConn  *c2t_serveconnbyte.ServeConnByte // for clientConn conn
-	ai          *ServerAIState                   // for server side ai
+	bornFaction factiontype.FactionType `prettystring:"simple"`
+	ai          *ServerAIState          // for server side ai
 	isAIInUse   bool
 
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
@@ -139,7 +137,7 @@ func newActiveObj(
 
 func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
-	conn *c2t_serveconnbyte.ServeConnByte) *ActiveObject {
+) *ActiveObject {
 
 	ao := newActiveObj(seed, homefloor, towerAchieveStat)
 	ao.uuid = uuidstr.New()
@@ -149,7 +147,6 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	ao.aoType = aotype.User
 	ao.respawnType = respawntype.ToCurrentFloor
 	ao.ai = ao.NewServerAI()
-	ao.clientConn = conn
 	ao.addRandFactionCarryObjEquip(ao.nickName, ao.currentBias.NearFaction(), gameconst.InitCarryObjEquipCount*2)
 	ao.addRandPotion(gameconst.InitPotionCount * 2)
 	ao.addRandScroll(gameconst.InitScrollCount * 2)
@@ -208,16 +205,6 @@ func (ao *ActiveObject) addInitGold() {
 		ao.achieveStat.Add(achievetype.MoneyGet, float64(v))
 	}
 }
-
-func (ao *ActiveObject) Suspend() {
-	ao.clientConn = nil
-}
-
-func (ao *ActiveObject) Resume(conn *c2t_serveconnbyte.ServeConnByte) {
-	ao.clientConn = conn
-}
-
-/////////////
 
 func (ao *ActiveObject) addRandCarryObjEquip(basename string, n int) {
 	for ; n > 0; n-- {
