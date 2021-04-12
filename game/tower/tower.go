@@ -278,7 +278,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	go func() {
 		time.Sleep(time.Second)
 		cl := glclient.New(tw.config, tw.c2tCh, tw.t2cCh)
-		if err := cl.Run(ctx); err != nil {
+		if err := cl.Run(); err != nil {
 			g2log.Error("%v", err)
 		}
 		tw.doClose()

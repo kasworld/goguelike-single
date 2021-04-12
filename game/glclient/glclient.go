@@ -12,9 +12,6 @@
 package glclient
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/g3n/engine/app"
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/core"
@@ -63,7 +60,6 @@ type GLClient struct {
 
 func New(config *goguelikeconfig.GoguelikeConfig,
 	c2tch, t2cch chan *c2t_packet.Packet) *GLClient {
-	fmt.Printf("%v\n", config.StringForm())
 	app := &GLClient{
 		config:            config,
 		pid2recv:          c2t_pid2rspfn.New(),
@@ -74,8 +70,7 @@ func New(config *goguelikeconfig.GoguelikeConfig,
 	return app
 }
 
-func (app *GLClient) Run(ctx context.Context) error {
-
+func (app *GLClient) Run() error {
 	return app.runG3N()
 }
 
