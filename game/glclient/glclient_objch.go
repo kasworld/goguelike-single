@@ -13,7 +13,6 @@ package glclient
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
@@ -48,21 +47,6 @@ func (app *GLClient) reqAIPlay(onoff bool) error {
 	)
 }
 
-func (app *GLClient) reqHeartbeat() error {
-	return app.sendReqObjWithRspFn(
-		c2t_idcmd.Heartbeat,
-		&c2t_obj.ReqHeartbeat_data{
-			Time: time.Now(),
-		},
-		func(hd c2t_packet.Header, robj interface{}) error {
-			rpk := robj.(*c2t_obj.RspHeartbeat_data)
-			PingDur := time.Now().Sub(rpk.Time)
-			g2log.Monitor("Ping %v", PingDur)
-			return nil
-		},
-	)
-}
-
 func (app *GLClient) sendReqObjWithRspFn(cmd c2t_idcmd.CommandID, body interface{},
 	fn c2t_pid2rspfn.HandleRspFn) error {
 	pid := app.pid2recv.NewPID(fn)
@@ -79,23 +63,25 @@ func (app *GLClient) sendReqObjWithRspFn(cmd c2t_idcmd.CommandID, body interface
 }
 
 func (app *GLClient) handle_t2ch() {
-	for rpk := range app.t2cCh {
-		g2log.TraceClient("recv %v", rpk.Header)
-		switch rpk.Header.FlowType {
-		default:
-			g2log.Fatal("invalid packet type %v %v", rpk.Header, rpk.Body)
-		case c2t_packet.Response:
-			if err := app.pid2recv.HandleRsp(rpk.Header, rpk.Body); err != nil {
-				g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
-				return
-			}
-		case c2t_packet.Notification:
-			err := app.handleRecvNotiObj(rpk)
-			// process result
-			if err != nil {
-				g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
-				return
-			}
+	rpk, ok := <-app.t2cCh
+	if !ok {
+		return
+	}
+	g2log.TraceClient("recv %v", rpk.Header)
+	switch rpk.Header.FlowType {
+	default:
+		g2log.Fatal("invalid packet type %v %v", rpk.Header, rpk.Body)
+	case c2t_packet.Response:
+		if err := app.pid2recv.HandleRsp(rpk.Header, rpk.Body); err != nil {
+			g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
+			return
+		}
+	case c2t_packet.Notification:
+		err := app.handleRecvNotiObj(rpk)
+		// process result
+		if err != nil {
+			g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
+			return
 		}
 	}
 }
@@ -191,13 +177,10 @@ func (app *GLClient) objRecvNotiFn_Broadcast(hd c2t_packet.Header, body *c2t_obj
 }
 func (app *GLClient) objRecvNotiFn_VPObjList(hd c2t_packet.Header, body *c2t_obj.NotiVPObjList_data) error {
 	app.OLNotiData = body
-	app.ServerClientTimeDiff = body.Time.Sub(time.Now())
 	oldOLNotiData := app.OLNotiData
 	app.OLNotiData = body
 	newOLNotiData := body
 	app.onFieldObj = nil
-
-	app.ServerJitter.ActByValue(body.Time)
 
 	c2t_obj.EquipClientByUUID(body.ActiveObj.EquipBag).Sort()
 	c2t_obj.PotionClientByUUID(body.ActiveObj.PotionBag).Sort()

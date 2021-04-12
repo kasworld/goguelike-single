@@ -29,7 +29,10 @@ import (
 	"github.com/g3n/engine/window"
 )
 
-func (ga *GLClient) runG3N() {
+// runtime.LockOSThread
+// must run in same thread
+
+func (ga *GLClient) runG3N() error {
 	// Create application and scene
 	ga.app = app.App()
 	ga.scene = core.NewNode()
@@ -74,12 +77,19 @@ func (ga *GLClient) runG3N() {
 
 	// Set background color to gray
 	ga.app.Gls().ClearColor(0.5, 0.5, 0.5, 1.0)
+
+	if err := ga.reqLogin(); err != nil {
+		return err
+	}
+
 	ga.app.Run(ga.updateGL)
+	return nil
 }
 
 func (ga *GLClient) updateGL(renderer *renderer.Renderer, deltaTime time.Duration) {
 	ga.app.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
 	renderer.Render(ga.scene, ga.cam)
+	ga.handle_t2ch()
 }
 
 // Set up callback to update viewport and camera aspect ratio when the window is resized
