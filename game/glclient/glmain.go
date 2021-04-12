@@ -32,7 +32,7 @@ import (
 // runtime.LockOSThread
 // must run in same thread
 
-func (ga *GLClient) runG3N() error {
+func (ga *GLClient) Run() error {
 	// Create application and scene
 	ga.app = app.App()
 	ga.scene = core.NewNode()

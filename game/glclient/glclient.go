@@ -70,10 +70,6 @@ func New(config *goguelikeconfig.GoguelikeConfig,
 	return app
 }
 
-func (app *GLClient) Run() error {
-	return app.runG3N()
-}
-
 func (app *GLClient) GetArg() interface{} {
 	return app.config
 }
