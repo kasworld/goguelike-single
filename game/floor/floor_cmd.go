@@ -14,7 +14,6 @@ package floor
 import (
 	"time"
 
-	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
@@ -62,18 +61,15 @@ func (f *Floor) processCmd(data interface{}) {
 			// send known tile area
 			f4c := pk.ActiveObj.GetFloor4Client(f.GetName())
 			fi := f.ToPacket_FloorInfo()
-			posList, taList := f.GetTerrain().GetTiles().DupWithFilter(
-				f4c.Visit.GetXYNolock).Split(gameconst.TileAreaSplitSize)
-			for i := range posList {
-				f.tower.SendNoti(c2t_idnoti.FloorTiles,
-					&c2t_obj.NotiFloorTiles_data{
-						FI:    fi,
-						X:     posList[i][0],
-						Y:     posList[i][1],
-						Tiles: taList[i],
-					},
-				)
-			}
+			ta := f.GetTerrain().GetTiles().DupWithFilter(f4c.Visit.GetXYNolock)
+			f.tower.SendNoti(c2t_idnoti.FloorTiles,
+				&c2t_obj.NotiFloorTiles_data{
+					FI:    fi,
+					X:     0,
+					Y:     0,
+					Tiles: ta,
+				},
+			)
 
 			// send fieldobj list
 			fol := make([]*c2t_obj.FieldObjClient, 0)

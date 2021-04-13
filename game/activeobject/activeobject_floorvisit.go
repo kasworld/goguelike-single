@@ -14,7 +14,6 @@ package activeobject
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
@@ -89,18 +88,16 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 	fi := f.ToPacket_FloorInfo()
 	if ao.aoType == aotype.User {
 		// send tile area
-		posList, taList := f.GetTerrain().GetTiles().Split(gameconst.TileAreaSplitSize)
-		for i := range posList {
-			ao.homefloor.GetTower().SendNoti(
-				c2t_idnoti.FloorTiles,
-				&c2t_obj.NotiFloorTiles_data{
-					FI:    fi,
-					X:     posList[i][0],
-					Y:     posList[i][1],
-					Tiles: taList[i],
-				},
-			)
-		}
+		ta := f.GetTerrain().GetTiles()
+		ao.homefloor.GetTower().SendNoti(
+			c2t_idnoti.FloorTiles,
+			&c2t_obj.NotiFloorTiles_data{
+				FI:    fi,
+				X:     0,
+				Y:     0,
+				Tiles: ta,
+			},
+		)
 		// send fieldobj list
 		fol := make([]*c2t_obj.FieldObjClient, 0)
 		f4c.FOPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {

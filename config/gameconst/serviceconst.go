@@ -13,5 +13,5 @@ package gameconst
 
 // service const
 const (
-	TileAreaSplitSize = 0x10000
+	SendBufferSize = 10
 )

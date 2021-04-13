@@ -82,6 +82,7 @@ func (cf *ClientFloor) Forget() {
 	cf.Visited = visitarea.New(FloorInfo)
 }
 
+// replace tile rect at x,y
 func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 	for x, xv := range fta.Tiles {
 		xpos := fta.X + x
@@ -93,7 +94,6 @@ func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
 			}
 		}
 	}
-	return
 }
 
 func (cf *ClientFloor) String() string {

@@ -22,6 +22,7 @@ import (
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike-single/config/dataversion"
+	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/gamedata"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
@@ -231,8 +232,8 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		return
 	}
 
-	tw.c2tCh = make(chan *c2t_packet.Packet, tw.floorMan.GetSendBufferSize())
-	tw.t2cCh = make(chan *c2t_packet.Packet, tw.floorMan.GetSendBufferSize())
+	tw.c2tCh = make(chan *c2t_packet.Packet, gameconst.SendBufferSize)
+	tw.t2cCh = make(chan *c2t_packet.Packet, gameconst.SendBufferSize)
 
 	// start tower
 	go func() {
