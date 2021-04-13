@@ -32,7 +32,7 @@ import (
 // runtime.LockOSThread
 // must run in same thread
 
-func (ga *GLClient) Run() error {
+func (ga *GLClient) glInit() error {
 	// Create application and scene
 	ga.app = app.App()
 	ga.scene = core.NewNode()
@@ -51,6 +51,22 @@ func (ga *GLClient) Run() error {
 	ga.app.Subscribe(window.OnWindowSize, ga.onResize)
 	ga.onResize("", nil)
 
+	// Create and add lights to the scene
+	ga.scene.Add(light.NewAmbient(&math32.Color{1.0, 1.0, 1.0}, 0.8))
+	pointLight := light.NewPoint(&math32.Color{1, 1, 1}, 5.0)
+	pointLight.SetPosition(1, 0, 2)
+	ga.scene.Add(pointLight)
+
+	// Create and add an axis helper to the scene
+	ga.scene.Add(helper.NewAxes(0.5))
+	return nil
+}
+
+func (ga *GLClient) Run() error {
+	if err := ga.glInit(); err != nil {
+		return err
+	}
+
 	// Create a blue torus and add it to the scene
 	geom := geometry.NewTorus(1, .4, 12, 32, math32.Pi*2)
 	mat := material.NewStandard(math32.NewColor("DarkBlue"))
@@ -66,18 +82,10 @@ func (ga *GLClient) Run() error {
 	})
 	ga.scene.Add(btn)
 
-	// Create and add lights to the scene
-	ga.scene.Add(light.NewAmbient(&math32.Color{1.0, 1.0, 1.0}, 0.8))
-	pointLight := light.NewPoint(&math32.Color{1, 1, 1}, 5.0)
-	pointLight.SetPosition(1, 0, 2)
-	ga.scene.Add(pointLight)
-
-	// Create and add an axis helper to the scene
-	ga.scene.Add(helper.NewAxes(0.5))
-
 	// Set background color to gray
 	ga.app.Gls().ClearColor(0.5, 0.5, 0.5, 1.0)
 
+	// login and start
 	if err := ga.reqLogin(); err != nil {
 		return err
 	}
