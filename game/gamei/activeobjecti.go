@@ -29,7 +29,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/floor4client"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
@@ -131,8 +130,6 @@ type ActiveObjectI interface {
 	GetFloor4Client(floorname string) *floor4client.Floor4Client
 	ForgetFloorByName(floorname string) error
 	MakeFloorComplete(f FloorI) error
-
-	DoAdminCmd(cmd, args string) c2t_error.ErrorCode
 }
 
 const (

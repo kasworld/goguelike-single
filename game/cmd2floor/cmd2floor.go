@@ -36,9 +36,3 @@ type APIAdminTeleport2Floor struct {
 	ReqPk     *c2t_obj.ReqAdminTeleport_data
 	RspCh     chan<- c2t_error.ErrorCode
 }
-
-type APIAdminCmd2Floor struct {
-	ActiveObj gamei.ActiveObjectI
-	ReqPk     *c2t_obj.ReqAdminFloorCmd_data
-	RspCh     chan<- c2t_error.ErrorCode
-}

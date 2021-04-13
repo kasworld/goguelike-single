@@ -48,9 +48,6 @@ func (tw *Tower) processCmd(data interface{}) {
 	case *cmd2tower.FloorMove:
 		pk.RspCh <- tw.Call_FloorMove(pk.ActiveObj, pk.FloorName)
 
-	case *cmd2tower.AdminTowerCmd:
-		pk.RspCh <- tw.Call_AdminTowerCmd(pk.ActiveObj, pk.RecvPacket)
-
 	case *cmd2tower.ActiveObjUsePortal:
 		tw.Call_ActiveObjUsePortal(pk.ActiveObj, pk.SrcFloor, pk.P1, pk.P2)
 
@@ -211,12 +208,6 @@ func (tw *Tower) Call_FloorMove(
 		g2log.Fatal("%v", err)
 		return c2t_error.ActionProhibited
 	}
-	return c2t_error.None
-}
-
-func (tw *Tower) Call_AdminTowerCmd(ActiveObj gamei.ActiveObjectI,
-	RecvPacket *c2t_obj.ReqAdminTowerCmd_data) c2t_error.ErrorCode {
-	g2log.Debug("%v %v", ActiveObj, RecvPacket)
 	return c2t_error.None
 }
 

@@ -85,19 +85,6 @@ func (cet FloorMove) String() string {
 	)
 }
 
-type AdminTowerCmd struct {
-	ActiveObj  gamei.ActiveObjectI
-	RecvPacket *c2t_obj.ReqAdminTowerCmd_data
-	RspCh      chan<- c2t_error.ErrorCode
-}
-
-func (cet AdminTowerCmd) String() string {
-	return fmt.Sprintf("AdminTowerCmd[%v %v]",
-		cet.ActiveObj,
-		cet.RecvPacket,
-	)
-}
-
 type ActiveObjTrapTeleport struct {
 	ActiveObj    gamei.ActiveObjectI
 	SrcFloor     gamei.FloorI

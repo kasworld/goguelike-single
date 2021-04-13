@@ -33,8 +33,6 @@ var attrib = [CommandID_Count]struct {
 }{
 	Invalid:           {false, false, 0},
 	Login:             {false, false, 0},
-	Heartbeat:         {false, false, 0},
-	Chat:              {false, false, 0},
 	AchieveInfo:       {false, false, 0},
 	Rebirth:           {false, true, 0},
 	MoveFloor:         {false, true, 1},
@@ -56,9 +54,6 @@ var attrib = [CommandID_Count]struct {
 	Recycle:           {true, true, 1},
 	EnterPortal:       {true, true, 1},
 	ActTeleport:       {false, true, 1},
-	AdminTowerCmd:     {false, true, 0},
-	AdminFloorCmd:     {false, true, 0},
-	AdminActiveObjCmd: {false, true, 0},
 	AdminFloorMove:    {false, true, 0},
 	AdminTeleport:     {false, true, 0},
 	AdminAddExp:       {false, true, 0},

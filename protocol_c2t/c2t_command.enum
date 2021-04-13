@@ -1,7 +1,7 @@
 Invalid make empty packet error
 Login
-Heartbeat
-Chat
+#Heartbeat
+#Chat
 AchieveInfo
 
 Rebirth
@@ -27,9 +27,9 @@ Recycle sell carryobj
 EnterPortal
 ActTeleport
 
-AdminTowerCmd generic cmd 
-AdminFloorCmd generic cmd 
-AdminActiveObjCmd generic cmd 
+#AdminTowerCmd generic cmd 
+#AdminFloorCmd generic cmd 
+#AdminActiveObjCmd generic cmd 
 
 AdminFloorMove Next Before floorUUID
 AdminTeleport random pos in floor 

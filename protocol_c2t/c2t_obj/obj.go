@@ -27,10 +27,8 @@ import (
 
 // Invalid make empty packet error
 type ReqInvalid_data struct {
-	Dummy uint8
 }
 type RspInvalid_data struct {
-	Dummy uint8
 }
 
 // Login
@@ -41,25 +39,8 @@ type RspLogin_data struct {
 	AccountInfo *AccountInfo
 }
 
-// Heartbeat
-type ReqHeartbeat_data struct {
-	Time time.Time `prettystring:"simple"`
-}
-type RspHeartbeat_data struct {
-	Time time.Time `prettystring:"simple"`
-}
-
-// Chat
-type ReqChat_data struct {
-	Chat string
-}
-type RspChat_data struct {
-	Dummy uint8
-}
-
 // AchieveInfo
 type ReqAchieveInfo_data struct {
-	Dummy uint8
 }
 type RspAchieveInfo_data struct {
 	AchieveStat   achievetype_vector.AchieveTypeVector         `prettystring:"simple"`
@@ -72,10 +53,8 @@ type RspAchieveInfo_data struct {
 
 // Rebirth
 type ReqRebirth_data struct {
-	Dummy uint8
 }
 type RspRebirth_data struct {
-	Dummy uint8
 }
 
 // MoveFloor tower cmd
@@ -83,7 +62,6 @@ type ReqMoveFloor_data struct {
 	UUID string
 }
 type RspMoveFloor_data struct {
-	Dummy uint8
 }
 
 // AIPlay
@@ -91,12 +69,11 @@ type ReqAIPlay_data struct {
 	On bool
 }
 type RspAIPlay_data struct {
-	Dummy uint8
 }
 
 // VisitFloorList floor info of visited
 type ReqVisitFloorList_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // VisitFloorList floor info of visited
@@ -106,12 +83,12 @@ type RspVisitFloorList_data struct {
 
 // PassTurn no action just trigger turn
 type ReqPassTurn_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // PassTurn no action just trigger turn
 type RspPassTurn_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -119,19 +96,17 @@ type RspPassTurn_data struct {
 
 // Meditate rest and recover HP,SP
 type ReqMeditate_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // Meditate rest and recover HP,SP
 type RspMeditate_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 type ReqKillSelf_data struct {
-	Dummy uint8
 }
 type RspKillSelf_data struct {
-	Dummy uint8
 }
 
 type ReqMove_data struct {
@@ -145,122 +120,80 @@ type ReqAttack_data struct {
 	Dir way9type.Way9Type
 }
 type RspAttack_data struct {
-	Dummy uint8
 }
 
 type ReqAttackWide_data struct {
 	Dir way9type.Way9Type
 }
 type RspAttackWide_data struct {
-	Dummy uint8
 }
 
 type ReqAttackLong_data struct {
 	Dir way9type.Way9Type
 }
 type RspAttackLong_data struct {
-	Dummy uint8
 }
 
 type ReqPickup_data struct {
 	UUID string
 }
 type RspPickup_data struct {
-	Dummy uint8
 }
 
 type ReqDrop_data struct {
 	UUID string
 }
 type RspDrop_data struct {
-	Dummy uint8
 }
 
 type ReqEquip_data struct {
 	UUID string
 }
 type RspEquip_data struct {
-	Dummy uint8
 }
 
 type ReqUnEquip_data struct {
 	UUID string
 }
 type RspUnEquip_data struct {
-	Dummy uint8
 }
 
 type ReqDrinkPotion_data struct {
 	UUID string
 }
 type RspDrinkPotion_data struct {
-	Dummy uint8
 }
 
 type ReqReadScroll_data struct {
 	UUID string
 }
 type RspReadScroll_data struct {
-	Dummy uint8
 }
 
 type ReqRecycle_data struct {
 	UUID string
 }
 type RspRecycle_data struct {
-	Dummy uint8
 }
 
 type ReqEnterPortal_data struct {
-	Dummy uint8
 }
 type RspEnterPortal_data struct {
-	Dummy uint8
 }
 
 type ReqActTeleport_data struct {
-	Dummy uint8
 }
 type RspActTeleport_data struct {
-	Dummy uint8
 }
 
 ////////////////////////////////////////////////////////////////////
 // admin
-
-// AdminTowerCmd generic cmd
-type ReqAdminTowerCmd_data struct {
-	Cmd string
-	Arg string
-}
-type RspAdminTowerCmd_data struct {
-	Dummy uint8
-}
-
-// AdminFloorCmd generic cmd
-type ReqAdminFloorCmd_data struct {
-	Cmd string
-	Arg string
-}
-type RspAdminFloorCmd_data struct {
-	Dummy uint8
-}
-
-// AdminActiveObjCmd generic cmd
-type ReqAdminActiveObjCmd_data struct {
-	Cmd string
-	Arg string
-}
-type RspAdminActiveObjCmd_data struct {
-	Dummy uint8
-}
 
 // AdminFloorMove Next Before floorUUID
 type ReqAdminFloorMove_data struct {
 	Floor string
 }
 type RspAdminFloorMove_data struct {
-	Dummy uint8
 }
 
 // AdminTeleport random pos in floor
@@ -269,7 +202,6 @@ type ReqAdminTeleport_data struct {
 	Y int
 }
 type RspAdminTeleport_data struct {
-	Dummy uint8
 }
 
 // AdminAddExp  add arg to battle exp
@@ -279,7 +211,7 @@ type ReqAdminAddExp_data struct {
 
 // AdminAddExp  add arg to battle exp
 type RspAdminAddExp_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminPotionEffect buff by arg potion type
@@ -289,7 +221,7 @@ type ReqAdminPotionEffect_data struct {
 
 // AdminPotionEffect buff by arg potion type
 type RspAdminPotionEffect_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminScrollEffect buff by arg Scroll type
@@ -299,7 +231,7 @@ type ReqAdminScrollEffect_data struct {
 
 // AdminScrollEffect buff by arg Scroll type
 type RspAdminScrollEffect_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminCondition add arg condition for 100 turn
@@ -309,7 +241,7 @@ type ReqAdminCondition_data struct {
 
 // AdminCondition add arg condition for 100 turn
 type RspAdminCondition_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminAddPotion add arg potion to inven
@@ -319,7 +251,7 @@ type ReqAdminAddPotion_data struct {
 
 // AdminAddPotion add arg potion to inven
 type RspAdminAddPotion_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminAddScroll add arg scroll to inven
@@ -329,7 +261,7 @@ type ReqAdminAddScroll_data struct {
 
 // AdminAddScroll add arg scroll to inven
 type RspAdminAddScroll_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminAddMoney add arg money to inven
@@ -339,7 +271,7 @@ type ReqAdminAddMoney_data struct {
 
 // AdminAddMoney add arg money to inven
 type RspAdminAddMoney_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminAddEquip add random equip to inven
@@ -350,34 +282,33 @@ type ReqAdminAddEquip_data struct {
 
 // AdminAddEquip add random equip to inven
 type RspAdminAddEquip_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminForgetFloor forget current floor map
 type ReqAdminForgetFloor_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminForgetFloor forget current floor map
 type RspAdminForgetFloor_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminFloorMap complete current floor map
 type ReqAdminFloorMap_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 // AdminFloorMap complete current floor map
 type RspAdminFloorMap_data struct {
-	Dummy uint8 // change as you need
+	// change as you need
 }
 
 /////////////////////////////////////////////////////////////////
 // noti
 
 type NotiInvalid_data struct {
-	Dummy uint8
 }
 
 type NotiEnterTower_data struct {
@@ -399,14 +330,11 @@ type NotiAgeing_data struct {
 }
 
 type NotiDeath_data struct {
-	Dummy uint8
 }
 
 type NotiReadyToRebirth_data struct {
-	Dummy uint8
 }
 type NotiRebirthed_data struct {
-	Dummy uint8
 }
 
 type NotiBroadcast_data struct {

@@ -13,10 +13,8 @@ package tower
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
-	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
@@ -118,10 +116,6 @@ func (tw *Tower) handleRecvReqObj(rpk *c2t_packet.Packet) (c2t_packet.Header, in
 		return tw.objAPIFn_ReqInvalid(rpk.Header, body)
 	case *c2t_obj.ReqLogin_data:
 		return tw.objAPIFn_ReqLogin(rpk.Header, body)
-	case *c2t_obj.ReqHeartbeat_data:
-		return tw.objAPIFn_ReqHeartbeat(rpk.Header, body)
-	case *c2t_obj.ReqChat_data:
-		return tw.objAPIFn_ReqChat(rpk.Header, body)
 	case *c2t_obj.ReqAchieveInfo_data:
 		return tw.objAPIFn_ReqAchieveInfo(rpk.Header, body)
 	case *c2t_obj.ReqRebirth_data:
@@ -164,12 +158,6 @@ func (tw *Tower) handleRecvReqObj(rpk *c2t_packet.Packet) (c2t_packet.Header, in
 		return tw.objAPIFn_ReqEnterPortal(rpk.Header, body)
 	case *c2t_obj.ReqActTeleport_data:
 		return tw.objAPIFn_ReqActTeleport(rpk.Header, body)
-	case *c2t_obj.ReqAdminTowerCmd_data:
-		return tw.objAPIFn_ReqAdminTowerCmd(rpk.Header, body)
-	case *c2t_obj.ReqAdminFloorCmd_data:
-		return tw.objAPIFn_ReqAdminFloorCmd(rpk.Header, body)
-	case *c2t_obj.ReqAdminActiveObjCmd_data:
-		return tw.objAPIFn_ReqAdminActiveObjCmd(rpk.Header, body)
 	case *c2t_obj.ReqAdminFloorMove_data:
 		return tw.objAPIFn_ReqAdminFloorMove(rpk.Header, body)
 	case *c2t_obj.ReqAdminTeleport_data:
@@ -240,36 +228,6 @@ func (tw *Tower) objAPIFn_ReqLogin(hd c2t_packet.Header, robj *c2t_obj.ReqLogin_
 		ServiceInfo: tw.serviceInfo,
 		AccountInfo: acinfo,
 	}, nil
-}
-
-// Heartbeat
-func (tw *Tower) objAPIFn_ReqHeartbeat(hd c2t_packet.Header, robj *c2t_obj.ReqHeartbeat_data) (
-	c2t_packet.Header, *c2t_obj.RspHeartbeat_data, error) {
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
-
-	sendHeader := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	sendBody := &c2t_obj.RspHeartbeat_data{
-		Time: robj.Time,
-	}
-	return sendHeader, sendBody, nil
-}
-
-// Chat
-func (tw *Tower) objAPIFn_ReqChat(hd c2t_packet.Header, robj *c2t_obj.ReqChat_data) (
-	c2t_packet.Header, *c2t_obj.RspChat_data, error) {
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
-
-	sendHeader := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	robj.Chat = strings.TrimSpace(robj.Chat)
-	if len(robj.Chat) > gameconst.MaxChatLen {
-		robj.Chat = robj.Chat[:gameconst.MaxChatLen]
-	}
-	tw.playerAO.SetChat(robj.Chat)
-	return sendHeader, &c2t_obj.RspChat_data{}, nil
 }
 
 // AchieveInfo
@@ -609,61 +567,6 @@ func (tw *Tower) objAPIFn_ReqActTeleport(hd c2t_packet.Header, robj *c2t_obj.Req
 		Act: c2t_idcmd.ActTeleport,
 	})
 	return sendHeader, sendBody, nil
-}
-
-// AdminTowerCmd generic cmd
-func (tw *Tower) objAPIFn_ReqAdminTowerCmd(hd c2t_packet.Header, robj *c2t_obj.ReqAdminTowerCmd_data) (
-	c2t_packet.Header, *c2t_obj.RspAdminTowerCmd_data, error) {
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
-
-	rspCh := make(chan c2t_error.ErrorCode, 1)
-	tw.GetCmdCh() <- &cmd2tower.AdminTowerCmd{
-		ActiveObj:  tw.playerAO,
-		RecvPacket: robj,
-		RspCh:      rspCh,
-	}
-	ec := <-rspCh
-	return c2t_packet.Header{
-		ErrorCode: ec,
-	}, &c2t_obj.RspAdminTowerCmd_data{}, nil
-}
-
-// AdminFloorCmd generic cmd
-func (tw *Tower) objAPIFn_ReqAdminFloorCmd(hd c2t_packet.Header, robj *c2t_obj.ReqAdminFloorCmd_data) (
-	c2t_packet.Header, *c2t_obj.RspAdminFloorCmd_data, error) {
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
-
-	sendHeader := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	sendBody := &c2t_obj.RspAdminFloorCmd_data{}
-
-	f := tw.playerAO.GetCurrentFloor()
-	if f == nil {
-		return sendHeader, nil, fmt.Errorf("user not in floor")
-	}
-	rspCh := make(chan c2t_error.ErrorCode, 1)
-	f.GetCmdCh() <- &cmd2floor.APIAdminCmd2Floor{
-		ActiveObj: tw.playerAO,
-		ReqPk:     robj,
-		RspCh:     rspCh,
-	}
-	ec := <-rspCh
-	return c2t_packet.Header{
-		ErrorCode: ec,
-	}, sendBody, nil
-
-	return sendHeader, sendBody, nil
-}
-
-// AdminActiveObjCmd generic cmd
-func (tw *Tower) objAPIFn_ReqAdminActiveObjCmd(hd c2t_packet.Header, robj *c2t_obj.ReqAdminActiveObjCmd_data) (
-	c2t_packet.Header, *c2t_obj.RspAdminActiveObjCmd_data, error) {
-	defer tw.triggerTurnByCmd(c2t_idcmd.CommandID(hd.Cmd))
-
-	return c2t_packet.Header{
-		ErrorCode: tw.playerAO.DoAdminCmd(robj.Cmd, robj.Arg),
-	}, &c2t_obj.RspAdminActiveObjCmd_data{}, nil
 }
 
 // AdminFloorMove Next Before floorUUID

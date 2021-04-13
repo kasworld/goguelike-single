@@ -104,10 +104,6 @@ func (f *Floor) processCmd(data interface{}) {
 
 	case *cmd2floor.APIAdminTeleport2Floor:
 		pk.RspCh <- f.Call_APIAdminTeleport2Floor(pk.ActiveObj, pk.ReqPk)
-
-	case *cmd2floor.APIAdminCmd2Floor:
-		pk.RspCh <- f.Call_APIAdminCmd2Floor(pk.ActiveObj, pk.ReqPk)
-
 	}
 }
 
@@ -130,10 +126,5 @@ func (f *Floor) Call_APIAdminTeleport2Floor(
 	}
 	ActiveObj.SetNeedTANoti()
 	ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
-	return c2t_error.None
-}
-
-func (f *Floor) Call_APIAdminCmd2Floor(
-	ActiveObj gamei.ActiveObjectI, ReqPk *c2t_obj.ReqAdminFloorCmd_data) c2t_error.ErrorCode {
 	return c2t_error.None
 }
