@@ -14,6 +14,23 @@ $PROTOCOL_C2T_VERSION=makesha256sum protocol_c2t/*.enum protocol_c2t/c2t_obj/pro
 echo "Protocol C2T Version: ${PROTOCOL_C2T_VERSION}"
 echo "genprotocol -ver=${PROTOCOL_C2T_VERSION} -basedir=protocol_c2t -prefix=c2t -statstype=int"
 genprotocol -ver="${PROTOCOL_C2T_VERSION}" -basedir=protocol_c2t -prefix=c2t -statstype=int
+
+# del no need package
+rmdir -r .\protocol_c2t\c2t_authorize
+rmdir -r .\protocol_c2t\c2t_connbytemanager
+rmdir -r .\protocol_c2t\c2t_conntcp
+rmdir -r .\protocol_c2t\c2t_connwasm
+rmdir -r .\protocol_c2t\c2t_connwsgorilla
+rmdir -r .\protocol_c2t\c2t_gob
+rmdir -r .\protocol_c2t\c2t_handlenoti
+rmdir -r .\protocol_c2t\c2t_handlereq
+rmdir -r .\protocol_c2t\c2t_handlersp
+rmdir -r .\protocol_c2t\c2t_json
+rmdir -r .\protocol_c2t\c2t_looptcp
+rmdir -r .\protocol_c2t\c2t_loopwsgorilla
+rmdir -r .\protocol_c2t\c2t_msgp
+rmdir -r .\protocol_c2t\c2t_serveconnbyte
+
 goimports -w protocol_c2t
 
 ################################################################################

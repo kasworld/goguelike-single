@@ -4,8 +4,6 @@ go 1.16
 
 require (
 	github.com/g3n/engine v0.1.1-0.20210127232258-6d0136f3444c
-	github.com/gorilla/websocket v1.4.2
-	github.com/kasworld/actjitter v0.0.0-20191107220721-3c533f25bbd7
 	github.com/kasworld/actpersec v0.0.0-20191019021204-8c24cd60715c
 	github.com/kasworld/argdefault v0.0.0-20200515031517-5b81c2684ab9
 	github.com/kasworld/configutil v0.0.0-20191216014610-0147549c8f10
@@ -16,10 +14,8 @@ require (
 	github.com/kasworld/g2rand v0.0.0-20200315073237-cff14c61a4f0
 	github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888
 	github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93
-	github.com/kasworld/gowasmlib v0.0.0-20200306023233-6d534fae80d1
 	github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025
 	github.com/kasworld/htmlcolors v0.0.0-20210321033505-e7fe9c6a43cc
-	github.com/kasworld/ifop v0.0.0-20190506032142-30f140457f43
 	github.com/kasworld/intervalduration v0.0.0-20191119062840-82a720a6b837
 	github.com/kasworld/log v0.0.0-20210321033816-d4232145e6fb
 	github.com/kasworld/prettystring v0.0.0-20200313054137-8305061037e7
@@ -32,6 +28,5 @@ require (
 	github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f
 	github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/tinylib/msgp v1.1.5
 	gopkg.in/ini.v1 v1.62.0 // indirect
 )
