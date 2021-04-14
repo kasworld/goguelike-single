@@ -73,8 +73,9 @@ type Tower struct {
 	id2ao        *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
 	aoExpRanking aoexpsort.ByExp                             `prettystring:"simple"`
 
-	serviceInfo *c2t_obj.ServiceInfo
-	towerInfo   *c2t_obj.TowerInfo
+	// serviceInfo *c2t_obj.ServiceInfo
+	// towerInfo   *c2t_obj.TowerInfo
+	gameInfo *c2t_obj.GameInfo
 
 	// single player
 	playerAO *activeobject.ActiveObject
@@ -127,11 +128,6 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 	tw.doClose = func() {
 		g2log.Fatal("Too early doClose call %v", tw)
 	}
-	tw.serviceInfo = &c2t_obj.ServiceInfo{
-		Version:         version.GetVersion(),
-		ProtocolVersion: c2t_version.ProtocolVersion,
-		DataVersion:     dataversion.DataVersion,
-	}
 	return tw
 }
 
@@ -144,7 +140,6 @@ func (tw *Tower) ServiceInit() error {
 		fmt.Println(rd)
 	}()
 
-	g2log.TraceService("%v", tw.serviceInfo.StringForm())
 	g2log.TraceService("%v", tw.config.StringForm())
 
 	var err error
@@ -180,16 +175,23 @@ func (tw *Tower) ServiceInit() error {
 		return err
 	}
 	tw.startTime = time.Now()
-	tw.towerInfo = &c2t_obj.TowerInfo{
+
+	tw.gameInfo = &c2t_obj.GameInfo{
+		Version:         version.GetVersion(),
+		ProtocolVersion: c2t_version.ProtocolVersion,
+		DataVersion:     dataversion.DataVersion,
+
 		StartTime:     tw.startTime,
-		UUID:          tw.uuid,
-		Name:          tw.config.ScriptFilename,
+		TowerUUID:     tw.uuid,
+		TowerName:     tw.config.ScriptFilename,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
+
+		NickName: tw.Config().NickName,
 	}
 
-	g2log.TraceService("%v", tw.towerInfo.StringForm())
-	fmt.Printf("%v\n", tw.towerInfo.StringForm())
+	g2log.TraceService("%v", tw.gameInfo.StringForm())
+	fmt.Printf("%v\n", tw.gameInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 		"http://localhost", tw.config.AdminPort, tw.config.WebAdminID, tw.config.WebAdminPass)
 
@@ -289,17 +291,14 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	if err := tw.id2ao.Add(tw.playerAO); err != nil {
 		g2log.Fatal("%v", err)
 	}
-	acinfo := &c2t_obj.AccountInfo{
-		ActiveObjUUID: tw.playerAO.GetUUID(),
-		NickName:      tw.Config().NickName,
-	}
+	tw.gameInfo.ActiveObjUUID = tw.playerAO.GetUUID()
 
 	go tw.handle_c2tch()
 
 	//run client
 	go func() {
 		time.Sleep(time.Second)
-		cl := glclient.New(tw.config, acinfo, tw.serviceInfo, tw.towerInfo, tw.c2tCh, tw.t2cCh)
+		cl := glclient.New(tw.config, tw.gameInfo, tw.c2tCh, tw.t2cCh)
 		if err := cl.Run(); err != nil {
 			g2log.Error("%v", err)
 		}

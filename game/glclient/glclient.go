@@ -27,11 +27,9 @@ import (
 )
 
 type GLClient struct {
-	config *goguelikeconfig.GoguelikeConfig
+	config   *goguelikeconfig.GoguelikeConfig
+	GameInfo *c2t_obj.GameInfo
 
-	ServiceInfo       *c2t_obj.ServiceInfo
-	AccountInfo       *c2t_obj.AccountInfo
-	TowerInfo         *c2t_obj.TowerInfo
 	ViewportXYLenList findnear.XYLenList
 	FloorInfoList     []*c2t_obj.FloorInfo
 	CurrentFloor      *clientfloor.ClientFloor
@@ -60,9 +58,7 @@ type GLClient struct {
 
 func New(
 	config *goguelikeconfig.GoguelikeConfig,
-	AccountInfo *c2t_obj.AccountInfo,
-	ServiceInfo *c2t_obj.ServiceInfo,
-	TowerInfo *c2t_obj.TowerInfo,
+	gameInfo *c2t_obj.GameInfo,
 	c2tch, t2cch chan *c2t_packet.Packet) *GLClient {
 	app := &GLClient{
 		config:            config,
@@ -70,9 +66,7 @@ func New(
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 		c2tCh:             c2tch,
 		t2cCh:             t2cch,
-		ServiceInfo:       ServiceInfo,
-		AccountInfo:       AccountInfo,
-		TowerInfo:         TowerInfo,
+		GameInfo:          gameInfo,
 	}
 	return app
 }
@@ -85,8 +79,8 @@ func (app *GLClient) TowerBias() bias.Bias {
 	if app.OLNotiData == nil {
 		return bias.Bias{}
 	}
-	ft := app.TowerInfo.Factor
-	dur := app.OLNotiData.Time.Sub(app.TowerInfo.StartTime)
+	ft := app.GameInfo.Factor
+	dur := app.OLNotiData.Time.Sub(app.GameInfo.StartTime)
 	return bias.MakeBiasByProgress(ft, dur.Seconds(), gameconst.TowerBaseBiasLen)
 }
 

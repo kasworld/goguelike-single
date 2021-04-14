@@ -158,11 +158,9 @@ func (app *GLClient) objRecvNotiFn_VPObjList(hd c2t_packet.Header, body *c2t_obj
 	newLevel := int(leveldata.CalcLevelFromExp(float64(newOLNotiData.ActiveObj.Exp)))
 
 	app.playerActiveObjClient = nil
-	if ainfo := app.AccountInfo; ainfo != nil {
-		for _, v := range body.ActiveObjList {
-			if v.UUID == app.AccountInfo.ActiveObjUUID {
-				app.playerActiveObjClient = v
-			}
+	for _, v := range body.ActiveObjList {
+		if v.UUID == app.GameInfo.ActiveObjUUID {
+			app.playerActiveObjClient = v
 		}
 	}
 

@@ -17,17 +17,6 @@ import (
 	"github.com/kasworld/weblib"
 )
 
-func (tw *Tower) json_TowerInfo(w http.ResponseWriter, r *http.Request) {
-	//Access-Control-Allow-Origin: *
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	weblib.ServeJSON2HTTP(tw.towerInfo, w)
-}
-
-func (tw *Tower) json_ServiceInfo(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	weblib.ServeJSON2HTTP(tw.serviceInfo, w)
-}
-
 func (tw *Tower) json_Config(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	weblib.ServeJSON2HTTP(tw.config, w)

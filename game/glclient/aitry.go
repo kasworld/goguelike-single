@@ -69,7 +69,7 @@ func tryAutoBattle(app *GLClient) bool {
 		if !ao.Alive {
 			continue
 		}
-		if ao.UUID == app.AccountInfo.ActiveObjUUID {
+		if ao.UUID == app.GameInfo.ActiveObjUUID {
 			continue
 		}
 		if !cf.IsValidPos(ao.X, ao.Y) {

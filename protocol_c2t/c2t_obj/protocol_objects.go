@@ -34,30 +34,22 @@ import (
 	"github.com/kasworld/prettystring"
 )
 
-type ServiceInfo struct {
+type GameInfo struct {
 	Version         string
 	ProtocolVersion string
 	DataVersion     string
-}
 
-func (info *ServiceInfo) StringForm() string {
-	return prettystring.PrettyString(info, 4)
-}
-
-type AccountInfo struct {
 	ActiveObjUUID string
 	NickName      string
-}
 
-type TowerInfo struct {
-	UUID          string
-	Name          string
+	TowerUUID     string
+	TowerName     string
 	Factor        [3]int64 `prettystring:"simple"`
 	TotalFloorNum int
 	StartTime     time.Time `prettystring:"simple"`
 }
 
-func (info *TowerInfo) StringForm() string {
+func (info *GameInfo) StringForm() string {
 	return prettystring.PrettyString(info, 4)
 }
 

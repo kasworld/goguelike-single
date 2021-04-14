@@ -132,12 +132,8 @@ func (tw *Tower) GetNotiStat() *c2t_statnoti.StatNotification {
 func (tw *Tower) GetErrorStat() *c2t_statapierror.StatAPIError {
 	return tw.errorStat
 }
-func (tw *Tower) GetServiceInfo() *c2t_obj.ServiceInfo {
-	return tw.serviceInfo
-}
-
-func (tw *Tower) GetTowerInfo() *c2t_obj.TowerInfo {
-	return tw.towerInfo
+func (tw *Tower) GetGameInfo() *c2t_obj.GameInfo {
+	return tw.gameInfo
 }
 
 func (tw *Tower) GetTowerCmdActStat() *actpersec.ActPerSec {
@@ -172,7 +168,7 @@ func (tw *Tower) RoomID() string {
 func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New("index").Parse(`
 	<html> <head>
-	<title>Tower {{.GetTowerInfo.Name}} admin</title>
+	<title>Tower {{.GetGameInfo.TowerName}} admin</title>
 	</head>
 	<body>
 
@@ -181,17 +177,17 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 
 	BuildDate : {{.BuildDate.Format "2006-01-02T15:04:05Z07:00"}}
 	<br/>
-	Version: {{.GetServiceInfo.Version}}
+	Version: {{.GetGameInfo.Version}}
 	<br/>
-	ProtocolVersion : {{.GetServiceInfo.ProtocolVersion}}
+	ProtocolVersion : {{.GetGameInfo.ProtocolVersion}}
 	<br/>
-	DataVersion : {{.GetServiceInfo.DataVersion}}
+	DataVersion : {{.GetGameInfo.DataVersion}}
 	<hr/>
 	{{.}}
 	<br/>
 	Start : {{.GetStartTime}} / {{.GetRunDur}}
 	<br/>
-	Factor : {{.GetTowerInfo.Factor}}
+	Factor : {{.GetGameInfo.Factor}}
 	<br/>
 	Current Bias : {{.GetBias}}
 	<br/>
@@ -253,8 +249,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	` + floor_HTML_header + `
 	</table>
 	<br/>
-	<pre>{{.GetServiceInfo.StringForm}}</pre>
-	<pre>{{.GetTowerInfo.StringForm}}</pre>
+	<pre>{{.GetGameInfo.StringForm}}</pre>
 	<pre>{{.Config.StringForm}}</pre>
 	<br/>
 	</body> </html> 
