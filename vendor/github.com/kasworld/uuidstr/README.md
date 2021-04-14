@@ -1,2 +1,0 @@
-# uuidstr
-uuid string maker

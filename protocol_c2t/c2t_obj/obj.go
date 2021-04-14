@@ -73,7 +73,6 @@ type RspAIPlay_data struct {
 
 // VisitFloorList floor info of visited
 type ReqVisitFloorList_data struct {
-	// change as you need
 }
 
 // VisitFloorList floor info of visited
@@ -83,12 +82,10 @@ type RspVisitFloorList_data struct {
 
 // PassTurn no action just trigger turn
 type ReqPassTurn_data struct {
-	// change as you need
 }
 
 // PassTurn no action just trigger turn
 type RspPassTurn_data struct {
-	// change as you need
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -96,12 +93,10 @@ type RspPassTurn_data struct {
 
 // Meditate rest and recover HP,SP
 type ReqMeditate_data struct {
-	// change as you need
 }
 
 // Meditate rest and recover HP,SP
 type RspMeditate_data struct {
-	// change as you need
 }
 
 type ReqKillSelf_data struct {
@@ -211,7 +206,6 @@ type ReqAdminAddExp_data struct {
 
 // AdminAddExp  add arg to battle exp
 type RspAdminAddExp_data struct {
-	// change as you need
 }
 
 // AdminPotionEffect buff by arg potion type
@@ -221,7 +215,6 @@ type ReqAdminPotionEffect_data struct {
 
 // AdminPotionEffect buff by arg potion type
 type RspAdminPotionEffect_data struct {
-	// change as you need
 }
 
 // AdminScrollEffect buff by arg Scroll type
@@ -231,7 +224,6 @@ type ReqAdminScrollEffect_data struct {
 
 // AdminScrollEffect buff by arg Scroll type
 type RspAdminScrollEffect_data struct {
-	// change as you need
 }
 
 // AdminCondition add arg condition for 100 turn
@@ -241,7 +233,6 @@ type ReqAdminCondition_data struct {
 
 // AdminCondition add arg condition for 100 turn
 type RspAdminCondition_data struct {
-	// change as you need
 }
 
 // AdminAddPotion add arg potion to inven
@@ -251,7 +242,6 @@ type ReqAdminAddPotion_data struct {
 
 // AdminAddPotion add arg potion to inven
 type RspAdminAddPotion_data struct {
-	// change as you need
 }
 
 // AdminAddScroll add arg scroll to inven
@@ -261,7 +251,6 @@ type ReqAdminAddScroll_data struct {
 
 // AdminAddScroll add arg scroll to inven
 type RspAdminAddScroll_data struct {
-	// change as you need
 }
 
 // AdminAddMoney add arg money to inven
@@ -271,7 +260,6 @@ type ReqAdminAddMoney_data struct {
 
 // AdminAddMoney add arg money to inven
 type RspAdminAddMoney_data struct {
-	// change as you need
 }
 
 // AdminAddEquip add random equip to inven
@@ -282,27 +270,22 @@ type ReqAdminAddEquip_data struct {
 
 // AdminAddEquip add random equip to inven
 type RspAdminAddEquip_data struct {
-	// change as you need
 }
 
 // AdminForgetFloor forget current floor map
 type ReqAdminForgetFloor_data struct {
-	// change as you need
 }
 
 // AdminForgetFloor forget current floor map
 type RspAdminForgetFloor_data struct {
-	// change as you need
 }
 
 // AdminFloorMap complete current floor map
 type ReqAdminFloorMap_data struct {
-	// change as you need
 }
 
 // AdminFloorMap complete current floor map
 type RspAdminFloorMap_data struct {
-	// change as you need
 }
 
 /////////////////////////////////////////////////////////////////

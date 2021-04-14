@@ -1,2 +1,0 @@
-# recordduration
-record duration 
