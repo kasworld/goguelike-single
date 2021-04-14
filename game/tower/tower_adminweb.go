@@ -29,9 +29,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/terrain/room"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib"
 	"github.com/kasworld/weblib/webprofile"
@@ -65,9 +62,6 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFuncAuth("/ActiveObj", tw.web_ActiveObjInfo)
 	webMux.HandleFuncAuth("/ActiveObjVisitImgae", tw.web_ActiveObjVisitFloorImage)
 	webMux.HandleFuncAuth("/ActiveObjRankingList", tw.web_ActiveObjRankingList)
-	webMux.HandleFuncAuth("/StatServeAPI", tw.web_ProtocolStat)
-	webMux.HandleFuncAuth("/StatNotification", tw.web_NotiStat)
-	webMux.HandleFuncAuth("/StatAPIError", tw.web_ErrorStat)
 	webMux.HandleFuncAuth("/towerStat", tw.web_towerStat)
 
 	webMux.HandleFuncAuth("/terrain", tw.web_TerrainInfo)
@@ -122,15 +116,6 @@ func (tw *Tower) GetSendStat() *actpersec.ActPerSec {
 }
 func (tw *Tower) GetRecvStat() *actpersec.ActPerSec {
 	return tw.recvStat
-}
-func (tw *Tower) GetProtocolStat() *c2t_statserveapi.StatServeAPI {
-	return tw.protocolStat
-}
-func (tw *Tower) GetNotiStat() *c2t_statnoti.StatNotification {
-	return tw.notiStat
-}
-func (tw *Tower) GetErrorStat() *c2t_statapierror.StatAPIError {
-	return tw.errorStat
 }
 func (tw *Tower) GetGameInfo() *c2t_obj.GameInfo {
 	return tw.gameInfo
@@ -230,12 +215,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<a href= "/towerStat" target="_blank">Tower Achieve</a>
     <br/>
 	TowerCmd act : {{.CmdChState}} {{.GetTowerCmdActStat}}
-    <br/>
-    <a href="/StatServeAPI" target="_blank">{{.GetProtocolStat}}</a>
-    <br/>
-    <a href="/StatNotification" target="_blank">{{.GetNotiStat}}</a>
-    <br/>
-    <a href="/StatAPIError" target="_blank">{{.GetErrorStat}}</a>
     <br/>
     <a href="/ActiveObjRankingList?page=0" target="_blank">{{.GetID2ActiveObj}}</a>
     <br/>

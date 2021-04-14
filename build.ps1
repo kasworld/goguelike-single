@@ -30,6 +30,12 @@ rmdir -r .\protocol_c2t\c2t_looptcp
 rmdir -r .\protocol_c2t\c2t_loopwsgorilla
 rmdir -r .\protocol_c2t\c2t_msgp
 rmdir -r .\protocol_c2t\c2t_serveconnbyte
+rmdir -r .\protocol_c2t\c2t_statapierror
+rmdir -r .\protocol_c2t\c2t_statcallapi
+rmdir -r .\protocol_c2t\c2t_statnoti
+rmdir -r .\protocol_c2t\c2t_statserveapi
+rmdir -r .\protocol_c2t\c2t_error_stats
+rmdir -r .\protocol_c2t\c2t_idnoti_stats
 
 goimports -w protocol_c2t
 

@@ -38,9 +38,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/loadlines"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statapierror"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statnoti"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
 	"github.com/kasworld/recordduration"
 	"github.com/kasworld/version"
@@ -80,9 +77,6 @@ type Tower struct {
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 	sendStat         *actpersec.ActPerSec                    `prettystring:"simple"`
 	recvStat         *actpersec.ActPerSec                    `prettystring:"simple"`
-	protocolStat     *c2t_statserveapi.StatServeAPI          `prettystring:"simple"`
-	notiStat         *c2t_statnoti.StatNotification          `prettystring:"simple"`
-	errorStat        *c2t_statapierror.StatAPIError          `prettystring:"simple"`
 
 	// tower cmd stats
 	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
@@ -93,8 +87,6 @@ type Tower struct {
 	c2tCh chan *c2t_packet.Packet
 	// tower to client packet channel
 	t2cCh chan *c2t_packet.Packet
-
-	pid2ApiStatObj *c2t_statserveapi.PacketID2StatObj
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
@@ -106,12 +98,8 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		turnStat:         actpersec.New(),
 		sendStat:         actpersec.New(),
 		recvStat:         actpersec.New(),
-		protocolStat:     c2t_statserveapi.New(),
-		notiStat:         c2t_statnoti.New(),
-		errorStat:        c2t_statapierror.New(),
 		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
-		pid2ApiStatObj:   c2t_statserveapi.NewPacketID2StatObj(),
 	}
 
 	tw.seed = int64(config.Seed)

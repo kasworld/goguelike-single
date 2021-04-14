@@ -20,27 +20,6 @@ import (
 	"github.com/kasworld/weblib"
 )
 
-func (tw *Tower) web_ProtocolStat(w http.ResponseWriter, r *http.Request) {
-	if err := weblib.SetFresh(w, r); err != nil {
-		g2log.Error("%v", err)
-	}
-	tw.protocolStat.ToWeb(w, r)
-}
-
-func (tw *Tower) web_NotiStat(w http.ResponseWriter, r *http.Request) {
-	if err := weblib.SetFresh(w, r); err != nil {
-		g2log.Error("%v", err)
-	}
-	tw.notiStat.ToWeb(w, r)
-}
-
-func (tw *Tower) web_ErrorStat(w http.ResponseWriter, r *http.Request) {
-	if err := weblib.SetFresh(w, r); err != nil {
-		g2log.Error("%v", err)
-	}
-	tw.errorStat.ToWeb(w, r)
-}
-
 func (tw *Tower) web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {
 	aoid := weblib.GetStringByName("aoid", "", w, r)
 	if aoid == "" {

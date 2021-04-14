@@ -61,23 +61,9 @@ func (tw *Tower) handle_c2tch() {
 			g2log.Error("Invalid rpk.Header command %v", rpk.Header)
 		}
 
-		statObj, err := tw.protocolStat.AfterRecvReqHeader(rpk.Header)
-		if err != nil {
-			g2log.Fatal("%v", err)
-			return
-		}
-		if err := tw.pid2ApiStatObj.Add(rpk.Header.ID, statObj); err != nil {
-			g2log.Fatal("%v", err)
-			return
-		}
-		statObj.BeforeAPICall()
-
 		// call api
 		sheader, sbody, apierr := tw.handleRecvReqObj(rpk)
 
-		statObj.AfterAPICall()
-
-		tw.errorStat.Inc(c2t_idcmd.CommandID(rpk.Header.Cmd), sheader.ErrorCode)
 		if apierr != nil {
 			g2log.Fatal("%v", apierr)
 		}
@@ -96,13 +82,6 @@ func (tw *Tower) handle_c2tch() {
 		// send rsp
 		tw.sendStat.Inc()
 		tw.t2cCh <- spk
-		statOjb := tw.pid2ApiStatObj.Del(spk.Header.ID)
-		if statOjb != nil {
-			statOjb.AfterSendRsp(spk.Header)
-		} else {
-			g2log.Error("send StatObj not found %v", spk.Header)
-		}
-
 	}
 }
 
