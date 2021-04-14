@@ -13,14 +13,12 @@ package tower
 
 import (
 	"github.com/kasworld/goguelike-single/enum/achievetype"
-	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
@@ -29,18 +27,6 @@ func (tw *Tower) processCmd(data interface{}) {
 	switch pk := data.(type) {
 	default:
 		g2log.Fatal("unknown tower cmd %#v", data)
-
-	case *cmd2tower.ActiveObjEnterTower:
-		pk.RspCh <- tw.Call_ActiveObjEnterTower(pk.ActiveObj)
-
-	case *cmd2tower.PlayerAOResumeTower:
-		pk.RspCh <- tw.Call_PlayerAOResumeTower()
-
-	case *cmd2tower.PlayerAOSuspendFromTower:
-		pk.RspCh <- tw.Call_PlayerAOSuspendFromTower()
-
-	case *cmd2tower.ActiveObjLeaveTower:
-		pk.RspCh <- tw.Call_ActiveObjLeaveTower(pk.ActiveObjUUID)
 
 	case *cmd2tower.AdminFloorMove:
 		pk.RspCh <- tw.Call_AdminFloorMove(pk.ActiveObj, pk.RecvPacket)
@@ -60,76 +46,6 @@ func (tw *Tower) processCmd(data interface{}) {
 	case *cmd2tower.Turn:
 		tw.Turn(pk.Now)
 	}
-}
-
-func (tw *Tower) Call_ActiveObjEnterTower(ao gamei.ActiveObjectI) error {
-	if err := tw.ao2Floor.ActiveObjEnterTower(ao.GetHomeFloor(), ao); err != nil {
-		g2log.Error("%v", err)
-		return err
-	}
-	if err := tw.id2ao.Add(ao); err != nil {
-		g2log.Fatal("%v", err)
-	}
-	if ao.GetActiveObjType() != aotype.User {
-		g2log.Fatal("ao connection nil %v", ao)
-		return nil
-	}
-	tw.SendNoti(c2t_idnoti.EnterTower,
-		&c2t_obj.NotiEnterTower_data{
-			TowerInfo: tw.towerInfo,
-		},
-	)
-
-	return nil // continue login
-}
-
-func (tw *Tower) Call_PlayerAOResumeTower() error {
-	ao := tw.playerAO
-	f := ao.GetCurrentFloor()
-	if f == nil {
-		f = ao.GetHomeFloor()
-	}
-	if err := tw.ao2Floor.ActiveObjResumeToFloor(f, ao); err != nil {
-		g2log.Fatal("%v", err)
-		return err
-	}
-	if err := tw.id2ao.Add(ao); err != nil {
-		g2log.Fatal("%v", err)
-	}
-	// send noti visitarea in ao
-	if ao.GetActiveObjType() != aotype.User {
-		g2log.Fatal("ao connection nil %v", ao)
-		return nil
-	}
-	tw.SendNoti(c2t_idnoti.EnterTower,
-		&c2t_obj.NotiEnterTower_data{
-			TowerInfo: tw.towerInfo,
-		},
-	)
-
-	// TODO need visited floor small info send to client, not full info
-
-	return nil // continue login
-}
-
-func (tw *Tower) Call_PlayerAOSuspendFromTower() error {
-	ao, err := tw.id2ao.DelByUUID(tw.playerAO.GetUUID())
-	if err != nil {
-		g2log.Fatal("%v", err)
-		return nil
-	}
-	tw.ao2Floor.ActiveObjLeaveFloor(ao)
-	return nil
-}
-
-func (tw *Tower) Call_ActiveObjLeaveTower(ActiveObjUUID string) error {
-	ao, err := tw.id2ao.DelByUUID(ActiveObjUUID)
-	if err != nil {
-		g2log.Fatal("%v", err)
-		return nil
-	}
-	tw.ao2Floor.ActiveObjLeaveFloor(ao)
-	return nil
 }
 
 func (tw *Tower) Call_AdminFloorMove(

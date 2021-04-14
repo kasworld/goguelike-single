@@ -187,7 +187,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// handle sleep condition
 	for ao, arr := range ao2ActReqRsp {
-		if arr.Acted() {
+		if arr.Acted {
 			continue
 		}
 		if arr.Req.Act.SleepCancel() &&
@@ -200,7 +200,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	}
 	// handle remain turn2act ao
 	for ao, arr := range ao2ActReqRsp {
-		if arr.Acted() {
+		if arr.Acted {
 			continue
 		}
 		if ao.GetAP() < 0 {
@@ -255,7 +255,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// handle attack
 	for ao, arr := range ao2ActReqRsp {
-		if arr.Acted() || !ao.IsAlive() {
+		if arr.Acted || !ao.IsAlive() {
 			continue
 		}
 		switch arr.Req.Act {
@@ -303,7 +303,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// handle ao action except attack
 	for ao, arr := range ao2ActReqRsp {
-		if arr.Acted() || !ao.IsAlive() {
+		if arr.Acted || !ao.IsAlive() {
 			continue
 		}
 		aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())

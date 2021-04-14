@@ -38,7 +38,7 @@ func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjCli
 		Chat:       ao.chat,
 	}
 
-	if stepAct := ao.turnActReqRsp; stepAct != nil && stepAct.Acted() {
+	if stepAct := ao.turnActReqRsp; stepAct != nil && stepAct.Acted {
 		aoc.Act = stepAct.Done.Act
 		aoc.Dir = stepAct.Done.Dir
 		aoc.Result = stepAct.Error

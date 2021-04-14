@@ -19,7 +19,6 @@ import (
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
 	"github.com/kasworld/goguelike-single/enum/statusoptype"
-	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/carryingobject"
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
@@ -112,10 +111,6 @@ func (tw *Tower) handleRecvReqObj(rpk *c2t_packet.Packet) (c2t_packet.Header, in
 	default:
 		return c2t_packet.Header{}, nil, fmt.Errorf("invalid packet")
 
-	case *c2t_obj.ReqInvalid_data:
-		return tw.objAPIFn_ReqInvalid(rpk.Header, body)
-	case *c2t_obj.ReqLogin_data:
-		return tw.objAPIFn_ReqLogin(rpk.Header, body)
 	case *c2t_obj.ReqAchieveInfo_data:
 		return tw.objAPIFn_ReqAchieveInfo(rpk.Header, body)
 	case *c2t_obj.ReqRebirth_data:
@@ -183,51 +178,6 @@ func (tw *Tower) handleRecvReqObj(rpk *c2t_packet.Packet) (c2t_packet.Header, in
 	case *c2t_obj.ReqAdminFloorMap_data:
 		return tw.objAPIFn_ReqAdminFloorMap(rpk.Header, body)
 	}
-}
-
-// Invalid make empty packet error
-func (tw *Tower) objAPIFn_ReqInvalid(hd c2t_packet.Header, robj *c2t_obj.ReqInvalid_data) (
-	c2t_packet.Header, *c2t_obj.RspInvalid_data, error) {
-	sendHeader := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	sendBody := &c2t_obj.RspInvalid_data{}
-	return sendHeader, sendBody, fmt.Errorf("invalid packet")
-}
-
-// Login
-func (tw *Tower) objAPIFn_ReqLogin(hd c2t_packet.Header, robj *c2t_obj.ReqLogin_data) (
-	c2t_packet.Header, *c2t_obj.RspLogin_data, error) {
-	sendHeader := c2t_packet.Header{
-		ErrorCode: c2t_error.None,
-	}
-	// new ao
-	homeFloor := tw.GetFloorManager().GetStartFloor()
-	newAO := activeobject.NewUserActiveObj(
-		tw.rnd.Int63(),
-		homeFloor,
-		tw.Config().NickName,
-		tw.towerAchieveStat,
-	)
-	tw.playerAO = newAO
-	rspCh := make(chan error, 1)
-	tw.GetCmdCh() <- &cmd2tower.ActiveObjEnterTower{
-		ActiveObj: newAO,
-		RspCh:     rspCh,
-	}
-	err := <-rspCh
-	if err != nil {
-
-	}
-
-	acinfo := &c2t_obj.AccountInfo{
-		ActiveObjUUID: tw.playerAO.GetUUID(),
-		NickName:      tw.Config().NickName,
-	}
-	return sendHeader, &c2t_obj.RspLogin_data{
-		ServiceInfo: tw.serviceInfo,
-		AccountInfo: acinfo,
-	}, nil
 }
 
 // AchieveInfo

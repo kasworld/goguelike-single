@@ -23,20 +23,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
 )
 
-func (app *GLClient) reqLogin() error {
-	return app.sendReqObjWithRspFn(
-		c2t_idcmd.Login,
-		&c2t_obj.ReqLogin_data{},
-		func(hd c2t_packet.Header, robj interface{}) error {
-			rpk := robj.(*c2t_obj.RspLogin_data)
-
-			app.ServiceInfo = rpk.ServiceInfo
-			app.AccountInfo = rpk.AccountInfo
-			return app.reqAIPlay(true)
-		},
-	)
-}
-
 func (app *GLClient) reqAIPlay(onoff bool) error {
 	return app.sendReqObjWithRspFn(
 		c2t_idcmd.AIPlay,
@@ -91,16 +77,10 @@ func (app *GLClient) handleRecvNotiObj(rpk *c2t_packet.Packet) error {
 	default:
 		return fmt.Errorf("invalid packet")
 
-	case *c2t_obj.NotiInvalid_data:
-		return app.objRecvNotiFn_Invalid(rpk.Header, body)
-	case *c2t_obj.NotiEnterTower_data:
-		return app.objRecvNotiFn_EnterTower(rpk.Header, body)
 	case *c2t_obj.NotiEnterFloor_data:
 		return app.objRecvNotiFn_EnterFloor(rpk.Header, body)
 	case *c2t_obj.NotiLeaveFloor_data:
 		return app.objRecvNotiFn_LeaveFloor(rpk.Header, body)
-	case *c2t_obj.NotiLeaveTower_data:
-		return app.objRecvNotiFn_LeaveTower(rpk.Header, body)
 	case *c2t_obj.NotiAgeing_data:
 		return app.objRecvNotiFn_Ageing(rpk.Header, body)
 	case *c2t_obj.NotiDeath_data:
@@ -109,8 +89,6 @@ func (app *GLClient) handleRecvNotiObj(rpk *c2t_packet.Packet) error {
 		return app.objRecvNotiFn_ReadyToRebirth(rpk.Header, body)
 	case *c2t_obj.NotiRebirthed_data:
 		return app.objRecvNotiFn_Rebirthed(rpk.Header, body)
-	case *c2t_obj.NotiBroadcast_data:
-		return app.objRecvNotiFn_Broadcast(rpk.Header, body)
 	case *c2t_obj.NotiVPObjList_data:
 		return app.objRecvNotiFn_VPObjList(rpk.Header, body)
 	case *c2t_obj.NotiVPTiles_data:
@@ -129,13 +107,6 @@ func (app *GLClient) handleRecvNotiObj(rpk *c2t_packet.Packet) error {
 	}
 }
 
-func (app *GLClient) objRecvNotiFn_Invalid(hd c2t_packet.Header, body *c2t_obj.NotiInvalid_data) error {
-	return fmt.Errorf("Not implemented %v", body)
-}
-func (app *GLClient) objRecvNotiFn_EnterTower(hd c2t_packet.Header, body *c2t_obj.NotiEnterTower_data) error {
-	app.TowerInfo = body.TowerInfo
-	return nil
-}
 func (app *GLClient) objRecvNotiFn_EnterFloor(hd c2t_packet.Header, body *c2t_obj.NotiEnterFloor_data) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
 		app.CurrentFloor = clientfloor.New(body.FI)
@@ -147,10 +118,7 @@ func (app *GLClient) objRecvNotiFn_LeaveFloor(hd c2t_packet.Header, body *c2t_ob
 	// do nothing
 	return nil
 }
-func (app *GLClient) objRecvNotiFn_LeaveTower(hd c2t_packet.Header, body *c2t_obj.NotiLeaveTower_data) error {
-	// do nothing
-	return nil
-}
+
 func (app *GLClient) objRecvNotiFn_Ageing(hd c2t_packet.Header, body *c2t_obj.NotiAgeing_data) error {
 	// do nothing
 	return nil
@@ -171,10 +139,7 @@ func (app *GLClient) objRecvNotiFn_Rebirthed(hd c2t_packet.Header, body *c2t_obj
 	// do nothing
 	return nil
 }
-func (app *GLClient) objRecvNotiFn_Broadcast(hd c2t_packet.Header, body *c2t_obj.NotiBroadcast_data) error {
-	// do nothing
-	return nil
-}
+
 func (app *GLClient) objRecvNotiFn_VPObjList(hd c2t_packet.Header, body *c2t_obj.NotiVPObjList_data) error {
 	app.OLNotiData = body
 	oldOLNotiData := app.OLNotiData

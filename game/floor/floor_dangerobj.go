@@ -60,7 +60,7 @@ func (f *Floor) checkAttackSrc(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 
 func (f *Floor) addAttackWide(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
 	aox, aoy, atkdir := f.checkAttackSrc(ao, arr)
-	if arr.Acted() {
+	if arr.Acted {
 		return
 	}
 
@@ -83,7 +83,7 @@ func (f *Floor) addAttackWide(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 
 func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
 	aox, aoy, atkdir := f.checkAttackSrc(ao, arr)
-	if arr.Acted() {
+	if arr.Acted {
 		return
 	}
 
@@ -106,7 +106,7 @@ func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 
 func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
 	aox, aoy, atkdir := f.checkAttackSrc(ao, arr)
-	if arr.Acted() {
+	if arr.Acted {
 		return
 	}
 	dstX, dstY := f.terrain.WrapXY(aox+atkdir.Dx(), aoy+atkdir.Dy())

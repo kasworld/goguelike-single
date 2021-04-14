@@ -70,7 +70,7 @@ func (ao *ActiveObject) NeedChangePlan(sai *ServerAIState, actresult *aoactreqrs
 	if actresult == nil {
 		return false
 	}
-	if !actresult.Acted() {
+	if !actresult.Acted {
 		return false
 	}
 	return actresult.Error != c2t_error.None

@@ -21,44 +21,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
-type ActiveObjEnterTower struct {
-	ActiveObj gamei.ActiveObjectI
-	RspCh     chan<- error
-}
-
-func (cet ActiveObjEnterTower) String() string {
-	return fmt.Sprintf("ActiveObjEnterTower[%v]",
-		cet.ActiveObj,
-	)
-}
-
-type PlayerAOSuspendFromTower struct {
-	RspCh chan<- error
-}
-
-func (cet PlayerAOSuspendFromTower) String() string {
-	return fmt.Sprintf("PlayerAOSuspendFromTower[]")
-}
-
-type PlayerAOResumeTower struct {
-	RspCh chan<- error
-}
-
-func (cet PlayerAOResumeTower) String() string {
-	return fmt.Sprintf("PlayerAOResumeTower[]")
-}
-
-type ActiveObjLeaveTower struct {
-	ActiveObjUUID string
-	RspCh         chan<- error
-}
-
-func (cet ActiveObjLeaveTower) String() string {
-	return fmt.Sprintf("ActiveObjLeaveTower[%v]",
-		cet.ActiveObjUUID,
-	)
-}
-
 type AdminFloorMove struct {
 	ActiveObj  gamei.ActiveObjectI
 	RecvPacket *c2t_obj.ReqAdminFloorMove_data

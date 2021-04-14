@@ -16,7 +16,6 @@ import (
 	"net/http"
 
 	"github.com/kasworld/goguelike-single/game/activeobject"
-	"github.com/kasworld/goguelike-single/game/cmd2tower"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/weblib"
 )
@@ -40,22 +39,6 @@ func (tw *Tower) web_ErrorStat(w http.ResponseWriter, r *http.Request) {
 		g2log.Error("%v", err)
 	}
 	tw.errorStat.ToWeb(w, r)
-}
-
-func (tw *Tower) web_KickActiveObj(w http.ResponseWriter, r *http.Request) {
-	id := weblib.GetStringByName("aoid", "", w, r)
-	if id == "" {
-		g2log.Warn("Invalid id")
-		http.Error(w, "Invalid id", 404)
-		return
-	}
-
-	rspCh := make(chan error, 1)
-	tw.GetCmdCh() <- &cmd2tower.ActiveObjLeaveTower{
-		ActiveObjUUID: id,
-		RspCh:         rspCh,
-	}
-	<-rspCh
 }
 
 func (tw *Tower) web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {

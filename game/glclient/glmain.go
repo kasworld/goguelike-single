@@ -87,10 +87,7 @@ func (ga *GLClient) Run() error {
 	// Set background color to gray
 	ga.app.Gls().ClearColor(0.5, 0.5, 0.5, 1.0)
 
-	// login and start
-	if err := ga.reqLogin(); err != nil {
-		return err
-	}
+	ga.reqAIPlay(true)
 
 	ga.app.Run(ga.updateGL)
 	return nil

@@ -1,13 +1,9 @@
-Invalid make empty packet error
-EnterTower
 EnterFloor
 LeaveFloor
-LeaveTower
 Ageing          // floor 
 Death
 ReadyToRebirth
 Rebirthed
-Broadcast       // global chat broadcast from web admin
 VPObjList       // in viewport, every turn
 VPTiles         // in viewport, when viewport changed only
 FloorTiles      // for rebuild known floor

@@ -58,7 +58,11 @@ type GLClient struct {
 	cam   *camera.Camera
 }
 
-func New(config *goguelikeconfig.GoguelikeConfig,
+func New(
+	config *goguelikeconfig.GoguelikeConfig,
+	AccountInfo *c2t_obj.AccountInfo,
+	ServiceInfo *c2t_obj.ServiceInfo,
+	TowerInfo *c2t_obj.TowerInfo,
 	c2tch, t2cch chan *c2t_packet.Packet) *GLClient {
 	app := &GLClient{
 		config:            config,
@@ -66,6 +70,9 @@ func New(config *goguelikeconfig.GoguelikeConfig,
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 		c2tCh:             c2tch,
 		t2cCh:             t2cch,
+		ServiceInfo:       ServiceInfo,
+		AccountInfo:       AccountInfo,
+		TowerInfo:         TowerInfo,
 	}
 	return app
 }

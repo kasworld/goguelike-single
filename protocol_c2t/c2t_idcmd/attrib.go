@@ -31,8 +31,6 @@ var attrib = [CommandID_Count]struct {
 	triggerTurn bool
 	needTurn    float64
 }{
-	Invalid:           {false, false, 0},
-	Login:             {false, false, 0},
 	AchieveInfo:       {false, false, 0},
 	Rebirth:           {false, true, 0},
 	MoveFloor:         {false, true, 1},

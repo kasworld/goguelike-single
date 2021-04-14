@@ -273,12 +273,33 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	tw.initAdminWeb()
 	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, g2log.GlobalLogger, "serveAdminWeb")
 
+	// prepare player ao enter tower
+	// new ao
+	newAO := activeobject.NewUserActiveObj(
+		tw.rnd.Int63(),
+		tw.GetFloorManager().GetStartFloor(),
+		tw.Config().NickName,
+		tw.towerAchieveStat,
+	)
+	tw.playerAO = newAO
+	if err := tw.ao2Floor.ActiveObjEnterTower(tw.playerAO.GetHomeFloor(), tw.playerAO); err != nil {
+		g2log.Error("%v", err)
+		return
+	}
+	if err := tw.id2ao.Add(tw.playerAO); err != nil {
+		g2log.Fatal("%v", err)
+	}
+	acinfo := &c2t_obj.AccountInfo{
+		ActiveObjUUID: tw.playerAO.GetUUID(),
+		NickName:      tw.Config().NickName,
+	}
+
 	go tw.handle_c2tch()
 
 	//run client
 	go func() {
 		time.Sleep(time.Second)
-		cl := glclient.New(tw.config, tw.c2tCh, tw.t2cCh)
+		cl := glclient.New(tw.config, acinfo, tw.serviceInfo, tw.towerInfo, tw.c2tCh, tw.t2cCh)
 		if err := cl.Run(); err != nil {
 			g2log.Error("%v", err)
 		}

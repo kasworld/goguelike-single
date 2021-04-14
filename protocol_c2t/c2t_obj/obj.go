@@ -25,20 +25,6 @@ import (
 ////////////////////////////////////////////////////////////////////
 // commnad protocol
 
-// Invalid make empty packet error
-type ReqInvalid_data struct {
-}
-type RspInvalid_data struct {
-}
-
-// Login
-type ReqLogin_data struct {
-}
-type RspLogin_data struct {
-	ServiceInfo *ServiceInfo
-	AccountInfo *AccountInfo
-}
-
 // AchieveInfo
 type ReqAchieveInfo_data struct {
 }
@@ -291,16 +277,6 @@ type RspAdminFloorMap_data struct {
 /////////////////////////////////////////////////////////////////
 // noti
 
-type NotiInvalid_data struct {
-}
-
-type NotiEnterTower_data struct {
-	TowerInfo *TowerInfo
-}
-type NotiLeaveTower_data struct {
-	TowerInfo *TowerInfo
-}
-
 type NotiEnterFloor_data struct {
 	FI *FloorInfo
 }
@@ -318,10 +294,6 @@ type NotiDeath_data struct {
 type NotiReadyToRebirth_data struct {
 }
 type NotiRebirthed_data struct {
-}
-
-type NotiBroadcast_data struct {
-	Msg string
 }
 
 type NotiVPObjList_data struct {

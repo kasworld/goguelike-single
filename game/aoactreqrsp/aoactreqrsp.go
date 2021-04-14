@@ -42,24 +42,22 @@ func (act Act) CalcAPByActAndCondition(cndflag condition_flag.ConditionFlag) flo
 }
 
 type ActReqRsp struct {
-	Req  Act // act requested
-	Done Act // act done
+	Req   Act // act requested
+	Done  Act // act done
+	Acted bool
 
 	Error c2t_error.ErrorCode
 }
 
-func (arr ActReqRsp) Acted() bool {
-	return arr.Done.Act != c2t_idcmd.Invalid
-}
-
 func (arr ActReqRsp) IsSuccess() bool {
-	return arr.Acted() && arr.Error == c2t_error.None
+	return arr.Acted && arr.Error == c2t_error.None
 }
 
 func (arr *ActReqRsp) SetDone(done Act, Error c2t_error.ErrorCode) {
-	if arr.Acted() {
+	if arr.Acted {
 		fmt.Printf("already Acted %v %+v", Error, arr)
 	}
 	arr.Done = done
 	arr.Error = Error
+	arr.Acted = true
 }
