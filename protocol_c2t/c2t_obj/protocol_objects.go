@@ -42,7 +42,7 @@ type GameInfo struct {
 	ActiveObjUUID string
 	NickName      string
 
-	TowerUUID     string
+	TowerSeed     int64
 	TowerName     string
 	Factor        [3]int64 `prettystring:"simple"`
 	TotalFloorNum int

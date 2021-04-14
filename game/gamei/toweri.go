@@ -18,7 +18,6 @@ import (
 )
 
 type TowerI interface {
-	GetUUID() string
 	String() string
 
 	GetCmdCh() chan<- interface{}

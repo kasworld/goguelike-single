@@ -41,10 +41,6 @@ func (tw *Tower) CmdChState() string {
 	return fmt.Sprintf("%v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 }
 
-func (tw *Tower) GetUUID() string {
-	return tw.uuid
-}
-
 func (tw *Tower) GetRunDur() time.Duration {
 	return time.Now().Sub(tw.startTime)
 }

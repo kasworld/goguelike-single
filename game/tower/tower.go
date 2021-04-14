@@ -43,7 +43,6 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_statserveapi"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
 	"github.com/kasworld/recordduration"
-	"github.com/kasworld/uuidstr"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib/retrylistenandserve"
 )
@@ -51,8 +50,8 @@ import (
 var _ gamei.TowerI = &Tower{}
 
 func (tw *Tower) String() string {
-	return fmt.Sprintf("Tower[Seed:%v %v]",
-		tw.seed, tw.uuid,
+	return fmt.Sprintf("Tower[Seed:%v]",
+		tw.seed,
 	)
 }
 
@@ -64,7 +63,6 @@ type Tower struct {
 
 	config     *goguelikeconfig.GoguelikeConfig
 	seed       int64
-	uuid       string
 	biasFactor [3]int64  `prettystring:"simple"`
 	startTime  time.Time `prettystring:"simple"`
 
@@ -73,8 +71,6 @@ type Tower struct {
 	id2ao        *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
 	aoExpRanking aoexpsort.ByExp                             `prettystring:"simple"`
 
-	// serviceInfo *c2t_obj.ServiceInfo
-	// towerInfo   *c2t_obj.TowerInfo
 	gameInfo *c2t_obj.GameInfo
 
 	// single player
@@ -105,7 +101,6 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 	fmt.Printf("%v\n", config.StringForm())
 
 	tw := &Tower{
-		uuid:             uuidstr.New(),
 		id2ao:            aoid2activeobject.New("ActiveObject working"),
 		config:           config,
 		turnStat:         actpersec.New(),
@@ -182,7 +177,7 @@ func (tw *Tower) ServiceInit() error {
 		DataVersion:     dataversion.DataVersion,
 
 		StartTime:     tw.startTime,
-		TowerUUID:     tw.uuid,
+		TowerSeed:     tw.seed,
 		TowerName:     tw.config.ScriptFilename,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
