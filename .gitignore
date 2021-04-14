@@ -52,8 +52,8 @@ bin/*
 
 core
 
-*_gen.go 
-*_gen_test.go
+# *_gen.go 
+# *_gen_test.go
 
 # *.ttf
 # merged.json

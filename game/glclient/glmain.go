@@ -35,6 +35,8 @@ import (
 func (ga *GLClient) glInit() error {
 	// Create application and scene
 	ga.app = app.App()
+	ga.app.IWindow.(*window.GlfwWindow).SetTitle("hello")
+	ga.app.IWindow.(*window.GlfwWindow).SetSize(1920, 1080)
 	ga.scene = core.NewNode()
 
 	// Set the scene to be managed by the gui manager

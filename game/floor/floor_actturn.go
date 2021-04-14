@@ -789,7 +789,11 @@ func (f *Floor) sendViewportNoti(
 					DangerObjList: dOs,
 				},
 			)
+
+			// // if ao cannot act next turn, schedule turn auto
+			// if ao.GetAP() < 0 {
+			// 	f.tower.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
+			// }
 		}
 	}
-	// fmt.Printf("%v\n", vpixyolistcache)
 }
