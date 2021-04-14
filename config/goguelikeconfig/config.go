@@ -34,7 +34,6 @@ type GoguelikeConfig struct {
 
 	// config for each tower
 	Seed           int    `default:"0" argname:""` // <=0 time seed
-	ServicePort    int    `default:"14101" argname:""`
 	AdminPort      int    `default:"14201" argname:""`
 	ScriptFilename string `default:"start" argname:""`
 }
@@ -66,8 +65,4 @@ func (config *GoguelikeConfig) MakeTowerFileFullpath() string {
 
 func (config *GoguelikeConfig) StringForm() string {
 	return prettystring.PrettyString(config, 4)
-}
-
-func (config *GoguelikeConfig) ConnectToTower() string {
-	return fmt.Sprintf("localhost:%v", config.ServicePort)
 }

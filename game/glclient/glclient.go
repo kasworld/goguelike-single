@@ -27,7 +27,6 @@ import (
 )
 
 type GLClient struct {
-	config   *goguelikeconfig.GoguelikeConfig
 	GameInfo *c2t_obj.GameInfo
 
 	ViewportXYLenList findnear.XYLenList
@@ -61,7 +60,6 @@ func New(
 	gameInfo *c2t_obj.GameInfo,
 	c2tch, t2cch chan *c2t_packet.Packet) *GLClient {
 	app := &GLClient{
-		config:            config,
 		pid2recv:          c2t_pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 		c2tCh:             c2tch,
@@ -69,10 +67,6 @@ func New(
 		GameInfo:          gameInfo,
 	}
 	return app
-}
-
-func (app *GLClient) GetArg() interface{} {
-	return app.config
 }
 
 func (app *GLClient) TowerBias() bias.Bias {
