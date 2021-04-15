@@ -12,7 +12,6 @@
 package floor
 
 import (
-	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/condition"
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
@@ -47,7 +46,6 @@ func (f *Floor) makeViewportActiveObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.ActiveObjClient {
 
-	maxobj := gameconst.AOCountInViewportLimit
 	rtn := make([]*c2t_obj.ActiveObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -59,11 +57,6 @@ func (f *Floor) makeViewportActiveObjs2(
 			continue
 		}
 		rtn = append(rtn, ww.ToPacket_ActiveObjClient(v.X, v.Y))
-		maxobj--
-		if maxobj < 0 {
-			f.statPacketObjOver.Inc()
-			break
-		}
 	}
 	return rtn
 }
@@ -72,7 +65,6 @@ func (f *Floor) makeViewportCarryObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.CarryObjClientOnFloor {
 
-	maxobj := gameconst.COCountInViewportLimit
 	rtn := make([]*c2t_obj.CarryObjClientOnFloor, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -80,11 +72,6 @@ func (f *Floor) makeViewportCarryObjs2(
 		}
 		ww := v.O.(gamei.CarryingObjectI)
 		rtn = append(rtn, ww.ToPacket_CarryObjClientOnFloor(v.X, v.Y))
-		maxobj--
-		if maxobj < 0 {
-			f.statPacketObjOver.Inc()
-			break
-		}
 	}
 	return rtn
 }
@@ -93,7 +80,6 @@ func (f *Floor) makeViewportFieldObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.FieldObjClient {
 
-	maxobj := gameconst.FOCountInViewportLimit
 	rtn := make([]*c2t_obj.FieldObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -104,11 +90,6 @@ func (f *Floor) makeViewportFieldObjs2(
 			continue
 		}
 		rtn = append(rtn, ww.ToPacket_FieldObjClient(v.X, v.Y))
-		maxobj--
-		if maxobj < 0 {
-			f.statPacketObjOver.Inc()
-			break
-		}
 	}
 	return rtn
 }
@@ -117,7 +98,6 @@ func (f *Floor) makeViewportDangerObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
 	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.DangerObjClient {
 
-	maxobj := gameconst.DOCountInViewportLimit
 	rtn := make([]*c2t_obj.DangerObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
@@ -125,11 +105,6 @@ func (f *Floor) makeViewportDangerObjs2(
 		}
 		ww := v.O.(*dangerobject.DangerObject)
 		rtn = append(rtn, ww.ToPacket_DangerObjClient(v.X, v.Y))
-		maxobj--
-		if maxobj < 0 {
-			f.statPacketObjOver.Inc()
-			break
-		}
 	}
 	return rtn
 }

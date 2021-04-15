@@ -565,7 +565,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		bufname := fieldobjacttype.Contagion.String()
 		if ao.GetBuffManager().Exist(bufname) {
 			// infact other near
-			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(contagionarea.ContagionArea, aox, aoy, 10)
+			aoList := f.aoPosMan.GetVPIXYObjByXYLenList(contagionarea.ContagionArea, aox, aoy)
 			for _, v := range aoList {
 				dstAo := v.O.(gamei.ActiveObjectI)
 				if !dstAo.IsAlive() { // skip dead dst
@@ -735,7 +735,7 @@ func (f *Floor) sendViewportNoti(
 
 		// update ai floor4client info
 		vpixyolistsFO := f.foPosMan.GetVPIXYObjByXYLenList(
-			viewportdata.ViewportXYLenList, aox, aoy, gameconst.FOCountInViewportLimit)
+			viewportdata.ViewportXYLenList, aox, aoy)
 		fOs := f.makeViewportFieldObjs2(vpixyolistsFO, sightMat, sight)
 
 		f4c := ao.GetFloor4Client(f.GetName())
@@ -759,15 +759,15 @@ func (f *Floor) sendViewportNoti(
 		if ao.GetActiveObjType() == aotype.User {
 
 			vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
-				viewportdata.ViewportXYLenList, aox, aoy, gameconst.AOCountInViewportLimit)
+				viewportdata.ViewportXYLenList, aox, aoy)
 			aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
 
 			vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
-				viewportdata.ViewportXYLenList, aox, aoy, gameconst.COCountInViewportLimit)
+				viewportdata.ViewportXYLenList, aox, aoy)
 			pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
 
 			vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
-				viewportdata.ViewportXYLenList, aox, aoy, gameconst.DOCountInViewportLimit)
+				viewportdata.ViewportXYLenList, aox, aoy)
 			dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)
 
 			// make and send NotiVPObjList

@@ -173,7 +173,7 @@ func (fo *UUIDPosMan) Search1stByXYLenList(
 
 func (fo *UUIDPosMan) GetVPIXYObjByXYLenList(
 	xylenlist findnear.XYLenList,
-	sx, sy int, l int) []uuidposmani.VPIXYObj {
+	sx, sy int) []uuidposmani.VPIXYObj {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()
 
@@ -187,9 +187,6 @@ func (fo *UUIDPosMan) GetVPIXYObjByXYLenList(
 				Y: y,
 				O: o,
 			})
-			if len(rtn) >= l {
-				return rtn
-			}
 		}
 	}
 	return rtn
@@ -197,7 +194,7 @@ func (fo *UUIDPosMan) GetVPIXYObjByXYLenList(
 
 func (fo *UUIDPosMan) IterByXYLenList(
 	xylenlist findnear.XYLenList,
-	sx, sy int, l int,
+	sx, sy int,
 	stopFn func(o uuidposmani.UUIDPosI, x, y int, i int, xylen findnear.XYLen) bool) {
 	fo.mutex.RLock()
 	defer fo.mutex.RUnlock()

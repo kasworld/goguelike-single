@@ -312,11 +312,12 @@ loop:
 
 func (tw *Tower) Turn(now time.Time) {
 	tw.turnStat.Inc()
+
 	var ws sync.WaitGroup
 	for _, f := range tw.floorMan.GetFloorList() {
 		ws.Add(1)
 		go func(f gamei.FloorI) {
-			f.TurnLocked(now)
+			f.Turn(now)
 			ws.Done()
 		}(f)
 	}

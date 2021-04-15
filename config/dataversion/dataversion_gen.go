@@ -1,3 +1,3 @@
 package dataversion
-const DataVersion = "8e135c20903d4b4bd3d0d176b46543076d4b4a685d10c0c315477f5878f1c24c" 
+const DataVersion = "6030b610fc1a676d25f58586d204414d8de51d05b8ae3888d0149134db4519fd" 
 

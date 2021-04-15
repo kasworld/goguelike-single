@@ -39,8 +39,7 @@ func (f *Floor) String() string {
 }
 
 type Floor struct {
-	mutexTurn sync.Mutex
-	rnd       *g2rand.G2Rand `prettystring:"hide"`
+	rnd *g2rand.G2Rand `prettystring:"hide"`
 
 	tower       gamei.TowerI
 	w           int
@@ -58,9 +57,8 @@ type Floor struct {
 	foPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 	doPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
-	interDur          *intervalduration.IntervalDuration `prettystring:"simple"`
-	statPacketObjOver *actpersec.ActPerSec               `prettystring:"simple"`
-	cmdActStat        *actpersec.ActPerSec               `prettystring:"simple"`
+	interDur   *intervalduration.IntervalDuration `prettystring:"simple"`
+	cmdActStat *actpersec.ActPerSec               `prettystring:"simple"`
 
 	// for actturn data
 	cmdCh chan interface{}
@@ -70,12 +68,11 @@ type Floor struct {
 
 func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 	f := &Floor{
-		tower:             tw,
-		seed:              seed,
-		rnd:               g2rand.NewWithSeed(seed),
-		interDur:          intervalduration.New(""),
-		statPacketObjOver: actpersec.New(),
-		cmdActStat:        actpersec.New(),
+		tower:      tw,
+		seed:       seed,
+		rnd:        g2rand.NewWithSeed(seed),
+		interDur:   intervalduration.New(""),
+		cmdActStat: actpersec.New(),
 	}
 	f.terrain = terrain.New(f.rnd.Int63(), ts, f.tower.Config().ServerDataFolder)
 	return f
@@ -130,21 +127,6 @@ func (f *Floor) Run(ctx context.Context, queuesize int) {
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
 
-	// split ch loop for blocked ch handle
-	go func() {
-	loop:
-		for {
-			select {
-			case <-ctx.Done():
-				break loop
-			case data := <-f.cmdCh:
-				f.mutexTurn.Lock()
-				f.processCmd(data)
-				f.mutexTurn.Unlock()
-			}
-		}
-	}()
-
 loop:
 	for {
 		select {
@@ -152,7 +134,6 @@ loop:
 			break loop
 
 		case <-timerInfoTk.C:
-			f.statPacketObjOver.UpdateLap()
 			f.cmdActStat.UpdateLap()
 			if len(f.cmdCh) > cap(f.cmdCh)/2 {
 				g2log.Fatal("Floor %v cmdch overloaded %v/%v",
@@ -167,10 +148,11 @@ loop:
 	}
 }
 
-func (f *Floor) TurnLocked(now time.Time) {
-	f.mutexTurn.Lock()
+func (f *Floor) Turn(now time.Time) {
+	for cmdCount := len(f.cmdCh); cmdCount > 0; cmdCount-- {
+		f.processCmd(<-f.cmdCh)
+	}
 	f.processTurn(now)
-	f.mutexTurn.Unlock()
 	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
 	if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
 		f.processAgeing()

@@ -46,10 +46,10 @@ type UUIDPosManI interface {
 		filterfn func(o UUIDPosI, x, y int, xylen findnear.XYLen) bool) (UUIDPosI, int, int)
 	GetVPIXYObjByXYLenList(
 		xylenlist findnear.XYLenList,
-		sx, sy int, l int) []VPIXYObj
+		sx, sy int) []VPIXYObj
 	IterByXYLenList(
 		xylenlist findnear.XYLenList,
-		sx, sy int, l int,
+		sx, sy int,
 		stopFn func(o UUIDPosI, x, y int, i int, xylen findnear.XYLen) bool)
 	AddOrUpdateToXY(o UUIDPosI, x, y int) error
 	AddToXY(o UUIDPosI, x, y int) error

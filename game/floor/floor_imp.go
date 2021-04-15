@@ -56,10 +56,6 @@ func (f *Floor) GetActTurn() int {
 	return f.interDur.GetCount()
 }
 
-func (f *Floor) GetStatPacketObjOver() *actpersec.ActPerSec {
-	return f.statPacketObjOver
-}
-
 func (f *Floor) GetCmdFloorActStat() *actpersec.ActPerSec {
 	return f.cmdActStat
 }

@@ -25,12 +25,6 @@ const (
 	ClientViewPortW = ViewPortW * 3
 	ClientViewPortH = ViewPortH * 3
 
-	// int packet
-	AOCountInViewportLimit = 100
-	COCountInViewportLimit = 100
-	FOCountInViewportLimit = 100
-	DOCountInViewportLimit = 100
-
 	// turn to del in floor CarryObj
 	CarryingObjectLifeTurnInFloor = 400
 

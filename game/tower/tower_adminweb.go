@@ -241,7 +241,6 @@ const (
 	<td>W/H</td>
 	<td>ActiveObj/CarryObj</td>
 	<td>ActTurnJitter</td>
-	<td>ObjOver Packet</td>
 	<td>Viewport Cache</td>
 	</tr>`
 	floor_HTML_row = `<tr>
@@ -261,7 +260,6 @@ const (
 	<td>{{$v.GetWidth}}/{{$v.GetHeight}}</td>
 	<td>{{$v.TotalActiveObjCount}} / {{$v.TotalCarryObjCount}}</td>
 	<td>{{$v.GetInterDur.GetCount}} {{$v.GetInterDur.GetInterval}} {{$v.GetInterDur.GetDuration}}</td>
-	<td>{{$v.GetStatPacketObjOver}}</td>
 	<td>{{$v.GetTerrain.GetViewportCache.HitRate}}</td>
 	</tr>`
 )

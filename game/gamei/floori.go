@@ -40,7 +40,6 @@ type FloorI interface {
 
 	GetTerrain() terraini.TerrainI
 
-	GetStatPacketObjOver() *actpersec.ActPerSec
 	GetCmdFloorActStat() *actpersec.ActPerSec
 
 	GetActiveObjPosMan() uuidposmani.UUIDPosManI
@@ -49,7 +48,7 @@ type FloorI interface {
 
 	GetCmdCh() chan<- interface{}
 	CmdChRate() float64
-	TurnLocked(now time.Time)
+	Turn(now time.Time)
 	Run(ctx context.Context, queuesize int)
 
 	TotalActiveObjCount() int
