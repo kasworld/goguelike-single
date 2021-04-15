@@ -43,8 +43,6 @@ func (tw *Tower) processCmd(data interface{}) {
 	case *cmd2tower.ActiveObjRebirth:
 		tw.Call_ActiveObjRebirth(pk.ActiveObj)
 
-	case *cmd2tower.Turn:
-		tw.Turn(pk.Now)
 	}
 }
 

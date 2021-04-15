@@ -200,6 +200,8 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	TurnStat : {{.GetTurnStat}}
 	<br/>
+	{{.GetInterDur.GetCount}} {{.GetInterDur.GetInterval}} {{.GetInterDur.GetDuration}}
+	<br/>
 	<a href= "/towerStat" target="_blank">Tower Achieve</a>
     <br/>
 	TowerCmd act : {{.CmdChState}} {{.GetTowerCmdActStat}}

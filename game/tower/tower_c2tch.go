@@ -44,7 +44,7 @@ func (tw *Tower) SendNoti(cmd c2t_idnoti.NotiID, body interface{}) {
 
 func (tw *Tower) triggerTurnByCmd(cmd c2t_idcmd.CommandID) {
 	if cmd.TriggerTurn() {
-		tw.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
+		tw.GetTurnCh() <- time.Now()
 	}
 }
 

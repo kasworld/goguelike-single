@@ -786,7 +786,7 @@ func (f *Floor) sendViewportNoti(
 
 			// // if ao cannot act next turn, schedule turn auto
 			// if ao.GetAP() < 0 {
-			// 	f.tower.GetCmdCh() <- &cmd2tower.Turn{Now: time.Now()}
+			// 	f.tower.GetTurnCh() <- time.Now()
 			// }
 		}
 	}

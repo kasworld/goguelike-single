@@ -79,9 +79,6 @@ func New(seed int64, ts []string, tw gamei.TowerI) *Floor {
 }
 
 func (f *Floor) Cleanup() {
-	g2log.TraceService("Start Cleanup Floor %v", f.GetName())
-	defer func() { g2log.TraceService("End Cleanup Floor %v", f.GetName()) }()
-
 	f.aoPosMan.Cleanup()
 	f.poPosMan.Cleanup()
 	f.terrain.Cleanup()
@@ -90,9 +87,6 @@ func (f *Floor) Cleanup() {
 
 // Init bi need for randomness
 func (f *Floor) Init() error {
-	g2log.TraceService("Start Init %v", f)
-	defer func() { g2log.TraceService("End Init %v", f) }()
-
 	if err := f.terrain.Init(); err != nil {
 		return fmt.Errorf("fail to make terrain %v", err)
 	}
@@ -115,9 +109,6 @@ func (f *Floor) Init() error {
 }
 
 func (f *Floor) Run(ctx context.Context, queuesize int) {
-	g2log.TraceService("start Run %v", f)
-	defer func() { g2log.TraceService("End Run %v", f) }()
-
 	f.cmdCh = make(chan interface{}, queuesize)
 	if f.cmdCh == nil {
 		g2log.Fatal("%v fail to make cmdCh %v", f, queuesize)
@@ -150,10 +141,8 @@ loop:
 
 func (f *Floor) Turn(now time.Time) {
 	act := f.interDur.BeginAct()
-	g2log.Monitor("Start Turn %v %v", f, f.interDur)
 	defer func() {
 		act.End()
-		g2log.Monitor("End Turn %v %v", f, f.interDur)
 	}()
 
 	for cmdCount := len(f.cmdCh); cmdCount > 0; cmdCount-- {

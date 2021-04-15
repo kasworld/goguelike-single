@@ -39,7 +39,7 @@ import (
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
 	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
-	"github.com/kasworld/recordduration"
+	"github.com/kasworld/intervalduration"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib/retrylistenandserve"
 )
@@ -56,7 +56,8 @@ type Tower struct {
 	doClose func()         `prettystring:"hide"`
 	rnd     *g2rand.G2Rand `prettystring:"hide"`
 
-	cmdCh chan interface{}
+	cmdCh  chan interface{}
+	turnCh chan time.Time
 
 	config     *goguelikeconfig.GoguelikeConfig
 	seed       int64
@@ -73,7 +74,9 @@ type Tower struct {
 	// single player
 	playerAO *activeobject.ActiveObject
 
-	turnStat         *actpersec.ActPerSec                    `prettystring:"simple"`
+	turnStat *actpersec.ActPerSec               `prettystring:"simple"`
+	interDur *intervalduration.IntervalDuration `prettystring:"simple"`
+
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
 
 	// tower cmd stats
@@ -94,6 +97,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		id2ao:            aoid2activeobject.New("ActiveObject working"),
 		config:           config,
 		turnStat:         actpersec.New(),
+		interDur:         intervalduration.New(""),
 		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
 	}
@@ -111,14 +115,6 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 }
 
 func (tw *Tower) ServiceInit() error {
-	rd := recordduration.New(tw.String())
-
-	g2log.TraceService("Start ServiceInit %v %v", tw, rd)
-	defer func() {
-		g2log.TraceService("End ServiceInit %v %v", tw, rd)
-		fmt.Println(rd)
-	}()
-
 	g2log.TraceService("%v", tw.config.StringForm())
 
 	var err error
@@ -178,9 +174,6 @@ func (tw *Tower) ServiceInit() error {
 }
 
 func (tw *Tower) ServiceCleanup() {
-	g2log.TraceService("Start ServiceCleanup %v", tw)
-	defer func() { g2log.TraceService("End ServiceCleanup %v", tw) }()
-
 	tw.id2ao.Cleanup()
 	tw.ao2Floor.Cleanup()
 	for _, f := range tw.floorMan.GetFloorList() {
@@ -190,8 +183,6 @@ func (tw *Tower) ServiceCleanup() {
 }
 
 func (tw *Tower) ServiceMain(mainctx context.Context) {
-	g2log.TraceService("Start ServiceMain %v", tw)
-	defer func() { g2log.TraceService("End ServiceMain %v", tw) }()
 	ctx, closeCtx := context.WithCancel(mainctx)
 	tw.doClose = closeCtx
 
@@ -212,6 +203,11 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		g2log.Fatal("fail to make cmdCh %v", queuesize)
 		return
 	}
+	tw.turnCh = make(chan time.Time, queuesize)
+	if tw.turnCh == nil {
+		g2log.Fatal("fail to make turnCh %v", queuesize)
+		return
+	}
 
 	tw.c2tCh = make(chan *c2t_packet.Packet, gameconst.SendBufferSize)
 	tw.t2cCh = make(chan *c2t_packet.Packet, gameconst.SendBufferSize)
@@ -223,8 +219,8 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 			select {
 			case <-ctx.Done():
 				break loop
-			case data := <-tw.cmdCh:
-				tw.processCmd(data)
+			case now := <-tw.turnCh:
+				tw.Turn(now)
 			}
 		}
 	}()
@@ -311,7 +307,14 @@ loop:
 }
 
 func (tw *Tower) Turn(now time.Time) {
+	act := tw.interDur.BeginAct()
+	defer func() {
+		act.End()
+	}()
 	tw.turnStat.Inc()
+	for cmdCount := len(tw.cmdCh); cmdCount > 0; cmdCount-- {
+		tw.processCmd(<-tw.cmdCh)
+	}
 
 	var ws sync.WaitGroup
 	for _, f := range tw.floorMan.GetFloorList() {

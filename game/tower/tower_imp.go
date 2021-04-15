@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/gamei"
+	"github.com/kasworld/intervalduration"
 )
 
 // managers
@@ -37,8 +38,16 @@ func (tw *Tower) GetCmdCh() chan<- interface{} {
 	return tw.cmdCh
 }
 
+func (tw *Tower) GetTurnCh() chan<- time.Time {
+	return tw.turnCh
+}
+
 func (tw *Tower) CmdChState() string {
 	return fmt.Sprintf("%v/%v", len(tw.cmdCh), cap(tw.cmdCh))
+}
+
+func (tw *Tower) GetInterDur() *intervalduration.IntervalDuration {
+	return tw.interDur
 }
 
 func (tw *Tower) GetRunDur() time.Duration {
