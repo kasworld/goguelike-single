@@ -43,13 +43,13 @@ func (app *GLClient) actByControlMode() {
 				return
 			}
 		}
+		app.sendReqObjWithRspFn(c2t_idcmd.PassTurn,
+			&c2t_obj.ReqPassTurn_data{},
+			func(hd c2t_packet.Header, rsp interface{}) error {
+				return nil
+			},
+		)
 	}
-	app.sendReqObjWithRspFn(c2t_idcmd.PassTurn,
-		&c2t_obj.ReqPassTurn_data{},
-		func(hd c2t_packet.Header, rsp interface{}) error {
-			return nil
-		},
-	)
 }
 
 func tryAutoBattle(app *GLClient) bool {

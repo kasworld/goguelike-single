@@ -220,7 +220,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 			case <-ctx.Done():
 				break loop
 			case now := <-tw.turnCh:
-				if len(tw.turnCh) > 0 {
+				if len(tw.turnCh) > 1 {
 					g2log.Warn("remove dup turn req")
 					now = <-tw.turnCh
 				}
@@ -329,6 +329,10 @@ func (tw *Tower) Turn(now time.Time) {
 		}(f)
 	}
 	ws.Wait()
+	// if player is dead, auto turn til readytorebirth
+	if !tw.playerAO.IsAlive() && tw.playerAO.GetRemainTurn2Rebirth() != 0 {
+		tw.turnCh <- time.Now()
+	}
 }
 
 func (tw *Tower) makeActiveObjExpRank() {
