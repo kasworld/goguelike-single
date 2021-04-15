@@ -42,12 +42,6 @@ import (
 )
 
 func (f *Floor) processTurn(turnTime time.Time) error {
-	act := f.interDur.BeginAct()
-	g2log.Monitor("Start Turn %v %v", f, f.interDur)
-	defer func() {
-		act.End()
-		g2log.Monitor("End Turn %v %v", f, f.interDur)
-	}()
 
 	// wait ai run last turn
 	f.aiWG.Wait()

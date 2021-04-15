@@ -149,6 +149,13 @@ loop:
 }
 
 func (f *Floor) Turn(now time.Time) {
+	act := f.interDur.BeginAct()
+	g2log.Monitor("Start Turn %v %v", f, f.interDur)
+	defer func() {
+		act.End()
+		g2log.Monitor("End Turn %v %v", f, f.interDur)
+	}()
+
 	for cmdCount := len(f.cmdCh); cmdCount > 0; cmdCount-- {
 		f.processCmd(<-f.cmdCh)
 	}
