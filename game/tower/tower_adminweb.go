@@ -69,8 +69,6 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFuncAuth("/terrainimageautozoom", tw.web_TerrainImageAutoZoom)
 	webMux.HandleFuncAuth("/terraintile", tw.web_TerrainTile)
 
-	webMux.HandleFunc("/Config", tw.json_Config)
-
 	authData.AddAllActionName(tw.config.WebAdminID)
 	g2log.TraceService("%v", webMux)
 
@@ -110,12 +108,6 @@ func (tw *Tower) GetID2ActiveObj() *aoid2activeobject.ActiveObjID2ActiveObject {
 
 func (tw *Tower) GetTurnStat() *actpersec.ActPerSec {
 	return tw.turnStat
-}
-func (tw *Tower) GetSendStat() *actpersec.ActPerSec {
-	return tw.sendStat
-}
-func (tw *Tower) GetRecvStat() *actpersec.ActPerSec {
-	return tw.recvStat
 }
 func (tw *Tower) GetGameInfo() *c2t_obj.GameInfo {
 	return tw.gameInfo
@@ -207,10 +199,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	TileCache : {{.TileCacheCount}}
 	<br/>
 	TurnStat : {{.GetTurnStat}}
-	<br/>
-	SendStat : {{.GetSendStat}}
-	<br/>
-	RecvStat : {{.GetRecvStat}}
 	<br/>
 	<a href= "/towerStat" target="_blank">Tower Achieve</a>
     <br/>

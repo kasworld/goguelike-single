@@ -75,8 +75,6 @@ type Tower struct {
 
 	turnStat         *actpersec.ActPerSec                    `prettystring:"simple"`
 	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
-	sendStat         *actpersec.ActPerSec                    `prettystring:"simple"`
-	recvStat         *actpersec.ActPerSec                    `prettystring:"simple"`
 
 	// tower cmd stats
 	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
@@ -96,8 +94,6 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		id2ao:            aoid2activeobject.New("ActiveObject working"),
 		config:           config,
 		turnStat:         actpersec.New(),
-		sendStat:         actpersec.New(),
-		recvStat:         actpersec.New(),
 		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
 	}
@@ -299,8 +295,6 @@ loop:
 			break loop
 		case <-timerInfoTk.C:
 			tw.cmdActStat.UpdateLap()
-			tw.sendStat.UpdateLap()
-			tw.recvStat.UpdateLap()
 			if len(tw.cmdCh) > cap(tw.cmdCh)/2 {
 				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 			}

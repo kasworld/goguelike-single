@@ -32,7 +32,6 @@ import (
 )
 
 func (tw *Tower) SendNoti(cmd c2t_idnoti.NotiID, body interface{}) {
-	tw.sendStat.Inc()
 	spk := c2t_packet.Packet{
 		Header: c2t_packet.Header{
 			Cmd:      uint16(cmd),
@@ -53,7 +52,6 @@ func (tw *Tower) triggerTurnByCmd(cmd c2t_idcmd.CommandID) {
 func (tw *Tower) handle_c2tch() {
 	for rpk := range tw.c2tCh {
 
-		tw.recvStat.Inc()
 		if rpk.Header.FlowType != c2t_packet.Request {
 			g2log.Error("Unexpected rpk.Header packet type: %v", rpk.Header)
 		}
@@ -80,7 +78,6 @@ func (tw *Tower) handle_c2tch() {
 		}
 
 		// send rsp
-		tw.sendStat.Inc()
 		tw.t2cCh <- spk
 	}
 }
