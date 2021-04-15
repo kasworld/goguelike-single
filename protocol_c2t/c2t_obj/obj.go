@@ -60,8 +60,6 @@ type RspAIPlay_data struct {
 // VisitFloorList floor info of visited
 type ReqVisitFloorList_data struct {
 }
-
-// VisitFloorList floor info of visited
 type RspVisitFloorList_data struct {
 	FloorList []*FloorInfo
 }
@@ -69,8 +67,6 @@ type RspVisitFloorList_data struct {
 // PassTurn no action just trigger turn
 type ReqPassTurn_data struct {
 }
-
-// PassTurn no action just trigger turn
 type RspPassTurn_data struct {
 }
 
@@ -80,8 +76,6 @@ type RspPassTurn_data struct {
 // Meditate rest and recover HP,SP
 type ReqMeditate_data struct {
 }
-
-// Meditate rest and recover HP,SP
 type RspMeditate_data struct {
 }
 
@@ -189,8 +183,6 @@ type RspAdminTeleport_data struct {
 type ReqAdminAddExp_data struct {
 	Exp int
 }
-
-// AdminAddExp  add arg to battle exp
 type RspAdminAddExp_data struct {
 }
 
@@ -198,8 +190,6 @@ type RspAdminAddExp_data struct {
 type ReqAdminPotionEffect_data struct {
 	Potion potiontype.PotionType
 }
-
-// AdminPotionEffect buff by arg potion type
 type RspAdminPotionEffect_data struct {
 }
 
@@ -207,8 +197,6 @@ type RspAdminPotionEffect_data struct {
 type ReqAdminScrollEffect_data struct {
 	Scroll scrolltype.ScrollType
 }
-
-// AdminScrollEffect buff by arg Scroll type
 type RspAdminScrollEffect_data struct {
 }
 
@@ -216,8 +204,6 @@ type RspAdminScrollEffect_data struct {
 type ReqAdminCondition_data struct {
 	Condition condition.Condition
 }
-
-// AdminCondition add arg condition for 100 turn
 type RspAdminCondition_data struct {
 }
 
@@ -225,8 +211,6 @@ type RspAdminCondition_data struct {
 type ReqAdminAddPotion_data struct {
 	Potion potiontype.PotionType
 }
-
-// AdminAddPotion add arg potion to inven
 type RspAdminAddPotion_data struct {
 }
 
@@ -234,8 +218,6 @@ type RspAdminAddPotion_data struct {
 type ReqAdminAddScroll_data struct {
 	Scroll scrolltype.ScrollType
 }
-
-// AdminAddScroll add arg scroll to inven
 type RspAdminAddScroll_data struct {
 }
 
@@ -243,8 +225,6 @@ type RspAdminAddScroll_data struct {
 type ReqAdminAddMoney_data struct {
 	Money int
 }
-
-// AdminAddMoney add arg money to inven
 type RspAdminAddMoney_data struct {
 }
 
@@ -253,24 +233,18 @@ type ReqAdminAddEquip_data struct {
 	Faction factiontype.FactionType
 	Equip   equipslottype.EquipSlotType
 }
-
-// AdminAddEquip add random equip to inven
 type RspAdminAddEquip_data struct {
 }
 
 // AdminForgetFloor forget current floor map
 type ReqAdminForgetFloor_data struct {
 }
-
-// AdminForgetFloor forget current floor map
 type RspAdminForgetFloor_data struct {
 }
 
 // AdminFloorMap complete current floor map
 type ReqAdminFloorMap_data struct {
 }
-
-// AdminFloorMap complete current floor map
 type RspAdminFloorMap_data struct {
 }
 
