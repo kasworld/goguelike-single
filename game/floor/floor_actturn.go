@@ -747,51 +747,84 @@ func (f *Floor) sendViewportNoti(
 		if ao.GetAndClearNeedTANoti() {
 			ao.UpdateVisitAreaBySightMat2(f, aox, aoy, sightMat, sight)
 			if ao.GetActiveObjType() == aotype.User {
-				// make and send NotiTileArea
-				f.tower.SendNoti(
-					c2t_idnoti.VPTiles,
-					&c2t_obj.NotiVPTiles_data{
-						FloorName: f.GetName(),
-						VPX:       aox,
-						VPY:       aoy,
-						VPTiles:   f.makeViewportTiles2(aox, aoy, sightMat, sight),
-					},
-				)
+				f.sendTANoti2Player(ao)
 			}
 		}
 		if ao.GetActiveObjType() == aotype.User {
-
-			vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
-				viewportdata.ViewportXYLenList, aox, aoy)
-			aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
-
-			vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
-				viewportdata.ViewportXYLenList, aox, aoy)
-			pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
-
-			vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
-				viewportdata.ViewportXYLenList, aox, aoy)
-			dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)
-
-			// make and send NotiVPObjList
-			aoContidion := ao.GetTurnData().Condition
-			if aoContidion.TestByCondition(condition.Blind) ||
-				aoContidion.TestByCondition(condition.Invisible) {
-				// if blind, invisible add self
-				aOs = append(aOs, ao.ToPacket_ActiveObjClient(aox, aoy))
-			}
-			f.tower.SendNoti(
-				c2t_idnoti.VPObjList,
-				&c2t_obj.NotiVPObjList_data{
-					Time:          turnTime,
-					ActiveObj:     ao.ToPacket_PlayerActiveObjInfo(),
-					FloorName:     f.GetName(),
-					ActiveObjList: aOs,
-					CarryObjList:  pOs,
-					FieldObjList:  fOs,
-					DangerObjList: dOs,
-				},
-			)
+			f.sendVPObj2Player(ao, turnTime)
 		}
 	}
+}
+
+// called from processcmd after interfloor move, processturn
+func (f *Floor) sendTANoti2Player(ao gamei.ActiveObjectI) {
+	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
+	if !exist {
+		g2log.Warn("ao not in currentfloor %v %v, skip tile, obj noti", f, ao)
+		return
+	}
+	aox, aoy = f.terrain.WrapXY(aox, aoy)
+
+	sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
+	sight := float32(ao.GetTurnData().Sight)
+	// make and send NotiTileArea
+	f.tower.SendNoti(
+		c2t_idnoti.VPTiles,
+		&c2t_obj.NotiVPTiles_data{
+			FloorName: f.GetName(),
+			VPX:       aox,
+			VPY:       aoy,
+			VPTiles:   f.makeViewportTiles2(aox, aoy, sightMat, sight),
+		},
+	)
+
+}
+
+// called from processcmd after interfloor move, processturn
+func (f *Floor) sendVPObj2Player(ao gamei.ActiveObjectI, turnTime time.Time) {
+	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
+	if !exist {
+		g2log.Warn("ao not in currentfloor %v %v, skip tile, obj noti", f, ao)
+		return
+	}
+	aox, aoy = f.terrain.WrapXY(aox, aoy)
+
+	sightMat := f.terrain.GetViewportCache().GetByCache(aox, aoy)
+	sight := float32(ao.GetTurnData().Sight)
+
+	vpixyolistsFO := f.foPosMan.GetVPIXYObjByXYLenList(
+		viewportdata.ViewportXYLenList, aox, aoy)
+	fOs := f.makeViewportFieldObjs2(vpixyolistsFO, sightMat, sight)
+
+	vpixyolistsAO := f.aoPosMan.GetVPIXYObjByXYLenList(
+		viewportdata.ViewportXYLenList, aox, aoy)
+	aOs := f.makeViewportActiveObjs2(vpixyolistsAO, sightMat, sight)
+
+	vpixyolistsPO := f.poPosMan.GetVPIXYObjByXYLenList(
+		viewportdata.ViewportXYLenList, aox, aoy)
+	pOs := f.makeViewportCarryObjs2(vpixyolistsPO, sightMat, sight)
+
+	vpixyolistsDO := f.doPosMan.GetVPIXYObjByXYLenList(
+		viewportdata.ViewportXYLenList, aox, aoy)
+	dOs := f.makeViewportDangerObjs2(vpixyolistsDO, sightMat, sight)
+
+	// make and send NotiVPObjList
+	aoContidion := ao.GetTurnData().Condition
+	if aoContidion.TestByCondition(condition.Blind) ||
+		aoContidion.TestByCondition(condition.Invisible) {
+		// if blind, invisible add self
+		aOs = append(aOs, ao.ToPacket_ActiveObjClient(aox, aoy))
+	}
+	f.tower.SendNoti(
+		c2t_idnoti.VPObjList,
+		&c2t_obj.NotiVPObjList_data{
+			Time:          turnTime,
+			ActiveObj:     ao.ToPacket_PlayerActiveObjInfo(),
+			FloorName:     f.GetName(),
+			ActiveObjList: aOs,
+			CarryObjList:  pOs,
+			FieldObjList:  fOs,
+			DangerObjList: dOs,
+		},
+	)
 }
