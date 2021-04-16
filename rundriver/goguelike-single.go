@@ -46,7 +46,8 @@ func main() {
 		defer fn()
 	}
 
-	g2log.GlobalLogger.SetFlags(g2log.GlobalLogger.GetFlags().BitClear(logflags.LF_functionname))
+	g2log.GlobalLogger.SetFlags(g2log.GlobalLogger.GetFlags().BitClear(
+		logflags.LF_functionname | logflags.LF_date))
 	g2log.GlobalLogger.SetLevel(config.LogLevel)
 	if config.BaseLogDir != "" {
 		log, err := g2log.NewWithDstDir(
