@@ -142,6 +142,10 @@ func (tw *Tower) RoomID() string {
 	return room.RoomIDMaker.String()
 }
 
+func (tw *Tower) GetPlayerAO() *activeobject.ActiveObject {
+	return tw.playerAO
+}
+
 func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New("index").Parse(`
 	<html> <head>
@@ -207,6 +211,8 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	TowerCmd act : {{.CmdChState}} {{.GetTowerCmdActStat}}
     <br/>
     <a href="/ActiveObjRankingList?page=0" target="_blank">{{.GetID2ActiveObj}}</a>
+    <br/>
+    <a href="/ActiveObj?aoid={{.GetPlayerAO.GetUUID}}" target="_blank">{{.GetPlayerAO}}</a>
     <br/>
 	<table border=1 style="border-collapse:collapse;">
 	` + floor_HTML_header + `
