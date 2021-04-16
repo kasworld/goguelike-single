@@ -14,11 +14,16 @@ package tower
 import (
 	"html/template"
 	"net/http"
+	"time"
 
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/weblib"
 )
+
+func (tw *Tower) web_AddTurn(w http.ResponseWriter, r *http.Request) {
+	tw.turnCh <- time.Now()
+}
 
 func (tw *Tower) web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {
 	aoid := weblib.GetStringByName("aoid", "", w, r)
