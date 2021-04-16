@@ -756,6 +756,7 @@ func (f *Floor) sendViewportNoti(
 	}
 }
 
+// send viewport tiles at ao
 // called from processcmd after interfloor move, processturn
 func (f *Floor) sendTANoti2Player(ao gamei.ActiveObjectI) {
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
@@ -780,6 +781,7 @@ func (f *Floor) sendTANoti2Player(ao gamei.ActiveObjectI) {
 
 }
 
+// send viewport object list at ao
 // called from processcmd after interfloor move, processturn
 func (f *Floor) sendVPObj2Player(ao gamei.ActiveObjectI, turnTime time.Time) {
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())

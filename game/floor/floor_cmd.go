@@ -84,8 +84,8 @@ func (f *Floor) processCmd(data interface{}) {
 					FOList: fol,
 				},
 			)
-
-			f.tower.GetTurnCh() <- time.Now()
+			f.sendTANoti2Player(pk.ActiveObj)
+			f.sendVPObj2Player(pk.ActiveObj, time.Now())
 		}
 
 	case *cmd2floor.ReqRebirth2Floor:
