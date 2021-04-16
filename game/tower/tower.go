@@ -310,17 +310,30 @@ loop:
 	tw.doClose()
 }
 
+func (tw *Tower) ProcessAllCmds() {
+	for len(tw.cmdCh) > 0 {
+		tw.processCmd(<-tw.cmdCh)
+	}
+}
 func (tw *Tower) Turn(now time.Time) {
 	act := tw.interDur.BeginAct()
 	defer func() {
 		act.End()
 	}()
 	tw.turnStat.Inc()
-	for len(tw.cmdCh) > 0 {
-		tw.processCmd(<-tw.cmdCh)
-	}
-
 	var ws sync.WaitGroup
+	// process all cmds
+	tw.ProcessAllCmds()
+	for _, f := range tw.floorMan.GetFloorList() {
+		ws.Add(1)
+		go func(f gamei.FloorI) {
+			f.ProcessAllCmds()
+			ws.Done()
+		}(f)
+	}
+	ws.Wait()
+
+	// process turn
 	for _, f := range tw.floorMan.GetFloorList() {
 		ws.Add(1)
 		go func(f gamei.FloorI) {

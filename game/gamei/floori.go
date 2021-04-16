@@ -49,6 +49,7 @@ type FloorI interface {
 	GetCmdCh() chan<- interface{}
 	CmdChRate() float64
 	Turn(now time.Time)
+	ProcessAllCmds()
 	Run(ctx context.Context, queuesize int)
 
 	TotalActiveObjCount() int

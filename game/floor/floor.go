@@ -139,15 +139,17 @@ loop:
 	}
 }
 
+func (f *Floor) ProcessAllCmds() {
+	for len(f.cmdCh) > 0 {
+		f.processCmd(<-f.cmdCh)
+	}
+}
+
 func (f *Floor) Turn(now time.Time) {
 	act := f.interDur.BeginAct()
 	defer func() {
 		act.End()
 	}()
-
-	for len(f.cmdCh) > 0 {
-		f.processCmd(<-f.cmdCh)
-	}
 	f.processTurn(now)
 	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
 	if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
