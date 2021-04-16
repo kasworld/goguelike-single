@@ -145,7 +145,7 @@ func (f *Floor) Turn(now time.Time) {
 		act.End()
 	}()
 
-	for cmdCount := len(f.cmdCh); cmdCount > 0; cmdCount-- {
+	for len(f.cmdCh) > 0 {
 		f.processCmd(<-f.cmdCh)
 	}
 	f.processTurn(now)

@@ -316,7 +316,7 @@ func (tw *Tower) Turn(now time.Time) {
 		act.End()
 	}()
 	tw.turnStat.Inc()
-	for cmdCount := len(tw.cmdCh); cmdCount > 0; cmdCount-- {
+	for len(tw.cmdCh) > 0 {
 		tw.processCmd(<-tw.cmdCh)
 	}
 
