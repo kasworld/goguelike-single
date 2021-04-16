@@ -162,6 +162,7 @@ func (app *GLClient) objRecvNotiFn_VPObjList(hd c2t_packet.Header, body *c2t_obj
 	for _, v := range body.ActiveObjList {
 		if v.UUID == app.GameInfo.ActiveObjUUID {
 			app.playerActiveObjClient = v
+			app.moveGLPos()
 		}
 	}
 

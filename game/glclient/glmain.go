@@ -99,13 +99,16 @@ func (ga *GLClient) Run() error {
 }
 
 func (ga *GLClient) updateGL(renderer *renderer.Renderer, deltaTime time.Duration) {
-	aox, aoy := ga.GetPlayerXY()
-	ga.cam.SetPosition(float32(aox), float32(aoy), 100)
-	ga.pLight.SetPosition(float32(aox), float32(aoy), 100)
 
 	ga.app.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
 	renderer.Render(ga.scene, ga.cam)
 	ga.handle_t2ch()
+}
+
+func (ga *GLClient) moveGLPos() {
+	aox, aoy := ga.GetPlayerXY()
+	ga.cam.SetPosition(float32(aox), float32(aoy), 100)
+	ga.pLight.SetPosition(float32(aox), float32(aoy), 100)
 }
 
 func (ga *GLClient) resizeGLFloor() {
