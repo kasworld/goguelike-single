@@ -12,6 +12,7 @@
 package glclient
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/g3n/engine/app"
@@ -25,6 +26,7 @@ import (
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/renderer"
+	"github.com/g3n/engine/util"
 	"github.com/g3n/engine/util/helper"
 	"github.com/g3n/engine/window"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -62,6 +64,14 @@ func (ga *GLClient) glInit() error {
 
 	// Create and add an axis helper to the scene
 	ga.scene.Add(helper.NewAxes(100))
+
+	ga.frameRater = util.NewFrameRater(60)
+	ga.labelFPS = gui.NewLabel(" ")
+	ga.labelFPS.SetFontSize(20)
+	ga.labelFPS.SetLayoutParams(&gui.HBoxLayoutParams{AlignV: gui.AlignCenter})
+	lightTextColor := math32.Color4{0.8, 0.8, 0.8, 1}
+	ga.labelFPS.SetColor4(&lightTextColor)
+	ga.scene.Add(ga.labelFPS)
 	return nil
 }
 
@@ -100,10 +110,17 @@ func (ga *GLClient) Run() error {
 }
 
 func (ga *GLClient) updateGL(renderer *renderer.Renderer, deltaTime time.Duration) {
+	// Start measuring this frame
+	ga.frameRater.Start()
 
 	ga.app.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
 	renderer.Render(ga.scene, ga.cam)
 	ga.handle_t2ch()
+
+	// Control and update FPS
+	ga.frameRater.Wait()
+	ga.updateFPS()
+
 }
 
 func (ga *GLClient) moveGLPos() {
@@ -134,4 +151,17 @@ func (ga *GLClient) onResize(evname string, ev interface{}) {
 	ga.app.Gls().Viewport(0, 0, int32(width), int32(height))
 	// Update the camera's aspect ratio
 	ga.cam.SetAspect(float32(width) / float32(height))
+}
+
+// UpdateFPS updates the fps value in the window title or header label
+func (ga *GLClient) updateFPS() {
+
+	// Get the FPS and potential FPS from the frameRater
+	fps, pfps, ok := ga.frameRater.FPS(time.Duration(60) * time.Millisecond)
+	if !ok {
+		return
+	}
+
+	// Show the FPS in the header label
+	ga.labelFPS.SetText(fmt.Sprintf("%3.1f / %3.1f", fps, pfps))
 }

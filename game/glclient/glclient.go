@@ -16,7 +16,9 @@ import (
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/graphic"
+	"github.com/g3n/engine/gui"
 	"github.com/g3n/engine/light"
+	"github.com/g3n/engine/util"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
@@ -52,12 +54,15 @@ type GLClient struct {
 	t2cCh chan *c2t_packet.Packet
 
 	// g3n field
-	app      *app.Application
-	scene    *core.Node
-	cam      *camera.Camera
-	pLight   *light.Point
-	boundBox *graphic.Mesh
-	playerAO *graphic.Mesh
+	app        *app.Application
+	scene      *core.Node
+	cam        *camera.Camera
+	pLight     *light.Point
+	boundBox   *graphic.Mesh
+	playerAO   *graphic.Mesh
+	frameRater *util.FrameRater // Render loop frame rater
+	labelFPS   *gui.Label       // header FPS label
+
 }
 
 func New(
