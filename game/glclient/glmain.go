@@ -73,13 +73,14 @@ func (ga *GLClient) Run() error {
 	// Create a blue torus and add it to the scene
 	geom := geometry.NewTorus(1, .4, 12, 32, math32.Pi*2)
 	mat := material.NewStandard(math32.NewColor("DarkBlue"))
-	mesh := graphic.NewMesh(geom, mat)
-	ga.scene.Add(mesh)
+	ga.playerAO = graphic.NewMesh(geom, mat)
+	ga.scene.Add(ga.playerAO)
 
 	geoBox := geometry.NewPlane(1, 1)
 	matBox := material.NewStandard(math32.NewColor("White"))
 	ga.boundBox = graphic.NewMesh(geoBox, matBox)
 	ga.scene.Add(ga.boundBox)
+
 	// Create and add a button to the scene
 	// btn := gui.NewButton("Make Red")
 	// btn.SetPosition(100, 40)
@@ -109,6 +110,7 @@ func (ga *GLClient) moveGLPos() {
 	aox, aoy := ga.GetPlayerXY()
 	ga.cam.SetPosition(float32(aox), float32(aoy), 100)
 	ga.pLight.SetPosition(float32(aox), float32(aoy), 100)
+	ga.playerAO.SetPosition(float32(aox), float32(aoy), 0)
 }
 
 func (ga *GLClient) resizeGLFloor() {

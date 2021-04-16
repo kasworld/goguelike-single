@@ -57,6 +57,7 @@ type GLClient struct {
 	cam      *camera.Camera
 	pLight   *light.Point
 	boundBox *graphic.Mesh
+	playerAO *graphic.Mesh
 }
 
 func New(
