@@ -146,6 +146,13 @@ func (tw *Tower) GetPlayerAO() *activeobject.ActiveObject {
 	return tw.playerAO
 }
 
+func (tw *Tower) C2tChInfo() string {
+	return fmt.Sprintf("len(tw.c2tCh) %v cap(tw.c2tCh) %v", len(tw.c2tCh), cap(tw.c2tCh))
+}
+func (tw *Tower) T2cChInfo() string {
+	return fmt.Sprintf("len(tw.t2cCh) %v cap(tw.t2cCh) %v", len(tw.t2cCh), cap(tw.t2cCh))
+}
+
 func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New("index").Parse(`
 	<html> <head>
@@ -206,6 +213,10 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<a href= "/towerStat" target="_blank">Tower Achieve</a>
     <br/>
 	TowerCmd act : {{.CmdChState}} {{.GetTowerCmdActStat}}
+    <br/>
+	{{.C2tChInfo}}
+    <br/>
+	{{.T2cChInfo}}
     <br/>
 
 	<hr/>

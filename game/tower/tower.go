@@ -303,6 +303,12 @@ loop:
 				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 				break loop
 			}
+			if len(tw.c2tCh) >= cap(tw.c2tCh) {
+				g2log.Fatal("c2tCh full")
+			}
+			if len(tw.t2cCh) >= cap(tw.t2cCh) {
+				g2log.Fatal("t2cCh full")
+			}
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()
 		}
