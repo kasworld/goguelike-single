@@ -18,45 +18,45 @@ import (
 )
 
 func (v FieldObjActType) Color24() htmlcolors.Color24 {
-	return attrib[v].Color24
+	return attrib[v].color24
 }
 
 func (v FieldObjActType) Rune() string {
-	return attrib[v].Rune
+	return attrib[v].runeStr
 }
 
 func (v FieldObjActType) TrapNoti() bool {
-	return attrib[v].TrapNoti
+	return attrib[v].trapNoti
 }
 
 func (v FieldObjActType) AutoTrigger() bool {
-	return attrib[v].AutoTrigger
+	return attrib[v].autoTrigger
 }
 
 func (v FieldObjActType) TriggerRate() float64 {
-	return attrib[v].TriggerRate
+	return attrib[v].triggerRate
 }
 
-func (v FieldObjActType) SkipAOAct() bool {
-	return attrib[v].SkipAOAct
+func (v FieldObjActType) SkipThisTurnAct() bool {
+	return attrib[v].skipThisTurnAct
 }
 func (v FieldObjActType) NeedTANoti() bool {
-	return attrib[v].NeedTANoti
+	return attrib[v].needTANoti
 }
 
 func (v FieldObjActType) MustCharPlaceable() bool {
-	return attrib[v].MustCharPlaceable
+	return attrib[v].mustCharPlaceable
 }
 
 var attrib = [FieldObjActType_Count]struct {
-	Rune              string
-	TrapNoti          bool // send noti on step
-	AutoTrigger       bool
-	TriggerRate       float64 // if AutoTrigger true
-	SkipAOAct         bool
-	NeedTANoti        bool // if pos changed
-	MustCharPlaceable bool // fatal if placed at noCharPlaceable
-	Color24           htmlcolors.Color24
+	runeStr           string
+	trapNoti          bool // send noti on step
+	autoTrigger       bool
+	triggerRate       float64 // if AutoTrigger true
+	skipThisTurnAct   bool
+	needTANoti        bool // if pos changed
+	mustCharPlaceable bool // fatal if placed at noCharPlaceable
+	color24           htmlcolors.Color24
 }{
 	None: {"?", false, false, 1.0, false, false, false, htmlcolors.Black},
 

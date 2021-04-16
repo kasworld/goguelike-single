@@ -48,7 +48,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// prepare to process ao
 	ao2ActReqRsp := make(map[gamei.ActiveObjectI]*aoactreqrsp.ActReqRsp, f.aoPosMan.Count())
-	aoMapSkipTurn := make(map[string]bool) // skip noti
+	aoMapSkipThisTurn := make(map[string]bool) // skip this turn
 	aoListToProcessInTurn := make([]gamei.ActiveObjectI, 0, f.aoPosMan.Count())
 	aoAliveInFloorAtStart := make([]gamei.ActiveObjectI, 0, f.aoPosMan.Count())
 	for _, v := range f.aoPosMan.GetAllList() {
@@ -164,8 +164,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			// start explode
 			p.CurrentRadius = 0
 		}
-		if p.ActType.SkipAOAct() {
-			aoMapSkipTurn[ao.GetUUID()] = true
+		if p.ActType.SkipThisTurnAct() {
+			aoMapSkipThisTurn[ao.GetUUID()] = true
 			if arr, exist := ao2ActReqRsp[ao]; exist {
 				arr.SetDone(
 					aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
@@ -186,7 +186,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		if arr.Req.Act.SleepCancel() &&
 			ao.GetTurnData().Condition.TestByCondition(condition.Sleep) {
-			aoMapSkipTurn[ao.GetUUID()] = true
+			aoMapSkipThisTurn[ao.GetUUID()] = true
 			arr.SetDone(
 				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
 				c2t_error.ActionCanceled)
@@ -518,7 +518,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			arr.SetDone(
 				aoactreqrsp.Act{Act: c2t_idcmd.EnterPortal},
 				c2t_error.None)
-			aoMapSkipTurn[ao.GetUUID()] = true
+			aoMapSkipThisTurn[ao.GetUUID()] = true
 			g2log.Debug("manual in portal %v %v", f, ao)
 
 		case c2t_idcmd.ActTeleport:
@@ -544,7 +544,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			arr.SetDone(
 				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
 				c2t_error.None)
-			aoMapSkipTurn[ao.GetUUID()] = true
+			aoMapSkipThisTurn[ao.GetUUID()] = true
 		}
 	}
 
@@ -660,11 +660,11 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// for next turn
 	// request next turn act for user
-	f.sendViewportNoti(turnTime, aoListToProcessInTurn, aoMapSkipTurn)
+	f.sendViewportNoti(turnTime, aoListToProcessInTurn, aoMapSkipThisTurn)
 
 	// requext next turn act for ai
 	for _, ao := range aoListToProcessInTurn {
-		if _, exist := aoMapSkipTurn[ao.GetUUID()]; exist {
+		if _, exist := aoMapSkipThisTurn[ao.GetUUID()]; exist {
 			// skip leaved ao
 			continue
 		}
@@ -710,10 +710,10 @@ func (f *Floor) processCarryObj2floor() {
 func (f *Floor) sendViewportNoti(
 	turnTime time.Time,
 	aoListToProcessInTurn []gamei.ActiveObjectI,
-	aoMapSkipTurn map[string]bool) {
+	aoMapSkipThisTurn map[string]bool) {
 
 	for _, ao := range aoListToProcessInTurn {
-		if _, exist := aoMapSkipTurn[ao.GetUUID()]; exist {
+		if _, exist := aoMapSkipThisTurn[ao.GetUUID()]; exist {
 			// skip leaved ao
 			continue
 		}
