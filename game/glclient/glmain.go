@@ -27,6 +27,7 @@ import (
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/util/helper"
 	"github.com/g3n/engine/window"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 // runtime.LockOSThread
@@ -75,14 +76,18 @@ func (ga *GLClient) Run() error {
 	mesh := graphic.NewMesh(geom, mat)
 	ga.scene.Add(mesh)
 
+	geoBox := geometry.NewPlane(1, 1)
+	matBox := material.NewStandard(math32.NewColor("White"))
+	ga.boundBox = graphic.NewMesh(geoBox, matBox)
+	ga.scene.Add(ga.boundBox)
 	// Create and add a button to the scene
-	btn := gui.NewButton("Make Red")
-	btn.SetPosition(100, 40)
-	btn.SetSize(40, 40)
-	btn.Subscribe(gui.OnClick, func(name string, ev interface{}) {
-		mat.SetColor(math32.NewColor("DarkRed"))
-	})
-	ga.scene.Add(btn)
+	// btn := gui.NewButton("Make Red")
+	// btn.SetPosition(100, 40)
+	// btn.SetSize(40, 40)
+	// btn.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+	// 	mat.SetColor(math32.NewColor("DarkRed"))
+	// })
+	// ga.scene.Add(btn)
 
 	// Set background color to gray
 	ga.app.Gls().ClearColor(0.5, 0.5, 0.5, 1.0)
@@ -101,6 +106,20 @@ func (ga *GLClient) updateGL(renderer *renderer.Renderer, deltaTime time.Duratio
 	ga.app.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
 	renderer.Render(ga.scene, ga.cam)
 	ga.handle_t2ch()
+}
+
+func (ga *GLClient) resizeGLFloor() {
+	if ga.CurrentFloor != nil {
+		fw := ga.CurrentFloor.FloorInfo.GetWidth()
+		ga.boundBox.SetScaleX(float32(fw))
+		ga.boundBox.SetPositionX(float32(fw) / 2)
+
+		fh := ga.CurrentFloor.FloorInfo.GetHeight()
+		ga.boundBox.SetScaleY(float32(fh))
+		ga.boundBox.SetPositionY(float32(fh) / 2)
+	} else {
+		g2log.Warn("CurrentFloor nil")
+	}
 }
 
 // Set up callback to update viewport and camera aspect ratio when the window is resized

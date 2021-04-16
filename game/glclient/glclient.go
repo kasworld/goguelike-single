@@ -15,6 +15,7 @@ import (
 	"github.com/g3n/engine/app"
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/core"
+	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/light"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
@@ -51,10 +52,11 @@ type GLClient struct {
 	t2cCh chan *c2t_packet.Packet
 
 	// g3n field
-	app    *app.Application
-	scene  *core.Node
-	cam    *camera.Camera
-	pLight *light.Point
+	app      *app.Application
+	scene    *core.Node
+	cam      *camera.Camera
+	pLight   *light.Point
+	boundBox *graphic.Mesh
 }
 
 func New(

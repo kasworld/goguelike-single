@@ -112,6 +112,7 @@ func (app *GLClient) objRecvNotiFn_EnterFloor(hd c2t_packet.Header, body *c2t_ob
 		app.CurrentFloor = clientfloor.New(body.FI)
 	}
 	app.CurrentFloor.EnterFloor()
+	app.resizeGLFloor()
 	return nil
 }
 func (app *GLClient) objRecvNotiFn_LeaveFloor(hd c2t_packet.Header, body *c2t_obj.NotiLeaveFloor_data) error {
