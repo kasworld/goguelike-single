@@ -11,8 +11,8 @@
 
 package c2t_idcmd
 
-// SleepCancel sleep condition prevent act
-func (cmd CommandID) SleepCancel() bool {
+// SleepBlockAct sleep condition prevent act
+func (cmd CommandID) SleepBlockAct() bool {
 	return attrib[cmd].sleepCancel
 }
 
