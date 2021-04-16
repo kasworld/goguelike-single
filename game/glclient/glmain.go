@@ -44,23 +44,23 @@ func (ga *GLClient) glInit() error {
 
 	// Create perspective camera
 	ga.cam = camera.New(1)
-	ga.cam.SetPosition(0, 0, 3)
+	ga.cam.SetPosition(0, 0, 100)
 	ga.scene.Add(ga.cam)
 
 	// Set up orbit control for the camera
-	camera.NewOrbitControl(ga.cam)
+	// camera.NewOrbitControl(ga.cam)
 
 	ga.app.Subscribe(window.OnWindowSize, ga.onResize)
 	ga.onResize("", nil)
 
 	// Create and add lights to the scene
 	ga.scene.Add(light.NewAmbient(&math32.Color{1.0, 1.0, 1.0}, 0.8))
-	pointLight := light.NewPoint(&math32.Color{1, 1, 1}, 5.0)
-	pointLight.SetPosition(1, 0, 2)
-	ga.scene.Add(pointLight)
+	ga.pLight = light.NewPoint(&math32.Color{1, 1, 1}, 5.0)
+	ga.pLight.SetPosition(1, 0, 2)
+	ga.scene.Add(ga.pLight)
 
 	// Create and add an axis helper to the scene
-	ga.scene.Add(helper.NewAxes(0.5))
+	ga.scene.Add(helper.NewAxes(100))
 	return nil
 }
 
@@ -94,6 +94,10 @@ func (ga *GLClient) Run() error {
 }
 
 func (ga *GLClient) updateGL(renderer *renderer.Renderer, deltaTime time.Duration) {
+	aox, aoy := ga.GetPlayerXY()
+	ga.cam.SetPosition(float32(aox), float32(aoy), 100)
+	ga.pLight.SetPosition(float32(aox), float32(aoy), 100)
+
 	ga.app.Gls().Clear(gls.DEPTH_BUFFER_BIT | gls.STENCIL_BUFFER_BIT | gls.COLOR_BUFFER_BIT)
 	renderer.Render(ga.scene, ga.cam)
 	ga.handle_t2ch()
