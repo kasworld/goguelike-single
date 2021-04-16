@@ -112,19 +112,3 @@ func (tw *Tower) web_towerStat(w http.ResponseWriter, r *http.Request) {
 		g2log.Error("%v", err)
 	}
 }
-
-func (tw *Tower) web_Service(w http.ResponseWriter, r *http.Request) {
-	cmd := weblib.GetStringByName("cmd", "", w, r)
-	if cmd == "" {
-		g2log.Warn("Invalid cmd")
-		http.Error(w, "Invalid cmd", 404)
-		return
-	}
-	switch cmd {
-	default:
-		g2log.Fatal("invalid service cmd %v", cmd)
-	case "stop":
-		g2log.Fatal("service stop by web cmd")
-		tw.doClose()
-	}
-}

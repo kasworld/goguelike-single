@@ -51,7 +51,6 @@ func (tw *Tower) initAdminWeb() {
 
 	webMux.HandleFunc("/favicon.ico", tw.web_FaviconIco)
 
-	webMux.HandleFunc("/service", tw.web_Service)
 	webMux.HandleFunc("/addturn", tw.web_AddTurn)
 
 	webMux.HandleFuncAuth("/", tw.web_TowerInfo)
@@ -154,12 +153,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	</head>
 	<body>
 
-	service cmd <a href= "/service?cmd=stop" target="_blank">stop</a> 
-	<hr/>
-
-	<a href="/ActiveObj?aoid={{.GetPlayerAO.GetUUID}}" target="_blank">{{.GetPlayerAO}}</a>
-    <br/>
-
 	BuildDate : {{.BuildDate.Format "2006-01-02T15:04:05Z07:00"}}
 	<br/>
 	Version: {{.GetGameInfo.Version}}
@@ -214,8 +207,14 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
     <br/>
 	TowerCmd act : {{.CmdChState}} {{.GetTowerCmdActStat}}
     <br/>
-    <a href="/ActiveObjRankingList?page=0" target="_blank">{{.GetID2ActiveObj}}</a>
+
+	<hr/>
+	<a href="/ActiveObjRankingList?page=0" target="_blank">{{.GetID2ActiveObj}}</a>
     <br/>
+	<a href="/ActiveObj?aoid={{.GetPlayerAO.GetUUID}}" target="_blank">{{.GetPlayerAO}}</a>
+    <br/>
+    <br/>
+
 	<table border=1 style="border-collapse:collapse;">
 	` + floor_HTML_header + `
 	{{range $i, $v := .GetFloorManager.GetFloorList}}
