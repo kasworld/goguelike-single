@@ -49,7 +49,7 @@ func (app *GLClient) sendReqObjWithRspFn(cmd c2t_idcmd.CommandID, body interface
 }
 
 func (app *GLClient) handle_t2ch() {
-	if len(app.t2cCh) >= 0 {
+	for len(app.t2cCh) > 0 {
 		rpk := <-app.t2cCh
 		g2log.TraceClient("recv %v", rpk.Header)
 		switch rpk.Header.FlowType {
