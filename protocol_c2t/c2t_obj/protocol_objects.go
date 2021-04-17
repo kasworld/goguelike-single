@@ -145,10 +145,10 @@ type PlayerActiveObjInfo struct {
 	Death      int
 	Kill       int
 	Sight      float64
-	HP         int
-	HPMax      int
-	SP         int
-	SPMax      int
+	HP         float64
+	HPMax      float64
+	SP         float64
+	SPMax      float64
 	AIPlan     aiplan.AIPlan
 	EquippedPo []*EquipClient
 	EquipBag   []*EquipClient

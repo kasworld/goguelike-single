@@ -44,8 +44,8 @@ type GLClient struct {
 	playerActiveObjClient *c2t_obj.ActiveObjClient
 	onFieldObj            *c2t_obj.FieldObjClient
 	IsOverLoad            bool
-	HPdiff                int
-	SPdiff                int
+	HPdiff                float64
+	SPdiff                float64
 	level                 int
 
 	// client to tower packet channel

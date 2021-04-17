@@ -80,10 +80,10 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjI
 		Kill:    int(ao.achieveStat.Get(achievetype.Kill)),
 		Sight:   ao.AOTurnData.Sight,
 
-		HP:    int(ao.hp),
-		HPMax: int(ao.AOTurnData.HPMax),
-		SP:    int(ao.sp),
-		SPMax: int(ao.AOTurnData.SPMax),
+		HP:    ao.hp,
+		HPMax: ao.AOTurnData.HPMax,
+		SP:    ao.sp,
+		SPMax: ao.AOTurnData.SPMax,
 
 		AIPlan: ao.ai.RunningPlanList.GetCurrentPlan(),
 
