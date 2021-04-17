@@ -23,7 +23,7 @@ func (f *Floor) FindUsablePortalPairAt(
 
 	srcPortal, ok := f.foPosMan.Get1stObjAt(x, y).(*fieldobject.FieldObject)
 	if !ok {
-		return nil, nil, fmt.Errorf("not found src %v %v", x, y)
+		return nil, nil, fmt.Errorf("not found src portal at (%v %v)", x, y)
 	}
 	if srcPortal.ActType != fieldobjacttype.PortalInOut &&
 		srcPortal.ActType != fieldobjacttype.PortalIn &&
