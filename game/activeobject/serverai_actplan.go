@@ -214,8 +214,10 @@ func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 	fl := ao.currentFloor
 	inPortal, outPortal, err := fl.FindUsablePortalPairAt(sai.aox, sai.aoy)
 	if err != nil {
-		if inPortal != nil { // no srcPortal
+		if inPortal != nil { // srcPortal found
 			g2log.Error("%v %v %v", fl, ao, err)
+		} else {
+			// igonore no srcPortal
 		}
 		return false
 	}
