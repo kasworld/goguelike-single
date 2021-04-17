@@ -295,9 +295,6 @@ loop:
 		case <-timerInfoTk.C:
 			tw.cmdActStat.UpdateLap()
 			tw.turnStat.UpdateLap()
-			if len(tw.cmdCh) > cap(tw.cmdCh)/2 {
-				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
-			}
 			if len(tw.cmdCh) >= cap(tw.cmdCh) {
 				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 				break loop
