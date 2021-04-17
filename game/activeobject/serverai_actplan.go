@@ -214,7 +214,9 @@ func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 	fl := ao.currentFloor
 	inPortal, outPortal, err := fl.FindUsablePortalPairAt(sai.aox, sai.aoy)
 	if err != nil {
-		g2log.Error("%v %v %v", fl, ao, err)
+		if inPortal != nil { // no srcPortal
+			g2log.Error("%v %v %v", fl, ao, err)
+		}
 		return false
 	}
 	sai.fieldObjUseTime[outPortal.ID] = sai.turnTime

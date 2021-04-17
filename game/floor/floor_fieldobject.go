@@ -28,19 +28,19 @@ func (f *Floor) FindUsablePortalPairAt(
 	if srcPortal.ActType != fieldobjacttype.PortalInOut &&
 		srcPortal.ActType != fieldobjacttype.PortalIn &&
 		srcPortal.ActType != fieldobjacttype.PortalAutoIn {
-		return nil, nil, fmt.Errorf("no in able portal %v", srcPortal)
+		return srcPortal, nil, fmt.Errorf("no in able portal %v", srcPortal)
 	}
 	fm := f.tower.GetFloorManager()
-	if fm == nil {
-		return nil, nil, fmt.Errorf("floor manager not ready")
-	}
+	// if fm == nil {
+	// 	return srcPortal, nil, fmt.Errorf("floor manager not ready")
+	// }
 	dstPortal := fm.FindPortalByID(srcPortal.DstPortalID)
 	if dstPortal == nil {
-		return nil, nil, fmt.Errorf("not found dest %v", dstPortal)
+		return srcPortal, nil, fmt.Errorf("not found dest %v", dstPortal)
 	}
 	if dstPortal.ActType != fieldobjacttype.PortalOut &&
 		dstPortal.ActType != fieldobjacttype.PortalInOut {
-		return nil, nil, fmt.Errorf("not out-able %v", dstPortal)
+		return srcPortal, dstPortal, fmt.Errorf("not out-able %v", dstPortal)
 	}
 	return srcPortal, dstPortal, nil
 }
