@@ -130,7 +130,7 @@ func (app *GLClient) objRecvNotiFn_Death(hd c2t_packet.Header, body *c2t_obj.Not
 	return nil
 }
 func (app *GLClient) objRecvNotiFn_ReadyToRebirth(hd c2t_packet.Header, body *c2t_obj.NotiReadyToRebirth_data) error {
-	go app.sendReqObjWithRspFn(c2t_idcmd.Rebirth,
+	app.sendReqObjWithRspFn(c2t_idcmd.Rebirth,
 		&c2t_obj.ReqRebirth_data{},
 		func(hd c2t_packet.Header, rsp interface{}) error {
 			return nil
