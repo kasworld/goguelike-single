@@ -13,5 +13,5 @@ package gameconst
 
 // service const
 const (
-	SendBufferSize = 10
+	SendBufferSize = 100
 )
