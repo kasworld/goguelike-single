@@ -221,7 +221,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 				break loop
 			case now := <-tw.turnCh:
 				if len(tw.turnCh) > 1 {
-					g2log.Warn("remove dup turn req")
+					g2log.Warn("remove dup turn req %v", len(tw.turnCh))
 					now = <-tw.turnCh
 				}
 				tw.Turn(now)
