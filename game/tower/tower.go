@@ -296,14 +296,16 @@ loop:
 			tw.cmdActStat.UpdateLap()
 			tw.turnStat.UpdateLap()
 			if len(tw.cmdCh) >= cap(tw.cmdCh) {
-				g2log.Fatal("Tower cmdch overloaded %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
+				g2log.Fatal("cmdCh full %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 				break loop
 			}
 			if len(tw.c2tCh) >= cap(tw.c2tCh) {
-				g2log.Fatal("c2tCh full")
+				g2log.Fatal("c2tCh full %v/%v", len(tw.c2tCh), cap(tw.c2tCh))
+				break loop
 			}
 			if len(tw.t2cCh) >= cap(tw.t2cCh) {
-				g2log.Fatal("t2cCh full")
+				g2log.Fatal("t2cCh full %v/%v", len(tw.t2cCh), cap(tw.t2cCh))
+				break loop
 			}
 		case <-rankMakeTk.C:
 			go tw.makeActiveObjExpRank()

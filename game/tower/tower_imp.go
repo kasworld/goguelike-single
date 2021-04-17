@@ -12,7 +12,6 @@
 package tower
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
@@ -40,10 +39,6 @@ func (tw *Tower) GetCmdCh() chan<- interface{} {
 
 func (tw *Tower) GetTurnCh() chan<- time.Time {
 	return tw.turnCh
-}
-
-func (tw *Tower) CmdChState() string {
-	return fmt.Sprintf("%v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 }
 
 func (tw *Tower) GetInterDur() *intervalduration.IntervalDuration {

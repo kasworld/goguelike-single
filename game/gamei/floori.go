@@ -47,7 +47,6 @@ type FloorI interface {
 	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 
 	GetCmdCh() chan<- interface{}
-	CmdChRate() float64
 	Turn(now time.Time)
 	ProcessAllCmds()
 	Run(ctx context.Context, queuesize int)
