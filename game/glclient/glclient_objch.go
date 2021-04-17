@@ -57,6 +57,7 @@ func (app *GLClient) handle_t2ch() {
 	switch rpk.Header.FlowType {
 	default:
 		g2log.Fatal("invalid packet type %v %v", rpk.Header, rpk.Body)
+		return
 	case c2t_packet.Response:
 		if err := app.pid2recv.HandleRsp(rpk.Header, rpk.Body); err != nil {
 			g2log.Fatal("%v %v %v %v", app, rpk.Header, rpk.Body, err)
