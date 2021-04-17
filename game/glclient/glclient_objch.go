@@ -143,7 +143,6 @@ func (app *GLClient) objRecvNotiFn_Rebirthed(hd c2t_packet.Header, body *c2t_obj
 }
 
 func (app *GLClient) objRecvNotiFn_VPObjList(hd c2t_packet.Header, body *c2t_obj.NotiVPObjList_data) error {
-	app.OLNotiData = body
 	oldOLNotiData := app.OLNotiData
 	app.OLNotiData = body
 	newOLNotiData := body
