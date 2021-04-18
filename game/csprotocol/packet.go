@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package packet
+package csprotocol
 
 import (
 	"github.com/kasworld/goguelike-single/enum/flowtype"
