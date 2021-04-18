@@ -169,8 +169,9 @@ func (tw *Tower) objAPIFn_ReqTurnAction(robj *csprotocol.ReqTurnAction) (
 	switch robj.Act {
 	default:
 		tw.playerAO.SetReq2Handle(&aoactreqrsp.Act{
-			Act: robj.Act,
-			Dir: robj.Dir,
+			Act:  robj.Act,
+			Dir:  robj.Dir,
+			UUID: robj.UUID,
 		})
 	case turnaction.Rebirth:
 		if err := tw.playerAO.TryRebirth(); err != nil {
