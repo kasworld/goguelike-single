@@ -113,8 +113,6 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 }
 
 func (tw *Tower) ServiceInit() error {
-	g2log.TraceService("%v", tw.config.StringForm())
-
 	var err error
 
 	gamedata.ActiveObjNameList, err = loadlines.LoadLineList(
@@ -162,7 +160,6 @@ func (tw *Tower) ServiceInit() error {
 		NickName: tw.Config().NickName,
 	}
 
-	g2log.TraceService("%v", tw.gameInfo.StringForm())
 	fmt.Printf("%v\n", tw.gameInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 		"http://localhost", tw.config.AdminPort, tw.config.WebAdminID, tw.config.WebAdminPass)

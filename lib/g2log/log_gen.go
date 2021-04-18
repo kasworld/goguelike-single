@@ -70,45 +70,29 @@ func (ll LL_Type) TestAt(n int) bool {
 }
 
 const (
-	LL_Fatal          LL_Type = 1 << iota //
-	LL_Error                              //
-	LL_Warn                               //
-	LL_TraceService                       //
-	LL_Monitor                            //
-	LL_Debug                              //
-	LL_AdminAudit                         //
-	LL_Analysis                           //
-	LL_TraceUser                          //
-	LL_TraceClient                        //
-	LL_TraceActiveObj                     //
-	LL_TraceAI                            //
-	LL_TraceTask                          //
-	LL_TraceSuspect                       //
-	LL_TraceRPC                           //
+	LL_Fatal        LL_Type = 1 << iota //
+	LL_Error                            //
+	LL_Warn                             //
+	LL_Monitor                          //
+	LL_Debug                            //
+	LL_TraceClient                      //
+	LL_TraceService                     //
 
 	LL_END
 	LL_All   = LL_END - 1
-	LL_Count = 15
+	LL_Count = 7
 )
 
 var leveldata = map[LL_Type]string{
-	1:     "Fatal",
-	2:     "Error",
-	4:     "Warn",
-	8:     "TraceService",
-	16:    "Monitor",
-	32:    "Debug",
-	64:    "AdminAudit",
-	128:   "Analysis",
-	256:   "TraceUser",
-	512:   "TraceClient",
-	1024:  "TraceActiveObj",
-	2048:  "TraceAI",
-	4096:  "TraceTask",
-	8192:  "TraceSuspect",
-	16384: "TraceRPC",
+	1:  "Fatal",
+	2:  "Error",
+	4:  "Warn",
+	8:  "Monitor",
+	16: "Debug",
+	32: "TraceClient",
+	64: "TraceService",
 
-	32768: "END",
+	128: "END",
 }
 
 //////////////////////////////////////////////////////////////////
@@ -347,17 +331,6 @@ func (l *LogBase) Warn(format string, v ...interface{}) {
 	}
 }
 
-func (l *LogBase) TraceService(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceService) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_TraceService, format, v...)
-	err := l.Output(LL_TraceService, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func (l *LogBase) Monitor(format string, v ...interface{}) {
 	if !l.GetLevel().IsLevel(LL_Monitor) {
 		return
@@ -380,39 +353,6 @@ func (l *LogBase) Debug(format string, v ...interface{}) {
 	}
 }
 
-func (l *LogBase) AdminAudit(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_AdminAudit) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_AdminAudit, format, v...)
-	err := l.Output(LL_AdminAudit, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (l *LogBase) Analysis(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_Analysis) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_Analysis, format, v...)
-	err := l.Output(LL_Analysis, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (l *LogBase) TraceUser(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceUser) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_TraceUser, format, v...)
-	err := l.Output(LL_TraceUser, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func (l *LogBase) TraceClient(format string, v ...interface{}) {
 	if !l.GetLevel().IsLevel(LL_TraceClient) {
 		return
@@ -424,56 +364,12 @@ func (l *LogBase) TraceClient(format string, v ...interface{}) {
 	}
 }
 
-func (l *LogBase) TraceActiveObj(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceActiveObj) {
+func (l *LogBase) TraceService(format string, v ...interface{}) {
+	if !l.GetLevel().IsLevel(LL_TraceService) {
 		return
 	}
-	s := l.Format2Bytes(1, LL_TraceActiveObj, format, v...)
-	err := l.Output(LL_TraceActiveObj, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (l *LogBase) TraceAI(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceAI) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_TraceAI, format, v...)
-	err := l.Output(LL_TraceAI, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (l *LogBase) TraceTask(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceTask) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_TraceTask, format, v...)
-	err := l.Output(LL_TraceTask, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (l *LogBase) TraceSuspect(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceSuspect) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_TraceSuspect, format, v...)
-	err := l.Output(LL_TraceSuspect, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func (l *LogBase) TraceRPC(format string, v ...interface{}) {
-	if !l.GetLevel().IsLevel(LL_TraceRPC) {
-		return
-	}
-	s := l.Format2Bytes(1, LL_TraceRPC, format, v...)
-	err := l.Output(LL_TraceRPC, s)
+	s := l.Format2Bytes(1, LL_TraceService, format, v...)
+	err := l.Output(LL_TraceService, s)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -515,17 +411,6 @@ func Warn(format string, v ...interface{}) {
 	}
 }
 
-func TraceService(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceService) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceService, format, v...)
-	err := GlobalLogger.Output(LL_TraceService, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func Monitor(format string, v ...interface{}) {
 	if !GlobalLogger.GetLevel().IsLevel(LL_Monitor) {
 		return
@@ -548,39 +433,6 @@ func Debug(format string, v ...interface{}) {
 	}
 }
 
-func AdminAudit(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_AdminAudit) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_AdminAudit, format, v...)
-	err := GlobalLogger.Output(LL_AdminAudit, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func Analysis(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_Analysis) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_Analysis, format, v...)
-	err := GlobalLogger.Output(LL_Analysis, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func TraceUser(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceUser) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceUser, format, v...)
-	err := GlobalLogger.Output(LL_TraceUser, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func TraceClient(format string, v ...interface{}) {
 	if !GlobalLogger.GetLevel().IsLevel(LL_TraceClient) {
 		return
@@ -592,56 +444,12 @@ func TraceClient(format string, v ...interface{}) {
 	}
 }
 
-func TraceActiveObj(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceActiveObj) {
+func TraceService(format string, v ...interface{}) {
+	if !GlobalLogger.GetLevel().IsLevel(LL_TraceService) {
 		return
 	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceActiveObj, format, v...)
-	err := GlobalLogger.Output(LL_TraceActiveObj, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func TraceAI(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceAI) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceAI, format, v...)
-	err := GlobalLogger.Output(LL_TraceAI, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func TraceTask(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceTask) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceTask, format, v...)
-	err := GlobalLogger.Output(LL_TraceTask, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func TraceSuspect(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceSuspect) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceSuspect, format, v...)
-	err := GlobalLogger.Output(LL_TraceSuspect, s)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func TraceRPC(format string, v ...interface{}) {
-	if !GlobalLogger.GetLevel().IsLevel(LL_TraceRPC) {
-		return
-	}
-	s := GlobalLogger.Format2Bytes(1, LL_TraceRPC, format, v...)
-	err := GlobalLogger.Output(LL_TraceRPC, s)
+	s := GlobalLogger.Format2Bytes(1, LL_TraceService, format, v...)
+	err := GlobalLogger.Output(LL_TraceService, s)
 	if err != nil {
 		fmt.Println(err)
 	}

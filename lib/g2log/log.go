@@ -57,8 +57,8 @@ func init() {
 }
 
 const (
-	LL_ServiceDefault = LL_Fatal | LL_Error | LL_Warn | LL_TraceService | LL_TraceUser | LL_AdminAudit
-	LL_TestDefault    = LL_Fatal | LL_Error | LL_Warn | LL_TraceService | LL_TraceUser | LL_Debug | LL_AdminAudit
+	LL_ServiceDefault = LL_Fatal | LL_Error | LL_Warn
+	LL_TestDefault    = LL_Fatal | LL_Error | LL_Warn | LL_Debug
 )
 
 //////////////////////////////////////////////////////////////////

@@ -86,7 +86,6 @@ func (fm *FloorManager) Init(rnd *g2rand.G2Rand) error {
 		if fm.startFloor == nil {
 			fm.startFloor = f
 		}
-		g2log.TraceService("Floor generated %v", f)
 
 		if oldFloor, exist := fm.floorName2Floor[f.GetName()]; exist {
 			return fmt.Errorf("floor name duplicate %v %v", oldFloor, f)

@@ -70,7 +70,6 @@ func (tw *Tower) initAdminWeb() {
 	webMux.HandleFuncAuth("/terraintile", tw.web_TerrainTile)
 
 	authData.AddAllActionName(tw.config.WebAdminID)
-	g2log.TraceService("%v", webMux)
 
 	tw.adminWeb = &http.Server{
 		Handler: webMux,

@@ -138,7 +138,7 @@ func (f *Floor) aoDieDropCarryObj(ao gamei.ActiveObjectI, aox, aoy int, p gamei.
 	}
 	if err := f.placeCarryObj2FloorAt(aox, aoy, co2Drop); err != nil {
 		// place fail is NOT drop fail
-		g2log.TraceActiveObj("CarryObj place fail po lost, %v %v", f, err)
+		g2log.Debug("CarryObj place fail po lost, %v %v", f, err)
 	}
 	ao.GetAchieveStat().Inc(achievetype.DropCarryObj)
 	return nil
@@ -315,7 +315,7 @@ func (f *Floor) aoDropCarryObj(ao gamei.ActiveObjectI, aox, aoy int, p gamei.Car
 	}
 	if err := f.placeCarryObj2FloorAt(aox, aoy, po); err != nil {
 		// place fail is NOT drop fail
-		g2log.TraceActiveObj("CarryObj place fail po lost, %v %v", f, err)
+		g2log.Debug("CarryObj place fail po lost, %v %v", f, err)
 	}
 	ao.GetAchieveStat().Inc(achievetype.DropCarryObj)
 	return nil
