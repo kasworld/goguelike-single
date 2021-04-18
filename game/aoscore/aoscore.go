@@ -20,9 +20,9 @@ import (
 	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 )
 
 func init() {
@@ -39,7 +39,7 @@ type ActiveObjScore struct {
 	UUID        string
 	NickName    string
 	AchieveStat achievetype_vector.AchieveTypeVector `prettystring:"simple"`
-	ActionStat  c2t_idcmd_stats.CommandIDStat        `prettystring:"simple"`
+	ActionStat  turnaction_vector.TurnActionVector   `prettystring:"simple"`
 	Exp         float64
 	Wealth      float64
 	BornFaction factiontype.FactionType

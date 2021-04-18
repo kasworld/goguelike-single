@@ -17,11 +17,11 @@ import (
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
 type CarryingObjectI interface {
-	ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor
+	ToPacket_CarryObjClientOnFloor(x, y int) *csprotocol.CarryObjClientOnFloor
 	GetRemainTurnInFloor() int
 	DecRemainTurnInFloor() int
 	SetRemainTurnInFloor()
@@ -34,7 +34,7 @@ type CarryingObjectI interface {
 
 type EquipObjI interface {
 	CarryingObjectI
-	ToPacket_EquipClient() *c2t_obj.EquipClient
+	ToPacket_EquipClient() *csprotocol.EquipClient
 
 	// bias, faction
 	GetEquipType() equipslottype.EquipSlotType
@@ -43,7 +43,7 @@ type EquipObjI interface {
 
 type PotionI interface {
 	CarryingObjectI
-	ToPacket_PotionClient() *c2t_obj.PotionClient
+	ToPacket_PotionClient() *csprotocol.PotionClient
 	GetPotionType() potiontype.PotionType
 }
 
@@ -56,5 +56,5 @@ type MoneyI interface {
 type ScrollI interface {
 	CarryingObjectI
 	GetScrollType() scrolltype.ScrollType
-	ToPacket_ScrollClient() *c2t_obj.ScrollClient
+	ToPacket_ScrollClient() *csprotocol.ScrollClient
 }

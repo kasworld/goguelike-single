@@ -67,6 +67,8 @@ type ReqTurnAction struct {
 	Dir  way9type.Way9Type
 	UUID string
 }
+type RspTurnAction struct {
+}
 
 ////////////////////////////////////////////////////////////////////
 // admin

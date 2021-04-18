@@ -18,8 +18,8 @@ import (
 	"github.com/kasworld/goguelike-single/enum/decaytype"
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 var FOIDMaker = idu64str.New("FOID")
@@ -81,8 +81,8 @@ func (p *FieldObject) GetActType() fieldobjacttype.FieldObjActType {
 	return p.ActType
 }
 
-func (p *FieldObject) ToPacket_FieldObjClient(x, y int) *c2t_obj.FieldObjClient {
-	rtn := &c2t_obj.FieldObjClient{
+func (p *FieldObject) ToPacket_FieldObjClient(x, y int) *csprotocol.FieldObjClient {
+	rtn := &csprotocol.FieldObjClient{
 		ID:          p.ID,
 		X:           x,
 		Y:           y,

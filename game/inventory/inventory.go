@@ -17,8 +17,8 @@ import (
 
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
 	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 // equip, bag is exclusive
@@ -59,8 +59,8 @@ func (inv *Inventory) getFromEquipByUUID(id string) (gamei.EquipObjI, error) {
 	return nil, fmt.Errorf("not in equipSlot %v", id)
 }
 
-func (inv *Inventory) ToPacket_EquipClient() []*c2t_obj.EquipClient {
-	var EquippedPo []*c2t_obj.EquipClient
+func (inv *Inventory) ToPacket_EquipClient() []*csprotocol.EquipClient {
+	var EquippedPo []*csprotocol.EquipClient
 	for _, v := range inv.equipSlot {
 		if v == nil {
 			continue
@@ -71,16 +71,16 @@ func (inv *Inventory) ToPacket_EquipClient() []*c2t_obj.EquipClient {
 }
 
 func (inv *Inventory) ToPacket_InvenInfos() (
-	[]*c2t_obj.EquipClient,
-	[]*c2t_obj.EquipClient,
-	[]*c2t_obj.PotionClient,
-	[]*c2t_obj.ScrollClient,
+	[]*csprotocol.EquipClient,
+	[]*csprotocol.EquipClient,
+	[]*csprotocol.PotionClient,
+	[]*csprotocol.ScrollClient,
 	int,
 ) {
-	var EquippedPo []*c2t_obj.EquipClient
-	var equipBag []*c2t_obj.EquipClient
-	var potionBag []*c2t_obj.PotionClient
-	var scrollBag []*c2t_obj.ScrollClient
+	var EquippedPo []*csprotocol.EquipClient
+	var equipBag []*csprotocol.EquipClient
+	var potionBag []*csprotocol.PotionClient
+	var scrollBag []*csprotocol.ScrollClient
 	for _, v := range inv.equipSlot {
 		if v == nil {
 			continue

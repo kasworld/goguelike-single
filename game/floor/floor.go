@@ -28,7 +28,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_slice"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
 	"github.com/kasworld/intervalduration"
 )
 
@@ -174,7 +173,6 @@ func (f *Floor) processAgeing() {
 			// send ageing noti
 			if ao.GetActiveObjType() == aotype.User {
 				f.tower.SendNoti(
-					c2t_idnoti.Ageing,
 					NotiAgeing,
 				)
 			}

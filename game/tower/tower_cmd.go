@@ -14,12 +14,12 @@ package tower
 import (
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
+	"github.com/kasworld/goguelike-single/enum/returncode"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 func (tw *Tower) processCmd(data interface{}) {
@@ -48,7 +48,7 @@ func (tw *Tower) processCmd(data interface{}) {
 
 func (tw *Tower) Call_AdminFloorMove(
 	ActiveObj gamei.ActiveObjectI,
-	RecvPacket *c2t_obj.ReqAdminFloorMove_data) c2t_error.ErrorCode {
+	RecvPacket *csprotocol.ReqAdminFloorMove) returncode.ReturnCode {
 
 	switch cmd := RecvPacket.Floor; cmd {
 	case "Before":
@@ -56,7 +56,7 @@ func (tw *Tower) Call_AdminFloorMove(
 		aoFloorIndex, err := tw.floorMan.GetFloorIndexByName(aoFloor.GetName())
 		if err != nil {
 			g2log.Error("floor not found %v", aoFloor)
-			return c2t_error.ObjectNotFound
+			return returncode.ObjectNotFound
 		}
 		dstFloor := tw.floorMan.GetFloorByIndexWrap(aoFloorIndex - 1)
 		x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
@@ -65,16 +65,16 @@ func (tw *Tower) Call_AdminFloorMove(
 		}
 		if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
 			g2log.Fatal("%v", err)
-			return c2t_error.ActionProhibited
+			return returncode.ActionProhibited
 		}
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
-		return c2t_error.None
+		return returncode.Success
 	case "Next":
 		aoFloor := tw.ao2Floor.GetFloorByActiveObjID(ActiveObj.GetUUID())
 		aoFloorIndex, err := tw.floorMan.GetFloorIndexByName(aoFloor.GetName())
 		if err != nil {
 			g2log.Error("floor not found %v", aoFloor)
-			return c2t_error.ObjectNotFound
+			return returncode.ObjectNotFound
 		}
 		dstFloor := tw.floorMan.GetFloorByIndexWrap(aoFloorIndex + 1)
 		x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
@@ -83,15 +83,15 @@ func (tw *Tower) Call_AdminFloorMove(
 		}
 		if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
 			g2log.Fatal("%v", err)
-			return c2t_error.ActionProhibited
+			return returncode.ActionProhibited
 		}
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
-		return c2t_error.None
+		return returncode.Success
 	default:
 		dstFloor := tw.floorMan.GetFloorByName(cmd)
 		if dstFloor == nil {
 			g2log.Error("floor not found %v", cmd)
-			return c2t_error.ObjectNotFound
+			return returncode.ObjectNotFound
 		}
 		x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 		if err != nil {
@@ -99,20 +99,20 @@ func (tw *Tower) Call_AdminFloorMove(
 		}
 		if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
 			g2log.Fatal("%v", err)
-			return c2t_error.ActionProhibited
+			return returncode.ActionProhibited
 		}
 		ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
-		return c2t_error.None
+		return returncode.Success
 	}
 }
 
 func (tw *Tower) Call_FloorMove(
-	ActiveObj gamei.ActiveObjectI, FloorName string) c2t_error.ErrorCode {
+	ActiveObj gamei.ActiveObjectI, FloorName string) returncode.ReturnCode {
 
 	dstFloor := tw.floorMan.GetFloorByName(FloorName)
 	if dstFloor == nil {
 		g2log.Error("floor not found %v", FloorName)
-		return c2t_error.ObjectNotFound
+		return returncode.ObjectNotFound
 	}
 	x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 	if err != nil {
@@ -120,9 +120,9 @@ func (tw *Tower) Call_FloorMove(
 	}
 	if err := tw.ao2Floor.ActiveObjMoveToFloor(dstFloor, ActiveObj, x, y); err != nil {
 		g2log.Fatal("%v", err)
-		return c2t_error.ActionProhibited
+		return returncode.ActionProhibited
 	}
-	return c2t_error.None
+	return returncode.Success
 }
 
 func (tw *Tower) Call_ActiveObjUsePortal(

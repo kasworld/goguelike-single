@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike-single/enum/tile_flag"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/attackcheck"
@@ -26,14 +27,13 @@ import (
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
 func ai_initPlanNone(ao *ActiveObject, sai *ServerAIState) int {
 	return 0
 }
 func ai_actPlanNone(ao *ActiveObject, sai *ServerAIState) bool {
-	ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Meditate, way9type.Center, "")
+	ao.sendActNotiPacket2Floor(sai, turnaction.Meditate, way9type.Center, "")
 	return false
 }
 
@@ -68,7 +68,7 @@ func ai_actPlanMove2Dest(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	// dest arrived
@@ -94,7 +94,7 @@ func ai_actPlanStrollAround(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	// dest arrived
@@ -135,7 +135,7 @@ func ai_actPlanMoveStraight3(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	sai.movePath2Dest = append(sai.movePath2Dest, [2]int{sai.aox, sai.aoy})
-	ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, sai.moveDir, "")
+	ao.sendActNotiPacket2Floor(sai, turnaction.Move, sai.moveDir, "")
 	return true
 }
 
@@ -171,7 +171,7 @@ func ai_actPlanMoveStraight5(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	sai.movePath2Dest = append(sai.movePath2Dest, [2]int{sai.aox, sai.aoy})
-	ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, sai.moveDir, "")
+	ao.sendActNotiPacket2Floor(sai, turnaction.Move, sai.moveDir, "")
 	return true
 }
 
@@ -207,7 +207,7 @@ func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	// dest arrived
@@ -223,7 +223,7 @@ func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 	}
 	sai.fieldObjUseTime[outPortal.ID] = sai.turnTime
 	sai.fieldObjUseTime[inPortal.ID] = sai.turnTime
-	ao.sendActNotiPacket2Floor(sai, c2t_idcmd.EnterPortal, way9type.Center, "")
+	ao.sendActNotiPacket2Floor(sai, turnaction.EnterPortal, way9type.Center, "")
 	// plan change to other
 	return false
 }
@@ -262,15 +262,15 @@ func ai_actPlanMoveToRecycler(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	// dest arrived
 	o := ao.currentFloor.GetFieldObjPosMan().Get1stObjAt(sai.aox, sai.aoy)
 	if _, ok := o.(*fieldobject.FieldObject); ok {
 		sai.fieldObjUseTime[o.GetUUID()] = time.Now()
-		// sai.sendPacket2Floor(&c2t_obj.ReqActiveObjAction_data{
-		// 	Act: c2t_idcmd.Recycle,
+		// sai.sendPacket2Floor(&csprotocol.ReqActiveObjAction{
+		// 	Act: turnaction.Recycle,
 		// })
 	}
 	// plan change to other
@@ -317,7 +317,7 @@ func ai_actPlanRechargeSafe(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 
@@ -385,7 +385,7 @@ func ai_actPlanRechargeCan(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	// dest arrived
@@ -450,14 +450,14 @@ func ai_actPlanAttack(ao *ActiveObject, sai *ServerAIState) bool {
 	attackdir, canAttack := attackcheck.CanBasicAttackTo(
 		ter.GetTiles(), sai.aox, sai.aoy, dstx, dsty)
 	if canAttack {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Attack, attackdir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Attack, attackdir, "")
 		return true
 	}
 
 	attackdir, canAttack = attackcheck.CanLongAttackTo(
 		ter.GetTiles(), sai.aox, sai.aoy, dstx, dsty)
 	if canAttack {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.AttackLong, attackdir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.AttackLong, attackdir, "")
 		return true
 	}
 
@@ -467,7 +467,7 @@ func ai_actPlanAttack(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	return false
@@ -526,11 +526,11 @@ func ai_actPlanPickupCarryObj(ao *ActiveObject, sai *ServerAIState) bool {
 		return false
 	}
 	if moveDir != way9type.Center {
-		ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Move, moveDir, "")
+		ao.sendActNotiPacket2Floor(sai, turnaction.Move, moveDir, "")
 		return true
 	}
 	// dest arrived
-	ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Pickup, way9type.Center,
+	ao.sendActNotiPacket2Floor(sai, turnaction.Pickup, way9type.Center,
 		sai.planCarryObj.GetUUID())
 	// plan change to other
 	return false
@@ -545,14 +545,14 @@ func ai_initPlanEquip(ao *ActiveObject, sai *ServerAIState) int {
 func ai_actPlanEquip(ao *ActiveObject, sai *ServerAIState) bool {
 	for _, po := range ao.GetInven().GetEquipSlot() {
 		if po != nil && ao.needUnEquipCarryObj(sai, po.GetBias()) {
-			ao.sendActNotiPacket2Floor(sai, c2t_idcmd.UnEquip, way9type.Center,
+			ao.sendActNotiPacket2Floor(sai, turnaction.UnEquip, way9type.Center,
 				po.GetUUID())
 			return false
 		}
 	}
 	for _, po := range ao.GetInven().GetEquipList() {
 		if po != nil && ao.isBetterCarryObj2(sai, po.GetEquipType(), po.GetBias()) {
-			ao.sendActNotiPacket2Floor(sai, c2t_idcmd.Equip, way9type.Center,
+			ao.sendActNotiPacket2Floor(sai, turnaction.Equip, way9type.Center,
 				po.GetUUID())
 			return false
 		}

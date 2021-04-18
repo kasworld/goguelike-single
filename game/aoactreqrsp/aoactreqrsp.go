@@ -16,13 +16,13 @@ import (
 
 	"github.com/kasworld/goguelike-single/enum/condition"
 	"github.com/kasworld/goguelike-single/enum/condition_flag"
+	"github.com/kasworld/goguelike-single/enum/returncode"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/way9type"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
 type Act struct {
-	Act  c2t_idcmd.CommandID
+	Act  turnaction.TurnAction
 	Dir  way9type.Way9Type
 	UUID string
 }
@@ -35,7 +35,7 @@ func (act Act) CalcAPByActAndCondition(cndflag condition_flag.ConditionFlag) flo
 	if cndflag.TestByCondition(condition.Haste) {
 		turn2need /= 2
 	}
-	if act.Act == c2t_idcmd.Move && act.Dir != way9type.Center {
+	if act.Act == turnaction.Move && act.Dir != way9type.Center {
 		turn2need *= act.Dir.Len()
 	}
 	return turn2need
@@ -46,14 +46,14 @@ type ActReqRsp struct {
 	Done  Act // act done
 	Acted bool
 
-	Error c2t_error.ErrorCode
+	Error returncode.ReturnCode
 }
 
 func (arr ActReqRsp) IsSuccess() bool {
-	return arr.Acted && arr.Error == c2t_error.None
+	return arr.Acted && arr.Error == returncode.Success
 }
 
-func (arr *ActReqRsp) SetDone(done Act, Error c2t_error.ErrorCode) {
+func (arr *ActReqRsp) SetDone(done Act, Error returncode.ReturnCode) {
 	if arr.Acted {
 		fmt.Printf("already Acted %v %+v", Error, arr)
 	}

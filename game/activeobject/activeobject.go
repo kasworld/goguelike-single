@@ -32,18 +32,18 @@ import (
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
 	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
 	"github.com/kasworld/goguelike-single/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/carryingobject"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/floor4clientman"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/game/inventory"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/uuidstr"
 )
 
@@ -79,7 +79,7 @@ type ActiveObject struct {
 	potionStat       potiontype_vector.PotionTypeVector           `prettystring:"simple"`
 	scrollStat       scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
 	foActStat        fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
-	aoActionStat     c2t_idcmd_stats.CommandIDStat                `prettystring:"simple"`
+	aoActionStat     turnaction_vector.TurnActionVector           `prettystring:"simple"`
 	conditionStat    condition_vector.ConditionVector             `prettystring:"simple"`
 
 	// info known to activeobject
@@ -107,7 +107,7 @@ type ActiveObject struct {
 	req2Handle     unsafe.Pointer         // aoactreqrsp.Act
 	turnActReqRsp  *aoactreqrsp.ActReqRsp `prettystring:"simple"`
 
-	aoClientCache *c2t_obj.ActiveObjClient `prettystring:"simple"`
+	aoClientCache *csprotocol.ActiveObjClient `prettystring:"simple"`
 	AOTurnData    *aoturndata.ActiveObjTurnData
 }
 

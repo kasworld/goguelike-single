@@ -17,9 +17,9 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 var ScrollIDMaker = idu64str.New("ScrollID")
@@ -56,8 +56,8 @@ func NewScrollByMakeRate(n int) gamei.ScrollI {
 	return NewScroll(scrolltype.Empty)
 }
 
-func (po *Scroll) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
-	poc := &c2t_obj.CarryObjClientOnFloor{
+func (po *Scroll) ToPacket_CarryObjClientOnFloor(x, y int) *csprotocol.CarryObjClientOnFloor {
+	poc := &csprotocol.CarryObjClientOnFloor{
 		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		X:                  x,
@@ -68,8 +68,8 @@ func (po *Scroll) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClie
 	return poc
 }
 
-func (po *Scroll) ToPacket_ScrollClient() *c2t_obj.ScrollClient {
-	poc := &c2t_obj.ScrollClient{
+func (po *Scroll) ToPacket_ScrollClient() *csprotocol.ScrollClient {
+	poc := &csprotocol.ScrollClient{
 		UUID:       po.uuid,
 		ScrollType: po.scrollType,
 	}

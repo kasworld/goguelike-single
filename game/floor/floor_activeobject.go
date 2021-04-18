@@ -19,13 +19,13 @@ import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/condition"
+	"github.com/kasworld/goguelike-single/enum/returncode"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/carryingobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
 )
 
 func (f *Floor) findActiveObjPlacabelNear(sx, sy int) (int, int, error) {
@@ -247,11 +247,11 @@ func (f *Floor) aoAct_Move(
 	ao gamei.ActiveObjectI,
 	trydir way9type.Way9Type,
 	aox, aoy int) (
-	way9type.Way9Type, c2t_error.ErrorCode) {
+	way9type.Way9Type, returncode.ReturnCode) {
 
 	mvdir := trydir
 	if mvdir == way9type.Center {
-		return mvdir, c2t_error.None
+		return mvdir, returncode.Success
 	}
 	if ao.GetTurnData().Condition.TestByCondition(condition.Drunken) {
 		turnmod := slippperydata.Drunken[f.rnd.Intn(len(slippperydata.Drunken))]
@@ -263,7 +263,7 @@ func (f *Floor) aoAct_Move(
 		mvdir = mvdir.TurnDir(turnmod)
 	}
 	newX, newY, ec := f.canMove2Dir(aox, aoy, mvdir)
-	if ec != c2t_error.None {
+	if ec != returncode.Success {
 		return mvdir, ec
 	}
 	if err := f.aoPosMan.UpdateToXY(ao, newX, newY); err != nil {
@@ -272,28 +272,28 @@ func (f *Floor) aoAct_Move(
 	}
 	ao.SetNeedTANoti()
 	ao.GetAchieveStat().Inc(achievetype.Move)
-	return mvdir, c2t_error.None
+	return mvdir, returncode.Success
 }
-func (f *Floor) canMove2Dir(aox, aoy int, dir way9type.Way9Type) (int, int, c2t_error.ErrorCode) {
+func (f *Floor) canMove2Dir(aox, aoy int, dir way9type.Way9Type) (int, int, returncode.ReturnCode) {
 	if !dir.IsValid() || dir == way9type.Center {
-		return aox, aoy, c2t_error.None
+		return aox, aoy, returncode.Success
 	}
 
 	newX, newY := aox+dir.Dx(), aoy+dir.Dy()
 	newX, newY = f.terrain.WrapXY(newX, newY)
 	tl := f.terrain.GetTiles()[newX][newY]
 	if !tl.CharPlaceable() {
-		return aox, aoy, c2t_error.MoveBlockedByTile
+		return aox, aoy, returncode.MoveBlockedByTile
 	}
 	if !tl.CanPlaceMultiObj() {
 		for _, vv := range f.aoPosMan.GetObjListAt(newX, newY) {
 			v := vv.(gamei.ActiveObjectI)
 			if v.IsAlive() {
-				return aox, aoy, c2t_error.MoveBlockedByActiveObj
+				return aox, aoy, returncode.MoveBlockedByActiveObj
 			}
 		}
 	}
-	return newX, newY, c2t_error.None
+	return newX, newY, returncode.Success
 }
 
 func (f *Floor) aoDropCarryObj(ao gamei.ActiveObjectI, aox, aoy int, p gamei.CarryingObjectI) error {

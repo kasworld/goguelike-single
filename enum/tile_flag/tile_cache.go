@@ -16,8 +16,8 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike-single/enum/tile"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/way9type"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/htmlcolors"
 )
 
@@ -90,29 +90,29 @@ func (t TileFlag) Slippery() bool {
 	return t.getTileValuesByCached().Slippery
 }
 
-func (t TileFlag) ActHPSP(act c2t_idcmd.CommandID) (float64, float64) {
+func (t TileFlag) ActHPSP(act turnaction.TurnAction) (float64, float64) {
 	rtn := t.getTileValuesByCached()
 	switch act {
 	default:
 		return rtn.NeedHPOther, rtn.NeedSPOther
-	case c2t_idcmd.Move:
+	case turnaction.Move:
 		return rtn.NeedHPMove, rtn.NeedSPMove
-	case c2t_idcmd.Attack:
+	case turnaction.Attack:
 		return rtn.NeedHPAttack, rtn.NeedSPAttack
 	}
 }
 
-func (t TileFlag) ActHPSPCalced(act c2t_idcmd.CommandID, dir way9type.Way9Type) (float64, float64) {
+func (t TileFlag) ActHPSPCalced(act turnaction.TurnAction, dir way9type.Way9Type) (float64, float64) {
 	rtn := t.getTileValuesByCached()
 	switch act {
 	default:
 		return rtn.NeedHPOther, rtn.NeedSPOther
-	case c2t_idcmd.Move:
+	case turnaction.Move:
 		if dir == way9type.Center {
 			return rtn.NeedHPMove, rtn.NeedSPMove
 		}
 		return rtn.NeedHPMove * dir.Len(), rtn.NeedSPMove * dir.Len()
-	case c2t_idcmd.Attack:
+	case turnaction.Attack:
 		return rtn.NeedHPAttack, rtn.NeedSPAttack
 	}
 }

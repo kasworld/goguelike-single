@@ -17,6 +17,7 @@ import (
 	"unsafe"
 
 	"github.com/kasworld/goguelike-single/enum/respawntype"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
 
 	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
 	"github.com/kasworld/goguelike-single/enum/aotype"
@@ -31,7 +32,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/floor4client"
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 )
 
 func (ao *ActiveObject) GetUUID() string {
@@ -119,7 +119,7 @@ func (ao *ActiveObject) GetConditionStat() *condition_vector.ConditionVector {
 	return &ao.conditionStat
 }
 
-func (ao *ActiveObject) GetActStat() *c2t_idcmd_stats.CommandIDStat {
+func (ao *ActiveObject) GetActStat() *turnaction_vector.TurnActionVector {
 	return &ao.aoActionStat
 }
 

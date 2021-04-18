@@ -12,9 +12,9 @@
 package cmd2floor
 
 import (
+	"github.com/kasworld/goguelike-single/enum/returncode"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 type ReqRebirth2Floor struct {
@@ -33,6 +33,6 @@ type ReqLeaveFloor struct {
 
 type APIAdminTeleport2Floor struct {
 	ActiveObj gamei.ActiveObjectI
-	ReqPk     *c2t_obj.ReqAdminTeleport_data
-	RspCh     chan<- c2t_error.ErrorCode
+	ReqPk     *csprotocol.ReqAdminTeleport
+	RspCh     chan<- returncode.ReturnCode
 }

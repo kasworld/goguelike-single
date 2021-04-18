@@ -22,15 +22,15 @@ import (
 	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
 	"github.com/kasworld/goguelike-single/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/bias"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/floor4client"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 type ActiveObjectI interface {
@@ -112,15 +112,15 @@ type ActiveObjectI interface {
 	// for tower
 	GetHomeFloor() FloorI
 
-	ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjClient
-	ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjInfo
+	ToPacket_ActiveObjClient(x, y int) *csprotocol.ActiveObjClient
+	ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveObjInfo
 	To_ActiveObjScore() *aoscore.ActiveObjScore
 
 	GetAchieveStat() *achievetype_vector.AchieveTypeVector
 	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector
 	GetPotionStat() *potiontype_vector.PotionTypeVector
 	GetScrollStat() *scrolltype_vector.ScrollTypeVector
-	GetActStat() *c2t_idcmd_stats.CommandIDStat
+	GetActStat() *turnaction_vector.TurnActionVector
 	GetConditionStat() *condition_vector.ConditionVector
 
 	UpdateVisitAreaBySightMat2(f FloorI, vpCenterX, vpCenterY int,

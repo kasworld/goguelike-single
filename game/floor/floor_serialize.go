@@ -11,12 +11,10 @@
 
 package floor
 
-import (
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-)
+import "github.com/kasworld/goguelike-single/game/csprotocol"
 
-func (f *Floor) ToPacket_FloorInfo() *c2t_obj.FloorInfo {
-	return &c2t_obj.FloorInfo{
+func (f *Floor) ToPacket_FloorInfo() *csprotocol.FloorInfo {
+	return &csprotocol.FloorInfo{
 		Name:  f.terrain.GetName(),
 		W:     f.w,
 		H:     f.h,
@@ -25,8 +23,8 @@ func (f *Floor) ToPacket_FloorInfo() *c2t_obj.FloorInfo {
 	}
 }
 
-func (f *Floor) ToPacket_NotiAgeing() *c2t_obj.NotiAgeing_data {
-	return &c2t_obj.NotiAgeing_data{
+func (f *Floor) ToPacket_NotiAgeing() *csprotocol.NotiAgeing {
+	return &csprotocol.NotiAgeing{
 		FloorName: f.GetName(),
 	}
 }

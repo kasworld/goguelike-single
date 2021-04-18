@@ -17,9 +17,9 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 var PotionIDMaker = idu64str.New("PotionID")
@@ -55,8 +55,8 @@ func NewPotionByMakeRate(n int) gamei.PotionI {
 	return NewPotion(potiontype.Empty)
 }
 
-func (po *Potion) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
-	poc := &c2t_obj.CarryObjClientOnFloor{
+func (po *Potion) ToPacket_CarryObjClientOnFloor(x, y int) *csprotocol.CarryObjClientOnFloor {
+	poc := &csprotocol.CarryObjClientOnFloor{
 		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		X:                  x,
@@ -67,8 +67,8 @@ func (po *Potion) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClie
 	return poc
 }
 
-func (po *Potion) ToPacket_PotionClient() *c2t_obj.PotionClient {
-	poc := &c2t_obj.PotionClient{
+func (po *Potion) ToPacket_PotionClient() *csprotocol.PotionClient {
+	poc := &csprotocol.PotionClient{
 		UUID:       po.uuid,
 		PotionType: po.potionType,
 	}

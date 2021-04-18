@@ -16,9 +16,9 @@ import (
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/carryingobjecttype"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 var MoneyIDMaker = idu64str.New("MoneyID")
@@ -58,8 +58,8 @@ func (po Money) Sub(po2 gamei.MoneyI) gamei.MoneyI {
 	return NewMoney(v)
 }
 
-func (po *Money) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
-	poc := &c2t_obj.CarryObjClientOnFloor{
+func (po *Money) ToPacket_CarryObjClientOnFloor(x, y int) *csprotocol.CarryObjClientOnFloor {
+	poc := &csprotocol.CarryObjClientOnFloor{
 		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		X:                  x,

@@ -18,10 +18,10 @@ import (
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike-single/game/bias"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terraini"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 type FloorI interface {
@@ -63,7 +63,7 @@ type FloorI interface {
 	Web_FloorImageAutoZoom(w http.ResponseWriter, r *http.Request)
 	Web_TileInfo(w http.ResponseWriter, r *http.Request)
 
-	ToPacket_FloorInfo() *c2t_obj.FloorInfo
+	ToPacket_FloorInfo() *csprotocol.FloorInfo
 
 	FindUsablePortalPairAt(x, y int) (*fieldobject.FieldObject, *fieldobject.FieldObject, error)
 }

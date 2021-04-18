@@ -30,15 +30,13 @@ import (
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
 	"github.com/kasworld/goguelike-single/game/aoid2activeobject"
 	"github.com/kasworld/goguelike-single/game/aoid2floor"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/floormanager"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/game/glclient"
 	"github.com/kasworld/goguelike-single/game/towerscript"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/loadlines"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_version"
 	"github.com/kasworld/intervalduration"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib/retrylistenandserve"
@@ -69,7 +67,7 @@ type Tower struct {
 	id2ao        *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
 	aoExpRanking aoexpsort.ByExp                             `prettystring:"simple"`
 
-	gameInfo *c2t_obj.GameInfo
+	gameInfo *csprotocol.GameInfo
 
 	// single player
 	playerAO *activeobject.ActiveObject
@@ -85,9 +83,9 @@ type Tower struct {
 	adminWeb *http.Server `prettystring:"simple"`
 
 	// client to tower packet channel
-	c2tCh chan *c2t_packet.Packet
+	c2tCh chan *csprotocol.Packet
 	// tower to client packet channel
-	t2cCh chan *c2t_packet.Packet
+	t2cCh chan *csprotocol.Packet
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
@@ -151,10 +149,9 @@ func (tw *Tower) ServiceInit() error {
 	}
 	tw.startTime = time.Now()
 
-	tw.gameInfo = &c2t_obj.GameInfo{
-		Version:         version.GetVersion(),
-		ProtocolVersion: c2t_version.ProtocolVersion,
-		DataVersion:     dataversion.DataVersion,
+	tw.gameInfo = &csprotocol.GameInfo{
+		Version:     version.GetVersion(),
+		DataVersion: dataversion.DataVersion,
 
 		StartTime:     tw.startTime,
 		TowerSeed:     tw.seed,
@@ -209,8 +206,8 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		return
 	}
 
-	tw.c2tCh = make(chan *c2t_packet.Packet, gameconst.SendBufferSize)
-	tw.t2cCh = make(chan *c2t_packet.Packet, gameconst.SendBufferSize)
+	tw.c2tCh = make(chan *csprotocol.Packet, gameconst.SendBufferSize)
+	tw.t2cCh = make(chan *csprotocol.Packet, gameconst.SendBufferSize)
 
 	// start tower
 	go func() {

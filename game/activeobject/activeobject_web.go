@@ -23,8 +23,8 @@ import (
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
 	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
 	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd_stats"
 )
 
 // function for web
@@ -52,7 +52,7 @@ func (ao *ActiveObject) GetAIObj() *ServerAIState {
 func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New(
 		"index").Funcs(
-		c2t_idcmd_stats.IndexFn).Funcs(
+		turnaction_vector.IndexFn).Funcs(
 		potiontype_vector.IndexFn).Funcs(
 		scrolltype_vector.IndexFn).Funcs(
 		fieldobjacttype_vector.IndexFn).Funcs(
@@ -186,11 +186,11 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	Action stat<br/>
 	{{with .GetActStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + c2t_idcmd_stats.HTML_tableheader + `
+		` + turnaction_vector.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + c2t_idcmd_stats.HTML_row + `
+		` + turnaction_vector.HTML_row + `
 		{{end}}
-		` + c2t_idcmd_stats.HTML_tableheader + `
+		` + turnaction_vector.HTML_tableheader + `
 		</table>
 	{{end}}
 	Condition stat<br/>

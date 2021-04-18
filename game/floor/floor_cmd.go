@@ -16,13 +16,12 @@ import (
 
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/aotype"
+	"github.com/kasworld/goguelike-single/enum/returncode"
 	"github.com/kasworld/goguelike-single/game/cmd2floor"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 func (f *Floor) processCmd(data interface{}) {
@@ -37,8 +36,7 @@ func (f *Floor) processCmd(data interface{}) {
 		}
 		if pk.ActiveObj.GetActiveObjType() == aotype.User {
 			f.tower.SendNoti(
-				c2t_idnoti.LeaveFloor,
-				&c2t_obj.NotiLeaveFloor_data{
+				&csprotocol.NotiLeaveFloor{
 					FI: f.ToPacket_FloorInfo(),
 				},
 			)
@@ -52,8 +50,7 @@ func (f *Floor) processCmd(data interface{}) {
 		pk.ActiveObj.EnterFloor(f)
 		if pk.ActiveObj.GetActiveObjType() == aotype.User {
 			f.tower.SendNoti(
-				c2t_idnoti.EnterFloor,
-				&c2t_obj.NotiEnterFloor_data{
+				&csprotocol.NotiEnterFloor{
 					FI: f.ToPacket_FloorInfo(),
 				},
 			)
@@ -61,8 +58,8 @@ func (f *Floor) processCmd(data interface{}) {
 			f4c := pk.ActiveObj.GetFloor4Client(f.GetName())
 			fi := f.ToPacket_FloorInfo()
 			ta := f.GetTerrain().GetTiles().DupWithFilter(f4c.Visit.GetXYNolock)
-			f.tower.SendNoti(c2t_idnoti.FloorTiles,
-				&c2t_obj.NotiFloorTiles_data{
+			f.tower.SendNoti(
+				&csprotocol.NotiFloorTiles{
 					FI:    fi,
 					X:     0,
 					Y:     0,
@@ -71,15 +68,14 @@ func (f *Floor) processCmd(data interface{}) {
 			)
 
 			// send fieldobj list
-			fol := make([]*c2t_obj.FieldObjClient, 0)
+			fol := make([]*csprotocol.FieldObjClient, 0)
 			f4c.FOPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
-				fo := o.(*c2t_obj.FieldObjClient)
+				fo := o.(*csprotocol.FieldObjClient)
 				fol = append(fol, fo)
 				return false
 			})
 			f.tower.SendNoti(
-				c2t_idnoti.FieldObjList,
-				&c2t_obj.NotiFieldObjList_data{
+				&csprotocol.NotiFieldObjList{
 					FI:     fi,
 					FOList: fol,
 				},
@@ -96,8 +92,7 @@ func (f *Floor) processCmd(data interface{}) {
 		pk.ActiveObj.Rebirth()
 		if pk.ActiveObj.GetActiveObjType() == aotype.User {
 			f.tower.SendNoti(
-				c2t_idnoti.Rebirthed,
-				&c2t_obj.NotiRebirthed_data{},
+				&csprotocol.NotiRebirthed{},
 			)
 		}
 
@@ -107,23 +102,23 @@ func (f *Floor) processCmd(data interface{}) {
 }
 
 func (f *Floor) Call_APIAdminTeleport2Floor(
-	ActiveObj gamei.ActiveObjectI, ReqPk *c2t_obj.ReqAdminTeleport_data) c2t_error.ErrorCode {
+	ActiveObj gamei.ActiveObjectI, ReqPk *csprotocol.ReqAdminTeleport) returncode.ReturnCode {
 
 	if f.aoPosMan.GetByUUID(ActiveObj.GetUUID()) == nil {
 		g2log.Warn("ActiveObj not in floor %v %v", f, ActiveObj)
-		return c2t_error.ActionProhibited
+		return returncode.ActionProhibited
 	}
 	x, y, err := f.SearchRandomActiveObjPos()
 	if err != nil {
 		g2log.Error("fail to teleport %v %v %v", f, ActiveObj, err)
-		return c2t_error.ActionCanceled
+		return returncode.ActionCanceled
 	}
 	x, y = f.terrain.WrapXY(x, y)
 	if err := f.aoPosMan.UpdateToXY(ActiveObj, x, y); err != nil {
 		g2log.Fatal("move ao fail %v %v %v", f, ActiveObj, err)
-		return c2t_error.ActionCanceled
+		return returncode.ActionCanceled
 	}
 	ActiveObj.SetNeedTANoti()
 	ActiveObj.GetAchieveStat().Inc(achievetype.Admin)
-	return c2t_error.None
+	return returncode.Success
 }

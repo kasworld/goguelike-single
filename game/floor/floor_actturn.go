@@ -24,21 +24,20 @@ import (
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
+	"github.com/kasworld/goguelike-single/enum/returncode"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 func (f *Floor) processTurn(turnTime time.Time) error {
@@ -110,8 +109,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		if ao.GetActiveObjType() == aotype.User {
 			if p.DisplayType == fieldobjdisplaytype.None {
 				f.tower.SendNoti(
-					c2t_idnoti.FoundFieldObj,
-					&c2t_obj.NotiFoundFieldObj_data{
+					&csprotocol.NotiFoundFieldObj{
 						FloorName: f.GetName(),
 						FieldObj:  p.ToPacket_FieldObjClient(aox, aoy),
 					},
@@ -119,8 +117,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			}
 			if p.ActType.TrapNoti() {
 				f.tower.SendNoti(
-					c2t_idnoti.ActivateTrap,
-					&c2t_obj.NotiActivateTrap_data{
+					&csprotocol.NotiActivateTrap{
 						FieldObjAct: p.ActType,
 						Triggered:   triggered,
 					},
@@ -172,8 +169,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			aoMapSkipActThisTurn[ao.GetUUID()] = true
 			if arr, exist := ao2ActReqRsp[ao]; exist {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-					c2t_error.ActionCanceled)
+					aoactreqrsp.Act{Act: turnaction.Meditate},
+					returncode.ActionCanceled)
 			}
 		}
 		if p.ActType.NeedTANoti() {
@@ -192,8 +189,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			ao.GetTurnData().Condition.TestByCondition(condition.Sleep) {
 			aoMapSkipActThisTurn[ao.GetUUID()] = true
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-				c2t_error.ActionCanceled)
+				aoactreqrsp.Act{Act: turnaction.Meditate},
+				returncode.ActionCanceled)
 		}
 	}
 	// handle remain turn2act ao
@@ -203,8 +200,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		if ao.GetAP() < 0 {
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-				c2t_error.ActionCanceled)
+				aoactreqrsp.Act{Act: turnaction.Meditate},
+				returncode.ActionCanceled)
 		}
 	}
 
@@ -257,11 +254,11 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			continue
 		}
 		switch arr.Req.Act {
-		case c2t_idcmd.Attack:
+		case turnaction.Attack:
 			f.addBasicAttack(ao, arr)
-		case c2t_idcmd.AttackWide:
+		case turnaction.AttackWide:
 			f.addAttackWide(ao, arr)
-		case c2t_idcmd.AttackLong:
+		case turnaction.AttackLong:
 			f.addAttackLong(ao, arr)
 		}
 	}
@@ -308,8 +305,8 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		if !exist {
 			g2log.Error("ao not in currentfloor %v %v", f, ao)
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-				c2t_error.ActionProhibited)
+				aoactreqrsp.Act{Act: turnaction.Meditate},
+				returncode.ActionProhibited)
 			continue
 		}
 
@@ -317,141 +314,141 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		default:
 			g2log.Fatal("unknown aoact %v %v", f, arr)
 
-		case c2t_idcmd.Attack, c2t_idcmd.AttackWide, c2t_idcmd.AttackLong:
+		case turnaction.Attack, turnaction.AttackWide, turnaction.AttackLong:
 			// must be acted
 			g2log.Fatal("already acted %v %v", f, arr)
 
-		case c2t_idcmd.Meditate:
+		case turnaction.Meditate:
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.Meditate},
+				returncode.Success)
 
-		case c2t_idcmd.Move:
+		case turnaction.Move:
 			mvdir, ec := f.aoAct_Move(ao, arr.Req.Dir, aox, aoy)
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Move, Dir: mvdir},
+				aoactreqrsp.Act{Act: turnaction.Move, Dir: mvdir},
 				ec)
 
-		case c2t_idcmd.Pickup:
+		case turnaction.Pickup:
 			if ao.GetTurnData().Condition.TestByCondition(condition.Float) {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.Pickup, UUID: arr.Req.UUID},
+					returncode.ActionProhibited)
 				continue
 			}
 			obj, err := f.poPosMan.GetByXYAndUUID(arr.Req.UUID, aox, aoy)
 			if err != nil {
 				g2log.Debug("Pickup obj not found %v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.Pickup, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			po, ok := obj.(gamei.CarryingObjectI)
 			if !ok {
 				g2log.Fatal("obj not carryingobject %v", po)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.Pickup, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			if err := f.poPosMan.Del(po); err != nil {
 				g2log.Fatal("remove po fail %v %v %v", f, po, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.Pickup, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			if err := ao.DoPickup(po); err != nil {
 				g2log.Error("%v %v %v", f, po, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.Pickup, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Pickup, UUID: arr.Req.UUID},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.Pickup, UUID: arr.Req.UUID},
+				returncode.Success)
 
-		case c2t_idcmd.Drop:
+		case turnaction.Drop:
 			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if err := f.aoDropCarryObj(ao, aox, aoy, po); err != nil {
 				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Drop, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.Drop, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Drop, UUID: arr.Req.UUID},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.Drop, UUID: arr.Req.UUID},
+				returncode.Success)
 
-		case c2t_idcmd.Equip:
+		case turnaction.Equip:
 			if err := ao.DoEquip(arr.Req.UUID); err != nil {
 				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Equip, UUID: arr.Req.UUID},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.Equip, UUID: arr.Req.UUID},
+					returncode.ActionProhibited)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Equip, UUID: arr.Req.UUID},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.Equip, UUID: arr.Req.UUID},
+				returncode.Success)
 
-		case c2t_idcmd.UnEquip:
+		case turnaction.UnEquip:
 			if err := ao.DoUnEquip(arr.Req.UUID); err != nil {
 				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.UnEquip, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.UnEquip, UUID: arr.Req.UUID},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.UnEquip, UUID: arr.Req.UUID},
+				returncode.Success)
 
-		case c2t_idcmd.DrinkPotion:
+		case turnaction.DrinkPotion:
 			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if po == nil {
 				g2log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.DrinkPotion, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			if err := ao.DoUseCarryObj(arr.Req.UUID); err != nil {
 				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.DrinkPotion, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			ao.SetNeedTANoti()
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.DrinkPotion, UUID: arr.Req.UUID},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.DrinkPotion, UUID: arr.Req.UUID},
+				returncode.Success)
 
-		case c2t_idcmd.ReadScroll:
+		case turnaction.ReadScroll:
 			po := ao.GetInven().GetByUUID(arr.Req.UUID)
 			if po == nil {
 				g2log.Error("po not in inventory %v %v", ao, arr.Req.UUID)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.ReadScroll, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			if so, ok := po.(gamei.ScrollI); ok && so.GetScrollType() == scrolltype.Teleport {
 				err := f.aoTeleportInFloorRandom(ao)
 				if err != nil {
 					arr.SetDone(
-						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
-						c2t_error.ActionCanceled)
+						aoactreqrsp.Act{Act: turnaction.ReadScroll, UUID: arr.Req.UUID},
+						returncode.ActionCanceled)
 					g2log.Fatal("fail to teleport %v %v %v", f, ao, err)
 					continue
 				}
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
-					c2t_error.None)
+					aoactreqrsp.Act{Act: turnaction.ReadScroll, UUID: arr.Req.UUID},
+					returncode.Success)
 				ao.GetInven().RemoveByUUID(arr.Req.UUID)
 				ao.GetAchieveStat().Inc(achievetype.UseCarryObj)
 				ao.GetScrollStat().Inc(scrolltype.Teleport)
@@ -459,54 +456,54 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				if err := ao.DoUseCarryObj(arr.Req.UUID); err != nil {
 					g2log.Error("%v %v %v", f, ao, err)
 					arr.SetDone(
-						aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
-						c2t_error.ObjectNotFound)
+						aoactreqrsp.Act{Act: turnaction.ReadScroll, UUID: arr.Req.UUID},
+						returncode.ObjectNotFound)
 					continue
 				}
 				ao.SetNeedTANoti()
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ReadScroll, UUID: arr.Req.UUID},
-					c2t_error.None)
+					aoactreqrsp.Act{Act: turnaction.ReadScroll, UUID: arr.Req.UUID},
+					returncode.Success)
 			}
 
-		case c2t_idcmd.Recycle:
+		case turnaction.Recycle:
 			if ao.GetTurnData().Condition.TestByCondition(condition.Float) {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.Recycle, UUID: arr.Req.UUID},
+					returncode.ActionProhibited)
 				continue
 			}
 			_, ok := f.foPosMan.Get1stObjAt(aox, aoy).(*fieldobject.FieldObject)
 			if !ok {
 				g2log.Error("not at Recycler FieldObj %v %v", f, ao)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.Recycle, UUID: arr.Req.UUID},
+					returncode.ActionProhibited)
 				continue
 			}
 			if err := ao.DoRecycleCarryObj(arr.Req.UUID); err != nil {
 				g2log.Error("%v %v %v", f, ao, err)
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
-					c2t_error.ObjectNotFound)
+					aoactreqrsp.Act{Act: turnaction.Recycle, UUID: arr.Req.UUID},
+					returncode.ObjectNotFound)
 				continue
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Recycle, UUID: arr.Req.UUID},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.Recycle, UUID: arr.Req.UUID},
+				returncode.Success)
 
-		case c2t_idcmd.EnterPortal:
+		case turnaction.EnterPortal:
 			if ao.GetTurnData().Condition.TestByCondition(condition.Float) {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.EnterPortal},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.EnterPortal},
+					returncode.ActionProhibited)
 				continue
 			}
 			p1, p2, err := f.FindUsablePortalPairAt(aox, aoy)
 			if err != nil {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.EnterPortal},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.EnterPortal},
+					returncode.ActionProhibited)
 				continue
 			}
 			ao.GetAchieveStat().Inc(achievetype.EnterPortal)
@@ -520,35 +517,35 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 				P2:        p2,
 			}
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.EnterPortal},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.EnterPortal},
+				returncode.Success)
 			aoMapSkipActThisTurn[ao.GetUUID()] = true
 			aoMapLeaveFloorInTurn[ao.GetUUID()] = true
 			g2log.Debug("manual in portal %v %v", f, ao)
 
-		case c2t_idcmd.ActTeleport:
+		case turnaction.ActTeleport:
 			if !ao.GetFloor4Client(f.GetName()).Visit.IsComplete() {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
-					c2t_error.ActionProhibited)
+					aoactreqrsp.Act{Act: turnaction.ActTeleport},
+					returncode.ActionProhibited)
 				continue
 			}
 			err := f.aoTeleportInFloorRandom(ao)
 			if err != nil {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
-					c2t_error.ActionCanceled)
+					aoactreqrsp.Act{Act: turnaction.ActTeleport},
+					returncode.ActionCanceled)
 				g2log.Fatal("fail to teleport %v %v %v", f, ao, err)
 			} else {
 				arr.SetDone(
-					aoactreqrsp.Act{Act: c2t_idcmd.ActTeleport},
-					c2t_error.None)
+					aoactreqrsp.Act{Act: turnaction.ActTeleport},
+					returncode.Success)
 			}
-		case c2t_idcmd.KillSelf:
+		case turnaction.KillSelf:
 			ao.ReduceHP(ao.GetHP())
 			arr.SetDone(
-				aoactreqrsp.Act{Act: c2t_idcmd.Meditate},
-				c2t_error.None)
+				aoactreqrsp.Act{Act: turnaction.Meditate},
+				returncode.Success)
 			aoMapSkipActThisTurn[ao.GetUUID()] = true
 		}
 	}
@@ -622,7 +619,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 			g2log.Error("ao not in currentfloor %v %v", f, ao)
 			continue
 		}
-		act := c2t_idcmd.Meditate
+		act := turnaction.Meditate
 		dir := way9type.Center
 		if arr, exist := ao2ActReqRsp[ao]; exist {
 			act = arr.Done.Act
@@ -657,8 +654,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		ao.Death(f) // set rebirth count
 		if ao.GetActiveObjType() == aotype.User {
 			f.tower.SendNoti(
-				c2t_idnoti.Death,
-				&c2t_obj.NotiDeath_data{},
+				&csprotocol.NotiDeath{},
 			)
 		}
 	}
@@ -770,8 +766,7 @@ func (f *Floor) sendTANoti2Player(ao gamei.ActiveObjectI) {
 	sight := float32(ao.GetTurnData().Sight)
 	// make and send NotiTileArea
 	f.tower.SendNoti(
-		c2t_idnoti.VPTiles,
-		&c2t_obj.NotiVPTiles_data{
+		&csprotocol.NotiVPTiles{
 			FloorName: f.GetName(),
 			VPX:       aox,
 			VPY:       aoy,
@@ -818,8 +813,7 @@ func (f *Floor) sendVPObj2Player(ao gamei.ActiveObjectI, turnTime time.Time) {
 		aOs = append(aOs, ao.ToPacket_ActiveObjClient(aox, aoy))
 	}
 	f.tower.SendNoti(
-		c2t_idnoti.VPObjList,
-		&c2t_obj.NotiVPObjList_data{
+		&csprotocol.NotiVPObjList{
 			Time:          turnTime,
 			ActiveObj:     ao.ToPacket_PlayerActiveObjInfo(),
 			FloorName:     f.GetName(),

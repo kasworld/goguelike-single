@@ -24,11 +24,11 @@ import (
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/aoid2activeobject"
 	"github.com/kasworld/goguelike-single/game/carryingobject"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/terrain/room"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/version"
 	"github.com/kasworld/weblib"
 	"github.com/kasworld/weblib/webprofile"
@@ -109,7 +109,7 @@ func (tw *Tower) GetID2ActiveObj() *aoid2activeobject.ActiveObjID2ActiveObject {
 func (tw *Tower) GetTurnStat() *actpersec.ActPerSec {
 	return tw.turnStat
 }
-func (tw *Tower) GetGameInfo() *c2t_obj.GameInfo {
+func (tw *Tower) GetGameInfo() *csprotocol.GameInfo {
 	return tw.gameInfo
 }
 

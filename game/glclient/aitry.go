@@ -18,11 +18,10 @@ import (
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
 var tryAutoActFn = []func(app *GLClient) bool{
@@ -43,9 +42,11 @@ func (app *GLClient) actByControlMode() {
 				return
 			}
 		}
-		app.sendReqObjWithRspFn(c2t_idcmd.PassTurn,
-			&c2t_obj.ReqPassTurn_data{},
-			func(hd c2t_packet.Header, rsp interface{}) error {
+		app.sendReqObjWithRspFn(
+			&csprotocol.ReqTurnAction{
+				Act: turnaction.PassTurn,
+			},
+			func(pk *csprotocol.Packet) error {
 				return nil
 			},
 		)
@@ -81,9 +82,12 @@ func tryAutoBattle(app *GLClient) bool {
 		isContact, dir := way9type.CalcContactDirWrappedXY(
 			playerX, playerY, ao.X, ao.Y, w, h)
 		if isContact && dir != way9type.Center {
-			app.sendReqObjWithRspFn(c2t_idcmd.Attack,
-				&c2t_obj.ReqAttack_data{Dir: dir},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act: turnaction.Attack,
+					Dir: dir,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -110,16 +114,22 @@ func tryAutoPickup(app *GLClient) bool {
 			continue
 		}
 		if dir == way9type.Center {
-			app.sendReqObjWithRspFn(c2t_idcmd.Pickup,
-				&c2t_obj.ReqPickup_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.Pickup,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
 		} else {
-			app.sendReqObjWithRspFn(c2t_idcmd.Move,
-				&c2t_obj.ReqMove_data{Dir: dir},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act: turnaction.Move,
+					Dir: dir,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -134,9 +144,12 @@ func tryAutoEquip(app *GLClient) bool {
 	}
 	for _, po := range app.OLNotiData.ActiveObj.EquippedPo {
 		if app.needUnEquipCarryObj(po.GetBias()) {
-			app.sendReqObjWithRspFn(c2t_idcmd.UnEquip,
-				&c2t_obj.ReqUnEquip_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.UnEquip,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -144,9 +157,12 @@ func tryAutoEquip(app *GLClient) bool {
 	}
 	for _, po := range app.OLNotiData.ActiveObj.EquipBag {
 		if app.isBetterCarryObj(po.EquipType, po.GetBias()) {
-			app.sendReqObjWithRspFn(c2t_idcmd.Equip,
-				&c2t_obj.ReqEquip_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.Equip,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -161,9 +177,12 @@ func tryAutoUsePotion(app *GLClient) bool {
 	}
 	for _, po := range app.OLNotiData.ActiveObj.PotionBag {
 		if app.needUsePotion(po) {
-			app.sendReqObjWithRspFn(c2t_idcmd.DrinkPotion,
-				&c2t_obj.ReqDrinkPotion_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.DrinkPotion,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -172,9 +191,12 @@ func tryAutoUsePotion(app *GLClient) bool {
 
 	for _, po := range app.OLNotiData.ActiveObj.ScrollBag {
 		if app.needUseScroll(po) {
-			app.sendReqObjWithRspFn(c2t_idcmd.ReadScroll,
-				&c2t_obj.ReqReadScroll_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.ReadScroll,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -243,7 +265,7 @@ func (app *GLClient) needUnEquipCarryObj(PoBias bias.Bias) bool {
 	return newBias.AbsSum() > currentBias.AbsSum()+1
 }
 
-func (app *GLClient) needUseScroll(po *c2t_obj.ScrollClient) bool {
+func (app *GLClient) needUseScroll(po *csprotocol.ScrollClient) bool {
 	cf := app.CurrentFloor
 	switch po.ScrollType {
 	case scrolltype.FloorMap:
@@ -254,7 +276,7 @@ func (app *GLClient) needUseScroll(po *c2t_obj.ScrollClient) bool {
 	return false
 }
 
-func (app *GLClient) needUsePotion(po *c2t_obj.PotionClient) bool {
+func (app *GLClient) needUsePotion(po *csprotocol.PotionClient) bool {
 	pao := app.OLNotiData.ActiveObj
 	switch po.PotionType {
 	case potiontype.RecoverHP10:
@@ -301,15 +323,18 @@ func (app *GLClient) needUsePotion(po *c2t_obj.PotionClient) bool {
 }
 
 func (app *GLClient) recycleEqbag() bool {
-	var poList c2t_obj.CarryObjEqByLen
+	var poList csprotocol.CarryObjEqByLen
 	poList = append(poList, app.OLNotiData.ActiveObj.EquipBag...)
 	if len(poList) == 0 {
 		return false
 	}
 	poList.Sort()
-	app.sendReqObjWithRspFn(c2t_idcmd.Recycle,
-		&c2t_obj.ReqRecycle_data{UUID: poList[0].UUID},
-		func(hd c2t_packet.Header, rsp interface{}) error {
+	app.sendReqObjWithRspFn(
+		&csprotocol.ReqTurnAction{
+			Act:  turnaction.Recycle,
+			UUID: poList[0].UUID,
+		},
+		func(pk *csprotocol.Packet) error {
 			return nil
 		})
 	return true
@@ -318,9 +343,12 @@ func (app *GLClient) recycleEqbag() bool {
 func (app *GLClient) recycleUselessPotion() bool {
 	for _, po := range app.OLNotiData.ActiveObj.PotionBag {
 		if potiontype.AIRecycleMap[po.PotionType] {
-			app.sendReqObjWithRspFn(c2t_idcmd.Recycle,
-				&c2t_obj.ReqRecycle_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.Recycle,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true
@@ -332,9 +360,12 @@ func (app *GLClient) recycleUselessPotion() bool {
 func (app *GLClient) recycleUselessScroll() bool {
 	for _, po := range app.OLNotiData.ActiveObj.ScrollBag {
 		if scrolltype.AIRecycleMap[po.ScrollType] {
-			app.sendReqObjWithRspFn(c2t_idcmd.Recycle,
-				&c2t_obj.ReqRecycle_data{UUID: po.UUID},
-				func(hd c2t_packet.Header, rsp interface{}) error {
+			app.sendReqObjWithRspFn(
+				&csprotocol.ReqTurnAction{
+					Act:  turnaction.Recycle,
+					UUID: po.UUID,
+				},
+				func(pk *csprotocol.Packet) error {
 					return nil
 				})
 			return true

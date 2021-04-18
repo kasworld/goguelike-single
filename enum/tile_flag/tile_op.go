@@ -13,11 +13,11 @@ package tile_flag
 
 import (
 	"github.com/kasworld/goguelike-single/enum/tile"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 )
 
 func (t TileFlag) Meditateable() bool {
-	hp, sp := t.ActHPSP(c2t_idcmd.Meditate)
+	hp, sp := t.ActHPSP(turnaction.Meditate)
 	return hp == 0 && sp == 0
 }
 

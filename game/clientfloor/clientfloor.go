@@ -19,17 +19,17 @@ import (
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/bias"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/tilearea"
 	"github.com/kasworld/goguelike-single/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike-single/game/visitarea"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 	"github.com/kasworld/wrapper"
 )
 
 type ClientFloor struct {
-	FloorInfo *c2t_obj.FloorInfo
+	FloorInfo *csprotocol.FloorInfo
 	Tiles     tilearea.TileArea `prettystring:"simple"`
 
 	Visited        *visitarea.VisitArea `prettystring:"simple"`
@@ -43,7 +43,7 @@ type ClientFloor struct {
 	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 }
 
-func New(FloorInfo *c2t_obj.FloorInfo) *ClientFloor {
+func New(FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	cf := ClientFloor{
 		Tiles:     tilearea.New(FloorInfo.W, FloorInfo.H),
 		Visited:   visitarea.New(FloorInfo),
@@ -83,7 +83,7 @@ func (cf *ClientFloor) Forget() {
 }
 
 // replace tile rect at x,y
-func (cf *ClientFloor) ReplaceFloorTiles(fta *c2t_obj.NotiFloorTiles_data) {
+func (cf *ClientFloor) ReplaceFloorTiles(fta *csprotocol.NotiFloorTiles) {
 	for x, xv := range fta.Tiles {
 		xpos := fta.X + x
 		for y, yv := range xv {
@@ -106,7 +106,7 @@ func (cf *ClientFloor) String() string {
 }
 
 func (cf *ClientFloor) UpdateFromViewportTile(
-	vp *c2t_obj.NotiVPTiles_data,
+	vp *csprotocol.NotiVPTiles,
 	vpXYLenList findnear.XYLenList,
 ) error {
 
@@ -127,7 +127,7 @@ func (cf *ClientFloor) UpdateFromViewportTile(
 	return nil
 }
 
-func (cf *ClientFloor) UpdateFieldObjList(folsit []*c2t_obj.FieldObjClient) {
+func (cf *ClientFloor) UpdateFieldObjList(folsit []*csprotocol.FieldObjClient) {
 	for _, v := range folsit {
 		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
 	}
@@ -183,8 +183,8 @@ func (cf *ClientFloor) EnterFloor() {
 	cf.visitTime = time.Now()
 }
 
-func (cf *ClientFloor) GetFieldObjAt(x, y int) *c2t_obj.FieldObjClient {
-	po, ok := cf.FieldObjPosMan.Get1stObjAt(x, y).(*c2t_obj.FieldObjClient)
+func (cf *ClientFloor) GetFieldObjAt(x, y int) *csprotocol.FieldObjClient {
+	po, ok := cf.FieldObjPosMan.Get1stObjAt(x, y).(*csprotocol.FieldObjClient)
 	if !ok {
 		return nil
 	}

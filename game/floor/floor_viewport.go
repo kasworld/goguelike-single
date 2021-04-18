@@ -16,11 +16,11 @@ import (
 	"github.com/kasworld/goguelike-single/enum/condition"
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike-single/game/activeobject"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 func (f *Floor) makeViewportTiles2(centerX, centerY int, sightMat *viewportdata.ViewportSight2,
@@ -44,9 +44,9 @@ func (f *Floor) makeViewportTiles2(centerX, centerY int, sightMat *viewportdata.
 
 func (f *Floor) makeViewportActiveObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
-	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.ActiveObjClient {
+	sightMat *viewportdata.ViewportSight2, sight float32) []*csprotocol.ActiveObjClient {
 
-	rtn := make([]*c2t_obj.ActiveObjClient, 0, len(vpixyolist))
+	rtn := make([]*csprotocol.ActiveObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
 			continue
@@ -63,9 +63,9 @@ func (f *Floor) makeViewportActiveObjs2(
 
 func (f *Floor) makeViewportCarryObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
-	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.CarryObjClientOnFloor {
+	sightMat *viewportdata.ViewportSight2, sight float32) []*csprotocol.CarryObjClientOnFloor {
 
-	rtn := make([]*c2t_obj.CarryObjClientOnFloor, 0, len(vpixyolist))
+	rtn := make([]*csprotocol.CarryObjClientOnFloor, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
 			continue
@@ -78,9 +78,9 @@ func (f *Floor) makeViewportCarryObjs2(
 
 func (f *Floor) makeViewportFieldObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
-	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.FieldObjClient {
+	sightMat *viewportdata.ViewportSight2, sight float32) []*csprotocol.FieldObjClient {
 
-	rtn := make([]*c2t_obj.FieldObjClient, 0, len(vpixyolist))
+	rtn := make([]*csprotocol.FieldObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
 			continue
@@ -96,9 +96,9 @@ func (f *Floor) makeViewportFieldObjs2(
 
 func (f *Floor) makeViewportDangerObjs2(
 	vpixyolist []uuidposmani.VPIXYObj,
-	sightMat *viewportdata.ViewportSight2, sight float32) []*c2t_obj.DangerObjClient {
+	sightMat *viewportdata.ViewportSight2, sight float32) []*csprotocol.DangerObjClient {
 
-	rtn := make([]*c2t_obj.DangerObjClient, 0, len(vpixyolist))
+	rtn := make([]*csprotocol.DangerObjClient, 0, len(vpixyolist))
 	for _, v := range vpixyolist {
 		if sightMat[v.I] >= sight {
 			continue

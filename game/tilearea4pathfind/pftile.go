@@ -15,9 +15,9 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	astar "github.com/kasworld/goguelike-single/lib/go-astar"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
 var _ astar.Pather = &pfTile{}
@@ -66,7 +66,7 @@ func (pft *pfTile) PathNeighborCost(to astar.Pather) float64 {
 		return 0
 	}
 	tl := pft.Ta4pf.tileArea[pft.X][pft.Y]
-	hp, sp := tl.ActHPSP(c2t_idcmd.Move)
+	hp, sp := tl.ActHPSP(turnaction.Move)
 	return (1 + hp + sp) * dir.Len()
 }
 

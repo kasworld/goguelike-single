@@ -15,16 +15,16 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/kasworld/goguelike-single/enum/returncode"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 type AdminFloorMove struct {
 	ActiveObj  gamei.ActiveObjectI
-	RecvPacket *c2t_obj.ReqAdminFloorMove_data
-	RspCh      chan<- c2t_error.ErrorCode
+	RecvPacket *csprotocol.ReqAdminFloorMove
+	RspCh      chan<- returncode.ReturnCode
 }
 
 func (cet AdminFloorMove) String() string {
@@ -37,7 +37,7 @@ func (cet AdminFloorMove) String() string {
 type FloorMove struct {
 	ActiveObj gamei.ActiveObjectI
 	FloorName string
-	RspCh     chan<- c2t_error.ErrorCode
+	RspCh     chan<- returncode.ReturnCode
 }
 
 func (cet FloorMove) String() string {

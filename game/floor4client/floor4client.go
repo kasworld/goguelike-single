@@ -12,16 +12,16 @@
 package floor4client
 
 import (
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/visitarea"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 // Floor4Client has floor info for server ai, client
 type Floor4Client struct {
 	Visit    *visitarea.VisitArea
-	FOPosMan uuidposmani.UUIDPosManI // must *c2t_obj.FieldObjClient
+	FOPosMan uuidposmani.UUIDPosManI // must *csprotocol.FieldObjClient
 }
 
 func New(fi visitarea.FloorI) *Floor4Client {
@@ -38,7 +38,7 @@ func (f4c *Floor4Client) Forget() {
 }
 
 func (f4c *Floor4Client) UpdateObjLists(
-	FieldObjList []*c2t_obj.FieldObjClient,
+	FieldObjList []*csprotocol.FieldObjClient,
 ) {
 	for _, fo := range FieldObjList {
 		f4c.FOPosMan.AddOrUpdateToXY(fo, fo.X, fo.Y)

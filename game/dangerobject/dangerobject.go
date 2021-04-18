@@ -13,9 +13,9 @@ package dangerobject
 
 import (
 	"github.com/kasworld/goguelike-single/enum/dangertype"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 var DOIDMaker = idu64str.New("DOID")
@@ -56,8 +56,8 @@ func NewFOAttact(attacker uuidposmani.UUIDPosI, dt dangertype.DangerType, affect
 	}
 }
 
-func (p *DangerObject) ToPacket_DangerObjClient(x, y int) *c2t_obj.DangerObjClient {
-	return &c2t_obj.DangerObjClient{
+func (p *DangerObject) ToPacket_DangerObjClient(x, y int) *csprotocol.DangerObjClient {
+	return &csprotocol.DangerObjClient{
 		UUID:       p.UUID,
 		OwnerID:    p.Owner.GetUUID(),
 		DangerType: p.DangerType,

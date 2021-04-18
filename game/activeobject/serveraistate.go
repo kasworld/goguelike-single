@@ -19,6 +19,8 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/aiplan"
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
+	"github.com/kasworld/goguelike-single/enum/returncode"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
@@ -26,8 +28,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/fieldobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 	"github.com/kasworld/intervalduration"
 )
 
@@ -73,7 +73,7 @@ func (ao *ActiveObject) NeedChangePlan(sai *ServerAIState, actresult *aoactreqrs
 	if !actresult.Acted {
 		return false
 	}
-	return actresult.Error != c2t_error.None
+	return actresult.Error != returncode.Success
 }
 
 func (ao *ActiveObject) selectPlan(sai *ServerAIState) {
@@ -224,7 +224,7 @@ func (ao *ActiveObject) posAddDir(sai *ServerAIState, x, y int, dir way9type.Way
 }
 
 func (ao *ActiveObject) sendActNotiPacket2Floor(sai *ServerAIState,
-	Act c2t_idcmd.CommandID,
+	Act turnaction.TurnAction,
 	Dir way9type.Way9Type,
 	UUID string,
 ) {

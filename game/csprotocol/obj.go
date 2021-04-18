@@ -37,9 +37,8 @@ import (
 )
 
 type GameInfo struct {
-	Version         string
-	ProtocolVersion string
-	DataVersion     string
+	Version     string
+	DataVersion string
 
 	ActiveObjUUID string
 	NickName      string

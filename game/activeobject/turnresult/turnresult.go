@@ -13,7 +13,7 @@ package turnresult
 
 import (
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
 type uuidObjI interface {
@@ -47,15 +47,15 @@ func (ar TurnResult) GetDamage() float64 {
 	return ar.Arg
 }
 
-func (ar TurnResult) ToPacket_TurnResultClient() c2t_obj.TurnResultClient {
+func (ar TurnResult) ToPacket_TurnResultClient() csprotocol.TurnResultClient {
 	if dstao := ar.DstObj; dstao != nil {
-		return c2t_obj.TurnResultClient{
+		return csprotocol.TurnResultClient{
 			ResultType: ar.ResultType,
 			DstUUID:    dstao.GetUUID(),
 			Arg:        ar.Arg,
 		}
 	}
-	return c2t_obj.TurnResultClient{
+	return csprotocol.TurnResultClient{
 		ResultType: ar.ResultType,
 		DstUUID:    "",
 		Arg:        ar.Arg,

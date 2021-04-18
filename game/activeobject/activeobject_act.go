@@ -26,10 +26,9 @@ import (
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
 	"github.com/kasworld/goguelike-single/game/cmd2tower"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idnoti"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 // PrepareNewTurn before turn start
@@ -142,8 +141,7 @@ func (ao *ActiveObject) ApplyTurnAct() {
 		if ao.remainTurn2Rebirth == 0 {
 			if ao.aoType == aotype.User {
 				ao.homefloor.GetTower().SendNoti(
-					c2t_idnoti.ReadyToRebirth,
-					&c2t_obj.NotiReadyToRebirth_data{},
+					&csprotocol.NotiReadyToRebirth{},
 				)
 			} else {
 				err := ao.TryRebirth()

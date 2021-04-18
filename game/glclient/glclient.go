@@ -25,33 +25,32 @@ import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/clientfloor"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_packet"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_pid2rspfn"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
+	"github.com/kasworld/goguelike-single/game/pid2rspfn"
 )
 
 type GLClient struct {
-	GameInfo *c2t_obj.GameInfo
+	GameInfo *csprotocol.GameInfo
 
 	ViewportXYLenList findnear.XYLenList
-	FloorInfoList     []*c2t_obj.FloorInfo
+	FloorInfoList     []*csprotocol.FloorInfo
 	CurrentFloor      *clientfloor.ClientFloor
 
-	pid2recv *c2t_pid2rspfn.PID2RspFn
+	pid2recv *pid2rspfn.PID2RspFn
 
 	// turn data
-	OLNotiData            *c2t_obj.NotiVPObjList_data
-	playerActiveObjClient *c2t_obj.ActiveObjClient
-	onFieldObj            *c2t_obj.FieldObjClient
+	OLNotiData            *csprotocol.NotiVPObjList
+	playerActiveObjClient *csprotocol.ActiveObjClient
+	onFieldObj            *csprotocol.FieldObjClient
 	IsOverLoad            bool
 	HPdiff                float64
 	SPdiff                float64
 	level                 int
 
 	// client to tower packet channel
-	c2tCh chan *c2t_packet.Packet
+	c2tCh chan *csprotocol.Packet
 	// tower to client packet channel
-	t2cCh chan *c2t_packet.Packet
+	t2cCh chan *csprotocol.Packet
 
 	// g3n field
 	app        *app.Application
@@ -67,10 +66,10 @@ type GLClient struct {
 
 func New(
 	config *goguelikeconfig.GoguelikeConfig,
-	gameInfo *c2t_obj.GameInfo,
-	c2tch, t2cch chan *c2t_packet.Packet) *GLClient {
+	gameInfo *csprotocol.GameInfo,
+	c2tch, t2cch chan *csprotocol.Packet) *GLClient {
 	app := &GLClient{
-		pid2recv:          c2t_pid2rspfn.New(),
+		pid2recv:          pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 		c2tCh:             c2tch,
 		t2cCh:             t2cch,

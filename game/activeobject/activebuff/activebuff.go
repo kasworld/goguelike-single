@@ -16,7 +16,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike-single/enum/statusoptype"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
 func (as ActiveBuff) String() string {
@@ -48,8 +48,8 @@ func (as *ActiveBuff) IsEnded() bool {
 	return as.AppliedCount >= len(as.Buff)
 }
 
-func (as *ActiveBuff) ToPacket_ActiveObjBuff() *c2t_obj.ActiveObjBuff {
-	return &c2t_obj.ActiveObjBuff{
+func (as *ActiveBuff) ToPacket_ActiveObjBuff() *csprotocol.ActiveObjBuff {
+	return &csprotocol.ActiveObjBuff{
 		Name:        as.Name,
 		RemainCount: len(as.Buff) - as.AppliedCount,
 	}

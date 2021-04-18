@@ -16,7 +16,7 @@ import (
 	"sync"
 
 	"github.com/kasworld/goguelike-single/enum/statusoptype"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
 type BuffManager struct {
@@ -99,8 +99,8 @@ func (bm *BuffManager) GetOpArgListToApply() []statusoptype.OpArg {
 	return rtn
 }
 
-func (bm *BuffManager) ToPacket_ActiveObjBuffList() []*c2t_obj.ActiveObjBuff {
-	rtn := make([]*c2t_obj.ActiveObjBuff, 0)
+func (bm *BuffManager) ToPacket_ActiveObjBuffList() []*csprotocol.ActiveObjBuff {
+	rtn := make([]*csprotocol.ActiveObjBuff, 0)
 	bm.Mutex.RLock()
 	defer bm.Mutex.RUnlock()
 	for _, v := range bm.BuffList {

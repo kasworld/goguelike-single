@@ -17,7 +17,9 @@ import (
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/condition"
 	"github.com/kasworld/goguelike-single/enum/dangertype"
+	"github.com/kasworld/goguelike-single/enum/returncode"
 	"github.com/kasworld/goguelike-single/enum/tile_flag"
+	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
@@ -25,8 +27,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/dangerobject"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_error"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_idcmd"
 )
 
 func (f *Floor) checkAttackSrc(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) (int, int, way9type.Way9Type) {
@@ -34,8 +34,8 @@ func (f *Floor) checkAttackSrc(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 	if !exist {
 		g2log.Error("ao not in currentfloor %v %v", f, ao)
-		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			c2t_error.ActionProhibited)
+		arr.SetDone(aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+			returncode.ActionProhibited)
 		return aox, aoy, atkdir
 	}
 	if ao.GetTurnData().Condition.TestByCondition(condition.Drunken) {
@@ -46,13 +46,13 @@ func (f *Floor) checkAttackSrc(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 
 	// check valid attack
 	if !atkdir.IsValid() || atkdir == way9type.Center {
-		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			c2t_error.InvalidDirection)
+		arr.SetDone(aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+			returncode.InvalidDirection)
 		return aox, aoy, atkdir
 	}
 	if f.terrain.GetTileWrapped(aox, aoy).NoBattle() {
-		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			c2t_error.ActionProhibited)
+		arr.SetDone(aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+			returncode.ActionProhibited)
 		return aox, aoy, atkdir
 	}
 	return aox, aoy, atkdir
@@ -77,8 +77,8 @@ func (f *Floor) addAttackWide(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 		}
 	}
 	arr.SetDone(
-		aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-		c2t_error.None)
+		aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+		returncode.Success)
 }
 
 func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
@@ -100,8 +100,8 @@ func (f *Floor) addAttackLong(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp
 		}
 	}
 	arr.SetDone(
-		aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-		c2t_error.None)
+		aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+		returncode.Success)
 }
 
 func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRsp) {
@@ -111,21 +111,21 @@ func (f *Floor) addBasicAttack(ao gamei.ActiveObjectI, arr *aoactreqrsp.ActReqRs
 	}
 	dstX, dstY := f.terrain.WrapXY(aox+atkdir.Dx(), aoy+atkdir.Dy())
 	if f.terrain.GetTiles()[dstX][dstY].NoBattle() {
-		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			c2t_error.ActionProhibited)
+		arr.SetDone(aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+			returncode.ActionProhibited)
 		return
 	}
 	if err := f.doPosMan.AddToXY(
 		dangerobject.NewAOAttact(ao, dangertype.BasicAttack, aox, aoy),
 		dstX, dstY); err != nil {
 		g2log.Fatal("fail to AddToXY %v", err)
-		arr.SetDone(aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-			c2t_error.ActionCanceled)
+		arr.SetDone(aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+			returncode.ActionCanceled)
 		return
 	}
 	arr.SetDone(
-		aoactreqrsp.Act{Act: c2t_idcmd.Attack, Dir: atkdir},
-		c2t_error.None)
+		aoactreqrsp.Act{Act: turnaction.Attack, Dir: atkdir},
+		returncode.Success)
 }
 
 func (f *Floor) aoAttackActiveObj(src, dst gamei.ActiveObjectI, srcTile, dstTile tile_flag.TileFlag) {

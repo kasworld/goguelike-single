@@ -17,16 +17,16 @@ import (
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
 	"github.com/kasworld/goguelike-single/game/aoscore"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
-func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjClient {
+func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *csprotocol.ActiveObjClient {
 	if ao.aoClientCache != nil {
 		return ao.aoClientCache
 	}
 	cnf := ao.AOTurnData.Condition
 	cnf.ClearByConditionFlag(condition_flag.HideOther())
-	aoc := &c2t_obj.ActiveObjClient{
+	aoc := &csprotocol.ActiveObjClient{
 		UUID:       ao.uuid,
 		NickName:   ao.nickName,
 		Faction:    ao.currentBias.NearFaction(),
@@ -62,14 +62,14 @@ func (ao *ActiveObject) ToPacket_ActiveObjClient(x, y int) *c2t_obj.ActiveObjCli
 	return aoc
 }
 
-func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjInfo {
+func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveObjInfo {
 	aoList := ao.GetHomeFloor().GetTower().GetExpRanking()
 	rank := aoexpsort.ByExp(aoList).FindPosByKey(ao.AOTurnData.TotalExp)
 
 	cnf := ao.AOTurnData.Condition
 	cnf.ClearByConditionFlag(condition_flag.HideSelf())
 
-	rtn := c2t_obj.PlayerActiveObjInfo{
+	rtn := csprotocol.PlayerActiveObjInfo{
 		Bias:       ao.currentBias,
 		Conditions: cnf,
 
@@ -92,7 +92,7 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *c2t_obj.PlayerActiveObjI
 	}
 	rtn.Wealth = int(ao.inven.GetTotalValue())
 	rtn.EquippedPo, rtn.EquipBag, rtn.PotionBag, rtn.ScrollBag, rtn.Wallet = ao.inven.ToPacket_InvenInfos()
-	rtn.TurnResult = make([]c2t_obj.TurnResultClient,
+	rtn.TurnResult = make([]csprotocol.TurnResultClient,
 		0, len(ao.turnResultList))
 	for _, v := range ao.turnResultList {
 		rtn.TurnResult = append(rtn.TurnResult, v.ToPacket_TurnResultClient())

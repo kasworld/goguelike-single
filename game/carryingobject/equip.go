@@ -20,9 +20,9 @@ import (
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/game/bias"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/idu64str"
-	"github.com/kasworld/goguelike-single/protocol_c2t/c2t_obj"
 )
 
 var EquipIDMaker = idu64str.New("EquipID")
@@ -101,8 +101,8 @@ func (po *EquipObj) GetBias() bias.Bias {
 	return bias.NewByFaction(po.Faction, po.BiasLen)
 }
 
-func (po *EquipObj) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjClientOnFloor {
-	poc := &c2t_obj.CarryObjClientOnFloor{
+func (po *EquipObj) ToPacket_CarryObjClientOnFloor(x, y int) *csprotocol.CarryObjClientOnFloor {
+	poc := &csprotocol.CarryObjClientOnFloor{
 		UUID:               po.uuid,
 		CarryingObjectType: po.GetCarryingObjectType(),
 		EquipType:          po.equipType,
@@ -114,8 +114,8 @@ func (po *EquipObj) ToPacket_CarryObjClientOnFloor(x, y int) *c2t_obj.CarryObjCl
 	return poc
 }
 
-func (po *EquipObj) ToPacket_EquipClient() *c2t_obj.EquipClient {
-	poc := &c2t_obj.EquipClient{
+func (po *EquipObj) ToPacket_EquipClient() *csprotocol.EquipClient {
+	poc := &csprotocol.EquipClient{
 		UUID:      po.uuid,
 		Name:      po.name,
 		EquipType: po.equipType,
