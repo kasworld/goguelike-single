@@ -1,0 +1,3 @@
+Request       Request for request packet (response packet expected)
+Response      Response is reply of request packet
+Notification  Notification is just send and forget packet

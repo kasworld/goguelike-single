@@ -42,28 +42,31 @@ goimports -w protocol_c2t
 ################################################################################
 # generate enum
 echo "generate enums"
-genenum -typename=AchieveType -packagename=achievetype -basedir=enum -vectortype=float64
-genenum -typename=AIPlan -packagename=aiplan -basedir=enum -vectortype=int
-genenum -typename=ActiveObjType -packagename=aotype -basedir=enum -vectortype=int
-genenum -typename=CarryingObjectType -packagename=carryingobjecttype -basedir=enum -vectortype=int
-genenum -typename=ClientControlType -packagename=clientcontroltype -basedir=enum 
-genenum -typename=Condition -packagename=condition -basedir=enum -flagtype=uint16 -vectortype=int
-genenum -typename=DangerType -packagename=dangertype -basedir=enum -vectortype=int
-genenum -typename=DecayType -packagename=decaytype -basedir=enum
-genenum -typename=EquipSlotType -packagename=equipslottype -basedir=enum -vectortype=int
-genenum -typename=FactionType -packagename=factiontype -basedir=enum -vectortype=int
-genenum -typename=FieldObjActType -packagename=fieldobjacttype -basedir=enum -vectortype=int
+genenum -typename=TurnAction          -packagename=turnaction          -basedir=enum -vectortype=int
+genenum -typename=ReturnCode          -packagename=returncode          -basedir=enum -vectortype=int
+genenum -typename=FlowType            -packagename=flowtype            -basedir=enum 
+genenum -typename=AchieveType         -packagename=achievetype         -basedir=enum -vectortype=float64
+genenum -typename=AIPlan              -packagename=aiplan              -basedir=enum -vectortype=int
+genenum -typename=ActiveObjType       -packagename=aotype              -basedir=enum -vectortype=int
+genenum -typename=CarryingObjectType  -packagename=carryingobjecttype  -basedir=enum -vectortype=int
+genenum -typename=ClientControlType   -packagename=clientcontroltype   -basedir=enum 
+genenum -typename=Condition           -packagename=condition           -basedir=enum -flagtype=uint16 -vectortype=int
+genenum -typename=DangerType          -packagename=dangertype          -basedir=enum -vectortype=int
+genenum -typename=DecayType           -packagename=decaytype           -basedir=enum
+genenum -typename=EquipSlotType       -packagename=equipslottype       -basedir=enum -vectortype=int
+genenum -typename=FactionType         -packagename=factiontype         -basedir=enum -vectortype=int
+genenum -typename=FieldObjActType     -packagename=fieldobjacttype     -basedir=enum -vectortype=int
 genenum -typename=FieldObjDisplayType -packagename=fieldobjdisplaytype -basedir=enum
-genenum -typename=PotionType -packagename=potiontype -basedir=enum -vectortype=int
-genenum -typename=ResourceType -packagename=resourcetype -basedir=enum -vectortype=int
-genenum -typename=RespawnType -packagename=respawntype -basedir=enum 
-genenum -typename=ScrollType -packagename=scrolltype -basedir=enum -vectortype=int
-genenum -typename=StatusOpType -packagename=statusoptype -basedir=enum
-genenum -typename=TerrainCmd -packagename=terraincmd -basedir=enum -vectortype=int
-genenum -typename=Tile -packagename=tile -basedir=enum -flagtype=uint16 -vectortype=int
-genenum -typename=TowerAchieve -packagename=towerachieve -basedir=enum -vectortype=float64
-genenum -typename=TurnResultType -packagename=turnresulttype -basedir=enum
-genenum -typename=Way9Type -packagename=way9type -basedir=enum 
+genenum -typename=PotionType          -packagename=potiontype          -basedir=enum -vectortype=int
+genenum -typename=ResourceType        -packagename=resourcetype        -basedir=enum -vectortype=int
+genenum -typename=RespawnType         -packagename=respawntype         -basedir=enum 
+genenum -typename=ScrollType          -packagename=scrolltype          -basedir=enum -vectortype=int
+genenum -typename=StatusOpType        -packagename=statusoptype        -basedir=enum
+genenum -typename=TerrainCmd          -packagename=terraincmd          -basedir=enum -vectortype=int
+genenum -typename=Tile                -packagename=tile                -basedir=enum -flagtype=uint16 -vectortype=int
+genenum -typename=TowerAchieve        -packagename=towerachieve        -basedir=enum -vectortype=float64
+genenum -typename=TurnResultType      -packagename=turnresulttype      -basedir=enum
+genenum -typename=Way9Type            -packagename=way9type            -basedir=enum 
 
 goimports -w enum
 

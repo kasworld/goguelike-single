@@ -1,0 +1,18 @@
+PassTurn no action just trigger turn 
+Rebirth
+MoveFloor tower cmd 
+Meditate rest and recover HP,SP
+KillSelf
+Move move 8way near tile
+Attack attack near 1 tile 
+AttackWide attack near 3 tile 
+AttackLong attack 3 tile to direction
+Pickup pickup carryobj
+Drop drop carryobj
+Equip equip equipable carryobj
+UnEquip unequip equipable carryobj
+DrinkPotion
+ReadScroll
+Recycle sell carryobj 
+EnterPortal
+ActTeleport
