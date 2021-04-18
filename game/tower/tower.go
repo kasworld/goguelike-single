@@ -253,16 +253,6 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 
 	go tw.handle_c2tch()
 	tw.initPlayer()
-	tw.turnCh <- time.Now() // start init turn
-
-	//run client
-	go func() {
-		cl := glclient.New(tw.config, tw.gameInfo, tw.c2tCh, tw.t2cCh)
-		if err := cl.Run(); err != nil {
-			g2log.Error("%v", err)
-		}
-		tw.doClose()
-	}()
 
 	timerInfoTk := time.NewTicker(1 * time.Second)
 	defer timerInfoTk.Stop()
@@ -313,6 +303,17 @@ func (tw *Tower) initPlayer() {
 		g2log.Fatal("%v", err)
 	}
 	tw.gameInfo.ActiveObjUUID = tw.playerAO.GetUUID()
+
+	tw.turnCh <- time.Now() // start init turn
+
+	//run client
+	go func() {
+		cl := glclient.New(tw.config, tw.gameInfo, tw.c2tCh, tw.t2cCh)
+		if err := cl.Run(); err != nil {
+			g2log.Error("%v", err)
+		}
+		tw.doClose()
+	}()
 }
 
 func (tw *Tower) ProcessAllCmds() {
