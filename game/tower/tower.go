@@ -209,7 +209,7 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	tw.c2tCh = make(chan *csprotocol.Packet, gameconst.SendBufferSize)
 	tw.t2cCh = make(chan *csprotocol.Packet, gameconst.SendBufferSize)
 
-	// start tower
+	// start turn tower
 	go func() {
 	loop:
 		for {
@@ -251,25 +251,9 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 	tw.initAdminWeb()
 	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, g2log.GlobalLogger, "serveAdminWeb")
 
-	// prepare player ao enter tower
-	// new ao
-	newAO := activeobject.NewUserActiveObj(
-		tw.rnd.Int63(),
-		tw.GetFloorManager().GetStartFloor(),
-		tw.Config().NickName,
-		tw.towerAchieveStat,
-	)
-	tw.playerAO = newAO
-	if err := tw.ao2Floor.ActiveObjEnterTower(tw.playerAO.GetHomeFloor(), tw.playerAO); err != nil {
-		g2log.Error("%v", err)
-		return
-	}
-	if err := tw.id2ao.Add(tw.playerAO); err != nil {
-		g2log.Fatal("%v", err)
-	}
-	tw.gameInfo.ActiveObjUUID = tw.playerAO.GetUUID()
-
 	go tw.handle_c2tch()
+	tw.initPlayer()
+	tw.turnCh <- time.Now() // start init turn
 
 	//run client
 	go func() {
@@ -309,6 +293,26 @@ loop:
 		}
 	}
 	tw.doClose()
+}
+
+func (tw *Tower) initPlayer() {
+	// prepare player ao enter tower
+	// new ao
+	newAO := activeobject.NewUserActiveObj(
+		tw.rnd.Int63(),
+		tw.GetFloorManager().GetStartFloor(),
+		tw.Config().NickName,
+		tw.towerAchieveStat,
+	)
+	tw.playerAO = newAO
+	if err := tw.ao2Floor.ActiveObjEnterTower(tw.playerAO.GetHomeFloor(), tw.playerAO); err != nil {
+		g2log.Error("%v", err)
+		return
+	}
+	if err := tw.id2ao.Add(tw.playerAO); err != nil {
+		g2log.Fatal("%v", err)
+	}
+	tw.gameInfo.ActiveObjUUID = tw.playerAO.GetUUID()
 }
 
 func (tw *Tower) ProcessAllCmds() {
