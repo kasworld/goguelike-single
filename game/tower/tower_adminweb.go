@@ -168,8 +168,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	Version: {{.GetGameInfo.Version}}
 	<br/>
-	ProtocolVersion : {{.GetGameInfo.ProtocolVersion}}
-	<br/>
 	DataVersion : {{.GetGameInfo.DataVersion}}
 	<hr/>
 	{{.}}
