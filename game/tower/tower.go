@@ -98,6 +98,9 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		interDur:         intervalduration.New(""),
 		cmdActStat:       actpersec.New(),
 		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
+		c2tCh:            make(chan *csprotocol.Packet, gameconst.SendBufferSize),
+		t2cCh:            make(chan *csprotocol.Packet, gameconst.SendBufferSize),
+		startTime:        time.Now(),
 	}
 
 	tw.seed = int64(config.Seed)
@@ -109,10 +112,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 	tw.doClose = func() {
 		g2log.Fatal("Too early doClose call %v", tw)
 	}
-	return tw
-}
 
-func (tw *Tower) ServiceInit() error {
 	var err error
 
 	gamedata.ActiveObjNameList, err = loadlines.LoadLineList(
@@ -120,7 +120,7 @@ func (tw *Tower) ServiceInit() error {
 	)
 	if err != nil {
 		g2log.Fatal("load ainame fail %v", err)
-		return err
+		return nil
 	}
 
 	gamedata.ChatData, err = loadlines.LoadLineList(
@@ -128,14 +128,14 @@ func (tw *Tower) ServiceInit() error {
 	)
 	if err != nil {
 		g2log.Fatal("load chatdata fail %v", err)
-		return err
+		return nil
 	}
 
 	tScript, err := towerscript.LoadJSON(
 		tw.config.MakeTowerFileFullpath(),
 	)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	tw.ao2Floor = aoid2floor.New(tw)
@@ -143,41 +143,32 @@ func (tw *Tower) ServiceInit() error {
 
 	tw.floorMan = floormanager.New(tScript, tw)
 	if err := tw.floorMan.Init(tw.rnd); err != nil {
-		return err
+		g2log.Fatal("floorman init fail %v", err)
+		return nil
 	}
-	tw.startTime = time.Now()
 
 	tw.gameInfo = &csprotocol.GameInfo{
-		Version:     version.GetVersion(),
-		DataVersion: dataversion.DataVersion,
-
+		Version:       version.GetVersion(),
+		DataVersion:   dataversion.DataVersion,
 		StartTime:     tw.startTime,
 		TowerSeed:     tw.seed,
 		TowerName:     tw.config.ScriptFilename,
 		Factor:        tw.biasFactor,
 		TotalFloorNum: tw.floorMan.GetFloorCount(),
-
-		NickName: tw.Config().NickName,
+		NickName:      tw.Config().NickName,
 	}
 
 	fmt.Printf("%v\n", tw.gameInfo.StringForm())
 	fmt.Printf("WebAdmin  : %v:%v id:%v pass:%v\n",
 		"http://localhost", tw.config.AdminPort, tw.config.WebAdminID, tw.config.WebAdminPass)
 
-	return nil
+	return tw
 }
 
-func (tw *Tower) ServiceCleanup() {
-	tw.id2ao.Cleanup()
-	tw.ao2Floor.Cleanup()
-	for _, f := range tw.floorMan.GetFloorList() {
-		f.Cleanup()
-	}
-	tw.floorMan.Cleanup()
-}
+func (tw *Tower) Run() {
+	defer tw.Cleanup()
 
-func (tw *Tower) ServiceMain(mainctx context.Context) {
-	ctx, closeCtx := context.WithCancel(mainctx)
+	ctx, closeCtx := context.WithCancel(context.Background())
 	tw.doClose = closeCtx
 
 	defer closeCtx()
@@ -202,9 +193,6 @@ func (tw *Tower) ServiceMain(mainctx context.Context) {
 		g2log.Fatal("fail to make turnCh %v", queuesize)
 		return
 	}
-
-	tw.c2tCh = make(chan *csprotocol.Packet, gameconst.SendBufferSize)
-	tw.t2cCh = make(chan *csprotocol.Packet, gameconst.SendBufferSize)
 
 	// start turn tower
 	go func() {
@@ -280,6 +268,15 @@ loop:
 		}
 	}
 	tw.doClose()
+}
+
+func (tw *Tower) Cleanup() {
+	tw.id2ao.Cleanup()
+	tw.ao2Floor.Cleanup()
+	for _, f := range tw.floorMan.GetFloorList() {
+		f.Cleanup()
+	}
+	tw.floorMan.Cleanup()
 }
 
 func (tw *Tower) initPlayer() {

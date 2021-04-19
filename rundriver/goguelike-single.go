@@ -12,7 +12,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 
@@ -65,12 +64,8 @@ func main() {
 	}
 
 	tw := tower.New(config)
-	if err := tw.ServiceInit(); err != nil {
-		fmt.Printf("%v\n", err)
-	} else {
-		ctx := context.Background()
-		tw.ServiceMain(ctx)
-		tw.ServiceCleanup()
+	if tw != nil {
+		tw.Run()
 	}
 
 	if profile.IsMem() {
