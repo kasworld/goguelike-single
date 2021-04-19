@@ -38,12 +38,6 @@ func (tw *Tower) SendNoti(body interface{}) {
 	tw.t2cCh <- &spk
 }
 
-func (tw *Tower) triggerTurnByCmd(cmd turnaction.TurnAction) {
-	if cmd.TriggerTurn() {
-		tw.GetTurnCh() <- time.Now()
-	}
-}
-
 // handle recv req obj
 func (tw *Tower) handle_c2tch() {
 	for rpk := range tw.c2tCh {
@@ -165,8 +159,6 @@ func (tw *Tower) objAPIFn_ReqTurnAction(robj *csprotocol.ReqTurnAction) (
 	returncode.ReturnCode, *csprotocol.RspTurnAction, error) {
 
 	sendBody := &csprotocol.RspTurnAction{}
-	defer tw.triggerTurnByCmd(robj.Act)
-
 	ec := returncode.Success
 	switch robj.Act {
 	default:
@@ -187,6 +179,10 @@ func (tw *Tower) objAPIFn_ReqTurnAction(robj *csprotocol.ReqTurnAction) (
 		}
 	case turnaction.PassTurn:
 
+	}
+
+	if robj.Act.TriggerTurn() {
+		tw.GetTurnCh() <- time.Now()
 	}
 
 	return ec, sendBody, nil
