@@ -57,9 +57,11 @@ func (tw *Tower) handle_c2tch() {
 
 		if apierr != nil {
 			g2log.Fatal("%v", apierr)
+			return
 		}
 		if sbody == nil {
 			g2log.Fatal("Response body nil")
+			return
 		}
 
 		spk := &csprotocol.Packet{
