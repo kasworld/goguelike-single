@@ -51,41 +51,41 @@ func (tw *Tower) String() string {
 }
 
 type Tower struct {
-	doClose func()         `prettystring:"hide"`
-	rnd     *g2rand.G2Rand `prettystring:"hide"`
+	doClose func() `prettystring:"hide"`
 
-	cmdCh  chan interface{}
-	turnCh chan time.Time
+	// cmd to tower channel
+	cmdCh chan interface{} `prettystring:"hide"`
+	// tower cmd stats
+	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
+	// trigger tower turn channel
+	turnCh   chan time.Time                     `prettystring:"hide"`
+	turnStat *actpersec.ActPerSec               `prettystring:"simple"`
+	interDur *intervalduration.IntervalDuration `prettystring:"simple"`
 
+	// init data
 	config     *goguelikeconfig.GoguelikeConfig
 	seed       int64
-	biasFactor [3]int64  `prettystring:"simple"`
-	startTime  time.Time `prettystring:"simple"`
+	rnd        *g2rand.G2Rand `prettystring:"hide"`
+	biasFactor [3]int64       `prettystring:"simple"`
+	startTime  time.Time      `prettystring:"simple"`
 
-	floorMan     *floormanager.FloorManager                  `prettystring:"simple"`
-	ao2Floor     *aoid2floor.ActiveObjID2Floor               `prettystring:"simple"`
-	id2ao        *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
-	aoExpRanking aoexpsort.ByExp                             `prettystring:"simple"`
+	// mamagers
+	floorMan         *floormanager.FloorManager                  `prettystring:"simple"`
+	ao2Floor         *aoid2floor.ActiveObjID2Floor               `prettystring:"simple"`
+	id2ao            *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
+	aoExpRanking     aoexpsort.ByExp                             `prettystring:"simple"`
+	towerAchieveStat *towerachieve_vector.TowerAchieveVector     `prettystring:"simple"`
 
 	gameInfo *csprotocol.GameInfo
 
 	// single player
 	playerAO *activeobject.ActiveObject
-
-	turnStat *actpersec.ActPerSec               `prettystring:"simple"`
-	interDur *intervalduration.IntervalDuration `prettystring:"simple"`
-
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector `prettystring:"simple"`
-
-	// tower cmd stats
-	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
+	// client to tower packet channel
+	c2tCh chan *csprotocol.Packet `prettystring:"hide"`
+	// tower to client packet channel
+	t2cCh chan *csprotocol.Packet `prettystring:"hide"`
 
 	adminWeb *http.Server `prettystring:"simple"`
-
-	// client to tower packet channel
-	c2tCh chan *csprotocol.Packet
-	// tower to client packet channel
-	t2cCh chan *csprotocol.Packet
 }
 
 func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
