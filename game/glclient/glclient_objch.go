@@ -17,9 +17,9 @@ import (
 	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/enum/flowtype"
 	"github.com/kasworld/goguelike-single/enum/turnaction"
-	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
-	"github.com/kasworld/goguelike-single/game/pid2rspfn"
+	"github.com/kasworld/goguelike-single/game/glclient/clientfloor"
+	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 

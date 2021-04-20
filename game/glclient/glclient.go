@@ -24,9 +24,9 @@ import (
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/bias"
-	"github.com/kasworld/goguelike-single/game/clientfloor"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
-	"github.com/kasworld/goguelike-single/game/pid2rspfn"
+	"github.com/kasworld/goguelike-single/game/glclient/clientfloor"
+	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
 )
 
 type GLClient struct {
