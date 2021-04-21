@@ -16,6 +16,11 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/g3n/engine/core"
+	"github.com/g3n/engine/geometry"
+	"github.com/g3n/engine/graphic"
+	"github.com/g3n/engine/material"
+	"github.com/g3n/engine/math32"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/bias"
@@ -41,6 +46,10 @@ type ClientFloor struct {
 	visitTime      time.Time                            `prettystring:"simple"`
 
 	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
+
+	// for g3n
+	Scene    *core.Node
+	BoundBox *graphic.Mesh
 }
 
 func New(FloorInfo *csprotocol.FloorInfo) *ClientFloor {
@@ -55,6 +64,16 @@ func New(FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman_map.New(FloorInfo.W, FloorInfo.H)
+
+	fw := float32(cf.FloorInfo.W)
+	fh := float32(cf.FloorInfo.H)
+	cf.Scene = core.NewNode()
+	geoBox := geometry.NewPlane(fw, fh)
+	matBox := material.NewStandard(math32.NewColor("White"))
+	cf.BoundBox = graphic.NewMesh(geoBox, matBox)
+	cf.BoundBox.SetPositionX(fw / 2)
+	cf.BoundBox.SetPositionY(fh / 2)
+	cf.Scene.Add(cf.BoundBox)
 
 	return &cf
 }
@@ -177,6 +196,9 @@ func (cf *ClientFloor) GetBias() bias.Bias {
 	} else {
 		return bias.Bias{}
 	}
+}
+
+func (cf *ClientFloor) LeaveFloor() {
 }
 
 func (cf *ClientFloor) EnterFloor() {

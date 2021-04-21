@@ -105,13 +105,17 @@ func (app *GLClient) handleRecvNotiObj(rpk *csprotocol.Packet) error {
 
 func (app *GLClient) objRecvNotiFn_EnterFloor(body *csprotocol.NotiEnterFloor) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
-		app.CurrentFloor = clientfloor.New(body.FI)
+		newFl := clientfloor.New(body.FI)
+		app.Name2Floor[body.FI.Name] = newFl
+		app.CurrentFloor = newFl
 	}
+	app.scene.Add(app.CurrentFloor.Scene)
 	app.CurrentFloor.EnterFloor()
-	app.resizeGLFloor()
 	return nil
 }
 func (app *GLClient) objRecvNotiFn_LeaveFloor(body *csprotocol.NotiLeaveFloor) error {
+	oldFl := app.Name2Floor[body.FI.Name]
+	app.scene.Remove(oldFl.Scene)
 	// do nothing
 	return nil
 }

@@ -33,7 +33,7 @@ type GLClient struct {
 	GameInfo *csprotocol.GameInfo
 
 	ViewportXYLenList findnear.XYLenList
-	FloorInfoList     []*csprotocol.FloorInfo
+	Name2Floor        map[string]*clientfloor.ClientFloor
 	CurrentFloor      *clientfloor.ClientFloor
 
 	pid2recv *pid2rspfn.PID2RspFn
@@ -57,7 +57,6 @@ type GLClient struct {
 	scene      *core.Node
 	cam        *camera.Camera
 	pLight     *light.Point
-	boundBox   *graphic.Mesh
 	playerAO   *graphic.Mesh
 	frameRater *util.FrameRater // Render loop frame rater
 	labelFPS   *gui.Label       // header FPS label
@@ -69,6 +68,7 @@ func New(
 	gameInfo *csprotocol.GameInfo,
 	c2tch, t2cch chan *csprotocol.Packet) *GLClient {
 	app := &GLClient{
+		Name2Floor:        make(map[string]*clientfloor.ClientFloor),
 		pid2recv:          pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 		c2tCh:             c2tch,

@@ -29,7 +29,6 @@ import (
 	"github.com/g3n/engine/util"
 	"github.com/g3n/engine/util/helper"
 	"github.com/g3n/engine/window"
-	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
 // runtime.LockOSThread
@@ -86,11 +85,6 @@ func (ga *GLClient) Run() error {
 	ga.playerAO = graphic.NewMesh(geom, mat)
 	ga.scene.Add(ga.playerAO)
 
-	geoBox := geometry.NewPlane(1, 1)
-	matBox := material.NewStandard(math32.NewColor("White"))
-	ga.boundBox = graphic.NewMesh(geoBox, matBox)
-	ga.scene.Add(ga.boundBox)
-
 	// Create and add a button to the scene
 	// btn := gui.NewButton("Make Red")
 	// btn.SetPosition(100, 40)
@@ -128,20 +122,6 @@ func (ga *GLClient) moveGLPos() {
 	ga.cam.SetPosition(float32(aox), float32(aoy), 100)
 	ga.pLight.SetPosition(float32(aox), float32(aoy), 100)
 	ga.playerAO.SetPosition(float32(aox), float32(aoy), 0)
-}
-
-func (ga *GLClient) resizeGLFloor() {
-	if ga.CurrentFloor != nil {
-		fw := ga.CurrentFloor.FloorInfo.GetWidth()
-		ga.boundBox.SetScaleX(float32(fw))
-		ga.boundBox.SetPositionX(float32(fw) / 2)
-
-		fh := ga.CurrentFloor.FloorInfo.GetHeight()
-		ga.boundBox.SetScaleY(float32(fh))
-		ga.boundBox.SetPositionY(float32(fh) / 2)
-	} else {
-		g2log.Warn("CurrentFloor nil")
-	}
 }
 
 // Set up callback to update viewport and camera aspect ratio when the window is resized
