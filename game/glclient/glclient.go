@@ -57,6 +57,7 @@ type GLClient struct {
 	app        *app.Application
 	scene      *core.Node
 	cam        *camera.Camera
+	camZpos    float32
 	pLight     *light.Point
 	playerAO   *graphic.Mesh
 	frameRater *util.FrameRater // Render loop frame rater

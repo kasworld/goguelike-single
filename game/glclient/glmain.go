@@ -46,7 +46,9 @@ func (ga *GLClient) glInit() error {
 
 	// Create perspective camera
 	ga.cam = camera.New(1)
-	ga.cam.SetPosition(0, 0, 100)
+	ga.cam.SetFar(1400)
+	ga.camZpos = 100
+	ga.cam.SetPosition(0, 0, ga.camZpos)
 	ga.scene.Add(ga.cam)
 
 	// Set up orbit control for the camera
@@ -71,7 +73,47 @@ func (ga *GLClient) glInit() error {
 	lightTextColor := math32.Color4{0.8, 0.8, 0.8, 1}
 	ga.labelFPS.SetColor4(&lightTextColor)
 	ga.scene.Add(ga.labelFPS)
+
+	gui.Manager().SubscribeID(window.OnMouseUp, ga, ga.onMouse)
+	gui.Manager().SubscribeID(window.OnMouseDown, ga, ga.onMouse)
+	gui.Manager().SubscribeID(window.OnScroll, &ga, ga.onScroll)
+
 	return nil
+}
+
+// onMouse is called when an OnMouseDown/OnMouseUp event is received.
+func (ga *GLClient) onMouse(evname string, ev interface{}) {
+
+	switch evname {
+	case window.OnMouseDown:
+		// gui.Manager().SetCursorFocus(ga)
+		mev := ev.(*window.MouseEvent)
+		switch mev.Button {
+		case window.MouseButtonLeft: // Rotate
+		case window.MouseButtonMiddle: // Zoom
+		case window.MouseButtonRight: // Pan
+		}
+	case window.OnMouseUp:
+		// gui.Manager().SetCursorFocus(nil)
+	}
+}
+
+// onScroll is called when an OnScroll event is received.
+func (ga *GLClient) onScroll(evname string, ev interface{}) {
+	zF := float32(1.5)
+	sev := ev.(*window.ScrollEvent)
+	if sev.Yoffset > 0 {
+		ga.camZpos *= zF
+		if ga.camZpos > 1000 {
+			ga.camZpos = 1000
+		}
+	} else if sev.Yoffset < 0 {
+		ga.camZpos /= zF
+		if ga.camZpos < 10 {
+			ga.camZpos = 10
+		}
+	}
+	ga.moveGLPos()
 }
 
 func (ga *GLClient) Run() error {
@@ -119,8 +161,8 @@ func (ga *GLClient) updateGL(renderer *renderer.Renderer, deltaTime time.Duratio
 
 func (ga *GLClient) moveGLPos() {
 	aox, aoy := ga.GetPlayerXY()
-	ga.cam.SetPosition(float32(aox), float32(aoy), 100)
-	ga.pLight.SetPosition(float32(aox), float32(aoy), 100)
+	ga.cam.SetPosition(float32(aox), float32(aoy), ga.camZpos)
+	ga.pLight.SetPosition(float32(aox), float32(aoy), ga.camZpos)
 	ga.playerAO.SetPosition(float32(aox), float32(aoy), 0)
 }
 
