@@ -21,13 +21,17 @@ import (
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
+	"github.com/g3n/engine/texture"
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
+	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/tilearea"
 	"github.com/kasworld/goguelike-single/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike-single/game/visitarea"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
@@ -48,17 +52,20 @@ type ClientFloor struct {
 	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
 	// for g3n
-	Scene    *core.Node
-	BoundBox *graphic.Mesh
+	Scene         *core.Node
+	TerrainLayers []*graphic.Mesh
 }
 
-func New(FloorInfo *csprotocol.FloorInfo) *ClientFloor {
+func New(
+	config *goguelikeconfig.GoguelikeConfig,
+	FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	cf := ClientFloor{
-		Tiles:     tilearea.New(FloorInfo.W, FloorInfo.H),
-		Visited:   visitarea.New(FloorInfo),
-		FloorInfo: FloorInfo,
-		XWrapper:  wrapper.New(FloorInfo.W),
-		YWrapper:  wrapper.New(FloorInfo.H),
+		Tiles:         tilearea.New(FloorInfo.W, FloorInfo.H),
+		Visited:       visitarea.New(FloorInfo),
+		FloorInfo:     FloorInfo,
+		XWrapper:      wrapper.New(FloorInfo.W),
+		YWrapper:      wrapper.New(FloorInfo.H),
+		TerrainLayers: make([]*graphic.Mesh, tile.Tile_Count),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
@@ -68,12 +75,29 @@ func New(FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	fw := float32(cf.FloorInfo.W)
 	fh := float32(cf.FloorInfo.H)
 	cf.Scene = core.NewNode()
-	geoBox := geometry.NewPlane(fw, fh)
-	matBox := material.NewStandard(math32.NewColor("White"))
-	cf.BoundBox = graphic.NewMesh(geoBox, matBox)
-	cf.BoundBox.SetPositionX(fw / 2)
-	cf.BoundBox.SetPositionY(fh / 2)
-	cf.Scene.Add(cf.BoundBox)
+
+	// make terrain layers
+	for i := range cf.TerrainLayers {
+		texFilename := tile.Tile(i).String() + ".png"
+
+		tex, err := texture.NewTexture2DFromImage(
+			config.ClientDataFolder + "/tiles/" + texFilename)
+		if err != nil {
+			g2log.Fatal("Error loading texture: %s", err)
+		}
+
+		geo := geometry.NewPlane(fw, fh)
+		mat := material.NewStandard(math32.NewColor("White"))
+		mat.SetOpacity(1)
+		mat.SetTransparent(true)
+		mat.AddTexture(tex)
+
+		cf.TerrainLayers[i] = graphic.NewMesh(geo, mat)
+		cf.TerrainLayers[i].SetPositionX(fw / 2)
+		cf.TerrainLayers[i].SetPositionY(fh / 2)
+		cf.TerrainLayers[i].SetPositionZ(float32(i - tile.Tile_Count))
+		cf.Scene.Add(cf.TerrainLayers[i])
+	}
 
 	return &cf
 }

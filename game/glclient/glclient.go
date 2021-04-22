@@ -31,6 +31,7 @@ import (
 
 type GLClient struct {
 	GameInfo *csprotocol.GameInfo
+	config   *goguelikeconfig.GoguelikeConfig
 
 	ViewportXYLenList findnear.XYLenList
 	Name2Floor        map[string]*clientfloor.ClientFloor
@@ -74,6 +75,7 @@ func New(
 		c2tCh:             c2tch,
 		t2cCh:             t2cch,
 		GameInfo:          gameInfo,
+		config:            config,
 	}
 	return app
 }
