@@ -88,7 +88,7 @@ func New(
 		}
 		tex.SetWrapS(gls.REPEAT)
 		tex.SetWrapT(gls.REPEAT)
-		// tex.SetRepeat(64, 64)
+		tex.SetRepeat(fw/128, fh/128)
 
 		mat := material.NewStandard(math32.NewColor("White"))
 		mat.SetOpacity(1)
