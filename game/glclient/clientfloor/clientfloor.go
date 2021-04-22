@@ -18,6 +18,7 @@ import (
 
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/geometry"
+	"github.com/g3n/engine/gls"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
@@ -85,18 +86,23 @@ func New(
 		if err != nil {
 			g2log.Fatal("Error loading texture: %s", err)
 		}
+		tex.SetWrapS(gls.REPEAT)
+		tex.SetWrapT(gls.REPEAT)
+		// tex.SetRepeat(64, 64)
 
-		geo := geometry.NewPlane(fw, fh)
 		mat := material.NewStandard(math32.NewColor("White"))
 		mat.SetOpacity(1)
 		mat.SetTransparent(true)
 		mat.AddTexture(tex)
 
-		cf.TerrainLayers[i] = graphic.NewMesh(geo, mat)
-		cf.TerrainLayers[i].SetPositionX(fw / 2)
-		cf.TerrainLayers[i].SetPositionY(fh / 2)
-		cf.TerrainLayers[i].SetPositionZ(float32(i - tile.Tile_Count))
-		cf.Scene.Add(cf.TerrainLayers[i])
+		geo := geometry.NewPlane(fw, fh)
+		mesh := graphic.NewMesh(geo, mat)
+		mesh.SetPositionX(fw / 2)
+		mesh.SetPositionY(fh / 2)
+		mesh.SetPositionZ(float32(i - tile.Tile_Count))
+
+		cf.Scene.Add(mesh)
+		cf.TerrainLayers[i] = mesh
 	}
 
 	return &cf
