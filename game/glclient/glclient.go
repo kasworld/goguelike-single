@@ -25,7 +25,6 @@ import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
-	"github.com/kasworld/goguelike-single/game/glclient/clientfloor"
 	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
 )
 
@@ -34,8 +33,8 @@ type GLClient struct {
 	config   *goguelikeconfig.GoguelikeConfig
 
 	ViewportXYLenList findnear.XYLenList
-	Name2Floor        map[string]*clientfloor.ClientFloor
-	CurrentFloor      *clientfloor.ClientFloor
+	Name2Floor        map[string]*ClientFloor
+	CurrentFloor      *ClientFloor
 
 	pid2recv *pid2rspfn.PID2RspFn
 
@@ -70,7 +69,7 @@ func New(
 	gameInfo *csprotocol.GameInfo,
 	c2tch, t2cch chan *csprotocol.Packet) *GLClient {
 	app := &GLClient{
-		Name2Floor:        make(map[string]*clientfloor.ClientFloor),
+		Name2Floor:        make(map[string]*ClientFloor),
 		pid2recv:          pid2rspfn.New(),
 		ViewportXYLenList: viewportdata.ViewportXYLenList,
 		c2tCh:             c2tch,

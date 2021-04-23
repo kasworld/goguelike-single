@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package clientfloor
+package glclient
 
 import (
 	"fmt"
@@ -59,7 +59,7 @@ type ClientFloor struct {
 	TerrainTiles [][][]*graphic.Mesh
 }
 
-func New(
+func NewClientFloor(
 	config *goguelikeconfig.GoguelikeConfig,
 	FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	cf := ClientFloor{
