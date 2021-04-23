@@ -18,7 +18,6 @@ import (
 
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/gls"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
@@ -76,8 +75,8 @@ func New(
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman_map.New(FloorInfo.W, FloorInfo.H)
 
-	fw := float32(cf.FloorInfo.W)
-	fh := float32(cf.FloorInfo.H)
+	// fw := float32(cf.FloorInfo.W)
+	// fh := float32(cf.FloorInfo.H)
 	cf.Scene = core.NewNode()
 
 	// make terrain layers
@@ -90,13 +89,13 @@ func New(
 		if err != nil {
 			g2log.Fatal("Error loading texture: %s", err)
 		}
-		tex.SetWrapS(gls.REPEAT)
-		tex.SetWrapT(gls.REPEAT)
-		tex.SetRepeat(fw/128, fh/128)
+		// tex.SetWrapS(gls.REPEAT)
+		// tex.SetWrapT(gls.REPEAT)
+		// tex.SetRepeat(fw/128, fh/128)
 
 		mat := material.NewStandard(math32.NewColor("White"))
-		mat.SetOpacity(1)
-		mat.SetTransparent(true)
+		// mat.SetOpacity(1)
+		// mat.SetTransparent(true)
 		mat.AddTexture(tex)
 
 		cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
@@ -108,9 +107,11 @@ func New(
 				mesh.SetPositionY(float32(y))
 				mesh.SetPositionZ(float32(i - tile.Tile_Count))
 
-				cf.Scene.Add(mesh)
 				cf.TerrainTiles[i][x][y] = mesh
-				mesh.SetVisible(rnd.Intn(10) == 0)
+				if rnd.Intn(20) == 0 {
+					cf.Scene.Add(mesh)
+				}
+				// mesh.SetVisible(rnd.Intn(20) == 0)
 			}
 		}
 	}
