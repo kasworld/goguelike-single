@@ -24,6 +24,7 @@ import (
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/texture"
 	"github.com/kasworld/findnear"
+	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/way9type"
@@ -53,20 +54,22 @@ type ClientFloor struct {
 	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
 	// for g3n
-	Scene         *core.Node
-	TerrainLayers []*graphic.Mesh
+	Scene *core.Node
+
+	// tile, x, y
+	TerrainTiles [][][]*graphic.Mesh
 }
 
 func New(
 	config *goguelikeconfig.GoguelikeConfig,
 	FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	cf := ClientFloor{
-		Tiles:         tilearea.New(FloorInfo.W, FloorInfo.H),
-		Visited:       visitarea.New(FloorInfo),
-		FloorInfo:     FloorInfo,
-		XWrapper:      wrapper.New(FloorInfo.W),
-		YWrapper:      wrapper.New(FloorInfo.H),
-		TerrainLayers: make([]*graphic.Mesh, tile.Tile_Count),
+		Tiles:        tilearea.New(FloorInfo.W, FloorInfo.H),
+		Visited:      visitarea.New(FloorInfo),
+		FloorInfo:    FloorInfo,
+		XWrapper:     wrapper.New(FloorInfo.W),
+		YWrapper:     wrapper.New(FloorInfo.H),
+		TerrainTiles: make([][][]*graphic.Mesh, tile.Tile_Count),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
@@ -78,9 +81,10 @@ func New(
 	cf.Scene = core.NewNode()
 
 	// make terrain layers
-	for i := range cf.TerrainLayers {
+	rnd := g2rand.New()
+	geo := geometry.NewPlane(1, 1)
+	for i := range cf.TerrainTiles {
 		texFilename := tile.Tile(i).String() + ".png"
-
 		tex, err := texture.NewTexture2DFromImage(
 			config.ClientDataFolder + "/tiles/" + texFilename)
 		if err != nil {
@@ -95,14 +99,20 @@ func New(
 		mat.SetTransparent(true)
 		mat.AddTexture(tex)
 
-		geo := geometry.NewPlane(fw, fh)
-		mesh := graphic.NewMesh(geo, mat)
-		mesh.SetPositionX(fw / 2)
-		mesh.SetPositionY(fh / 2)
-		mesh.SetPositionZ(float32(i - tile.Tile_Count))
+		for x := 0; x < cf.FloorInfo.W; x++ {
+			cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
+			for y := 0; y < cf.FloorInfo.H; y++ {
+				cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
+				mesh := graphic.NewMesh(geo, mat)
+				mesh.SetPositionX(float32(x))
+				mesh.SetPositionY(float32(y))
+				mesh.SetPositionZ(float32(i - tile.Tile_Count))
 
-		cf.Scene.Add(mesh)
-		cf.TerrainLayers[i] = mesh
+				cf.Scene.Add(mesh)
+				cf.TerrainTiles[i][x][y] = mesh
+				mesh.SetVisible(rnd.Intn(10) == 0)
+			}
+		}
 	}
 
 	return &cf
