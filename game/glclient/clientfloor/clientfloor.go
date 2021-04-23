@@ -99,10 +99,10 @@ func New(
 		mat.SetTransparent(true)
 		mat.AddTexture(tex)
 
+		cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
 		for x := 0; x < cf.FloorInfo.W; x++ {
-			cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
+			cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
 			for y := 0; y < cf.FloorInfo.H; y++ {
-				cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
 				mesh := graphic.NewMesh(geo, mat)
 				mesh.SetPositionX(float32(x))
 				mesh.SetPositionY(float32(y))
