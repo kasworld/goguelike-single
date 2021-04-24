@@ -25,6 +25,27 @@ import (
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
+var tileAttrib = [tile.Tile_Count]struct {
+	tranparent bool
+}{
+	tile.Swamp:  {false},
+	tile.Soil:   {false},
+	tile.Stone:  {false},
+	tile.Sand:   {false},
+	tile.Sea:    {false},
+	tile.Magma:  {false},
+	tile.Ice:    {false},
+	tile.Grass:  {false},
+	tile.Tree:   {false},
+	tile.Road:   {false},
+	tile.Room:   {false},
+	tile.Wall:   {false},
+	tile.Window: {true},
+	tile.Door:   {false},
+	tile.Fog:    {true},
+	tile.Smoke:  {true},
+}
+
 func (mm *MeshMaker) String() string {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "MeshMaker[")
@@ -62,7 +83,7 @@ func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 		mat := material.NewStandard(math32.NewColor("White"))
 		mat.AddTexture(tex)
 		// mat.SetOpacity(1)
-		// mat.SetTransparent(true)
+		mat.SetTransparent(tileAttrib[i].tranparent)
 
 		mm.mat[i] = mat
 
@@ -90,7 +111,7 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 	}
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
-	mesh.SetPositionZ(float32(int(tl) - tile.Tile_Count))
+	mesh.SetPositionZ(float32(int(tl)-tile.Tile_Count) / float32(tile.Tile_Count))
 	return mesh
 }
 
