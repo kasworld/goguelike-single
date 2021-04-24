@@ -54,17 +54,13 @@ type FieldObject struct {
 
 func (p FieldObject) String() string {
 	return fmt.Sprintf(
-		"FieldObject[Floor:%v ID:%v %v %v %v %v %v Decay:%v Degree:%v PerTurn:%v WingLen:%v WingCount:%v R:%v]",
+		"FieldObject[Floor:%v ID:%v %v %v %v %v %v]",
 		p.FloorName,
 		p.ID,
 		p.ActType,
 		p.DisplayType,
 		p.Message,
 		p.DstPortalID, p.DstFloorName,
-		p.Decay,
-		p.Degree, p.DegreePerTurn,
-		p.WingLen, p.WingCount,
-		p.CurrentRadius,
 	)
 }
 
