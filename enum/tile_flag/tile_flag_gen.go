@@ -2,7 +2,12 @@
 
 package tile_flag
 
-import "github.com/kasworld/goguelike-single/enum/tile"
+import (
+	"bytes"
+	"fmt"
+
+	"github.com/kasworld/goguelike-single/enum/tile"
+)
 
 type TileFlag uint16
 
@@ -24,6 +29,18 @@ const (
 	FogFlag    = TileFlag(1 << tile.Fog)    // layer 3
 	SmokeFlag  = TileFlag(1 << tile.Smoke)  //
 )
+
+func (cf TileFlag) String() string {
+	var buf bytes.Buffer
+	fmt.Fprintf(&buf, "TileFlag[")
+	for i := 0; i < tile.Tile_Count; i++ {
+		if cf.TestByTile(tile.Tile(i)) {
+			fmt.Fprintf(&buf, "%v ", tile.Tile(i))
+		}
+	}
+	fmt.Fprintf(&buf, "]")
+	return buf.String()
+}
 
 func (bt *TileFlag) SetByTile(n tile.Tile) {
 	*bt |= TileFlag(1 << n)

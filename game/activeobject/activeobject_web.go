@@ -64,10 +64,6 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	<body>
 	{{.}}
 	</br>
-	<a href= "/KickActiveObj?aoid={{.GetUUID}}" >
-		KickActiveObj
-	</a>
-	</br>
 	Level : {{.GetTurnData.Level}}
 	</br>
 	Exp : {{.GetTurnData.TotalExp}} 
@@ -91,6 +87,8 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	AtkBias {{.GetTurnData.AttackBias}} 
 	</br>
 	DefBias {{.GetTurnData.DefenceBias}} 
+	<br/>
+	Condition {{.GetTurnData.Condition}}
 	<br/>
 	{{if .GetAIObj }} 
 		AI : {{.GetAIObj}} 

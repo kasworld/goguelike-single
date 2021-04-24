@@ -13,7 +13,6 @@ package tile_flag
 
 import (
 	"bytes"
-	"fmt"
 
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/turnaction"
@@ -149,9 +148,9 @@ func (t TileFlag) Name() string {
 	return t.getTileValuesByCached().Name
 }
 
-func (t TileFlag) String() string {
-	return fmt.Sprintf("TileFlag[%s]", t.Name())
-}
+// func (t TileFlag) String() string {
+// 	return fmt.Sprintf("TileFlag[%s]", t.Name())
+// }
 
 func TileCacheCount() int {
 	rtn := 0

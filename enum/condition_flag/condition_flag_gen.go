@@ -2,7 +2,12 @@
 
 package condition_flag
 
-import "github.com/kasworld/goguelike-single/enum/condition"
+import (
+	"bytes"
+	"fmt"
+
+	"github.com/kasworld/goguelike-single/enum/condition"
+)
 
 type ConditionFlag uint16
 
@@ -18,6 +23,18 @@ const (
 	SlowFlag      = ConditionFlag(1 << condition.Slow)      // need actionpoint doubled
 	HasteFlag     = ConditionFlag(1 << condition.Haste)     // need actionpoint halfed
 )
+
+func (cf ConditionFlag) String() string {
+	var buf bytes.Buffer
+	fmt.Fprintf(&buf, "ConditionFlag[")
+	for i := 0; i < condition.Condition_Count; i++ {
+		if cf.TestByCondition(condition.Condition(i)) {
+			fmt.Fprintf(&buf, "%v ", condition.Condition(i))
+		}
+	}
+	fmt.Fprintf(&buf, "]")
+	return buf.String()
+}
 
 func (bt *ConditionFlag) SetByCondition(n condition.Condition) {
 	*bt |= ConditionFlag(1 << n)

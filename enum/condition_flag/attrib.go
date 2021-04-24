@@ -37,3 +37,15 @@ func init() {
 		}
 	}
 }
+
+// func (cf ConditionFlag) String() string {
+// 	var buf bytes.Buffer
+// 	fmt.Fprintf(&buf, "ConditionFlag[")
+// 	for i := 0; i < condition.Condition_Count; i++ {
+// 		if cf.TestByCondition(condition.Condition(i)) {
+// 			fmt.Fprintf(&buf, "%v ", condition.Condition(i))
+// 		}
+// 	}
+// 	fmt.Fprintf(&buf, "]")
+// 	return buf.String()
+// }
