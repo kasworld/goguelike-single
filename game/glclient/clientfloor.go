@@ -88,42 +88,6 @@ func NewClientFloor(
 			}
 		}
 	}
-
-	// geo := geometry.NewPlane(1, 1)
-	// for i := range cf.TerrainTiles {
-	// 	texFilename := tile.Tile(i).String() + ".png"
-	// 	tex, err := texture.NewTexture2DFromImage(
-	// 		config.ClientDataFolder + "/tiles/" + texFilename)
-	// 	if err != nil {
-	// 		g2log.Fatal("Error loading texture: %s", err)
-	// 	}
-	// 	// tex.SetWrapS(gls.REPEAT)
-	// 	// tex.SetWrapT(gls.REPEAT)
-	// 	// tex.SetRepeat(fw/128, fh/128)
-
-	// 	mat := material.NewStandard(math32.NewColor("White"))
-	// 	// mat.SetOpacity(1)
-	// 	// mat.SetTransparent(true)
-	// 	mat.AddTexture(tex)
-
-	// 	cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
-	// 	for x := 0; x < cf.FloorInfo.W; x++ {
-	// 		cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
-	// 		for y := 0; y < cf.FloorInfo.H; y++ {
-	// 			mesh := graphic.NewMesh(geo, mat)
-	// 			mesh.SetPositionX(float32(x))
-	// 			mesh.SetPositionY(float32(y))
-	// 			mesh.SetPositionZ(float32(i - tile.Tile_Count))
-
-	// 			cf.TerrainTiles[i][x][y] = mesh
-	// 			if rnd.Intn(20) == 0 {
-	// 				cf.Scene.Add(mesh)
-	// 			}
-	// 			// mesh.SetVisible(rnd.Intn(20) == 0)
-	// 		}
-	// 	}
-	// }
-
 	return &cf
 }
 

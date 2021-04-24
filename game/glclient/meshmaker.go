@@ -22,15 +22,17 @@ import (
 )
 
 type MeshMaker struct {
-	tex []*texture.Texture2D
-	mat []*material.Standard
-	geo []*geometry.Geometry
+	inUse []int
+	tex   []*texture.Texture2D
+	mat   []*material.Standard
+	geo   []*geometry.Geometry
 	// tile , free list
 	tiles [][]*graphic.Mesh
 }
 
 func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 	mm := MeshMaker{
+		inUse: make([]int, tile.Tile_Count),
 		tex:   make([]*texture.Texture2D, tile.Tile_Count),
 		mat:   make([]*material.Standard, tile.Tile_Count),
 		geo:   make([]*geometry.Geometry, tile.Tile_Count),
@@ -69,6 +71,7 @@ func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {
 }
 
 func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
+	mm.inUse[tl]++
 	var mesh *graphic.Mesh
 	freeSize := len(mm.tiles[tl])
 	if freeSize > 0 {
@@ -84,5 +87,6 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 }
 
 func (mm *MeshMaker) PutTile(tl tile.Tile, mesh *graphic.Mesh) {
+	mm.inUse[tl]--
 	mm.tiles[tl] = append(mm.tiles[tl], mesh)
 }
