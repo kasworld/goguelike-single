@@ -14,6 +14,9 @@ package glclient
 import (
 	"bytes"
 	"fmt"
+	"image"
+	"image/draw"
+	"os"
 
 	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
@@ -65,19 +68,49 @@ type MeshMaker struct {
 	tiles [tile.Tile_Count][]*graphic.Mesh
 }
 
+func loadTileTexture(texFilename string) *texture.Texture2D {
+
+	// Open image file
+	file, err := os.Open(texFilename)
+	if err != nil {
+		g2log.Fatal("Error loading texture: %s", err)
+		return nil
+	}
+	defer file.Close()
+
+	// Decodes image
+	img, _, err := image.Decode(file)
+	if err != nil {
+		g2log.Fatal("Error loading texture: %s", err)
+		return nil
+	}
+
+	// Converts image to RGBA format
+	texSize := image.Rectangle{
+		Min: image.Point{0, 0},
+		Max: image.Point{64, 64},
+	}
+	rgba := image.NewRGBA(texSize)
+	if rgba.Stride != rgba.Rect.Size().X*4 {
+		err := fmt.Errorf("unsupported stride")
+		g2log.Fatal("Error loading texture: %s", err)
+		return nil
+	}
+	draw.Draw(rgba, rgba.Bounds(), img, image.Point{0, 0}, draw.Src)
+
+	tex := texture.NewTexture2DFromRGBA(rgba)
+	tex.SetFromRGBA(rgba)
+
+	// tex.SetWrapS(gls.REPEAT)
+	// tex.SetWrapT(gls.REPEAT)
+	// tex.SetRepeat(fw/128, fh/128)
+	return tex
+}
+
 func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 	mm := MeshMaker{}
 	for i := range mm.tex {
-		texFilename := tile.Tile(i).String() + ".png"
-		tex, err := texture.NewTexture2DFromImage(
-			dataFolder + "/tiles/" + texFilename)
-		if err != nil {
-			g2log.Fatal("Error loading texture: %s", err)
-			return nil
-		}
-		// tex.SetWrapS(gls.REPEAT)
-		// tex.SetWrapT(gls.REPEAT)
-		// tex.SetRepeat(fw/128, fh/128)
+		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
 		mm.tex[i] = tex
 
 		mat := material.NewStandard(math32.NewColor("White"))
