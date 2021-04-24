@@ -21,6 +21,7 @@ import (
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/tile"
+	"github.com/kasworld/goguelike-single/enum/tile_vector"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
@@ -35,22 +36,16 @@ func (mm *MeshMaker) String() string {
 }
 
 type MeshMaker struct {
-	inUse []int
-	tex   []*texture.Texture2D
-	mat   []*material.Standard
-	geo   []*geometry.Geometry
+	inUse tile_vector.TileVector
+	tex   [tile.Tile_Count]*texture.Texture2D
+	mat   [tile.Tile_Count]*material.Standard
+	geo   [tile.Tile_Count]*geometry.Geometry
 	// tile , free list
-	tiles [][]*graphic.Mesh
+	tiles [tile.Tile_Count][]*graphic.Mesh
 }
 
 func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
-	mm := MeshMaker{
-		inUse: make([]int, tile.Tile_Count),
-		tex:   make([]*texture.Texture2D, tile.Tile_Count),
-		mat:   make([]*material.Standard, tile.Tile_Count),
-		geo:   make([]*geometry.Geometry, tile.Tile_Count),
-		tiles: make([][]*graphic.Mesh, tile.Tile_Count),
-	}
+	mm := MeshMaker{}
 	for i := range mm.tex {
 		texFilename := tile.Tile(i).String() + ".png"
 		tex, err := texture.NewTexture2DFromImage(
@@ -84,12 +79,12 @@ func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {
 }
 
 func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
-	mm.inUse[tl]++
+	mm.inUse.Inc(tl)
 	var mesh *graphic.Mesh
 	freeSize := len(mm.tiles[tl])
 	if freeSize > 0 {
 		mesh = mm.tiles[tl][freeSize-1]
-		mm.tiles = mm.tiles[:freeSize-1]
+		mm.tiles[tl] = mm.tiles[tl][:freeSize-1]
 	} else {
 		mesh = mm.newTile(tl)
 	}
@@ -100,6 +95,6 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 }
 
 func (mm *MeshMaker) PutTile(tl tile.Tile, mesh *graphic.Mesh) {
-	mm.inUse[tl]--
+	mm.inUse.Dec(tl)
 	mm.tiles[tl] = append(mm.tiles[tl], mesh)
 }
