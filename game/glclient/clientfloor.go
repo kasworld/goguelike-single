@@ -88,6 +88,7 @@ func NewClientFloor(
 			}
 		}
 	}
+	fmt.Println(cf.meshMaker.String())
 	return &cf
 }
 

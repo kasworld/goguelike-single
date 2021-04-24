@@ -12,6 +12,9 @@
 package glclient
 
 import (
+	"bytes"
+	"fmt"
+
 	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
@@ -20,6 +23,16 @@ import (
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
+
+func (mm *MeshMaker) String() string {
+	var buf bytes.Buffer
+	fmt.Fprintf(&buf, "MeshMaker[")
+	for i, v := range mm.inUse {
+		fmt.Fprintf(&buf, "%v:%v ", tile.Tile(i), v)
+	}
+	fmt.Fprintf(&buf, "]")
+	return buf.String()
+}
 
 type MeshMaker struct {
 	inUse []int
