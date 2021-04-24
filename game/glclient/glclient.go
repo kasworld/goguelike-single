@@ -53,6 +53,7 @@ type GLClient struct {
 	t2cCh chan *csprotocol.Packet
 
 	// g3n field
+	meshMaker  *MeshMaker
 	app        *app.Application
 	scene      *core.Node
 	cam        *camera.Camera
@@ -76,6 +77,10 @@ func New(
 		t2cCh:             t2cch,
 		GameInfo:          gameInfo,
 		config:            config,
+	}
+	app.meshMaker = NewMeshMaker(config.ClientDataFolder, 1024)
+	if app.meshMaker == nil {
+		return nil
 	}
 	return app
 }

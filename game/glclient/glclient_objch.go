@@ -104,7 +104,7 @@ func (app *GLClient) handleRecvNotiObj(rpk *csprotocol.Packet) error {
 
 func (app *GLClient) objRecvNotiFn_EnterFloor(body *csprotocol.NotiEnterFloor) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
-		newFl := NewClientFloor(app.config, body.FI)
+		newFl := NewClientFloor(app.meshMaker, body.FI)
 		app.Name2Floor[body.FI.Name] = newFl
 		app.CurrentFloor = newFl
 	}
@@ -215,7 +215,7 @@ func (app *GLClient) objRecvNotiFn_VPTiles(body *csprotocol.NotiVPTiles) error {
 func (app *GLClient) objRecvNotiFn_FloorTiles(body *csprotocol.NotiFloorTiles) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
 		// new floor
-		app.CurrentFloor = NewClientFloor(app.config, body.FI)
+		app.CurrentFloor = NewClientFloor(app.meshMaker, body.FI)
 	}
 
 	oldComplete := app.CurrentFloor.Visited.IsComplete()
@@ -228,7 +228,7 @@ func (app *GLClient) objRecvNotiFn_FloorTiles(body *csprotocol.NotiFloorTiles) e
 func (app *GLClient) objRecvNotiFn_FieldObjList(body *csprotocol.NotiFieldObjList) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
 		// new floor
-		app.CurrentFloor = NewClientFloor(app.config, body.FI)
+		app.CurrentFloor = NewClientFloor(app.meshMaker, body.FI)
 	}
 	app.CurrentFloor.UpdateFieldObjList(body.FOList)
 	return nil
