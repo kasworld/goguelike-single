@@ -34,30 +34,26 @@ var tryAutoActFn = []func(app *GLClient) bool{
 }
 
 func (app *GLClient) actByControlMode() {
-	if app.OLNotiData != nil &&
-		app.OLNotiData.ActiveObj.AP > 0 &&
-		app.OLNotiData.ActiveObj.HP > 0 {
+	if app.OLNotiData.ActiveObj.HP > 0 && app.OLNotiData.ActiveObj.AP > 0 {
 		for _, v := range tryAutoActFn {
 			if v(app) {
 				return
 			}
 		}
-		app.sendReqObjWithRspFn(
-			&csprotocol.ReqTurnAction{
-				Act: turnaction.PassTurn,
-			},
-			func(pk *csprotocol.Packet) error {
-				return nil
-			},
-		)
 	}
+	app.sendReqObjWithRspFn(
+		&csprotocol.ReqTurnAction{
+			Act: turnaction.PassTurn,
+		},
+		func(pk *csprotocol.Packet) error {
+			return nil
+		},
+	)
+
 }
 
 func tryAutoBattle(app *GLClient) bool {
 	cf := app.CurrentFloor
-	if app.OLNotiData == nil {
-		return false
-	}
 	playerX, playerY := app.GetPlayerXY()
 	if !cf.IsValidPos(playerX, playerY) {
 		return false
@@ -98,9 +94,6 @@ func tryAutoBattle(app *GLClient) bool {
 
 func tryAutoPickup(app *GLClient) bool {
 	cf := app.CurrentFloor
-	if app.OLNotiData == nil {
-		return false
-	}
 	if app.OLNotiData.ActiveObj.Conditions.TestByCondition(condition.Float) {
 		return false
 	}
@@ -139,9 +132,6 @@ func tryAutoPickup(app *GLClient) bool {
 }
 
 func tryAutoEquip(app *GLClient) bool {
-	if app.OLNotiData == nil {
-		return false
-	}
 	for _, po := range app.OLNotiData.ActiveObj.EquippedPo {
 		if app.needUnEquipCarryObj(po.GetBias()) {
 			app.sendReqObjWithRspFn(
@@ -172,9 +162,6 @@ func tryAutoEquip(app *GLClient) bool {
 }
 
 func tryAutoUsePotion(app *GLClient) bool {
-	if app.OLNotiData == nil {
-		return false
-	}
 	for _, po := range app.OLNotiData.ActiveObj.PotionBag {
 		if app.needUsePotion(po) {
 			app.sendReqObjWithRspFn(
@@ -207,9 +194,6 @@ func tryAutoUsePotion(app *GLClient) bool {
 }
 
 func tryAutoRecycleEquip(app *GLClient) bool {
-	if app.OLNotiData == nil {
-		return false
-	}
 	if app.OLNotiData.ActiveObj.Conditions.TestByCondition(condition.Float) {
 		return false
 	}
@@ -223,9 +207,6 @@ func tryAutoRecycleEquip(app *GLClient) bool {
 }
 
 func tryAutoRecyclePotionScroll(app *GLClient) bool {
-	if app.OLNotiData == nil {
-		return false
-	}
 	if app.OLNotiData.ActiveObj.Conditions.TestByCondition(condition.Float) {
 		return false
 	}

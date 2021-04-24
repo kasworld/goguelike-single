@@ -715,10 +715,6 @@ func (f *Floor) sendViewportNoti(
 
 	for _, ao := range aoListToProcessInTurn {
 		if _, exist := aoMapLeaveFloorInTurn[ao.GetUUID()]; exist {
-			if ao.GetActiveObjType() == aotype.User {
-				// if player is leaving, autoturn
-				f.tower.GetTurnCh() <- time.Now()
-			}
 			// skip leaved ao
 			continue
 		}

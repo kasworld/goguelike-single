@@ -342,12 +342,6 @@ func (tw *Tower) Turn(now time.Time) {
 		}(f)
 	}
 	ws.Wait()
-	// if player is dead, auto turn til readytorebirth
-	// or if ao cannot act next turn, schedule turn auto
-	if (!tw.playerAO.IsAlive() && tw.playerAO.GetRemainTurn2Rebirth() != 0) ||
-		tw.playerAO.GetAP() < 0 {
-		tw.turnCh <- time.Now()
-	}
 }
 
 func (tw *Tower) makeActiveObjExpRank() {
