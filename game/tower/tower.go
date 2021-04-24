@@ -188,7 +188,7 @@ func (tw *Tower) Run() {
 		g2log.Fatal("fail to make cmdCh %v", queuesize)
 		return
 	}
-	tw.turnCh = make(chan time.Time, queuesize)
+	tw.turnCh = make(chan time.Time, 100)
 	if tw.turnCh == nil {
 		g2log.Fatal("fail to make turnCh %v", queuesize)
 		return
@@ -202,8 +202,8 @@ func (tw *Tower) Run() {
 			case <-ctx.Done():
 				break loop
 			case now := <-tw.turnCh:
-				for len(tw.turnCh) > queuesize/2 {
-					g2log.Warn("remove dup turn req %v", len(tw.turnCh))
+				for len(tw.turnCh) > cap(tw.turnCh)/2 {
+					g2log.Warn("remove dup turn req %v/%v", len(tw.turnCh), cap(tw.turnCh))
 					now = <-tw.turnCh
 				}
 				tw.Turn(now)
