@@ -19,8 +19,8 @@ import (
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/graphic"
 	"github.com/kasworld/findnear"
-	"github.com/kasworld/g2rand"
 	"github.com/kasworld/goguelike-single/enum/tile"
+	"github.com/kasworld/goguelike-single/enum/tile_flag"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
@@ -31,6 +31,15 @@ import (
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
 )
+
+func (cf *ClientFloor) String() string {
+	return fmt.Sprintf("ClientFloor[%v %v %v %v]",
+		cf.FloorInfo.Name,
+		cf.Visited,
+		cf.FloorInfo.W,
+		cf.FloorInfo.H,
+	)
+}
 
 type ClientFloor struct {
 	FloorInfo *csprotocol.FloorInfo
@@ -51,44 +60,33 @@ type ClientFloor struct {
 
 	meshMaker *MeshMaker
 	// tile, x, y
-	TerrainTiles [][][]*graphic.Mesh
+	TerrainTiles [tile.Tile_Count][][]*graphic.Mesh
 }
 
 func NewClientFloor(
 	meshMaker *MeshMaker,
 	FloorInfo *csprotocol.FloorInfo) *ClientFloor {
 	cf := ClientFloor{
-		meshMaker:    meshMaker,
-		Tiles:        tilearea.New(FloorInfo.W, FloorInfo.H),
-		Visited:      visitarea.New(FloorInfo),
-		FloorInfo:    FloorInfo,
-		XWrapper:     wrapper.New(FloorInfo.W),
-		YWrapper:     wrapper.New(FloorInfo.H),
-		TerrainTiles: make([][][]*graphic.Mesh, tile.Tile_Count),
+		meshMaker: meshMaker,
+		Tiles:     tilearea.New(FloorInfo.W, FloorInfo.H),
+		Visited:   visitarea.New(FloorInfo),
+		FloorInfo: FloorInfo,
+		XWrapper:  wrapper.New(FloorInfo.W),
+		YWrapper:  wrapper.New(FloorInfo.H),
 	}
 	cf.XWrapSafe = cf.XWrapper.GetWrapSafeFn()
 	cf.YWrapSafe = cf.YWrapper.GetWrapSafeFn()
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman_map.New(FloorInfo.W, FloorInfo.H)
 
-	// fw := float32(cf.FloorInfo.W)
-	// fh := float32(cf.FloorInfo.H)
 	cf.Scene = core.NewNode()
 
-	// make terrain layers
-	rnd := g2rand.New()
 	for i := range cf.TerrainTiles {
+		cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
 		for x := 0; x < cf.FloorInfo.W; x++ {
-			for y := 0; y < cf.FloorInfo.H; y++ {
-				if rnd.Intn(20) == 0 {
-					mesh := cf.meshMaker.GetTile(tile.Tile(i), x, y)
-					cf.Scene.Add(mesh)
-				}
-
-			}
+			cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
 		}
 	}
-	fmt.Println(cf.meshMaker.String())
 	return &cf
 }
 
@@ -118,28 +116,40 @@ func (cf *ClientFloor) Forget() {
 // replace tile rect at x,y
 func (cf *ClientFloor) ReplaceFloorTiles(tiles tilearea.TileArea) {
 	for x, xv := range tiles {
-		xpos := x
 		for y, yv := range xv {
-			ypos := y
-			cf.Tiles[xpos][ypos] = yv
+			cf.Tiles[x][y] = yv
 			if yv != 0 {
-				cf.Visited.CheckAndSetNolock(xpos, ypos)
+				cf.Visited.CheckAndSetNolock(x, y)
+				cf.updateMeshAtByTileFlag(yv, x, y)
 			}
 		}
 	}
 }
 
-func (cf *ClientFloor) String() string {
-	return fmt.Sprintf("ClientFloor[%v %v %v %v]",
-		cf.FloorInfo.Name,
-		cf.Visited,
-		cf.XWrapper.GetWidth(),
-		cf.YWrapper.GetWidth(),
-	)
+func (cf *ClientFloor) updateMeshAtByTileFlag(tf tile_flag.TileFlag, x, y int) {
+	for i := 0; i < tile.Tile_Count; i++ {
+		if tf.TestByTile(tile.Tile(i)) {
+			if cf.TerrainTiles[i][x][y] == nil {
+				// add new mesh
+				mesh := cf.meshMaker.GetTile(tile.Tile(i), x, y)
+				cf.Scene.Add(mesh)
+				cf.TerrainTiles[i][x][y] = mesh
+			} else {
+				// do nothing
+			}
+		} else {
+			if cf.TerrainTiles[i][x][y] == nil {
+				// do nothing
+			} else {
+				// del exist mesh
+				mesh := cf.TerrainTiles[i][x][y]
+				cf.TerrainTiles[i][x][y] = nil
+				cf.Scene.Remove(mesh)
+			}
+		}
+	}
 }
-
-func (cf *ClientFloor) UpdateFromViewportTile(
-	vp *csprotocol.NotiVPTiles,
+func (cf *ClientFloor) UpdateFromViewportTile(vp *csprotocol.NotiVPTiles,
 	vpXYLenList findnear.XYLenList,
 ) error {
 
@@ -155,6 +165,7 @@ func (cf *ClientFloor) UpdateFromViewportTile(
 		fy := cf.YWrapSafe(v.Y + vp.VPY)
 		if vp.VPTiles[i] != 0 {
 			cf.Tiles[fx][fy] = vp.VPTiles[i]
+			cf.updateMeshAtByTileFlag(vp.VPTiles[i], fx, fy)
 		}
 	}
 	return nil
