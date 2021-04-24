@@ -88,10 +88,8 @@ func (app *GLClient) handleRecvNotiObj(rpk *csprotocol.Packet) error {
 		return app.objRecvNotiFn_VPObjList(body)
 	case *csprotocol.NotiVPTiles:
 		return app.objRecvNotiFn_VPTiles(body)
-	case *csprotocol.NotiFloorTiles:
-		return app.objRecvNotiFn_FloorTiles(body)
-	case *csprotocol.NotiFieldObjList:
-		return app.objRecvNotiFn_FieldObjList(body)
+	case *csprotocol.NotiFloorComplete:
+		return app.objRecvNotiFn_FloorComplete(body)
 	case *csprotocol.NotiFoundFieldObj:
 		return app.objRecvNotiFn_FoundFieldObj(body)
 	case *csprotocol.NotiForgetFloor:
@@ -212,23 +210,16 @@ func (app *GLClient) objRecvNotiFn_VPTiles(body *csprotocol.NotiVPTiles) error {
 	}
 	return nil
 }
-func (app *GLClient) objRecvNotiFn_FloorTiles(body *csprotocol.NotiFloorTiles) error {
+func (app *GLClient) objRecvNotiFn_FloorComplete(body *csprotocol.NotiFloorComplete) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
 		// new floor
 		app.CurrentFloor = NewClientFloor(app.meshMaker, body.FI)
 	}
 
 	oldComplete := app.CurrentFloor.Visited.IsComplete()
-	app.CurrentFloor.ReplaceFloorTiles(body)
+	app.CurrentFloor.ReplaceFloorTiles(body.Tiles)
 	if !oldComplete && app.CurrentFloor.Visited.IsComplete() {
 		// floor complete
-	}
-	return nil
-}
-func (app *GLClient) objRecvNotiFn_FieldObjList(body *csprotocol.NotiFieldObjList) error {
-	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FI.Name {
-		// new floor
-		app.CurrentFloor = NewClientFloor(app.meshMaker, body.FI)
 	}
 	app.CurrentFloor.UpdateFieldObjList(body.FOList)
 	return nil

@@ -197,17 +197,10 @@ type NotiVPTiles struct {
 	VPTiles   *viewportdata.ViewportTileArea2
 }
 
-// NotiFloorTiles used for floor map, reconnect client
-type NotiFloorTiles struct {
-	FI    *FloorInfo
-	X     int // X start position, not center
-	Y     int // Y start position, not center
-	Tiles tilearea.TileArea
-}
-
-// FieldObjList    // for rebuild known floor
-type NotiFieldObjList struct {
+// NotiFloorComplete used for floor complete
+type NotiFloorComplete struct {
 	FI     *FloorInfo
+	Tiles  tilearea.TileArea
 	FOList []*FieldObjClient
 }
 

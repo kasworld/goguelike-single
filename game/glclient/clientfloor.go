@@ -116,11 +116,11 @@ func (cf *ClientFloor) Forget() {
 }
 
 // replace tile rect at x,y
-func (cf *ClientFloor) ReplaceFloorTiles(fta *csprotocol.NotiFloorTiles) {
-	for x, xv := range fta.Tiles {
-		xpos := fta.X + x
+func (cf *ClientFloor) ReplaceFloorTiles(tiles tilearea.TileArea) {
+	for x, xv := range tiles {
+		xpos := x
 		for y, yv := range xv {
-			ypos := fta.Y + y
+			ypos := y
 			cf.Tiles[xpos][ypos] = yv
 			if yv != 0 {
 				cf.Visited.CheckAndSetNolock(xpos, ypos)

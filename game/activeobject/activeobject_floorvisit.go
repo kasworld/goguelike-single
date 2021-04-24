@@ -87,15 +87,6 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 	if ao.aoType == aotype.User {
 		// send tile area
 		ta := f.GetTerrain().GetTiles()
-		ao.homefloor.GetTower().SendNoti(
-			&csprotocol.NotiFloorTiles{
-				FI:    fi,
-				X:     0,
-				Y:     0,
-				Tiles: ta,
-			},
-		)
-		// send fieldobj list
 		fol := make([]*csprotocol.FieldObjClient, 0)
 		f4c.FOPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
 			fo := o.(*csprotocol.FieldObjClient)
@@ -103,11 +94,13 @@ func (ao *ActiveObject) MakeFloorComplete(f gamei.FloorI) error {
 			return false
 		})
 		ao.homefloor.GetTower().SendNoti(
-			&csprotocol.NotiFieldObjList{
+			&csprotocol.NotiFloorComplete{
 				FI:     fi,
+				Tiles:  ta,
 				FOList: fol,
 			},
 		)
+		// send fieldobj list
 	}
 	return nil
 }

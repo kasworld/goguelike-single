@@ -21,7 +21,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/gamei"
 	"github.com/kasworld/goguelike-single/lib/g2log"
-	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 )
 
 func (f *Floor) processCmd(data interface{}) {
@@ -52,32 +51,6 @@ func (f *Floor) processCmd(data interface{}) {
 			f.tower.SendNoti(
 				&csprotocol.NotiEnterFloor{
 					FI: f.ToPacket_FloorInfo(),
-				},
-			)
-			// send known tile area
-			f4c := pk.ActiveObj.GetFloor4Client(f.GetName())
-			fi := f.ToPacket_FloorInfo()
-			ta := f.GetTerrain().GetTiles().DupWithFilter(f4c.Visit.GetXYNolock)
-			f.tower.SendNoti(
-				&csprotocol.NotiFloorTiles{
-					FI:    fi,
-					X:     0,
-					Y:     0,
-					Tiles: ta,
-				},
-			)
-
-			// send fieldobj list
-			fol := make([]*csprotocol.FieldObjClient, 0)
-			f4c.FOPosMan.IterAll(func(o uuidposmani.UUIDPosI, foX, foY int) bool {
-				fo := o.(*csprotocol.FieldObjClient)
-				fol = append(fol, fo)
-				return false
-			})
-			f.tower.SendNoti(
-				&csprotocol.NotiFieldObjList{
-					FI:     fi,
-					FOList: fol,
 				},
 			)
 			f.sendTANoti2Player(pk.ActiveObj)
