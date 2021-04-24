@@ -148,6 +148,9 @@ func (tw *Tower) GetPlayerAO() *activeobject.ActiveObject {
 func (tw *Tower) CmdChState() string {
 	return fmt.Sprintf("cmdCh %v/%v", len(tw.cmdCh), cap(tw.cmdCh))
 }
+func (tw *Tower) TurnChInfo() string {
+	return fmt.Sprintf("turnCh %v/%v", len(tw.turnCh), cap(tw.turnCh))
+}
 
 func (tw *Tower) C2tChInfo() string {
 	return fmt.Sprintf("c2tCh %v/%v", len(tw.c2tCh), cap(tw.c2tCh))
@@ -207,7 +210,7 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<br/>
 	TileCache : {{.TileCacheCount}}
 	<br/>
-	TurnStat : {{.GetTurnStat}} <a href= "/addturn" target="_blank">Add</a> 
+	TurnStat : {{.GetTurnStat}} {{.TurnChInfo}} <a href= "/addturn" target="_blank">Add</a> 
 	<br/>
 	{{.GetInterDur.GetCount}} {{.GetInterDur.GetInterval}} {{.GetInterDur.GetDuration}}
 	<br/>

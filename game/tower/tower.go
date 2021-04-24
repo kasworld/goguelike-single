@@ -202,7 +202,7 @@ func (tw *Tower) Run() {
 			case <-ctx.Done():
 				break loop
 			case now := <-tw.turnCh:
-				for len(tw.turnCh) > 0 {
+				for len(tw.turnCh) > queuesize/2 {
 					g2log.Warn("remove dup turn req %v", len(tw.turnCh))
 					now = <-tw.turnCh
 				}
