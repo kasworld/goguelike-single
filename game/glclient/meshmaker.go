@@ -179,8 +179,38 @@ func (mm *MeshMaker) PutTile(tl tile.Tile, mesh *graphic.Mesh) {
 
 // fieldobj manage
 
+var foAttrib = []struct {
+	Co string
+}{
+	fieldobjacttype.None:             {"black"},
+	fieldobjacttype.PortalInOut:      {"mediumvioletred"},
+	fieldobjacttype.PortalIn:         {"mediumvioletred"},
+	fieldobjacttype.PortalOut:        {"mediumvioletred"},
+	fieldobjacttype.PortalAutoIn:     {"mediumvioletred"},
+	fieldobjacttype.RecycleCarryObj:  {"green"},
+	fieldobjacttype.Teleport:         {"red"},
+	fieldobjacttype.ForgetFloor:      {"orangered"},
+	fieldobjacttype.ForgetOneFloor:   {"orangered"},
+	fieldobjacttype.AlterFaction:     {"red"},
+	fieldobjacttype.AllFaction:       {"red"},
+	fieldobjacttype.Bleeding:         {"crimson"},
+	fieldobjacttype.Chilly:           {"darkturquoise"},
+	fieldobjacttype.Blind:            {"darkred"},
+	fieldobjacttype.Invisible:        {"lemonchiffon"},
+	fieldobjacttype.Burden:           {"deeppink"},
+	fieldobjacttype.Float:            {"wheat"},
+	fieldobjacttype.Greasy:           {"papayawhip"},
+	fieldobjacttype.Drunken:          {"plum"},
+	fieldobjacttype.Sleepy:           {"lightcoral"},
+	fieldobjacttype.Contagion:        {"darkgreen"},
+	fieldobjacttype.Slow:             {"darkblue"},
+	fieldobjacttype.Haste:            {"lightblue"},
+	fieldobjacttype.RotateLineAttack: {"lavender"},
+	fieldobjacttype.Mine:             {"orange"},
+}
+
 func newFieldObjColor(fokey FOKey) string {
-	return fokey.AT.Color24().ToHTMLColorString()
+	return foAttrib[fokey.AT].Co
 }
 
 func newFieldObjGeo(fokey FOKey) *geometry.Geometry {

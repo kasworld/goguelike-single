@@ -27,6 +27,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/tilearea"
 	"github.com/kasworld/goguelike-single/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike-single/game/visitarea"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 	"github.com/kasworld/wrapper"
@@ -126,13 +127,13 @@ func (cf *ClientFloor) ReplaceFloorTiles(tiles tilearea.TileArea) {
 			cf.Tiles[x][y] = yv
 			if yv != 0 {
 				cf.Visited.CheckAndSetNolock(x, y)
-				cf.updateMeshAtByTileFlag(yv, x, y)
+				cf.updateTileMeshAtByTileFlag(yv, x, y)
 			}
 		}
 	}
 }
 
-func (cf *ClientFloor) updateMeshAtByTileFlag(tf tile_flag.TileFlag, x, y int) {
+func (cf *ClientFloor) updateTileMeshAtByTileFlag(tf tile_flag.TileFlag, x, y int) {
 	for i := 0; i < tile.Tile_Count; i++ {
 		if tf.TestByTile(tile.Tile(i)) {
 			if cf.TerrainTiles[i][x][y] == nil {
@@ -171,15 +172,47 @@ func (cf *ClientFloor) UpdateFromViewportTile(vp *csprotocol.NotiVPTiles,
 		fy := cf.YWrapSafe(v.Y + vp.VPY)
 		if vp.VPTiles[i] != 0 {
 			cf.Tiles[fx][fy] = vp.VPTiles[i]
-			cf.updateMeshAtByTileFlag(vp.VPTiles[i], fx, fy)
+			cf.updateTileMeshAtByTileFlag(vp.VPTiles[i], fx, fy)
 		}
 	}
 	return nil
 }
 
+func (cf *ClientFloor) AddOrUpdateFieldObj(v *csprotocol.FieldObjClient) {
+	old := cf.FieldObjPosMan.GetByUUID(v.ID)
+	if old != nil {
+		oldfo := old.(*csprotocol.FieldObjClient)
+		if oldfo.X != v.X || oldfo.Y != v.Y {
+			// moved
+			err := cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+			if err != nil {
+				g2log.Fatal("fail to AddOrUpdateToXY %v", v)
+			}
+			oldmesh := cf.FieldObjMeshs[v.X][v.Y]
+			cf.FieldObjMeshs[v.X][v.Y] = nil
+			cf.Scene.Remove(oldmesh)
+			mesh := cf.meshMaker.GetFieldObj(v.ActType, v.DisplayType, v.X, v.Y)
+			cf.FieldObjMeshs[v.X][v.Y] = mesh
+			cf.Scene.Add(mesh)
+		} else {
+			// do nothing
+		}
+	} else {
+		// add new
+		err := cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+		if err != nil {
+			g2log.Fatal("fail to AddOrUpdateToXY %v", v)
+		}
+		mesh := cf.meshMaker.GetFieldObj(v.ActType, v.DisplayType, v.X, v.Y)
+		cf.FieldObjMeshs[v.X][v.Y] = mesh
+		cf.Scene.Add(mesh)
+	}
+
+}
+
 func (cf *ClientFloor) UpdateFieldObjList(folsit []*csprotocol.FieldObjClient) {
 	for _, v := range folsit {
-		cf.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+		cf.AddOrUpdateFieldObj(v)
 	}
 }
 

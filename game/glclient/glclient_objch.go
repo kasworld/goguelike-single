@@ -178,7 +178,7 @@ func (app *GLClient) objRecvNotiFn_VPObjList(body *csprotocol.NotiVPObjList) err
 	}
 
 	for _, v := range newOLNotiData.FieldObjList {
-		app.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(v, v.X, v.Y)
+		app.CurrentFloor.AddOrUpdateFieldObj(v)
 	}
 
 	playerX, playerY := app.GetPlayerXY()
@@ -229,9 +229,7 @@ func (app *GLClient) objRecvNotiFn_FoundFieldObj(body *csprotocol.NotiFoundField
 		g2log.Fatal("FoundFieldObj unknonw floor %v", body)
 		return fmt.Errorf("FoundFieldObj unknonw floor %v", body)
 	}
-	if app.CurrentFloor.FieldObjPosMan.Get1stObjAt(body.FieldObj.X, body.FieldObj.Y) == nil {
-		app.CurrentFloor.FieldObjPosMan.AddOrUpdateToXY(body.FieldObj, body.FieldObj.X, body.FieldObj.Y)
-	}
+	app.CurrentFloor.AddOrUpdateFieldObj(body.FieldObj)
 	return nil
 }
 func (app *GLClient) objRecvNotiFn_ForgetFloor(body *csprotocol.NotiForgetFloor) error {
