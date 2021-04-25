@@ -30,23 +30,25 @@ import (
 
 var tileAttrib = [tile.Tile_Count]struct {
 	tranparent bool
+	zPos       float32
+	height     float32
 }{
-	tile.Swamp:  {false},
-	tile.Soil:   {false},
-	tile.Stone:  {false},
-	tile.Sand:   {false},
-	tile.Sea:    {false},
-	tile.Magma:  {false},
-	tile.Ice:    {false},
-	tile.Grass:  {false},
-	tile.Tree:   {false},
-	tile.Road:   {false},
-	tile.Room:   {false},
-	tile.Wall:   {false},
-	tile.Window: {true},
-	tile.Door:   {false},
-	tile.Fog:    {true},
-	tile.Smoke:  {true},
+	tile.Swamp:  {false, -0.2, 0.2},
+	tile.Soil:   {false, -0.2, 0.2},
+	tile.Stone:  {false, -0.2, 0.2},
+	tile.Sand:   {false, -0.2, 0.2},
+	tile.Sea:    {false, -0.3, 0.2},
+	tile.Magma:  {false, -0.3, 0.2},
+	tile.Ice:    {false, -0.1, 0.1},
+	tile.Grass:  {false, -0.0, 0.2},
+	tile.Tree:   {false, -0.0, 0.3},
+	tile.Road:   {false, -0.0, 0.1},
+	tile.Room:   {false, -0.0, 0.1},
+	tile.Wall:   {false, -0.0, 1.0},
+	tile.Window: {true, -0.0, 1.0},
+	tile.Door:   {true, -0.0, 1.0},
+	tile.Fog:    {true, 0.1, 1.0},
+	tile.Smoke:  {true, 0.1, 1.0},
 }
 
 func (mm *MeshMaker) String() string {
@@ -120,7 +122,8 @@ func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 
 		mm.mat[i] = mat
 
-		mm.geo[i] = geometry.NewPlane(1, 1)
+		// mm.geo[i] = geometry.NewPlane(1, 1)
+		mm.geo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
 
 		mm.tiles[i] = make([]*graphic.Mesh, 0, initSize)
 	}
@@ -144,7 +147,7 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 	}
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
-	mesh.SetPositionZ(float32(int(tl)-tile.Tile_Count) / float32(tile.Tile_Count))
+	mesh.SetPositionZ(tileAttrib[tl].zPos)
 	return mesh
 }
 
