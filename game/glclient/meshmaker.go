@@ -33,8 +33,13 @@ import (
 func (mm *MeshMaker) String() string {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "MeshMaker[")
+	fmt.Fprintf(&buf, "TileInUse:")
 	for i, v := range mm.tileInUse {
 		fmt.Fprintf(&buf, "%v:%v ", tile.Tile(i), v)
+	}
+	fmt.Fprintf(&buf, "FieldObjInUse:")
+	for i, v := range mm.foInUse {
+		fmt.Fprintf(&buf, "%v:%v ", i, v)
 	}
 	fmt.Fprintf(&buf, "]")
 	return buf.String()
