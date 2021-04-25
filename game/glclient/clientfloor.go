@@ -59,8 +59,10 @@ type ClientFloor struct {
 	Scene *core.Node
 
 	meshMaker *MeshMaker
-	// tile, x, y
+	// tiles at x,y
 	TerrainTiles [tile.Tile_Count][][]*graphic.Mesh
+	// fieldobj at x,y
+	FieldObjMeshs [][]*graphic.Mesh
 }
 
 func NewClientFloor(
@@ -86,6 +88,10 @@ func NewClientFloor(
 		for x := 0; x < cf.FloorInfo.W; x++ {
 			cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
 		}
+	}
+	cf.FieldObjMeshs = make([][]*graphic.Mesh, cf.FloorInfo.W)
+	for x := 0; x < cf.FloorInfo.W; x++ {
+		cf.FieldObjMeshs[x] = make([]*graphic.Mesh, cf.FloorInfo.H)
 	}
 	return &cf
 }
