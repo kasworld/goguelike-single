@@ -30,6 +30,66 @@ import (
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
+func (mm *MeshMaker) String() string {
+	var buf bytes.Buffer
+	fmt.Fprintf(&buf, "MeshMaker[")
+	for i, v := range mm.tileInUse {
+		fmt.Fprintf(&buf, "%v:%v ", tile.Tile(i), v)
+	}
+	fmt.Fprintf(&buf, "]")
+	return buf.String()
+}
+
+type FOKey struct {
+	AT fieldobjacttype.FieldObjActType
+	DT fieldobjdisplaytype.FieldObjDisplayType
+}
+
+type MeshMaker struct {
+	// tile
+	tileInUse tile_vector.TileVector
+	tileTex   [tile.Tile_Count]*texture.Texture2D
+	tileMat   [tile.Tile_Count]*material.Standard
+	tileGeo   [tile.Tile_Count]*geometry.Geometry
+	// tile , free list
+	tileMeshFreeList [tile.Tile_Count][]*graphic.Mesh
+
+	// fieldobj
+	foInUse map[FOKey]int
+	foMat   map[FOKey]*material.Standard
+	foGeo   map[FOKey]*geometry.Geometry
+	// free list
+	foMeshFreeLIst map[FOKey][]*graphic.Mesh
+}
+
+func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
+	mm := MeshMaker{
+		foInUse:        make(map[FOKey]int),
+		foMat:          make(map[FOKey]*material.Standard),
+		foGeo:          make(map[FOKey]*geometry.Geometry),
+		foMeshFreeLIst: make(map[FOKey][]*graphic.Mesh),
+	}
+	for i := range mm.tileTex {
+		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
+		mm.tileTex[i] = tex
+
+		mat := material.NewStandard(math32.NewColor("White"))
+		mat.AddTexture(tex)
+		// mat.SetOpacity(1)
+		mat.SetTransparent(tileAttrib[i].tranparent)
+
+		mm.tileMat[i] = mat
+
+		// mm.tileGeo[i] = geometry.NewPlane(1, 1)
+		mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
+
+		mm.tileMeshFreeList[i] = make([]*graphic.Mesh, 0, initSize)
+	}
+	return &mm
+}
+
+// tile manage
+
 var tileAttrib = [tile.Tile_Count]struct {
 	tranparent bool
 	zPos       float32
@@ -53,27 +113,7 @@ var tileAttrib = [tile.Tile_Count]struct {
 	tile.Smoke:  {true, 0.1, 1.0},
 }
 
-func (mm *MeshMaker) String() string {
-	var buf bytes.Buffer
-	fmt.Fprintf(&buf, "MeshMaker[")
-	for i, v := range mm.tileInUse {
-		fmt.Fprintf(&buf, "%v:%v ", tile.Tile(i), v)
-	}
-	fmt.Fprintf(&buf, "]")
-	return buf.String()
-}
-
-type MeshMaker struct {
-	tileInUse tile_vector.TileVector
-	tileTex   [tile.Tile_Count]*texture.Texture2D
-	tileMat   [tile.Tile_Count]*material.Standard
-	tileGeo   [tile.Tile_Count]*geometry.Geometry
-	// tile , free list
-	tiles [tile.Tile_Count][]*graphic.Mesh
-}
-
 func loadTileTexture(texFilename string) *texture.Texture2D {
-
 	// Open image file
 	file, err := os.Open(texFilename)
 	if err != nil {
@@ -111,37 +151,6 @@ func loadTileTexture(texFilename string) *texture.Texture2D {
 	return tex
 }
 
-func NewFieldObjColor(ActType fieldobjacttype.FieldObjActType) string {
-	return ActType.Color24().ToHTMLColorString()
-}
-
-func NewFieldObjGeo(
-	ActType fieldobjacttype.FieldObjActType,
-	DisplayType fieldobjdisplaytype.FieldObjDisplayType) *geometry.Geometry {
-	return geometry.NewSphere(0.5, int(ActType)+2, int(DisplayType)+2)
-}
-
-func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
-	mm := MeshMaker{}
-	for i := range mm.tileTex {
-		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
-		mm.tileTex[i] = tex
-
-		mat := material.NewStandard(math32.NewColor("White"))
-		mat.AddTexture(tex)
-		// mat.SetOpacity(1)
-		mat.SetTransparent(tileAttrib[i].tranparent)
-
-		mm.tileMat[i] = mat
-
-		// mm.tileGeo[i] = geometry.NewPlane(1, 1)
-		mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
-
-		mm.tiles[i] = make([]*graphic.Mesh, 0, initSize)
-	}
-	return &mm
-}
-
 func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {
 	mesh := graphic.NewMesh(mm.tileGeo[tl], mm.tileMat[tl])
 	return mesh
@@ -150,10 +159,10 @@ func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {
 func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 	mm.tileInUse.Inc(tl)
 	var mesh *graphic.Mesh
-	freeSize := len(mm.tiles[tl])
+	freeSize := len(mm.tileMeshFreeList[tl])
 	if freeSize > 0 {
-		mesh = mm.tiles[tl][freeSize-1]
-		mm.tiles[tl] = mm.tiles[tl][:freeSize-1]
+		mesh = mm.tileMeshFreeList[tl][freeSize-1]
+		mm.tileMeshFreeList[tl] = mm.tileMeshFreeList[tl][:freeSize-1]
 	} else {
 		mesh = mm.newTile(tl)
 	}
@@ -165,5 +174,59 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 
 func (mm *MeshMaker) PutTile(tl tile.Tile, mesh *graphic.Mesh) {
 	mm.tileInUse.Dec(tl)
-	mm.tiles[tl] = append(mm.tiles[tl], mesh)
+	mm.tileMeshFreeList[tl] = append(mm.tileMeshFreeList[tl], mesh)
+}
+
+// fieldobj manage
+
+func newFieldObjColor(fokey FOKey) string {
+	return fokey.AT.Color24().ToHTMLColorString()
+}
+
+func newFieldObjGeo(fokey FOKey) *geometry.Geometry {
+	return geometry.NewSphere(0.5, int(fokey.AT)+2, int(fokey.DT)+2)
+}
+
+func (mm *MeshMaker) GetFieldObj(
+	at fieldobjacttype.FieldObjActType,
+	dt fieldobjdisplaytype.FieldObjDisplayType,
+	x, y int) *graphic.Mesh {
+	fokey := FOKey{at, dt}
+	mm.foInUse[fokey]++
+	var mesh *graphic.Mesh
+	freeSize := len(mm.foMeshFreeLIst)
+	if freeSize > 0 {
+		mesh = mm.foMeshFreeLIst[fokey][freeSize-1]
+		mm.foMeshFreeLIst[fokey] = mm.foMeshFreeLIst[fokey][:freeSize-1]
+	} else {
+		var mat *material.Standard
+		if _, exist := mm.foMat[fokey]; exist {
+			mat = mm.foMat[fokey]
+		} else {
+			mat = material.NewStandard(math32.NewColor(newFieldObjColor(fokey)))
+			mm.foMat[fokey] = mat
+		}
+		var geo *geometry.Geometry
+		if _, exist := mm.foGeo[fokey]; exist {
+			geo = mm.foGeo[fokey]
+		} else {
+			geo = newFieldObjGeo(fokey)
+			mm.foGeo[fokey] = geo
+		}
+		mesh = graphic.NewMesh(geo, mat)
+
+	}
+	mesh.SetPositionX(float32(x))
+	mesh.SetPositionY(float32(y))
+	mesh.SetPositionZ(0.5)
+	return mesh
+}
+
+func (mm *MeshMaker) PutFieldObj(
+	at fieldobjacttype.FieldObjActType,
+	dt fieldobjdisplaytype.FieldObjDisplayType,
+	mesh *graphic.Mesh) {
+	fokey := FOKey{at, dt}
+	mm.foInUse[fokey]--
+	mm.foMeshFreeLIst[fokey] = append(mm.foMeshFreeLIst[fokey], mesh)
 }
