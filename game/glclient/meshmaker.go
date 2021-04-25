@@ -23,6 +23,8 @@ import (
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/texture"
+	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
+	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/tile_vector"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -54,7 +56,7 @@ var tileAttrib = [tile.Tile_Count]struct {
 func (mm *MeshMaker) String() string {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "MeshMaker[")
-	for i, v := range mm.inUse {
+	for i, v := range mm.tileInUse {
 		fmt.Fprintf(&buf, "%v:%v ", tile.Tile(i), v)
 	}
 	fmt.Fprintf(&buf, "]")
@@ -62,10 +64,10 @@ func (mm *MeshMaker) String() string {
 }
 
 type MeshMaker struct {
-	inUse tile_vector.TileVector
-	tex   [tile.Tile_Count]*texture.Texture2D
-	mat   [tile.Tile_Count]*material.Standard
-	geo   [tile.Tile_Count]*geometry.Geometry
+	tileInUse tile_vector.TileVector
+	tileTex   [tile.Tile_Count]*texture.Texture2D
+	tileMat   [tile.Tile_Count]*material.Standard
+	tileGeo   [tile.Tile_Count]*geometry.Geometry
 	// tile , free list
 	tiles [tile.Tile_Count][]*graphic.Mesh
 }
@@ -109,21 +111,31 @@ func loadTileTexture(texFilename string) *texture.Texture2D {
 	return tex
 }
 
+func NewFieldObjColor(ActType fieldobjacttype.FieldObjActType) string {
+	return ActType.Color24().ToHTMLColorString()
+}
+
+func NewFieldObjGeo(
+	ActType fieldobjacttype.FieldObjActType,
+	DisplayType fieldobjdisplaytype.FieldObjDisplayType) *geometry.Geometry {
+	return geometry.NewSphere(0.5, int(ActType)+2, int(DisplayType)+2)
+}
+
 func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 	mm := MeshMaker{}
-	for i := range mm.tex {
+	for i := range mm.tileTex {
 		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
-		mm.tex[i] = tex
+		mm.tileTex[i] = tex
 
 		mat := material.NewStandard(math32.NewColor("White"))
 		mat.AddTexture(tex)
 		// mat.SetOpacity(1)
 		mat.SetTransparent(tileAttrib[i].tranparent)
 
-		mm.mat[i] = mat
+		mm.tileMat[i] = mat
 
-		// mm.geo[i] = geometry.NewPlane(1, 1)
-		mm.geo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
+		// mm.tileGeo[i] = geometry.NewPlane(1, 1)
+		mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
 
 		mm.tiles[i] = make([]*graphic.Mesh, 0, initSize)
 	}
@@ -131,12 +143,12 @@ func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 }
 
 func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {
-	mesh := graphic.NewMesh(mm.geo[tl], mm.mat[tl])
+	mesh := graphic.NewMesh(mm.tileGeo[tl], mm.tileMat[tl])
 	return mesh
 }
 
 func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
-	mm.inUse.Inc(tl)
+	mm.tileInUse.Inc(tl)
 	var mesh *graphic.Mesh
 	freeSize := len(mm.tiles[tl])
 	if freeSize > 0 {
@@ -152,6 +164,6 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 }
 
 func (mm *MeshMaker) PutTile(tl tile.Tile, mesh *graphic.Mesh) {
-	mm.inUse.Dec(tl)
+	mm.tileInUse.Dec(tl)
 	mm.tiles[tl] = append(mm.tiles[tl], mesh)
 }
