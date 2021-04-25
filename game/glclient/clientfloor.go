@@ -61,7 +61,7 @@ type ClientFloor struct {
 
 	meshMaker *MeshMaker
 	// tiles at x,y
-	TerrainTiles [tile.Tile_Count][][]*graphic.Mesh
+	TileMeshs [tile.Tile_Count][][]*graphic.Mesh
 	// fieldobj at x,y
 	FieldObjMeshs [][]*graphic.Mesh
 }
@@ -84,10 +84,10 @@ func NewClientFloor(
 
 	cf.Scene = core.NewNode()
 
-	for i := range cf.TerrainTiles {
-		cf.TerrainTiles[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
+	for i := range cf.TileMeshs {
+		cf.TileMeshs[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)
 		for x := 0; x < cf.FloorInfo.W; x++ {
-			cf.TerrainTiles[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
+			cf.TileMeshs[i][x] = make([]*graphic.Mesh, cf.FloorInfo.H)
 		}
 	}
 	cf.FieldObjMeshs = make([][]*graphic.Mesh, cf.FloorInfo.W)
@@ -136,21 +136,21 @@ func (cf *ClientFloor) ReplaceFloorTiles(tiles tilearea.TileArea) {
 func (cf *ClientFloor) updateTileMeshAtByTileFlag(tf tile_flag.TileFlag, x, y int) {
 	for i := 0; i < tile.Tile_Count; i++ {
 		if tf.TestByTile(tile.Tile(i)) {
-			if cf.TerrainTiles[i][x][y] == nil {
+			if cf.TileMeshs[i][x][y] == nil {
 				// add new mesh
 				mesh := cf.meshMaker.GetTile(tile.Tile(i), x, y)
 				cf.Scene.Add(mesh)
-				cf.TerrainTiles[i][x][y] = mesh
+				cf.TileMeshs[i][x][y] = mesh
 			} else {
 				// do nothing
 			}
 		} else {
-			if cf.TerrainTiles[i][x][y] == nil {
+			if cf.TileMeshs[i][x][y] == nil {
 				// do nothing
 			} else {
 				// del exist mesh
-				mesh := cf.TerrainTiles[i][x][y]
-				cf.TerrainTiles[i][x][y] = nil
+				mesh := cf.TileMeshs[i][x][y]
+				cf.TileMeshs[i][x][y] = nil
 				cf.Scene.Remove(mesh)
 			}
 		}
