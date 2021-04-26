@@ -20,7 +20,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/fieldobjdisplaytype"
 )
 
-// fieldobj manage
+// mange field object
 
 type FOKey struct {
 	AT fieldobjacttype.FieldObjActType

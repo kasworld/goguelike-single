@@ -23,7 +23,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
-// tile manage
+// mange tile
 
 var tileAttrib = [tile.Tile_Count]struct {
 	tranparent bool
