@@ -20,6 +20,8 @@ import (
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/texture"
+	"github.com/kasworld/goguelike-single/enum/dangertype"
+	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/tile_vector"
 )
@@ -45,15 +47,36 @@ type MeshMaker struct {
 	tileTex   [tile.Tile_Count]*texture.Texture2D
 	tileMat   [tile.Tile_Count]*material.Standard
 	tileGeo   [tile.Tile_Count]*geometry.Geometry
-	// tile , free list
+	// free list
 	tileMeshFreeList [tile.Tile_Count][]*graphic.Mesh
 
-	// fieldobj
+	// field object
 	foInUse map[FOKey]int
 	foMat   map[FOKey]*material.Standard
 	foGeo   map[FOKey]*geometry.Geometry
 	// free list
 	foMeshFreeLIst map[FOKey][]*graphic.Mesh
+
+	// active object
+	aoInUse [factiontype.FactionType_Count]int
+	aoMat   [factiontype.FactionType_Count]*material.Standard
+	aoGeo   [factiontype.FactionType_Count]*geometry.Geometry
+	// free list
+	aoMeshFreeLIst [factiontype.FactionType_Count][]*graphic.Mesh
+
+	// carry object
+	coInUse map[COKey]int
+	coMat   map[COKey]*material.Standard
+	coGeo   map[COKey]*geometry.Geometry
+	// free list
+	coMeshFreeLIst map[COKey][]*graphic.Mesh
+
+	// danger object
+	doInUse [dangertype.DangerType_Count]int
+	doMat   [dangertype.DangerType_Count]*material.Standard
+	doGeo   [dangertype.DangerType_Count]*geometry.Geometry
+	// free list
+	doMeshFreeLIst [dangertype.DangerType_Count][]*graphic.Mesh
 }
 
 func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
@@ -62,6 +85,11 @@ func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 		foMat:          make(map[FOKey]*material.Standard),
 		foGeo:          make(map[FOKey]*geometry.Geometry),
 		foMeshFreeLIst: make(map[FOKey][]*graphic.Mesh),
+
+		coInUse:        make(map[COKey]int),
+		coMat:          make(map[COKey]*material.Standard),
+		coGeo:          make(map[COKey]*geometry.Geometry),
+		coMeshFreeLIst: make(map[COKey][]*graphic.Mesh),
 	}
 	for i := range mm.tileTex {
 		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")

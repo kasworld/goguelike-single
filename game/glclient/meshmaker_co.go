@@ -11,4 +11,21 @@
 
 package glclient
 
+import (
+	"github.com/kasworld/goguelike-single/enum/carryingobjecttype"
+	"github.com/kasworld/goguelike-single/enum/equipslottype"
+	"github.com/kasworld/goguelike-single/enum/factiontype"
+	"github.com/kasworld/goguelike-single/enum/potiontype"
+	"github.com/kasworld/goguelike-single/enum/scrolltype"
+)
+
 // manage carry object
+
+type COKey struct {
+	CT  carryingobjecttype.CarryingObjectType
+	ET  equipslottype.EquipSlotType
+	FT  factiontype.FactionType
+	PT  potiontype.PotionType
+	ST  scrolltype.ScrollType
+	Val int // log10 value
+}
