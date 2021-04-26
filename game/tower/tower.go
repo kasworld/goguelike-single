@@ -321,7 +321,19 @@ func (tw *Tower) Turn(now time.Time) {
 		act.End()
 	}()
 	tw.turnStat.Inc()
+
 	var ws sync.WaitGroup
+
+	// process turn
+	for _, f := range tw.floorMan.GetFloorList() {
+		ws.Add(1)
+		go func(f gamei.FloorI) {
+			f.Turn(now)
+			ws.Done()
+		}(f)
+	}
+	ws.Wait()
+
 	// process all cmds
 	tw.ProcessAllCmds()
 	for _, f := range tw.floorMan.GetFloorList() {
@@ -333,15 +345,6 @@ func (tw *Tower) Turn(now time.Time) {
 	}
 	ws.Wait()
 
-	// process turn
-	for _, f := range tw.floorMan.GetFloorList() {
-		ws.Add(1)
-		go func(f gamei.FloorI) {
-			f.Turn(now)
-			ws.Done()
-		}(f)
-	}
-	ws.Wait()
 }
 
 func (tw *Tower) makeActiveObjExpRank() {
