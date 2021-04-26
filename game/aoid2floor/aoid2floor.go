@@ -56,9 +56,20 @@ func (toam *ActiveObjID2Floor) ActiveObjEnterTower(
 	oldfloor := toam.aoID2Floor[ao.GetUUID()]
 	if oldfloor != nil {
 		g2log.Fatal("ao in other floor %v %v %v", toam, dstFloor, ao)
-		toam.aoLeaveFloorNolock(ao, oldfloor)
+		// leave floor
+		delete(toam.aoID2Floor, ao.GetUUID())
+		oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
+			ActiveObj: ao,
+		}
 	}
-	toam.aoEnterFloorNolock(dstFloor, ao, x, y)
+	// enter floor
+	toam.aoID2Floor[ao.GetUUID()] = dstFloor
+	dstFloor.GetCmdCh() <- &cmd2floor.ReqEnterFloor{
+		ActiveObj: ao,
+		X:         x,
+		Y:         y,
+	}
+
 	return nil
 }
 
@@ -75,9 +86,19 @@ func (toam *ActiveObjID2Floor) ActiveObjResumeToFloor(
 
 	oldfloor := toam.aoID2Floor[ao.GetUUID()]
 	if oldfloor != nil && oldfloor != dstFloor {
-		toam.aoLeaveFloorNolock(ao, oldfloor)
+		// leave floor
+		delete(toam.aoID2Floor, ao.GetUUID())
+		oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
+			ActiveObj: ao,
+		}
 	}
-	toam.aoEnterFloorNolock(dstFloor, ao, x, y)
+	// enter floor
+	toam.aoID2Floor[ao.GetUUID()] = dstFloor
+	dstFloor.GetCmdCh() <- &cmd2floor.ReqEnterFloor{
+		ActiveObj: ao,
+		X:         x,
+		Y:         y,
+	}
 	return nil
 }
 
@@ -89,9 +110,19 @@ func (toam *ActiveObjID2Floor) ActiveObjMoveToFloor(
 
 	oldfloor := toam.aoID2Floor[ao.GetUUID()]
 	if oldfloor != nil && oldfloor != dstFloor {
-		toam.aoLeaveFloorNolock(ao, oldfloor)
+		// leave floor
+		delete(toam.aoID2Floor, ao.GetUUID())
+		oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
+			ActiveObj: ao,
+		}
 	}
-	toam.aoEnterFloorNolock(dstFloor, ao, x, y)
+	// enter floor
+	toam.aoID2Floor[ao.GetUUID()] = dstFloor
+	dstFloor.GetCmdCh() <- &cmd2floor.ReqEnterFloor{
+		ActiveObj: ao,
+		X:         x,
+		Y:         y,
+	}
 	return nil
 }
 
@@ -103,16 +134,32 @@ func (toam *ActiveObjID2Floor) ActiveObjRebirthToFloor(
 
 	oldfloor := toam.aoID2Floor[ao.GetUUID()]
 	if oldfloor != nil && oldfloor != dstFloor {
-		toam.aoLeaveFloorNolock(ao, oldfloor)
+		// leave floor
+		delete(toam.aoID2Floor, ao.GetUUID())
+		oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
+			ActiveObj: ao,
+		}
 	}
 	x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
 	if err != nil {
 		g2log.Fatal("%v %v %v", err, dstFloor, ao)
 	}
 	if oldfloor != nil && oldfloor != dstFloor {
-		toam.aoEnterFloorNolock(dstFloor, ao, x, y)
+		// enter floor
+		toam.aoID2Floor[ao.GetUUID()] = dstFloor
+		dstFloor.GetCmdCh() <- &cmd2floor.ReqEnterFloor{
+			ActiveObj: ao,
+			X:         x,
+			Y:         y,
+		}
+
 	}
-	toam.aoRebirthToFloorNolock(dstFloor, ao, x, y)
+	// rebirth to floor
+	dstFloor.GetCmdCh() <- &cmd2floor.ReqRebirth2Floor{
+		ActiveObj: ao,
+		X:         x,
+		Y:         y,
+	}
 	return nil
 }
 
@@ -121,36 +168,11 @@ func (toam *ActiveObjID2Floor) ActiveObjLeaveFloor(ao gamei.ActiveObjectI) {
 	defer toam.mutex.Unlock()
 	oldfloor := toam.aoID2Floor[ao.GetUUID()]
 	if oldfloor != nil {
-		toam.aoLeaveFloorNolock(ao, oldfloor)
-	}
-}
-
-func (toam *ActiveObjID2Floor) aoRebirthToFloorNolock(dstFloor gamei.FloorI,
-	ao gamei.ActiveObjectI, dstX, dstY int) {
-
-	toam.aoID2Floor[ao.GetUUID()] = dstFloor
-	dstFloor.GetCmdCh() <- &cmd2floor.ReqRebirth2Floor{
-		ActiveObj: ao,
-		X:         dstX,
-		Y:         dstY,
-	}
-}
-
-func (toam *ActiveObjID2Floor) aoEnterFloorNolock(dstFloor gamei.FloorI,
-	ao gamei.ActiveObjectI, dstX, dstY int) {
-
-	toam.aoID2Floor[ao.GetUUID()] = dstFloor
-	dstFloor.GetCmdCh() <- &cmd2floor.ReqEnterFloor{
-		ActiveObj: ao,
-		X:         dstX,
-		Y:         dstY,
-	}
-}
-
-func (toam *ActiveObjID2Floor) aoLeaveFloorNolock(ao gamei.ActiveObjectI, oldfloor gamei.FloorI) {
-	delete(toam.aoID2Floor, ao.GetUUID())
-	oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
-		ActiveObj: ao,
+		// leave floor
+		delete(toam.aoID2Floor, ao.GetUUID())
+		oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
+			ActiveObj: ao,
+		}
 	}
 }
 
