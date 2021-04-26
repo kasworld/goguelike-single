@@ -282,9 +282,10 @@ func (tw *Tower) Cleanup() {
 func (tw *Tower) initPlayer() {
 	// prepare player ao enter tower
 	// new ao
+	playerFloor := tw.GetFloorManager().GetStartFloor()
 	newAO := activeobject.NewUserActiveObj(
 		tw.rnd.Int63(),
-		tw.GetFloorManager().GetStartFloor(),
+		playerFloor,
 		tw.Config().NickName,
 		tw.towerAchieveStat,
 	)
@@ -298,7 +299,8 @@ func (tw *Tower) initPlayer() {
 	}
 	tw.gameInfo.ActiveObjUUID = tw.playerAO.GetUUID()
 
-	tw.turnCh <- time.Now() // start init turn
+	// process in floor and send init data
+	playerFloor.ProcessAllCmds()
 
 	//run client
 	go func() {

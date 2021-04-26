@@ -46,7 +46,7 @@ func (app *GLClient) sendReqObjWithRspFn(
 func (app *GLClient) handle_t2ch() {
 	for len(app.t2cCh) > 0 {
 		rpk := <-app.t2cCh
-		g2log.TraceClient("recv %v", rpk)
+		g2log.TraceClient("recv %v %#v", rpk, rpk.Body)
 		switch rpk.FlowType {
 		default:
 			g2log.Fatal("invalid packet type %v %v", rpk, rpk.Body)
@@ -163,7 +163,9 @@ func (app *GLClient) objRecvNotiFn_VPObjList(body *csprotocol.NotiVPObjList) err
 			app.moveGLPos()
 		}
 	}
-
+	if app.playerActiveObjClient == nil {
+		g2log.Fatal("no player ao in NotiVPObjList")
+	}
 	app.IsOverLoad = newOLNotiData.ActiveObj.CalcWeight() >= leveldata.WeightLimit(newLevel)
 
 	if app.CurrentFloor.FloorInfo == nil {
@@ -190,7 +192,7 @@ func (app *GLClient) objRecvNotiFn_VPObjList(body *csprotocol.NotiVPObjList) err
 }
 func (app *GLClient) objRecvNotiFn_VPTiles(body *csprotocol.NotiVPTiles) error {
 	if app.CurrentFloor.FloorInfo == nil {
-		g2log.Warn("OrangeRed app.CurrentFloor.FloorInfo not set")
+		g2log.Warn("app.CurrentFloor.FloorInfo not set")
 		return nil
 	}
 	if app.CurrentFloor.FloorInfo.Name != body.FloorName {

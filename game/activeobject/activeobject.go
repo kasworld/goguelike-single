@@ -151,6 +151,7 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 	ao.addRandPotion(gameconst.InitPotionCount * 2)
 	ao.addRandScroll(gameconst.InitScrollCount * 2)
 	ao.addInitGold()
+	ao.updateActiveObjTurnData()
 	return ao
 }
 
@@ -168,6 +169,7 @@ func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
 	ao.addRandPotion(gameconst.InitPotionCount)
 	ao.addRandScroll(gameconst.InitScrollCount)
 	ao.addInitGold()
+	ao.updateActiveObjTurnData()
 	return ao
 }
 

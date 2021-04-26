@@ -156,9 +156,9 @@ func (cf *ClientFloor) updateTileMeshAtByTileFlag(tf tile_flag.TileFlag, x, y in
 		}
 	}
 }
-func (cf *ClientFloor) UpdateFromViewportTile(vp *csprotocol.NotiVPTiles,
-	vpXYLenList findnear.XYLenList,
-) error {
+func (cf *ClientFloor) UpdateFromViewportTile(
+	vp *csprotocol.NotiVPTiles,
+	vpXYLenList findnear.XYLenList) error {
 
 	if cf.FloorInfo.Name != vp.FloorName {
 		return fmt.Errorf("vptile data floor not match %v %v",
