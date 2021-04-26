@@ -73,35 +73,6 @@ func (toam *ActiveObjID2Floor) ActiveObjEnterTower(
 	return nil
 }
 
-func (toam *ActiveObjID2Floor) ActiveObjResumeToFloor(
-	dstFloor gamei.FloorI, ao gamei.ActiveObjectI) error {
-
-	toam.mutex.Lock()
-	defer toam.mutex.Unlock()
-
-	x, y, err := dstFloor.SearchRandomActiveObjPosInRoomOrRandPos()
-	if err != nil {
-		return err
-	}
-
-	oldfloor := toam.aoID2Floor[ao.GetUUID()]
-	if oldfloor != nil && oldfloor != dstFloor {
-		// leave floor
-		delete(toam.aoID2Floor, ao.GetUUID())
-		oldfloor.GetCmdCh() <- &cmd2floor.ReqLeaveFloor{
-			ActiveObj: ao,
-		}
-	}
-	// enter floor
-	toam.aoID2Floor[ao.GetUUID()] = dstFloor
-	dstFloor.GetCmdCh() <- &cmd2floor.ReqEnterFloor{
-		ActiveObj: ao,
-		X:         x,
-		Y:         y,
-	}
-	return nil
-}
-
 func (toam *ActiveObjID2Floor) ActiveObjMoveToFloor(
 	dstFloor gamei.FloorI, ao gamei.ActiveObjectI, x, y int) error {
 
