@@ -15,7 +15,6 @@ import (
 	"github.com/g3n/engine/app"
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/gui"
 	"github.com/g3n/engine/light"
 	"github.com/g3n/engine/util"
@@ -59,10 +58,12 @@ type GLClient struct {
 	cam        *camera.Camera
 	camZpos    float32
 	pLight     *light.Point
-	playerAO   *graphic.Mesh
 	frameRater *util.FrameRater // Render loop frame rater
 	labelFPS   *gui.Label       // header FPS label
 
+	sceneAO *core.Node
+	sceneCO *core.Node
+	sceneDO *core.Node
 }
 
 func New(

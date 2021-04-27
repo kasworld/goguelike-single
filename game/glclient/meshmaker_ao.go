@@ -21,8 +21,8 @@ import (
 
 // manage active object
 
-var aoAtttib = [factiontype.FactionType_Count]struct {
-	co string
+var aoAttrib = [factiontype.FactionType_Count]struct {
+	Co string
 }{
 	factiontype.Black:           {"black"},
 	factiontype.Maroon:          {"maroon"},
@@ -53,7 +53,7 @@ var aoAtttib = [factiontype.FactionType_Count]struct {
 }
 
 func newActiveObjMat(ft factiontype.FactionType) *material.Standard {
-	return material.NewStandard(math32.NewColor(foAttrib[ft].Co))
+	return material.NewStandard(math32.NewColor(aoAttrib[ft].Co))
 }
 
 func newActiveObjGeo(ft factiontype.FactionType) *geometry.Geometry {
@@ -90,10 +90,12 @@ func (mm *MeshMaker) GetActiveObj(ft factiontype.FactionType, x, y int) *graphic
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
 	mesh.SetPositionZ(0.5)
+	mesh.SetUserData(ft)
 	return mesh
 }
 
-func (mm *MeshMaker) PutActiveObj(ft factiontype.FactionType, mesh *graphic.Mesh) {
+func (mm *MeshMaker) PutActiveObj(mesh *graphic.Mesh) {
+	ft := mesh.UserData().(factiontype.FactionType)
 	mm.aoInUse.Dec(ft)
 	mm.aoMeshFreeList[ft] = append(mm.aoMeshFreeList[ft], mesh)
 }

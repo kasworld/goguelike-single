@@ -187,6 +187,7 @@ func (app *GLClient) objRecvNotiFn_VPObjList(body *csprotocol.NotiVPObjList) err
 	if app.playerActiveObjClient != nil && app.CurrentFloor.IsValidPos(playerX, playerY) {
 		app.onFieldObj = app.CurrentFloor.GetFieldObjAt(playerX, playerY)
 	}
+	app.updateVPObjList(body)
 	app.actByControlMode()
 	return nil
 }

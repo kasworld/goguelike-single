@@ -18,17 +18,16 @@ import (
 	"github.com/g3n/engine/app"
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/gls"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/gui"
 	"github.com/g3n/engine/light"
-	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/util"
 	"github.com/g3n/engine/util/helper"
 	"github.com/g3n/engine/window"
+	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
 // runtime.LockOSThread
@@ -40,6 +39,13 @@ func (ga *GLClient) glInit() error {
 	ga.app.IWindow.(*window.GlfwWindow).SetTitle("gogguelike-single")
 	ga.app.IWindow.(*window.GlfwWindow).SetSize(1920, 1080)
 	ga.scene = core.NewNode()
+
+	ga.sceneAO = core.NewNode()
+	ga.scene.Add(ga.sceneAO)
+	ga.sceneCO = core.NewNode()
+	ga.scene.Add(ga.sceneCO)
+	ga.sceneDO = core.NewNode()
+	ga.scene.Add(ga.sceneDO)
 
 	// Set the scene to be managed by the gui manager
 	gui.Manager().Set(ga.scene)
@@ -121,12 +127,6 @@ func (ga *GLClient) Run() error {
 		return err
 	}
 
-	// Create a blue torus and add it to the scene
-	geom := geometry.NewTorus(1, .4, 12, 32, math32.Pi*2)
-	mat := material.NewStandard(math32.NewColor("DarkBlue"))
-	ga.playerAO = graphic.NewMesh(geom, mat)
-	ga.scene.Add(ga.playerAO)
-
 	// Create and add a button to the scene
 	// btn := gui.NewButton("Make Red")
 	// btn.SetPosition(100, 40)
@@ -163,7 +163,6 @@ func (ga *GLClient) moveGLPos() {
 	aox, aoy := ga.GetPlayerXY()
 	ga.cam.SetPosition(float32(aox), float32(aoy), ga.camZpos)
 	ga.pLight.SetPosition(float32(aox), float32(aoy), ga.camZpos)
-	ga.playerAO.SetPosition(float32(aox), float32(aoy), 0)
 }
 
 // Set up callback to update viewport and camera aspect ratio when the window is resized
@@ -186,4 +185,16 @@ func (ga *GLClient) updateFPS() {
 
 	// Show the FPS in the header label
 	ga.labelFPS.SetText(fmt.Sprintf("%3.1f / %3.1f", fps, pfps))
+}
+
+func (ga *GLClient) updateVPObjList(body *csprotocol.NotiVPObjList) {
+	for _, v := range ga.sceneAO.Children() {
+		aoMesh := v.(*graphic.Mesh)
+		ga.meshMaker.PutActiveObj(aoMesh)
+	}
+	ga.sceneAO.RemoveAll(true)
+	for _, v := range body.ActiveObjList {
+		aoMesh := ga.meshMaker.GetActiveObj(v.Faction, v.X, v.Y)
+		ga.sceneAO.Add(aoMesh)
+	}
 }
