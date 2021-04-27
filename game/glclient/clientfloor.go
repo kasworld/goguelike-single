@@ -191,6 +191,8 @@ func (cf *ClientFloor) AddOrUpdateFieldObj(v *csprotocol.FieldObjClient) {
 			oldmesh := cf.FieldObjMeshs[v.X][v.Y]
 			cf.FieldObjMeshs[v.X][v.Y] = nil
 			cf.Scene.Remove(oldmesh)
+			cf.meshMaker.PutFieldObj(oldmesh)
+
 			mesh := cf.meshMaker.GetFieldObj(v.ActType, v.DisplayType, v.X, v.Y)
 			cf.FieldObjMeshs[v.X][v.Y] = mesh
 			cf.Scene.Add(mesh)
@@ -207,7 +209,6 @@ func (cf *ClientFloor) AddOrUpdateFieldObj(v *csprotocol.FieldObjClient) {
 		cf.FieldObjMeshs[v.X][v.Y] = mesh
 		cf.Scene.Add(mesh)
 	}
-
 }
 
 func (cf *ClientFloor) UpdateFieldObjList(folsit []*csprotocol.FieldObjClient) {

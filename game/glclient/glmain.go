@@ -209,4 +209,17 @@ func (ga *GLClient) updateVPObjList(body *csprotocol.NotiVPObjList) {
 		doMesh := ga.meshMaker.GetDangerObj(v.DangerType, v.X, v.Y)
 		ga.sceneDO.Add(doMesh)
 	}
+
+	// update carry object
+	for _, v := range ga.sceneCO.Children() {
+		coMesh := v.(*graphic.Mesh)
+		ga.meshMaker.PutCarryObj(coMesh)
+	}
+	ga.sceneCO.RemoveAll(true)
+	for _, v := range body.CarryObjList {
+		cokey := NewCOKeyFromCarryObjClientOnFloor(v)
+		coMesh := ga.meshMaker.GetCarryObj(cokey, v.X, v.Y)
+		ga.sceneCO.Add(coMesh)
+	}
+
 }

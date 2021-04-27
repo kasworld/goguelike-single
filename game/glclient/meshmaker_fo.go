@@ -91,7 +91,7 @@ func (mm *MeshMaker) GetFieldObj(
 	fokey := FOKey{at, dt}
 	mm.foInUse[fokey]++
 	var mesh *graphic.Mesh
-	freeSize := len(mm.foMeshFreeList)
+	freeSize := len(mm.foMeshFreeList[fokey])
 	if freeSize > 0 {
 		mesh = mm.foMeshFreeList[fokey][freeSize-1]
 		mm.foMeshFreeList[fokey] = mm.foMeshFreeList[fokey][:freeSize-1]
@@ -101,14 +101,12 @@ func (mm *MeshMaker) GetFieldObj(
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
 	mesh.SetPositionZ(0.5)
+	mesh.SetUserData(fokey)
 	return mesh
 }
 
-func (mm *MeshMaker) PutFieldObj(
-	at fieldobjacttype.FieldObjActType,
-	dt fieldobjdisplaytype.FieldObjDisplayType,
-	mesh *graphic.Mesh) {
-	fokey := FOKey{at, dt}
+func (mm *MeshMaker) PutFieldObj(mesh *graphic.Mesh) {
+	fokey := mesh.UserData().(FOKey)
 	mm.foInUse[fokey]--
 	mm.foMeshFreeList[fokey] = append(mm.foMeshFreeList[fokey], mesh)
 }
