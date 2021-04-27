@@ -17,7 +17,10 @@ import (
 	"image/draw"
 	"os"
 
+	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
+	"github.com/g3n/engine/material"
+	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -84,6 +87,25 @@ func loadTileTexture(texFilename string) *texture.Texture2D {
 	// tex.SetWrapT(gls.REPEAT)
 	// tex.SetRepeat(fw/128, fh/128)
 	return tex
+}
+
+func (mm *MeshMaker) initTile(dataFolder string, initSize int) {
+	for i := range mm.tileTex {
+		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
+		mm.tileTex[i] = tex
+
+		mat := material.NewStandard(math32.NewColor("White"))
+		mat.AddTexture(tex)
+		// mat.SetOpacity(1)
+		mat.SetTransparent(tileAttrib[i].tranparent)
+
+		mm.tileMat[i] = mat
+
+		// mm.tileGeo[i] = geometry.NewPlane(1, 1)
+		mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
+
+		mm.tileMeshFreeList[i] = make([]*graphic.Mesh, 0, initSize)
+	}
 }
 
 func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {

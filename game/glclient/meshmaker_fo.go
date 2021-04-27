@@ -57,12 +57,31 @@ var foAttrib = []struct {
 	fieldobjacttype.Mine:             {"orange"},
 }
 
-func newFieldObjColor(fokey FOKey) string {
-	return foAttrib[fokey.AT].Co
+func newFieldObjMat(fokey FOKey) *material.Standard {
+	return material.NewStandard(math32.NewColor(foAttrib[fokey.AT].Co))
 }
 
 func newFieldObjGeo(fokey FOKey) *geometry.Geometry {
 	return geometry.NewSphere(0.5, int(fokey.AT)+2, int(fokey.DT)+2)
+}
+
+func (mm *MeshMaker) initFieldObj(dataFolder string, initSize int) {
+
+}
+
+func (mm *MeshMaker) newFieldObj(fokey FOKey) *graphic.Mesh {
+	var mat *material.Standard
+	var exist bool
+	if mat, exist = mm.foMat[fokey]; !exist {
+		mat = newFieldObjMat(fokey)
+		mm.foMat[fokey] = mat
+	}
+	var geo *geometry.Geometry
+	if geo, exist = mm.foGeo[fokey]; !exist {
+		geo = newFieldObjGeo(fokey)
+		mm.foGeo[fokey] = geo
+	}
+	return graphic.NewMesh(geo, mat)
 }
 
 func (mm *MeshMaker) GetFieldObj(
@@ -72,27 +91,12 @@ func (mm *MeshMaker) GetFieldObj(
 	fokey := FOKey{at, dt}
 	mm.foInUse[fokey]++
 	var mesh *graphic.Mesh
-	freeSize := len(mm.foMeshFreeLIst)
+	freeSize := len(mm.foMeshFreeList)
 	if freeSize > 0 {
-		mesh = mm.foMeshFreeLIst[fokey][freeSize-1]
-		mm.foMeshFreeLIst[fokey] = mm.foMeshFreeLIst[fokey][:freeSize-1]
+		mesh = mm.foMeshFreeList[fokey][freeSize-1]
+		mm.foMeshFreeList[fokey] = mm.foMeshFreeList[fokey][:freeSize-1]
 	} else {
-		var mat *material.Standard
-		if _, exist := mm.foMat[fokey]; exist {
-			mat = mm.foMat[fokey]
-		} else {
-			mat = material.NewStandard(math32.NewColor(newFieldObjColor(fokey)))
-			mm.foMat[fokey] = mat
-		}
-		var geo *geometry.Geometry
-		if _, exist := mm.foGeo[fokey]; exist {
-			geo = mm.foGeo[fokey]
-		} else {
-			geo = newFieldObjGeo(fokey)
-			mm.foGeo[fokey] = geo
-		}
-		mesh = graphic.NewMesh(geo, mat)
-
+		mesh = mm.newFieldObj(fokey)
 	}
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
@@ -106,5 +110,5 @@ func (mm *MeshMaker) PutFieldObj(
 	mesh *graphic.Mesh) {
 	fokey := FOKey{at, dt}
 	mm.foInUse[fokey]--
-	mm.foMeshFreeLIst[fokey] = append(mm.foMeshFreeLIst[fokey], mesh)
+	mm.foMeshFreeList[fokey] = append(mm.foMeshFreeList[fokey], mesh)
 }

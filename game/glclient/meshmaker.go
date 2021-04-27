@@ -18,10 +18,10 @@ import (
 	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/dangertype"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
+	"github.com/kasworld/goguelike-single/enum/factiontype_vector"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/tile_vector"
 )
@@ -55,28 +55,28 @@ type MeshMaker struct {
 	foMat   map[FOKey]*material.Standard
 	foGeo   map[FOKey]*geometry.Geometry
 	// free list
-	foMeshFreeLIst map[FOKey][]*graphic.Mesh
+	foMeshFreeList map[FOKey][]*graphic.Mesh
 
 	// active object
-	aoInUse [factiontype.FactionType_Count]int
+	aoInUse factiontype_vector.FactionTypeVector
 	aoMat   [factiontype.FactionType_Count]*material.Standard
 	aoGeo   [factiontype.FactionType_Count]*geometry.Geometry
 	// free list
-	aoMeshFreeLIst [factiontype.FactionType_Count][]*graphic.Mesh
+	aoMeshFreeList [factiontype.FactionType_Count][]*graphic.Mesh
 
 	// carry object
 	coInUse map[COKey]int
 	coMat   map[COKey]*material.Standard
 	coGeo   map[COKey]*geometry.Geometry
 	// free list
-	coMeshFreeLIst map[COKey][]*graphic.Mesh
+	coMeshFreeList map[COKey][]*graphic.Mesh
 
 	// danger object
-	doInUse [dangertype.DangerType_Count]int
+	doInUse factiontype_vector.FactionTypeVector
 	doMat   [dangertype.DangerType_Count]*material.Standard
 	doGeo   [dangertype.DangerType_Count]*geometry.Geometry
 	// free list
-	doMeshFreeLIst [dangertype.DangerType_Count][]*graphic.Mesh
+	doMeshFreeList [dangertype.DangerType_Count][]*graphic.Mesh
 }
 
 func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
@@ -84,28 +84,15 @@ func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 		foInUse:        make(map[FOKey]int),
 		foMat:          make(map[FOKey]*material.Standard),
 		foGeo:          make(map[FOKey]*geometry.Geometry),
-		foMeshFreeLIst: make(map[FOKey][]*graphic.Mesh),
+		foMeshFreeList: make(map[FOKey][]*graphic.Mesh),
 
 		coInUse:        make(map[COKey]int),
 		coMat:          make(map[COKey]*material.Standard),
 		coGeo:          make(map[COKey]*geometry.Geometry),
-		coMeshFreeLIst: make(map[COKey][]*graphic.Mesh),
+		coMeshFreeList: make(map[COKey][]*graphic.Mesh),
 	}
-	for i := range mm.tileTex {
-		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
-		mm.tileTex[i] = tex
-
-		mat := material.NewStandard(math32.NewColor("White"))
-		mat.AddTexture(tex)
-		// mat.SetOpacity(1)
-		mat.SetTransparent(tileAttrib[i].tranparent)
-
-		mm.tileMat[i] = mat
-
-		// mm.tileGeo[i] = geometry.NewPlane(1, 1)
-		mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
-
-		mm.tileMeshFreeList[i] = make([]*graphic.Mesh, 0, initSize)
-	}
+	mm.initTile(dataFolder, initSize)
+	mm.initFieldObj(dataFolder, initSize)
+	mm.initActiveObj(dataFolder, initSize)
 	return &mm
 }
