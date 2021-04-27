@@ -18,15 +18,70 @@ import (
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/math32"
+	"github.com/kasworld/goguelike-single/config/moneycolor"
 	"github.com/kasworld/goguelike-single/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
+	"github.com/kasworld/htmlcolors"
 )
 
 // manage carry object
+
+type ShiftInfo struct {
+	X float32
+	Y float32
+	Z float32
+}
+
+// equipped shift, around ao
+var aoEqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
+	// center
+	equipslottype.Helmet:   {0.5, 0.00, 0.5},
+	equipslottype.Amulet:   {0.5, 0.33, 0.5},
+	equipslottype.Armor:    {0.5, 0.66, 0.5},
+	equipslottype.Footwear: {0.5, 1.00, 0.5},
+
+	// right
+	equipslottype.Weapon:   {1.00, 0.33, 0.5},
+	equipslottype.Gauntlet: {1.00, 0.66, 0.5},
+
+	// left
+	equipslottype.Shield: {0.00, 0.33, 0.5},
+	equipslottype.Ring:   {0.00, 0.66, 0.5},
+}
+
+func cokey2ShiftInfo(cokey COKey) ShiftInfo {
+	switch cokey.CT {
+	default:
+		return otherCarryObjShift[cokey.CT]
+	case carryingobjecttype.Equip:
+		return eqPosShift[cokey.ET]
+	}
+}
+
+// on floor in tile
+var eqPosShift = [equipslottype.EquipSlotType_Count]ShiftInfo{
+	equipslottype.Helmet: {0.0, 0.0, 0.0},
+	equipslottype.Amulet: {0.75, 0.0, 0.0},
+
+	equipslottype.Weapon: {0.0, 0.25, 0.0},
+	equipslottype.Shield: {0.75, 0.25, 0.0},
+
+	equipslottype.Ring:     {0.0, 0.50, 0.0},
+	equipslottype.Gauntlet: {0.75, 0.50, 0.0},
+
+	equipslottype.Armor:    {0.0, 0.75, 0.0},
+	equipslottype.Footwear: {0.75, 0.75, 0.0},
+}
+
+var otherCarryObjShift = [carryingobjecttype.CarryingObjectType_Count]ShiftInfo{
+	carryingobjecttype.Money:  {0.33, 0.0, 0.0},
+	carryingobjecttype.Potion: {0.33, 0.33, 0.0},
+	carryingobjecttype.Scroll: {0.33, 0.66, 0.0},
+}
 
 type COKey struct {
 	CT  carryingobjecttype.CarryingObjectType
@@ -49,9 +104,28 @@ func NewCOKeyFromCarryObjClientOnFloor(
 	}
 }
 
+func cokey2Color(cokey COKey) string {
+	var v htmlcolors.Color24
+	switch cokey.CT {
+	case carryingobjecttype.Equip:
+		v = cokey.FT.Color24()
+	case carryingobjecttype.Money:
+		if cokey.Val >= len(moneycolor.Attrib) {
+			v = moneycolor.Attrib[len(moneycolor.Attrib)-1].Color
+		} else {
+			v = moneycolor.Attrib[cokey.Val].Color
+		}
+	case carryingobjecttype.Potion:
+		v = cokey.PT.Color24()
+	case carryingobjecttype.Scroll:
+		v = cokey.ST.Color24()
+	}
+	return v.NearNamedColor24().String()
+}
+
 // TODO update
 func newCarryObjMat(cokey COKey) *material.Standard {
-	return material.NewStandard(math32.NewColor("yellow"))
+	return material.NewStandard(math32.NewColor(cokey2Color(cokey)))
 }
 
 // TODO update
@@ -88,9 +162,10 @@ func (mm *MeshMaker) GetCarryObj(cokey COKey, x, y int) *graphic.Mesh {
 	} else {
 		mesh = mm.newCarryObj(cokey)
 	}
-	mesh.SetPositionX(float32(x))
-	mesh.SetPositionY(float32(y))
-	mesh.SetPositionZ(0.5)
+	si := cokey2ShiftInfo(cokey)
+	mesh.SetPositionX(float32(x) + si.X - 0.5)
+	mesh.SetPositionY(float32(y) + si.Y - 0.5)
+	mesh.SetPositionZ(0.5 + si.Z)
 	mesh.SetUserData(cokey)
 	return mesh
 }
