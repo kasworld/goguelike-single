@@ -12,6 +12,8 @@
 package glclient
 
 import (
+	"math"
+
 	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
@@ -37,7 +39,7 @@ func newDangerObjMat(dt dangertype.DangerType) *material.Standard {
 }
 
 func newDangerObjGeo(dt dangertype.DangerType) *geometry.Geometry {
-	return geometry.NewCylinder(0.5, 1, 16, 8, true, true)
+	return geometry.NewTorus(0.5, 0.1, 16, 8, math.Pi*2)
 }
 
 func (mm *MeshMaker) initDangerObj(dataFolder string, initSize int) {
