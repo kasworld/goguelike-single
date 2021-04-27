@@ -11,4 +11,71 @@
 
 package glclient
 
+import (
+	"github.com/g3n/engine/geometry"
+	"github.com/g3n/engine/graphic"
+	"github.com/g3n/engine/material"
+	"github.com/g3n/engine/math32"
+	"github.com/kasworld/goguelike-single/enum/dangertype"
+)
+
 // manage danger object
+
+var doAttrib = [dangertype.DangerType_Count]struct {
+	Co string
+}{
+	dangertype.None:             {"black"},
+	dangertype.BasicAttack:      {"red"},
+	dangertype.WideAttack:       {"crimson"},
+	dangertype.LongAttack:       {"firebrick"},
+	dangertype.RotateLineAttack: {"deeppink"},
+	dangertype.MineExplode:      {"orange"},
+}
+
+func newDangerObjMat(dt dangertype.DangerType) *material.Standard {
+	return material.NewStandard(math32.NewColor(doAttrib[dt].Co))
+}
+
+func newDangerObjGeo(dt dangertype.DangerType) *geometry.Geometry {
+	return geometry.NewCylinder(0.5, 1, 16, 8, true, true)
+}
+
+func (mm *MeshMaker) initDangerObj(dataFolder string, initSize int) {
+}
+
+func (mm *MeshMaker) newDangerObj(dt dangertype.DangerType) *graphic.Mesh {
+	var mat *material.Standard
+	if mat = mm.doMat[dt]; mat == nil {
+		mat = newDangerObjMat(dt)
+		mm.doMat[dt] = mat
+	}
+	var geo *geometry.Geometry
+	if geo = mm.doGeo[dt]; geo == nil {
+		geo = newDangerObjGeo(dt)
+		mm.doGeo[dt] = geo
+	}
+	return graphic.NewMesh(geo, mat)
+}
+
+func (mm *MeshMaker) GetDangerObj(dt dangertype.DangerType, x, y int) *graphic.Mesh {
+	mm.doInUse.Inc(dt)
+	var mesh *graphic.Mesh
+	freeSize := len(mm.doMeshFreeList[dt])
+	if freeSize > 0 {
+		mesh = mm.doMeshFreeList[dt][freeSize-1]
+		mm.doMeshFreeList[dt] = mm.doMeshFreeList[dt][:freeSize-1]
+	} else {
+		mesh = mm.newDangerObj(dt)
+	}
+	mesh.SetPositionX(float32(x))
+	mesh.SetPositionY(float32(y))
+	mesh.SetPositionZ(0.5)
+	mesh.SetUserData(dt)
+	return mesh
+}
+
+func (mm *MeshMaker) PutDangerObj(mesh *graphic.Mesh) {
+	dt := mesh.UserData().(dangertype.DangerType)
+	mm.doInUse.Dec(dt)
+	mm.doMeshFreeList[dt] = append(mm.doMeshFreeList[dt], mesh)
+}

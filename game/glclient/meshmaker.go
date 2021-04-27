@@ -20,6 +20,7 @@ import (
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/dangertype"
+	"github.com/kasworld/goguelike-single/enum/dangertype_vector"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/enum/factiontype_vector"
 	"github.com/kasworld/goguelike-single/enum/tile"
@@ -72,7 +73,7 @@ type MeshMaker struct {
 	coMeshFreeList map[COKey][]*graphic.Mesh
 
 	// danger object
-	doInUse factiontype_vector.FactionTypeVector
+	doInUse dangertype_vector.DangerTypeVector
 	doMat   [dangertype.DangerType_Count]*material.Standard
 	doGeo   [dangertype.DangerType_Count]*geometry.Geometry
 	// free list

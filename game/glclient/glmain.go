@@ -188,6 +188,7 @@ func (ga *GLClient) updateFPS() {
 }
 
 func (ga *GLClient) updateVPObjList(body *csprotocol.NotiVPObjList) {
+	// update active object
 	for _, v := range ga.sceneAO.Children() {
 		aoMesh := v.(*graphic.Mesh)
 		ga.meshMaker.PutActiveObj(aoMesh)
@@ -196,5 +197,16 @@ func (ga *GLClient) updateVPObjList(body *csprotocol.NotiVPObjList) {
 	for _, v := range body.ActiveObjList {
 		aoMesh := ga.meshMaker.GetActiveObj(v.Faction, v.X, v.Y)
 		ga.sceneAO.Add(aoMesh)
+	}
+
+	// update danger object
+	for _, v := range ga.sceneDO.Children() {
+		doMesh := v.(*graphic.Mesh)
+		ga.meshMaker.PutDangerObj(doMesh)
+	}
+	ga.sceneDO.RemoveAll(true)
+	for _, v := range body.DangerObjList {
+		doMesh := ga.meshMaker.GetDangerObj(v.DangerType, v.X, v.Y)
+		ga.sceneDO.Add(doMesh)
 	}
 }
