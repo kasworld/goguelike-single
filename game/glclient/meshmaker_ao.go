@@ -12,6 +12,8 @@
 package glclient
 
 import (
+	"math"
+
 	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
@@ -57,7 +59,7 @@ func newActiveObjMat(ft factiontype.FactionType) *material.Standard {
 }
 
 func newActiveObjGeo(ft factiontype.FactionType) *geometry.Geometry {
-	return geometry.NewCylinder(0.5, 1, 16, 8, true, true)
+	return geometry.NewCylinder(0.4, 1, 16, 8, true, true)
 }
 
 func (mm *MeshMaker) initActiveObj(dataFolder string, initSize int) {
@@ -86,6 +88,7 @@ func (mm *MeshMaker) GetActiveObj(ft factiontype.FactionType, x, y int) *graphic
 		mm.aoMeshFreeList[ft] = mm.aoMeshFreeList[ft][:freeSize-1]
 	} else {
 		mesh = mm.newActiveObj(ft)
+		mesh.RotateX(math.Pi / 2)
 	}
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
