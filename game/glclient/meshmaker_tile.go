@@ -101,8 +101,12 @@ func (mm *MeshMaker) initTile(dataFolder string, initSize int) {
 
 		mm.tileMat[i] = mat
 
-		// mm.tileGeo[i] = geometry.NewPlane(1, 1)
-		mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
+		switch tile.Tile(i) {
+		default:
+			mm.tileGeo[i] = geometry.NewBox(1, 1, tileAttrib[i].height)
+		case tile.Tree:
+			mm.tileGeo[i] = geometry.NewCone(0.5, 1, 16, 8, true)
+		}
 
 		mm.tileMeshFreeList[i] = make([]*graphic.Mesh, 0, initSize)
 	}
