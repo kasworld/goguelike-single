@@ -12,6 +12,8 @@
 package glclient
 
 import (
+	"math"
+
 	"github.com/g3n/engine/geometry"
 	"github.com/g3n/engine/graphic"
 	"github.com/g3n/engine/material"
@@ -62,7 +64,7 @@ func newFieldObjMat(fokey FOKey) *material.Standard {
 }
 
 func newFieldObjGeo(fokey FOKey) *geometry.Geometry {
-	return geometry.NewSphere(0.5, int(fokey.AT)+2, int(fokey.DT)+2)
+	return geometry.NewCone(0.5, 1, int(fokey.DT)+2, 8, true)
 }
 
 func (mm *MeshMaker) initFieldObj(dataFolder string, initSize int) {
@@ -97,6 +99,7 @@ func (mm *MeshMaker) GetFieldObj(
 		mm.foMeshFreeList[fokey] = mm.foMeshFreeList[fokey][:freeSize-1]
 	} else {
 		mesh = mm.newFieldObj(fokey)
+		mesh.RotateX(math.Pi / 2)
 	}
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))

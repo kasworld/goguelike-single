@@ -59,7 +59,7 @@ func newActiveObjMat(ft factiontype.FactionType) *material.Standard {
 }
 
 func newActiveObjGeo(ft factiontype.FactionType) *geometry.Geometry {
-	return geometry.NewCylinder(0.4, 1, 16, 8, true, true)
+	return geometry.NewCylinder(0.3, 1, 16, 8, true, true)
 }
 
 func (mm *MeshMaker) initActiveObj(dataFolder string, initSize int) {

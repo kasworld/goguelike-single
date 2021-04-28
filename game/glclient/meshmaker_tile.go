@@ -46,7 +46,7 @@ var tileAttrib = [tile.Tile_Count]struct {
 	tile.Room:   {false, -0.0, 0.1},
 	tile.Wall:   {false, -0.0, 1.0},
 	tile.Window: {true, -0.0, 1.0},
-	tile.Door:   {true, -0.0, 1.0},
+	tile.Door:   {true, 0.1, 0.1},
 	tile.Fog:    {true, 0.1, 1.0},
 	tile.Smoke:  {true, 0.1, 1.0},
 }
