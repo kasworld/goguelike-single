@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
+	"math"
 	"os"
 
 	"github.com/g3n/engine/geometry"
@@ -114,6 +115,9 @@ func (mm *MeshMaker) initTile(dataFolder string, initSize int) {
 
 func (mm *MeshMaker) newTile(tl tile.Tile) *graphic.Mesh {
 	mesh := graphic.NewMesh(mm.tileGeo[tl], mm.tileMat[tl])
+	if tl == tile.Tree {
+		mesh.RotateX(math.Pi / 2)
+	}
 	return mesh
 }
 
@@ -129,7 +133,7 @@ func (mm *MeshMaker) GetTile(tl tile.Tile, x, y int) *graphic.Mesh {
 	}
 	mesh.SetPositionX(float32(x))
 	mesh.SetPositionY(float32(y))
-	mesh.SetPositionZ(tileAttrib[tl].zPos)
+	mesh.SetPositionZ(tileAttrib[tl].zPos + tileAttrib[tl].height/2)
 	return mesh
 }
 
