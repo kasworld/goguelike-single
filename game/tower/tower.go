@@ -143,7 +143,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 
 	tw.floorMan = floormanager.New(tScript, tw)
 	if err := tw.floorMan.Init(tw.rnd); err != nil {
-		g2log.Fatal("floorman init fail %v", err)
+		g2log.Fatal("floorman init fail %v, seed %v", err, tw.seed)
 		return nil
 	}
 
