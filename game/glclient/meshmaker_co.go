@@ -114,10 +114,14 @@ func cokey2Color(cokey COKey) string {
 	case carryingobjecttype.Equip:
 		v = cokey.FT.Color24()
 	case carryingobjecttype.Money:
-		if cokey.Val >= len(moneycolor.Attrib) {
-			v = moneycolor.Attrib[len(moneycolor.Attrib)-1].Color
+		if cokey.Val <= 0 {
+			v = htmlcolors.Black
 		} else {
-			v = moneycolor.Attrib[cokey.Val].Color
+			if cokey.Val >= len(moneycolor.Attrib) {
+				v = moneycolor.Attrib[len(moneycolor.Attrib)-1].Color
+			} else {
+				v = moneycolor.Attrib[cokey.Val].Color
+			}
 		}
 	case carryingobjecttype.Potion:
 		v = cokey.PT.Color24()
