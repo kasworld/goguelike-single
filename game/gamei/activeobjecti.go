@@ -25,7 +25,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
 	"github.com/kasworld/goguelike-single/game/aoactreqrsp"
-	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/floor4client"
@@ -112,7 +111,6 @@ type ActiveObjectI interface {
 
 	ToPacket_ActiveObjClient(x, y int) *csprotocol.ActiveObjClient
 	ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveObjInfo
-	To_ActiveObjScore(int) *aoscore.ActiveObjScore
 
 	GetAchieveStat() *achievetype_vector.AchieveTypeVector
 	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector

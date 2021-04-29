@@ -16,7 +16,6 @@ import (
 	"github.com/kasworld/goguelike-single/enum/condition_flag"
 	"github.com/kasworld/goguelike-single/enum/turnresulttype"
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
-	"github.com/kasworld/goguelike-single/game/aoscore"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 )
 
@@ -101,19 +100,4 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveO
 	rtn.ActiveBuff = ao.buffManager.ToPacket_ActiveObjBuffList()
 
 	return &rtn
-}
-
-func (ao *ActiveObject) To_ActiveObjScore(TurnCount int) *aoscore.ActiveObjScore {
-	aos := &aoscore.ActiveObjScore{
-		UUID:            ao.uuid,
-		NickName:        ao.nickName,
-		AchieveStat:     ao.achieveStat,
-		ActionStat:      ao.aoActionStat,
-		Exp:             ao.AOTurnData.TotalExp,
-		Wealth:          ao.inven.GetTotalValue(),
-		BornFaction:     ao.bornFaction,
-		CurrentBias:     ao.currentBias,
-		RecordTurnCount: TurnCount,
-	}
-	return aos
 }
