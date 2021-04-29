@@ -67,8 +67,8 @@ func newFieldObjGeo(fokey FOKey) *geometry.Geometry {
 	return geometry.NewCone(0.5, 1, int(fokey.DT)+2, 8, true)
 }
 
-func (mm *MeshMaker) initFieldObj(dataFolder string, initSize int) {
-
+func (mm *MeshMaker) initFieldObj(dataFolder string) {
+	// do nothing
 }
 
 func (mm *MeshMaker) newFieldObj(fokey FOKey) *graphic.Mesh {

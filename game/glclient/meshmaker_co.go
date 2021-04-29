@@ -133,8 +133,8 @@ func newCarryObjGeo(cokey COKey) *geometry.Geometry {
 	return geometry.NewBox(0.1, 0.1, 0.1)
 }
 
-func (mm *MeshMaker) initCarryObj(dataFolder string, initSize int) {
-
+func (mm *MeshMaker) initCarryObj(dataFolder string) {
+	// do nothing
 }
 
 func (mm *MeshMaker) newCarryObj(cokey COKey) *graphic.Mesh {

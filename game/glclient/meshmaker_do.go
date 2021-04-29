@@ -42,7 +42,8 @@ func newDangerObjGeo(dt dangertype.DangerType) *geometry.Geometry {
 	return geometry.NewTorus(0.5, 0.1, 16, 8, math.Pi*2)
 }
 
-func (mm *MeshMaker) initDangerObj(dataFolder string, initSize int) {
+func (mm *MeshMaker) initDangerObj(dataFolder string) {
+	// do nothing
 }
 
 func (mm *MeshMaker) newDangerObj(dt dangertype.DangerType) *graphic.Mesh {

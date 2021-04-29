@@ -79,7 +79,7 @@ func New(
 		GameInfo:          gameInfo,
 		config:            config,
 	}
-	app.meshMaker = NewMeshMaker(config.ClientDataFolder, 1024)
+	app.meshMaker = NewMeshMaker(config.ClientDataFolder)
 	if app.meshMaker == nil {
 		return nil
 	}

@@ -80,7 +80,7 @@ type MeshMaker struct {
 	doMeshFreeList [dangertype.DangerType_Count][]*graphic.Mesh
 }
 
-func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
+func NewMeshMaker(dataFolder string) *MeshMaker {
 	mm := MeshMaker{
 		foInUse:        make(map[FOKey]int),
 		foMat:          make(map[FOKey]*material.Standard),
@@ -92,8 +92,10 @@ func NewMeshMaker(dataFolder string, initSize int) *MeshMaker {
 		coGeo:          make(map[COKey]*geometry.Geometry),
 		coMeshFreeList: make(map[COKey][]*graphic.Mesh),
 	}
-	mm.initTile(dataFolder, initSize)
-	mm.initFieldObj(dataFolder, initSize)
-	mm.initActiveObj(dataFolder, initSize)
+	mm.initTile(dataFolder)
+	mm.initFieldObj(dataFolder)
+	mm.initActiveObj(dataFolder)
+	mm.initCarryObj(dataFolder)
+	mm.initDangerObj(dataFolder)
 	return &mm
 }

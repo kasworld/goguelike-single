@@ -90,7 +90,7 @@ func loadTileTexture(texFilename string) *texture.Texture2D {
 	return tex
 }
 
-func (mm *MeshMaker) initTile(dataFolder string, initSize int) {
+func (mm *MeshMaker) initTile(dataFolder string) {
 	for i := range mm.tileTex {
 		tex := loadTileTexture(dataFolder + "/tiles/" + tile.Tile(i).String() + ".png")
 		mm.tileTex[i] = tex
@@ -109,7 +109,7 @@ func (mm *MeshMaker) initTile(dataFolder string, initSize int) {
 			mm.tileGeo[i] = geometry.NewCone(0.5, 1, 16, 8, true)
 		}
 
-		mm.tileMeshFreeList[i] = make([]*graphic.Mesh, 0, initSize)
+		mm.tileMeshFreeList[i] = make([]*graphic.Mesh, 0)
 	}
 }
 

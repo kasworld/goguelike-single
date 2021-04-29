@@ -62,7 +62,8 @@ func newActiveObjGeo(ft factiontype.FactionType) *geometry.Geometry {
 	return geometry.NewCylinder(0.3, 1, 16, 8, true, true)
 }
 
-func (mm *MeshMaker) initActiveObj(dataFolder string, initSize int) {
+func (mm *MeshMaker) initActiveObj(dataFolder string) {
+	// do nothing
 }
 
 func (mm *MeshMaker) newActiveObj(ft factiontype.FactionType) *graphic.Mesh {

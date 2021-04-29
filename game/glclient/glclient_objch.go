@@ -237,6 +237,7 @@ func (app *GLClient) objRecvNotiFn_FoundFieldObj(body *csprotocol.NotiFoundField
 }
 func (app *GLClient) objRecvNotiFn_ForgetFloor(body *csprotocol.NotiForgetFloor) error {
 	if app.CurrentFloor == nil || app.CurrentFloor.FloorInfo.Name != body.FloorName {
+		g2log.Fatal("Forget unknonw floor %v", body)
 	} else {
 		app.CurrentFloor.Forget()
 	}
