@@ -14,7 +14,6 @@ package activeobject
 
 import (
 	"fmt"
-	"time"
 	"unsafe"
 
 	"github.com/kasworld/g2rand"
@@ -88,8 +87,8 @@ type ActiveObject struct {
 	currentFloor       gamei.FloorI
 	remainTurn2Rebirth int
 
-	chat     string
-	chatTime time.Time `prettystring:"simple"`
+	chat             string
+	chatOldTurnCount int
 
 	ap float64 // action point to use,  -inf ~ 1
 	// battle relate

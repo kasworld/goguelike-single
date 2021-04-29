@@ -12,8 +12,6 @@
 package gamei
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
 )
@@ -22,7 +20,8 @@ type TowerI interface {
 	String() string
 
 	GetCmdCh() chan<- interface{}
-	GetTurnCh() chan<- time.Time
+	GetTurnCh() chan<- int
+	GetTurnCount() int
 	SendNoti(body interface{})
 
 	GetBias() bias.Bias

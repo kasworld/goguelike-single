@@ -174,8 +174,6 @@ func (tw *Tower) web_TowerInfo(w http.ResponseWriter, r *http.Request) {
 	<hr/>
 	{{.}}
 	<br/>
-	Start : {{.GetStartTime}} / {{.GetRunDur}}
-	<br/>
 	Factor : {{.GetGameInfo.Factor}}
 	<br/>
 	Current Bias : {{.GetBias}}

@@ -12,8 +12,6 @@
 package activeobject
 
 import (
-	"time"
-
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gamedata"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
@@ -48,7 +46,7 @@ func ai_actPlanChat(ao *ActiveObject, sai *ServerAIState) bool {
 	if len(chat) > 32 {
 		chat = chat[:32]
 	}
-	ao.SetChat(chat)
+	ao.SetChat(chat, sai.TurnCount)
 	return true
 }
 
@@ -184,8 +182,8 @@ func ai_initPlanUsePortal(ao *ActiveObject, sai *ServerAIState) int {
 			if err != nil {
 				return false
 			}
-			lastTime := sai.fieldObjUseTime[p1.ID]
-			if lastTime.Add(time.Second * 120).After(sai.turnTime) {
+			lastTurn := sai.fieldObjUseTurnCount[p1.ID]
+			if sai.TurnCount-lastTurn < 120 {
 				return false
 			}
 			return true
@@ -221,8 +219,8 @@ func ai_actPlanUsePortal(ao *ActiveObject, sai *ServerAIState) bool {
 		}
 		return false
 	}
-	sai.fieldObjUseTime[outPortal.ID] = sai.turnTime
-	sai.fieldObjUseTime[inPortal.ID] = sai.turnTime
+	sai.fieldObjUseTurnCount[outPortal.ID] = sai.TurnCount
+	sai.fieldObjUseTurnCount[inPortal.ID] = sai.TurnCount
 	ao.sendActNotiPacket2Floor(sai, turnaction.EnterPortal, way9type.Center, "")
 	// plan change to other
 	return false
@@ -237,8 +235,8 @@ func ai_initPlanMoveToRecycler(ao *ActiveObject, sai *ServerAIState) int {
 				if fo.ActType != fieldobjacttype.RecycleCarryObj {
 					return false
 				}
-				lastTime := sai.fieldObjUseTime[o.GetUUID()]
-				if lastTime.Add(time.Second * 120).After(sai.turnTime) {
+				lastTurn := sai.fieldObjUseTurnCount[o.GetUUID()]
+				if sai.TurnCount-lastTurn < 120 {
 					return false
 				}
 				return true
@@ -268,7 +266,7 @@ func ai_actPlanMoveToRecycler(ao *ActiveObject, sai *ServerAIState) bool {
 	// dest arrived
 	o := ao.currentFloor.GetFieldObjPosMan().Get1stObjAt(sai.aox, sai.aoy)
 	if _, ok := o.(*fieldobject.FieldObject); ok {
-		sai.fieldObjUseTime[o.GetUUID()] = time.Now()
+		sai.fieldObjUseTurnCount[o.GetUUID()] = sai.TurnCount
 		// sai.sendPacket2Floor(&csprotocol.ReqActiveObjAction{
 		// 	Act: turnaction.Recycle,
 		// })

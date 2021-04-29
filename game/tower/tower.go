@@ -58,7 +58,7 @@ type Tower struct {
 	// tower cmd stats
 	cmdActStat *actpersec.ActPerSec `prettystring:"simple"`
 	// trigger tower turn channel
-	turnCh   chan time.Time                     `prettystring:"hide"`
+	turnCh   chan int                           `prettystring:"hide"`
 	turnStat *actpersec.ActPerSec               `prettystring:"simple"`
 	interDur *intervalduration.IntervalDuration `prettystring:"simple"`
 
@@ -188,7 +188,7 @@ func (tw *Tower) Run() {
 		g2log.Fatal("fail to make cmdCh %v", queuesize)
 		return
 	}
-	tw.turnCh = make(chan time.Time, 100)
+	tw.turnCh = make(chan int, 10)
 	if tw.turnCh == nil {
 		g2log.Fatal("fail to make turnCh %v", queuesize)
 		return
@@ -317,7 +317,7 @@ func (tw *Tower) ProcessAllCmds() {
 		tw.processCmd(<-tw.cmdCh)
 	}
 }
-func (tw *Tower) Turn(now time.Time) {
+func (tw *Tower) Turn(TurnCount int) {
 	act := tw.interDur.BeginAct()
 	defer func() {
 		act.End()
@@ -330,7 +330,7 @@ func (tw *Tower) Turn(now time.Time) {
 	for _, f := range tw.floorMan.GetFloorList() {
 		ws.Add(1)
 		go func(f gamei.FloorI) {
-			f.Turn(now)
+			f.Turn(TurnCount)
 			ws.Done()
 		}(f)
 	}

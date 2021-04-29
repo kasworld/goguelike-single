@@ -48,10 +48,6 @@ func (f *Floor) GetInterDur() *intervalduration.IntervalDuration {
 	return f.interDur
 }
 
-func (f *Floor) GetActTurn() int {
-	return f.interDur.GetCount()
-}
-
 func (f *Floor) GetCmdFloorActStat() *actpersec.ActPerSec {
 	return f.cmdActStat
 }

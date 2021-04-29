@@ -14,7 +14,6 @@ package activeobject
 import (
 	"fmt"
 	"math/rand"
-	"time"
 
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/enum/aiplan"
@@ -39,7 +38,7 @@ type ServerAIState struct {
 	InterDur        *intervalduration.IntervalDuration
 	RunningPlanList aiplan.PlanList
 
-	turnTime        time.Time
+	TurnCount       int
 	isAIRunning     int32 // atomic check
 	movePath2Dest   [][2]int
 	planCarryObj    gamei.CarryingObjectI
@@ -47,7 +46,7 @@ type ServerAIState struct {
 	planRemainCount int
 	moveDir         way9type.Way9Type
 
-	fieldObjUseTime map[string]time.Time
+	fieldObjUseTurnCount map[string]int
 }
 
 func (sai *ServerAIState) String() string {
@@ -56,9 +55,9 @@ func (sai *ServerAIState) String() string {
 
 func (ao *ActiveObject) NewServerAI() *ServerAIState {
 	sai := &ServerAIState{
-		fieldObjUseTime: make(map[string]time.Time),
-		InterDur:        intervalduration.New(""),
-		RunningPlanList: aoType2aiPlan[ao.GetActiveObjType()].Dup(),
+		fieldObjUseTurnCount: make(map[string]int),
+		InterDur:             intervalduration.New(""),
+		RunningPlanList:      aoType2aiPlan[ao.GetActiveObjType()].Dup(),
 	}
 	ao.rnd.Shuffle(len(sai.RunningPlanList), func(i, j int) {
 		sai.RunningPlanList[i], sai.RunningPlanList[j] = sai.RunningPlanList[j], sai.RunningPlanList[i]

@@ -13,7 +13,6 @@ package activeobject
 
 import (
 	"sync/atomic"
-	"time"
 	"unsafe"
 
 	"github.com/kasworld/goguelike-single/enum/respawntype"
@@ -66,14 +65,10 @@ func (ao *ActiveObject) GetRespawnType() respawntype.RespawnType {
 func (ao *ActiveObject) GetChat() string {
 	return ao.chat
 }
-func (ao *ActiveObject) SetChat(c string) {
+func (ao *ActiveObject) SetChat(c string, TurnCount int) {
 	ao.chat = c
-	ao.chatTime = time.Now()
+	ao.chatOldTurnCount = TurnCount
 }
-
-// func (ao *ActiveObject) SetNickName(nickname string) {
-// 	ao.nickName = nickname
-// }
 
 // func (ao *ActiveObject) GetNickName() string {
 // 	return ao.nickName
@@ -87,10 +82,6 @@ func (ao *ActiveObject) GetAndClearNeedTANoti() bool {
 	ao.needTANoti = false
 	return rtn
 }
-
-// func (ao *ActiveObject) SetActiveObjType(aot aotype.ActiveObjType) {
-// 	ao.aoType = aot
-// }
 
 func (ao *ActiveObject) GetBias() bias.Bias {
 	return ao.currentBias

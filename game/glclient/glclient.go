@@ -86,13 +86,16 @@ func New(
 	return app
 }
 
+func (app *GLClient) GetTurnCount() int {
+	return app.OLNotiData.TurnCount
+}
+
 func (app *GLClient) TowerBias() bias.Bias {
 	if app.OLNotiData == nil {
 		return bias.Bias{}
 	}
 	ft := app.GameInfo.Factor
-	dur := app.OLNotiData.Time.Sub(app.GameInfo.StartTime)
-	return bias.MakeBiasByProgress(ft, dur.Seconds(), gameconst.TowerBaseBiasLen)
+	return bias.MakeBiasByProgress(ft, float64(app.GetTurnCount()), gameconst.TowerBaseBiasLen)
 }
 
 func (app *GLClient) GetPlayerXY() (int, int) {

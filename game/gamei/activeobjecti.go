@@ -12,8 +12,6 @@
 package gamei
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
 	"github.com/kasworld/goguelike-single/enum/aotype"
@@ -84,17 +82,17 @@ type ActiveObjectI interface {
 
 	IsAIUse() bool
 	SetUseAI(b bool)
-	RunAI(turnTime time.Time)
+	RunAI(TurnCount int)
 
 	GetChat() string
-	SetChat(c string)
+	SetChat(c string, TurnCount int)
 
 	GetRemainTurn2Rebirth() int
 	TryRebirth() error
 
 	GetCurrentFloor() FloorI
 
-	PrepareNewTurn(turnTime time.Time)
+	PrepareNewTurn(TurnCount int)
 	ApplyTurnAct()
 	AppendTurnResult(turnResult turnresult.TurnResult)
 
@@ -114,7 +112,7 @@ type ActiveObjectI interface {
 
 	ToPacket_ActiveObjClient(x, y int) *csprotocol.ActiveObjClient
 	ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveObjInfo
-	To_ActiveObjScore() *aoscore.ActiveObjScore
+	To_ActiveObjScore(int) *aoscore.ActiveObjScore
 
 	GetAchieveStat() *achievetype_vector.AchieveTypeVector
 	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector

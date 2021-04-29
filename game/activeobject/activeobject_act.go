@@ -13,7 +13,6 @@ package activeobject
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
@@ -32,11 +31,11 @@ import (
 )
 
 // PrepareNewTurn before turn start
-func (ao *ActiveObject) PrepareNewTurn(turnTime time.Time) {
+func (ao *ActiveObject) PrepareNewTurn(TurnCount int) {
 	ao.turnResultList = ao.turnResultList[:0] // for ao to ao damage record
 	ao.turnActReqRsp = nil
 	ao.aoClientCache = nil
-	if turnTime.Sub(ao.chatTime) > 10*time.Second {
+	if TurnCount-ao.chatOldTurnCount > 10 {
 		ao.chat = ""
 	}
 	ao.achieveStat.Inc(achievetype.Turn)

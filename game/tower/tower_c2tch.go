@@ -13,7 +13,6 @@ package tower
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/flowtype"
@@ -182,7 +181,7 @@ func (tw *Tower) objAPIFn_ReqTurnAction(robj *csprotocol.ReqTurnAction) (
 	}
 
 	if robj.Act.TriggerTurn() {
-		tw.GetTurnCh() <- time.Now()
+		tw.GetTurnCh() <- tw.GetTurnCount()
 	}
 
 	return ec, sendBody, nil

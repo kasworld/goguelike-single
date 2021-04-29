@@ -14,7 +14,6 @@ package activeobject
 
 import (
 	"sync/atomic"
-	"time"
 
 	"github.com/kasworld/goguelike-single/enum/aiplan"
 	"github.com/kasworld/goguelike-single/lib/g2log"
@@ -30,22 +29,22 @@ func (ao *ActiveObject) SetUseAI(b bool) {
 	}
 }
 
-func (ao *ActiveObject) RunAI(turnTime time.Time) {
+func (ao *ActiveObject) RunAI(TurnCount int) {
 	if aio := ao.ai; aio != nil && ao.IsAIUse() {
-		ao.ActTurn(aio, turnTime)
+		ao.ActTurn(aio, TurnCount)
 	}
 }
 
-func (ao *ActiveObject) ActTurn(sai *ServerAIState, turnTime time.Time) {
+func (ao *ActiveObject) ActTurn(sai *ServerAIState, TurnCount int) {
 	if atomic.CompareAndSwapInt32(&sai.isAIRunning, 0, 1) {
 		defer atomic.AddInt32(&sai.isAIRunning, -1)
-		ao.actTurn(sai, turnTime)
+		ao.actTurn(sai, TurnCount)
 	} else {
 		g2log.Warn("skip ai Turn %v %v", ao, sai.isAIRunning)
 	}
 }
 
-func (ao *ActiveObject) actTurn(sai *ServerAIState, turnTime time.Time) {
+func (ao *ActiveObject) actTurn(sai *ServerAIState, TurnCount int) {
 	if !ao.IsAlive() {
 		return
 	}
@@ -62,7 +61,7 @@ func (ao *ActiveObject) actTurn(sai *ServerAIState, turnTime time.Time) {
 		act.End()
 	}()
 
-	sai.turnTime = turnTime
+	sai.TurnCount = TurnCount
 
 	aox, aoy, exist := ao.currentFloor.GetActiveObjPosMan().GetXYByUUID(ao.GetUUID())
 	if !exist {

@@ -12,8 +12,6 @@
 package floor
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/enum/achievetype"
 	"github.com/kasworld/goguelike-single/enum/aotype"
 	"github.com/kasworld/goguelike-single/enum/returncode"
@@ -50,11 +48,12 @@ func (f *Floor) processCmd(data interface{}) {
 		if pk.ActiveObj.GetActiveObjType() == aotype.User {
 			f.tower.SendNoti(
 				&csprotocol.NotiEnterFloor{
-					FI: f.ToPacket_FloorInfo(),
+					FI:        f.ToPacket_FloorInfo(),
+					TurnCount: f.tower.GetTurnCount(),
 				},
 			)
 			f.sendTANoti2Player(pk.ActiveObj)
-			f.sendVPObj2Player(pk.ActiveObj, time.Now())
+			f.sendVPObj2Player(pk.ActiveObj, f.tower.GetTurnCount())
 		}
 
 	case *cmd2floor.ReqRebirth2Floor:

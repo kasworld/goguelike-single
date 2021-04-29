@@ -144,14 +144,14 @@ func (f *Floor) ProcessAllCmds() {
 	}
 }
 
-func (f *Floor) Turn(now time.Time) {
+func (f *Floor) Turn(TurnCount int) {
 	act := f.interDur.BeginAct()
 	defer func() {
 		act.End()
 	}()
-	f.processTurn(now)
+	f.processTurn(TurnCount)
 	turnPerAge := f.terrain.GetMSPerAgeing() / 1000
-	if turnPerAge > 0 && f.interDur.GetCount()%int(turnPerAge) == 0 {
+	if turnPerAge > 0 && TurnCount%int(turnPerAge) == 0 {
 		f.processAgeing()
 	}
 }

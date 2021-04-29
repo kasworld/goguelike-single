@@ -13,7 +13,6 @@ package cmd2tower
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/kasworld/goguelike-single/enum/returncode"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
@@ -81,5 +80,5 @@ func (pk ActiveObjRebirth) String() string {
 }
 
 type Turn struct {
-	Now time.Time
+	TurnCount int
 }

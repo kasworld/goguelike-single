@@ -22,10 +22,10 @@ func (cfList ClientFloorList) Swap(i, j int) {
 func (cfList ClientFloorList) Less(i, j int) bool {
 	ao1 := cfList[i]
 	ao2 := cfList[j]
-	if ao1.visitTime == ao2.visitTime {
+	if ao1.visitTurnCount == ao2.visitTurnCount {
 		return ao1.FloorInfo.Name < ao2.FloorInfo.Name
 	}
-	return ao1.visitTime.After(ao2.visitTime)
+	return ao1.visitTurnCount < ao2.visitTurnCount
 }
 func (cfList ClientFloorList) Sort() {
 	sort.Stable(cfList)

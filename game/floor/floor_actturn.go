@@ -12,8 +12,6 @@
 package floor
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/config/contagionarea"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/viewportdata"
@@ -40,7 +38,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
 )
 
-func (f *Floor) processTurn(turnTime time.Time) error {
+func (f *Floor) processTurn(TurnCount int) error {
 
 	// wait ai run last turn
 	f.aiWG.Wait()
@@ -76,7 +74,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 	)
 
 	for _, ao := range aoListToProcessInTurn {
-		ao.PrepareNewTurn(turnTime)
+		ao.PrepareNewTurn(TurnCount)
 	}
 
 	// process auto portal and trapteleport steped ao
@@ -661,7 +659,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 
 	// for next turn
 	// request next turn act for user
-	f.sendViewportNoti(turnTime, aoListToProcessInTurn, aoMapLeaveFloorInTurn)
+	f.sendViewportNoti(TurnCount, aoListToProcessInTurn, aoMapLeaveFloorInTurn)
 
 	// requext next turn act for ai
 	for _, ao := range aoListToProcessInTurn {
@@ -671,7 +669,7 @@ func (f *Floor) processTurn(turnTime time.Time) error {
 		}
 		f.aiWG.Add(1)
 		go func(ao gamei.ActiveObjectI) {
-			ao.RunAI(turnTime)
+			ao.RunAI(TurnCount)
 			f.aiWG.Done()
 		}(ao)
 	}
@@ -709,7 +707,7 @@ func (f *Floor) processCarryObj2floor() {
 // send VPTiles, VPObjList noti when need
 // request next turn act
 func (f *Floor) sendViewportNoti(
-	turnTime time.Time,
+	TurnCount int,
 	aoListToProcessInTurn []gamei.ActiveObjectI,
 	aoMapLeaveFloorInTurn map[string]bool) {
 
@@ -743,7 +741,7 @@ func (f *Floor) sendViewportNoti(
 			}
 		}
 		if ao.GetActiveObjType() == aotype.User {
-			f.sendVPObj2Player(ao, turnTime)
+			f.sendVPObj2Player(ao, TurnCount)
 		}
 	}
 }
@@ -774,7 +772,7 @@ func (f *Floor) sendTANoti2Player(ao gamei.ActiveObjectI) {
 
 // send viewport object list at ao
 // called from processcmd after interfloor move, processturn
-func (f *Floor) sendVPObj2Player(ao gamei.ActiveObjectI, turnTime time.Time) {
+func (f *Floor) sendVPObj2Player(ao gamei.ActiveObjectI, TurnCount int) {
 	aox, aoy, exist := f.aoPosMan.GetXYByUUID(ao.GetUUID())
 	if !exist {
 		g2log.Warn("ao not in currentfloor %v %v, skip tile, obj noti", f, ao)
@@ -810,7 +808,7 @@ func (f *Floor) sendVPObj2Player(ao gamei.ActiveObjectI, turnTime time.Time) {
 	}
 	f.tower.SendNoti(
 		&csprotocol.NotiVPObjList{
-			Time:          turnTime,
+			TurnCount:     TurnCount,
 			ActiveObj:     ao.ToPacket_PlayerActiveObjInfo(),
 			FloorName:     f.GetName(),
 			ActiveObjList: aOs,

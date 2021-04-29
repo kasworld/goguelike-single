@@ -14,10 +14,7 @@ package aoscore
 
 import (
 	"encoding/gob"
-	"fmt"
-	"time"
 
-	"github.com/kasworld/goguelike-single/config/leveldata"
 	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
@@ -32,9 +29,9 @@ func init() {
 var ScoreIDMaker = idu64str.New("ScoreID")
 
 type ActiveObjScore struct {
-	TowerUUID  string
-	TowerName  string
-	RecordTime time.Time `prettystring:"simple"`
+	TowerUUID       string
+	TowerName       string
+	RecordTurnCount int
 
 	UUID        string
 	NickName    string
@@ -44,21 +41,4 @@ type ActiveObjScore struct {
 	Wealth      float64
 	BornFaction factiontype.FactionType
 	CurrentBias bias.Bias `prettystring:"simple"`
-}
-
-// NewActiveObjScoreByLevel make dummy data for ground server
-func NewActiveObjScoreByLevel(lv int, bornFaction factiontype.FactionType, CurrentBias bias.Bias) *ActiveObjScore {
-	exp := leveldata.BaseExp(lv)
-	aos := &ActiveObjScore{
-		TowerUUID:  "NoUUID",
-		TowerName:  "Noname",
-		RecordTime: time.Now(),
-
-		UUID:        ScoreIDMaker.New(),
-		NickName:    fmt.Sprintf("Unnamed%v", lv),
-		Exp:         exp,
-		BornFaction: bornFaction,
-		CurrentBias: CurrentBias,
-	}
-	return aos
 }

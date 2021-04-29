@@ -103,16 +103,17 @@ func (ao *ActiveObject) ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveO
 	return &rtn
 }
 
-func (ao *ActiveObject) To_ActiveObjScore() *aoscore.ActiveObjScore {
+func (ao *ActiveObject) To_ActiveObjScore(TurnCount int) *aoscore.ActiveObjScore {
 	aos := &aoscore.ActiveObjScore{
-		UUID:        ao.uuid,
-		NickName:    ao.nickName,
-		AchieveStat: ao.achieveStat,
-		ActionStat:  ao.aoActionStat,
-		Exp:         ao.AOTurnData.TotalExp,
-		Wealth:      ao.inven.GetTotalValue(),
-		BornFaction: ao.bornFaction,
-		CurrentBias: ao.currentBias,
+		UUID:            ao.uuid,
+		NickName:        ao.nickName,
+		AchieveStat:     ao.achieveStat,
+		ActionStat:      ao.aoActionStat,
+		Exp:             ao.AOTurnData.TotalExp,
+		Wealth:          ao.inven.GetTotalValue(),
+		BornFaction:     ao.bornFaction,
+		CurrentBias:     ao.currentBias,
+		RecordTurnCount: TurnCount,
 	}
 	return aos
 }

@@ -12,8 +12,6 @@
 package tower
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
 	"github.com/kasworld/goguelike-single/game/bias"
@@ -37,7 +35,7 @@ func (tw *Tower) GetCmdCh() chan<- interface{} {
 	return tw.cmdCh
 }
 
-func (tw *Tower) GetTurnCh() chan<- time.Time {
+func (tw *Tower) GetTurnCh() chan<- int {
 	return tw.turnCh
 }
 
@@ -45,12 +43,12 @@ func (tw *Tower) GetInterDur() *intervalduration.IntervalDuration {
 	return tw.interDur
 }
 
-func (tw *Tower) GetRunDur() time.Duration {
-	return time.Now().Sub(tw.startTime)
+func (tw *Tower) GetTurnCount() int {
+	return tw.interDur.GetCount()
 }
 
 func (tw *Tower) GetBias() bias.Bias {
-	rtn := bias.MakeBiasByProgress(tw.biasFactor, tw.GetRunDur().Seconds(), gameconst.TowerBaseBiasLen)
+	rtn := bias.MakeBiasByProgress(tw.biasFactor, float64(tw.GetTurnCount()), gameconst.TowerBaseBiasLen)
 	return rtn
 }
 

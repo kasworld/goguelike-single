@@ -14,7 +14,6 @@ package gamei
 import (
 	"context"
 	"net/http"
-	"time"
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike-single/game/bias"
@@ -27,7 +26,6 @@ import (
 type FloorI interface {
 	Initialized() bool
 	Cleanup()
-	GetActTurn() int
 	GetName() string
 	GetWidth() int
 	GetHeight() int
@@ -47,7 +45,7 @@ type FloorI interface {
 	GetFieldObjPosMan() uuidposmani.UUIDPosManI
 
 	GetCmdCh() chan<- interface{}
-	Turn(now time.Time)
+	Turn(TurnCount int)
 	ProcessAllCmds()
 	Run(ctx context.Context, queuesize int)
 

@@ -14,7 +14,6 @@ package glclient
 import (
 	"fmt"
 	"math/rand"
-	"time"
 
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/graphic"
@@ -52,7 +51,7 @@ type ClientFloor struct {
 	XWrapSafe      func(i int) int
 	YWrapSafe      func(i int) int
 	Tiles4PathFind *tilearea4pathfind.TileArea4PathFind `prettystring:"simple"`
-	visitTime      time.Time                            `prettystring:"simple"`
+	visitTurnCount int
 
 	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
@@ -266,8 +265,8 @@ func (cf *ClientFloor) GetBias() bias.Bias {
 func (cf *ClientFloor) LeaveFloor() {
 }
 
-func (cf *ClientFloor) EnterFloor() {
-	cf.visitTime = time.Now()
+func (cf *ClientFloor) EnterFloor(TurnCount int) {
+	cf.visitTurnCount = TurnCount
 }
 
 func (cf *ClientFloor) GetFieldObjAt(x, y int) *csprotocol.FieldObjClient {

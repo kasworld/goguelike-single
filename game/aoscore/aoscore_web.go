@@ -68,7 +68,7 @@ const (
 		<td>{{$v.BornFaction}}</td>
 		<td>{{$v.CurrentBias}}</td>
 		<td>{{$v.TowerName}}</td>
-		<td>{{$v.RecordTime.Format "2006-01-02T15:04:05Z07:00"}}</td>
+		<td>{{$v.RecordTurnCount}}</td>
 	</tr>
 `
 )

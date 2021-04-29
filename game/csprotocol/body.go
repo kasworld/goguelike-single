@@ -12,8 +12,6 @@
 package csprotocol
 
 import (
-	"time"
-
 	"github.com/kasworld/goguelike-single/config/viewportdata"
 	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
 	"github.com/kasworld/goguelike-single/enum/condition"
@@ -161,7 +159,8 @@ type RspAdminFloorMap struct {
 // noti
 
 type NotiEnterFloor struct {
-	FI *FloorInfo
+	FI        *FloorInfo
+	TurnCount int
 }
 type NotiLeaveFloor struct {
 	FI *FloorInfo
@@ -180,7 +179,7 @@ type NotiRebirthed struct {
 }
 
 type NotiVPObjList struct {
-	Time          time.Time `prettystring:"simple"`
+	TurnCount     int
 	FloorName     string
 	ActiveObj     *PlayerActiveObjInfo
 	ActiveObjList []*ActiveObjClient

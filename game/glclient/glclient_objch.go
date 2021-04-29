@@ -107,7 +107,7 @@ func (app *GLClient) objRecvNotiFn_EnterFloor(body *csprotocol.NotiEnterFloor) e
 		app.CurrentFloor = newFl
 	}
 	app.scene.Add(app.CurrentFloor.Scene)
-	app.CurrentFloor.EnterFloor()
+	app.CurrentFloor.EnterFloor(body.TurnCount)
 	return nil
 }
 func (app *GLClient) objRecvNotiFn_LeaveFloor(body *csprotocol.NotiLeaveFloor) error {
