@@ -207,16 +207,6 @@ func (ao *ActiveObject) addInitGold() {
 	}
 }
 
-func (ao *ActiveObject) addRandCarryObjEquip(basename string, n int) {
-	for ; n > 0; n-- {
-		po := carryingobject.NewRandFactionEquipObj(
-			basename,
-			factiontype.FactionType(ao.rnd.Intn(factiontype.FactionType_Count)),
-			ao.rnd)
-		ao.inven.AddToBag(po)
-	}
-}
-
 func (ao *ActiveObject) addRandFactionCarryObjEquip(basename string, ft factiontype.FactionType, n int) {
 	for ; n > 0; n-- {
 		po := carryingobject.NewRandFactionEquipObj(basename, ft, ao.rnd)

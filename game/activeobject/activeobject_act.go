@@ -158,7 +158,7 @@ func (ao *ActiveObject) TryRebirth() error {
 	if ao.remainTurn2Rebirth == 0 && !ao.IsAlive() {
 		ao.buffManager.ClearOnRebirth()
 		ao.homefloor.GetTower().GetCmdCh() <- &cmd2tower.ActiveObjRebirth{
-			ao,
+			ActiveObj: ao,
 		}
 		return nil
 	}
@@ -172,9 +172,9 @@ func (ao *ActiveObject) AppendTurnResult(turnResult turnresult.TurnResult) {
 ////////////////////////////////////////////////////////////////////////////////
 // process packet
 
-func (ao *ActiveObject) DoPickup(po gamei.CarryingObjectI) error {
+func (ao *ActiveObject) DoPickup(co gamei.CarryingObjectI) error {
 	var err error
-	switch po.(type) {
+	switch po := co.(type) {
 	default:
 		err = fmt.Errorf("unknown type %T %v", po, po)
 	case gamei.MoneyI:

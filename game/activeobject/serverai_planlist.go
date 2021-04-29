@@ -22,7 +22,7 @@ type planObj struct {
 }
 
 var aoType2aiPlan = [...]aiplan.PlanList{
-	aotype.System: aiplan.PlanList{
+	aotype.System: {
 		aiplan.Chat,
 		aiplan.StrollAround,
 		aiplan.Move2Dest,
@@ -36,7 +36,7 @@ var aoType2aiPlan = [...]aiplan.PlanList{
 		aiplan.MoveStraight3,
 		aiplan.MoveStraight5,
 	},
-	aotype.User: aiplan.PlanList{
+	aotype.User: {
 		aiplan.StrollAround,
 		aiplan.Move2Dest,
 		aiplan.Revenge,
