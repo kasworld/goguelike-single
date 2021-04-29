@@ -39,7 +39,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/loadlines"
 	"github.com/kasworld/intervalduration"
 	"github.com/kasworld/version"
-	"github.com/kasworld/weblib/retrylistenandserve"
 )
 
 var _ gamei.TowerI = &Tower{}
@@ -233,8 +232,7 @@ func (tw *Tower) Run() {
 		}
 	}
 
-	tw.initAdminWeb()
-	go retrylistenandserve.RetryListenAndServe(tw.adminWeb, g2log.GlobalLogger, "serveAdminWeb")
+	go tw.runAdminWeb()
 
 	go tw.handle_c2tch()
 	tw.initPlayer()

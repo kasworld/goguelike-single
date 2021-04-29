@@ -14,8 +14,11 @@ package tower
 import (
 	"fmt"
 	"html/template"
+	"net"
 	"net/http"
+	"os"
 	"runtime"
+	"syscall"
 	"time"
 
 	"github.com/kasworld/actpersec"
@@ -38,7 +41,7 @@ import (
 func (tw *Tower) web_FaviconIco(w http.ResponseWriter, r *http.Request) {
 }
 
-func (tw *Tower) initAdminWeb() {
+func (tw *Tower) runAdminWeb() {
 	authData := weblib.NewAuthData("tower")
 	authData.ReLoadUserData([][2]string{
 		{tw.config.WebAdminID, tw.config.WebAdminPass},
@@ -74,6 +77,21 @@ func (tw *Tower) initAdminWeb() {
 	tw.adminWeb = &http.Server{
 		Handler: webMux,
 		Addr:    fmt.Sprintf(":%v", tw.config.AdminPort),
+	}
+	for {
+		err := tw.adminWeb.ListenAndServe()
+		if err != nil {
+			operr, ok := err.(*net.OpError)
+			if ok {
+				syscallerr, ok := operr.Err.(*os.SyscallError)
+				if ok && syscallerr.Err == syscall.EADDRINUSE {
+					g2log.Warn("Retry adminWeb %v", err) // bind: address already in use
+					time.Sleep(time.Second)
+					continue
+				}
+			}
+			break
+		}
 	}
 }
 

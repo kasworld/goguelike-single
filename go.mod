@@ -6,7 +6,6 @@ require (
 	github.com/g3n/engine v0.1.1-0.20210127232258-6d0136f3444c
 	github.com/kasworld/actpersec v0.0.0-20191019021204-8c24cd60715c
 	github.com/kasworld/argdefault v0.0.0-20200515031517-5b81c2684ab9
-	github.com/kasworld/configutil v0.0.0-20191216014610-0147549c8f10
 	github.com/kasworld/direction v0.0.0-20200404021744-bc9d917fa31b // indirect
 	github.com/kasworld/durjitter v0.0.0-20190506030451-c6b107ee04f5 // indirect
 	github.com/kasworld/findnear v0.0.0-20190507055216-d04f3f02788f
@@ -20,13 +19,10 @@ require (
 	github.com/kasworld/log v0.0.0-20210321033816-d4232145e6fb
 	github.com/kasworld/prettystring v0.0.0-20200313054137-8305061037e7
 	github.com/kasworld/primenum v0.0.0-20200519063715-de250634a56d
-	github.com/kasworld/recordduration v0.0.0-20190924031050-aa5da0a840f6
 	github.com/kasworld/rect v0.0.0-20191110105826-d670102a73be
 	github.com/kasworld/uuidstr v0.0.0-20190503034528-2edffd24297a
 	github.com/kasworld/version v0.0.0-20190507052028-3d2e657a23f8
 	github.com/kasworld/walk2d v0.0.0-20190508054438-4e630929cb37
 	github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f
 	github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62
-	github.com/smartystreets/goconvey v1.6.4 // indirect
-	gopkg.in/ini.v1 v1.62.0 // indirect
 )
