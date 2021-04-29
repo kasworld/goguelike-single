@@ -25,6 +25,7 @@ import (
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
+	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/htmlcolors"
 )
 
@@ -107,6 +108,9 @@ func NewCOKeyFromCarryObjClientOnFloor(
 func cokey2Color(cokey COKey) string {
 	var v htmlcolors.Color24
 	switch cokey.CT {
+	default:
+		v = htmlcolors.Black
+		g2log.Fatal("invalid cokey %v", cokey)
 	case carryingobjecttype.Equip:
 		v = cokey.FT.Color24()
 	case carryingobjecttype.Money:
