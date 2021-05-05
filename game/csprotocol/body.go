@@ -13,17 +13,17 @@ package csprotocol
 
 import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
-	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
+	"github.com/kasworld/goguelike-single/enum/achievetype_vector_float64"
 	"github.com/kasworld/goguelike-single/enum/condition"
-	"github.com/kasworld/goguelike-single/enum/condition_vector"
+	"github.com/kasworld/goguelike-single/enum/condition_vector_int"
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/enum/fieldobjacttype"
-	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
-	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
+	"github.com/kasworld/goguelike-single/enum/potiontype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
-	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike-single/enum/scrolltype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/turnaction"
 	"github.com/kasworld/goguelike-single/enum/way9type"
 	"github.com/kasworld/goguelike-single/game/tilearea"
@@ -36,11 +36,11 @@ import (
 type ReqAchieveInfo struct {
 }
 type RspAchieveInfo struct {
-	AchieveStat   achievetype_vector.AchieveTypeVector         `prettystring:"simple"`
-	PotionStat    potiontype_vector.PotionTypeVector           `prettystring:"simple"`
-	ScrollStat    scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
-	FOActStat     fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
-	ConditionStat condition_vector.ConditionVector             `prettystring:"simple"`
+	AchieveStat   achievetype_vector_float64.AchieveTypeVector_float64 `prettystring:"simple"`
+	PotionStat    potiontype_vector_int.PotionTypeVector_int           `prettystring:"simple"`
+	ScrollStat    scrolltype_vector_int.ScrollTypeVector_int           `prettystring:"simple"`
+	FOActStat     fieldobjacttype_vector_int.FieldObjActTypeVector_int `prettystring:"simple"`
+	ConditionStat condition_vector_int.ConditionVector_int             `prettystring:"simple"`
 }
 
 // AIPlay

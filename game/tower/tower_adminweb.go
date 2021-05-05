@@ -23,7 +23,7 @@ import (
 
 	"github.com/kasworld/actpersec"
 	"github.com/kasworld/goguelike-single/enum/tile_flag"
-	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike-single/enum/towerachieve_vector_float64"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/aoid2activeobject"
 	"github.com/kasworld/goguelike-single/game/carryingobject"
@@ -111,7 +111,7 @@ func (tw *Tower) WrapInfo() string {
 	return wrapper.G_WrapperInfo()
 }
 
-func (tw *Tower) GetTowerAchieveStat() *towerachieve_vector.TowerAchieveVector {
+func (tw *Tower) GetTowerAchieveStat() *towerachieve_vector_float64.TowerAchieveVector_float64 {
 	return tw.towerAchieveStat
 }
 

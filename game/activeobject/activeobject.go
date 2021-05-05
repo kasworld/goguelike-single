@@ -20,18 +20,18 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/gamedata"
 	"github.com/kasworld/goguelike-single/enum/achievetype"
-	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
+	"github.com/kasworld/goguelike-single/enum/achievetype_vector_float64"
 	"github.com/kasworld/goguelike-single/enum/aotype"
-	"github.com/kasworld/goguelike-single/enum/condition_vector"
+	"github.com/kasworld/goguelike-single/enum/condition_vector_int"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
-	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
+	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/potiontype"
-	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
+	"github.com/kasworld/goguelike-single/enum/potiontype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
-	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
-	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
-	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
+	"github.com/kasworld/goguelike-single/enum/scrolltype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/towerachieve_vector_float64"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector_int"
 	"github.com/kasworld/goguelike-single/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
@@ -73,13 +73,13 @@ type ActiveObject struct {
 	ai          *ServerAIState          // for server side ai
 	isAIInUse   bool
 
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector      `prettystring:"simple"`
-	achieveStat      achievetype_vector.AchieveTypeVector         `prettystring:"simple"`
-	potionStat       potiontype_vector.PotionTypeVector           `prettystring:"simple"`
-	scrollStat       scrolltype_vector.ScrollTypeVector           `prettystring:"simple"`
-	foActStat        fieldobjacttype_vector.FieldObjActTypeVector `prettystring:"simple"`
-	aoActionStat     turnaction_vector.TurnActionVector           `prettystring:"simple"`
-	conditionStat    condition_vector.ConditionVector             `prettystring:"simple"`
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64 `prettystring:"simple"`
+	achieveStat      achievetype_vector_float64.AchieveTypeVector_float64    `prettystring:"simple"`
+	potionStat       potiontype_vector_int.PotionTypeVector_int              `prettystring:"simple"`
+	scrollStat       scrolltype_vector_int.ScrollTypeVector_int              `prettystring:"simple"`
+	foActStat        fieldobjacttype_vector_int.FieldObjActTypeVector_int    `prettystring:"simple"`
+	aoActionStat     turnaction_vector_int.TurnActionVector_int              `prettystring:"simple"`
+	conditionStat    condition_vector_int.ConditionVector_int                `prettystring:"simple"`
 
 	// info known to activeobject
 	floor4ClientMan *floor4clientman.Floor4ClientMan `prettystring:"simple"`
@@ -113,7 +113,7 @@ type ActiveObject struct {
 func newActiveObj(
 	seed int64,
 	homefloor gamei.FloorI,
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64,
 ) *ActiveObject {
 
 	ao := &ActiveObject{
@@ -135,7 +135,7 @@ func newActiveObj(
 }
 
 func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64,
 ) *ActiveObject {
 
 	ao := newActiveObj(seed, homefloor, towerAchieveStat)
@@ -155,7 +155,7 @@ func NewUserActiveObj(seed int64, homefloor gamei.FloorI, nickname string,
 }
 
 func NewSystemActiveObj(seed int64, homefloor gamei.FloorI,
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector,
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64,
 ) *ActiveObject {
 	ao := newActiveObj(seed, homefloor, towerAchieveStat)
 	ao.uuid = SysAOIDMaker.New()

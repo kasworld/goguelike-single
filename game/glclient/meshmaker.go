@@ -20,11 +20,11 @@ import (
 	"github.com/g3n/engine/material"
 	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/dangertype"
-	"github.com/kasworld/goguelike-single/enum/dangertype_vector"
+	"github.com/kasworld/goguelike-single/enum/dangertype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
-	"github.com/kasworld/goguelike-single/enum/factiontype_vector"
+	"github.com/kasworld/goguelike-single/enum/factiontype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/tile"
-	"github.com/kasworld/goguelike-single/enum/tile_vector"
+	"github.com/kasworld/goguelike-single/enum/tile_vector_int"
 )
 
 func (mm *MeshMaker) String() string {
@@ -44,7 +44,7 @@ func (mm *MeshMaker) String() string {
 
 type MeshMaker struct {
 	// tile
-	tileInUse tile_vector.TileVector
+	tileInUse tile_vector_int.TileVector_int
 	tileTex   [tile.Tile_Count]*texture.Texture2D
 	tileMat   [tile.Tile_Count]*material.Standard
 	tileGeo   [tile.Tile_Count]*geometry.Geometry
@@ -59,7 +59,7 @@ type MeshMaker struct {
 	foMeshFreeList map[FOKey][]*graphic.Mesh
 
 	// active object
-	aoInUse factiontype_vector.FactionTypeVector
+	aoInUse factiontype_vector_int.FactionTypeVector_int
 	aoMat   [factiontype.FactionType_Count]*material.Standard
 	aoGeo   [factiontype.FactionType_Count]*geometry.Geometry
 	// free list
@@ -73,7 +73,7 @@ type MeshMaker struct {
 	coMeshFreeList map[COKey][]*graphic.Mesh
 
 	// danger object
-	doInUse dangertype_vector.DangerTypeVector
+	doInUse dangertype_vector_int.DangerTypeVector_int
 	doMat   [dangertype.DangerType_Count]*material.Standard
 	doGeo   [dangertype.DangerType_Count]*geometry.Geometry
 	// free list

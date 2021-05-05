@@ -13,14 +13,14 @@ package gamei
 
 import (
 	"github.com/kasworld/goguelike-single/config/viewportdata"
-	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
+	"github.com/kasworld/goguelike-single/enum/achievetype_vector_float64"
 	"github.com/kasworld/goguelike-single/enum/aotype"
-	"github.com/kasworld/goguelike-single/enum/condition_vector"
-	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
-	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
+	"github.com/kasworld/goguelike-single/enum/condition_vector_int"
+	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/potiontype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/respawntype"
-	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
-	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
+	"github.com/kasworld/goguelike-single/enum/scrolltype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector_int"
 	"github.com/kasworld/goguelike-single/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
@@ -112,12 +112,12 @@ type ActiveObjectI interface {
 	ToPacket_ActiveObjClient(x, y int) *csprotocol.ActiveObjClient
 	ToPacket_PlayerActiveObjInfo() *csprotocol.PlayerActiveObjInfo
 
-	GetAchieveStat() *achievetype_vector.AchieveTypeVector
-	GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector
-	GetPotionStat() *potiontype_vector.PotionTypeVector
-	GetScrollStat() *scrolltype_vector.ScrollTypeVector
-	GetActStat() *turnaction_vector.TurnActionVector
-	GetConditionStat() *condition_vector.ConditionVector
+	GetAchieveStat() *achievetype_vector_float64.AchieveTypeVector_float64
+	GetFieldObjActStat() *fieldobjacttype_vector_int.FieldObjActTypeVector_int
+	GetPotionStat() *potiontype_vector_int.PotionTypeVector_int
+	GetScrollStat() *scrolltype_vector_int.ScrollTypeVector_int
+	GetActStat() *turnaction_vector_int.TurnActionVector_int
+	GetConditionStat() *condition_vector_int.ConditionVector_int
 
 	UpdateVisitAreaBySightMat2(f FloorI, vpCenterX, vpCenterY int,
 		sightMat *viewportdata.ViewportSight2, sight float32)

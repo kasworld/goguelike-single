@@ -17,13 +17,13 @@ import (
 	"net/http"
 
 	"github.com/kasworld/goguelike-single/enum/achievetype"
-	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
-	"github.com/kasworld/goguelike-single/enum/condition_vector"
+	"github.com/kasworld/goguelike-single/enum/achievetype_vector_float64"
+	"github.com/kasworld/goguelike-single/enum/condition_vector_int"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
-	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
-	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
-	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
-	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
+	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/potiontype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/scrolltype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector_int"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 
@@ -52,12 +52,12 @@ func (ao *ActiveObject) GetAIObj() *ServerAIState {
 func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request) {
 	tplIndex, err := template.New(
 		"index").Funcs(
-		turnaction_vector.IndexFn).Funcs(
-		potiontype_vector.IndexFn).Funcs(
-		scrolltype_vector.IndexFn).Funcs(
-		fieldobjacttype_vector.IndexFn).Funcs(
-		condition_vector.IndexFn).Funcs(
-		achievetype_vector.IndexFn).Parse(`
+		turnaction_vector_int.IndexFn).Funcs(
+		potiontype_vector_int.IndexFn).Funcs(
+		scrolltype_vector_int.IndexFn).Funcs(
+		fieldobjacttype_vector_int.IndexFn).Funcs(
+		condition_vector_int.IndexFn).Funcs(
+		achievetype_vector_float64.IndexFn).Parse(`
 	<html> <head>
 	<title>ActiveObject</title>
 	</head>
@@ -144,61 +144,61 @@ func (ao *ActiveObject) Web_ActiveObjInfo(w http.ResponseWriter, r *http.Request
 	Achieve stat<br/>
 	{{with .GetAchieveStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + achievetype_vector.HTML_tableheader + `
+		` + achievetype_vector_float64.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + achievetype_vector.HTML_row + `
+		` + achievetype_vector_float64.HTML_row + `
 		{{end}}
-		` + achievetype_vector.HTML_tableheader + `
+		` + achievetype_vector_float64.HTML_tableheader + `
 		</table>
 	{{end}}
 	Potion stat<br/>
 	{{with .GetPotionStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + potiontype_vector.HTML_tableheader + `
+		` + potiontype_vector_int.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + potiontype_vector.HTML_row + `
+		` + potiontype_vector_int.HTML_row + `
 		{{end}}
-		` + potiontype_vector.HTML_tableheader + `
+		` + potiontype_vector_int.HTML_tableheader + `
 		</table>
 	{{end}}
 	Scroll stat<br/>
 	{{with .GetScrollStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + scrolltype_vector.HTML_tableheader + `
+		` + scrolltype_vector_int.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + scrolltype_vector.HTML_row + `
+		` + scrolltype_vector_int.HTML_row + `
 		{{end}}
-		` + scrolltype_vector.HTML_tableheader + `
+		` + scrolltype_vector_int.HTML_tableheader + `
 		</table>
 	{{end}}
 	FieldObj stat<br/>
 	{{with .GetFieldObjActStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + fieldobjacttype_vector.HTML_tableheader + `
+		` + fieldobjacttype_vector_int.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + fieldobjacttype_vector.HTML_row + `
+		` + fieldobjacttype_vector_int.HTML_row + `
 		{{end}}
-		` + fieldobjacttype_vector.HTML_tableheader + `
+		` + fieldobjacttype_vector_int.HTML_tableheader + `
 		</table>
 	{{end}}
 	Action stat<br/>
 	{{with .GetActStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + turnaction_vector.HTML_tableheader + `
+		` + turnaction_vector_int.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + turnaction_vector.HTML_row + `
+		` + turnaction_vector_int.HTML_row + `
 		{{end}}
-		` + turnaction_vector.HTML_tableheader + `
+		` + turnaction_vector_int.HTML_tableheader + `
 		</table>
 	{{end}}
 	Condition stat<br/>
 	{{with .GetConditionStat}}
 		<table border=1 style="border-collapse:collapse;">
-		` + condition_vector.HTML_tableheader + `
+		` + condition_vector_int.HTML_tableheader + `
 		{{range $i, $v := .}}
-		` + condition_vector.HTML_row + `
+		` + condition_vector_int.HTML_row + `
 		{{end}}
-		` + condition_vector.HTML_tableheader + `
+		` + condition_vector_int.HTML_tableheader + `
 		</table>
 	{{end}}
 	{{range $i, $v := .GetFloor4ClientList}}

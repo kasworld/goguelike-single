@@ -15,15 +15,14 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/kasworld/goguelike-single/enum/respawntype"
-	"github.com/kasworld/goguelike-single/enum/turnaction_vector"
-
-	"github.com/kasworld/goguelike-single/enum/achievetype_vector"
+	"github.com/kasworld/goguelike-single/enum/achievetype_vector_float64"
 	"github.com/kasworld/goguelike-single/enum/aotype"
-	"github.com/kasworld/goguelike-single/enum/condition_vector"
-	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector"
-	"github.com/kasworld/goguelike-single/enum/potiontype_vector"
-	"github.com/kasworld/goguelike-single/enum/scrolltype_vector"
+	"github.com/kasworld/goguelike-single/enum/condition_vector_int"
+	"github.com/kasworld/goguelike-single/enum/fieldobjacttype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/potiontype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/respawntype"
+	"github.com/kasworld/goguelike-single/enum/scrolltype_vector_int"
+	"github.com/kasworld/goguelike-single/enum/turnaction_vector_int"
 	"github.com/kasworld/goguelike-single/game/activeobject/activebuff"
 	"github.com/kasworld/goguelike-single/game/activeobject/aoturndata"
 	"github.com/kasworld/goguelike-single/game/activeobject/turnresult"
@@ -94,27 +93,27 @@ func (ao *ActiveObject) GetInven() gamei.InventoryI {
 ////////////////////////////////////////////////////////////////////////////////
 // stats, at least used for web
 
-func (ao *ActiveObject) GetAchieveStat() *achievetype_vector.AchieveTypeVector {
+func (ao *ActiveObject) GetAchieveStat() *achievetype_vector_float64.AchieveTypeVector_float64 {
 	return &ao.achieveStat
 }
 
-func (ao *ActiveObject) GetScrollStat() *scrolltype_vector.ScrollTypeVector {
+func (ao *ActiveObject) GetScrollStat() *scrolltype_vector_int.ScrollTypeVector_int {
 	return &ao.scrollStat
 }
 
-func (ao *ActiveObject) GetFieldObjActStat() *fieldobjacttype_vector.FieldObjActTypeVector {
+func (ao *ActiveObject) GetFieldObjActStat() *fieldobjacttype_vector_int.FieldObjActTypeVector_int {
 	return &ao.foActStat
 }
 
-func (ao *ActiveObject) GetConditionStat() *condition_vector.ConditionVector {
+func (ao *ActiveObject) GetConditionStat() *condition_vector_int.ConditionVector_int {
 	return &ao.conditionStat
 }
 
-func (ao *ActiveObject) GetActStat() *turnaction_vector.TurnActionVector {
+func (ao *ActiveObject) GetActStat() *turnaction_vector_int.TurnActionVector_int {
 	return &ao.aoActionStat
 }
 
-func (ao *ActiveObject) GetPotionStat() *potiontype_vector.PotionTypeVector {
+func (ao *ActiveObject) GetPotionStat() *potiontype_vector_int.PotionTypeVector_int {
 	return &ao.potionStat
 }
 

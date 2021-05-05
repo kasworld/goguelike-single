@@ -25,7 +25,7 @@ import (
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/gamedata"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
-	"github.com/kasworld/goguelike-single/enum/towerachieve_vector"
+	"github.com/kasworld/goguelike-single/enum/towerachieve_vector_float64"
 	"github.com/kasworld/goguelike-single/game/activeobject"
 	"github.com/kasworld/goguelike-single/game/aoexpsort"
 	"github.com/kasworld/goguelike-single/game/aoid2activeobject"
@@ -69,11 +69,11 @@ type Tower struct {
 	startTime  time.Time      `prettystring:"simple"`
 
 	// mamagers
-	floorMan         *floormanager.FloorManager                  `prettystring:"simple"`
-	ao2Floor         *aoid2floor.ActiveObjID2Floor               `prettystring:"simple"`
-	id2ao            *aoid2activeobject.ActiveObjID2ActiveObject `prettystring:"simple"`
-	aoExpRanking     aoexpsort.ByExp                             `prettystring:"simple"`
-	towerAchieveStat *towerachieve_vector.TowerAchieveVector     `prettystring:"simple"`
+	floorMan         *floormanager.FloorManager                              `prettystring:"simple"`
+	ao2Floor         *aoid2floor.ActiveObjID2Floor                           `prettystring:"simple"`
+	id2ao            *aoid2activeobject.ActiveObjID2ActiveObject             `prettystring:"simple"`
+	aoExpRanking     aoexpsort.ByExp                                         `prettystring:"simple"`
+	towerAchieveStat *towerachieve_vector_float64.TowerAchieveVector_float64 `prettystring:"simple"`
 
 	gameInfo *csprotocol.GameInfo
 
@@ -96,7 +96,7 @@ func New(config *goguelikeconfig.GoguelikeConfig) *Tower {
 		turnStat:         actpersec.New(),
 		interDur:         intervalduration.New(""),
 		cmdActStat:       actpersec.New(),
-		towerAchieveStat: new(towerachieve_vector.TowerAchieveVector),
+		towerAchieveStat: new(towerachieve_vector_float64.TowerAchieveVector_float64),
 		c2tCh:            make(chan *csprotocol.Packet, gameconst.SendBufferSize),
 		t2cCh:            make(chan *csprotocol.Packet, gameconst.SendBufferSize),
 		startTime:        time.Now(),
