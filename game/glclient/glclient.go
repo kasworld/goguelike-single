@@ -12,12 +12,6 @@
 package glclient
 
 import (
-	"github.com/g3n/engine/app"
-	"github.com/g3n/engine/camera"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gui"
-	"github.com/g3n/engine/light"
-	"github.com/g3n/engine/util"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/config/gameconst"
 	"github.com/kasworld/goguelike-single/config/goguelikeconfig"
@@ -25,6 +19,12 @@ import (
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
+	"github.com/kasworld/goguelike-single/lib/engine/app"
+	"github.com/kasworld/goguelike-single/lib/engine/camera"
+	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/gui"
+	"github.com/kasworld/goguelike-single/lib/engine/light"
+	"github.com/kasworld/goguelike-single/lib/engine/util"
 )
 
 type GLClient struct {

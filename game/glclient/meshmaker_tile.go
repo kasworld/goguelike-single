@@ -18,12 +18,12 @@ import (
 	"math"
 	"os"
 
-	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/math32"
-	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/tile"
+	"github.com/kasworld/goguelike-single/lib/engine/geometry"
+	"github.com/kasworld/goguelike-single/lib/engine/graphic"
+	"github.com/kasworld/goguelike-single/lib/engine/material"
+	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/texture"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 )
 

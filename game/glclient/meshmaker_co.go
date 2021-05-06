@@ -14,10 +14,6 @@ package glclient
 import (
 	"math"
 
-	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/math32"
 	"github.com/kasworld/goguelike-single/config/moneycolor"
 	"github.com/kasworld/goguelike-single/enum/carryingobjecttype"
 	"github.com/kasworld/goguelike-single/enum/equipslottype"
@@ -25,6 +21,10 @@ import (
 	"github.com/kasworld/goguelike-single/enum/potiontype"
 	"github.com/kasworld/goguelike-single/enum/scrolltype"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
+	"github.com/kasworld/goguelike-single/lib/engine/geometry"
+	"github.com/kasworld/goguelike-single/lib/engine/graphic"
+	"github.com/kasworld/goguelike-single/lib/engine/material"
+	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/htmlcolors"
 )

@@ -15,19 +15,19 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/g3n/engine/app"
-	"github.com/g3n/engine/camera"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/gui"
-	"github.com/g3n/engine/light"
-	"github.com/g3n/engine/math32"
-	"github.com/g3n/engine/renderer"
-	"github.com/g3n/engine/util"
-	"github.com/g3n/engine/util/helper"
-	"github.com/g3n/engine/window"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
+	"github.com/kasworld/goguelike-single/lib/engine/app"
+	"github.com/kasworld/goguelike-single/lib/engine/camera"
+	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/gls"
+	"github.com/kasworld/goguelike-single/lib/engine/graphic"
+	"github.com/kasworld/goguelike-single/lib/engine/gui"
+	"github.com/kasworld/goguelike-single/lib/engine/light"
+	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderer"
+	"github.com/kasworld/goguelike-single/lib/engine/util"
+	"github.com/kasworld/goguelike-single/lib/engine/util/helper"
+	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // runtime.LockOSThread
@@ -36,7 +36,7 @@ import (
 func (ga *GLClient) glInit() error {
 	// Create application and scene
 	ga.app = app.App()
-	ga.app.IWindow.(*window.GlfwWindow).SetTitle("gogguelike-single")
+	ga.app.IWindow.(*window.GlfwWindow).SetTitle("goguelike-single")
 	ga.app.IWindow.(*window.GlfwWindow).SetSize(1920, 1080)
 	ga.scene = core.NewNode()
 

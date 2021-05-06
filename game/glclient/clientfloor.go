@@ -15,8 +15,6 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/graphic"
 	"github.com/kasworld/findnear"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/tile_flag"
@@ -26,6 +24,8 @@ import (
 	"github.com/kasworld/goguelike-single/game/tilearea"
 	"github.com/kasworld/goguelike-single/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike-single/game/visitarea"
+	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"

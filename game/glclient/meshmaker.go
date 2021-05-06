@@ -15,16 +15,16 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/texture"
 	"github.com/kasworld/goguelike-single/enum/dangertype"
 	"github.com/kasworld/goguelike-single/enum/dangertype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/factiontype"
 	"github.com/kasworld/goguelike-single/enum/factiontype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/tile_vector_int"
+	"github.com/kasworld/goguelike-single/lib/engine/geometry"
+	"github.com/kasworld/goguelike-single/lib/engine/graphic"
+	"github.com/kasworld/goguelike-single/lib/engine/material"
+	"github.com/kasworld/goguelike-single/lib/engine/texture"
 )
 
 func (mm *MeshMaker) String() string {
