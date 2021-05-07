@@ -25,7 +25,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderer"
-	"github.com/kasworld/goguelike-single/lib/engine/util"
+	"github.com/kasworld/goguelike-single/lib/engine/util/framerater"
 	"github.com/kasworld/goguelike-single/lib/engine/util/helper"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -70,7 +70,7 @@ func (ga *GLClient) glInit() error {
 	// Create and add an axis helper to the scene
 	ga.scene.Add(helper.NewAxes(100))
 
-	ga.frameRater = util.NewFrameRater(60)
+	ga.frameRater = framerater.NewFrameRater(60)
 	ga.labelFPS = gui.NewLabel(" ")
 	ga.labelFPS.SetFontSize(20)
 	ga.labelFPS.SetLayoutParams(&gui.HBoxLayoutParams{AlignV: gui.AlignCenter})

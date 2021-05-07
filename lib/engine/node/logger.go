@@ -5,4 +5,4 @@ import (
 )
 
 // Package logger
-var log = logger.New("CORE", logger.Default)
+var log = logger.New("NODE", logger.Default)

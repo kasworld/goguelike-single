@@ -24,7 +24,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/light"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
-	"github.com/kasworld/goguelike-single/lib/engine/util"
+	"github.com/kasworld/goguelike-single/lib/engine/util/framerater"
 )
 
 type GLClient struct {
@@ -58,8 +58,8 @@ type GLClient struct {
 	cam        *camera.Camera
 	camZpos    float32
 	pLight     *light.Point
-	frameRater *util.FrameRater // Render loop frame rater
-	labelFPS   *gui.Label       // header FPS label
+	frameRater *framerater.FrameRater // Render loop frame rater
+	labelFPS   *gui.Label             // header FPS label
 
 	sceneAO *node.Node
 	sceneCO *node.Node
