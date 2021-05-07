@@ -15,23 +15,23 @@ import (
 	"runtime"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets"
 )
 
 // GlfwWindow describes one glfw window
 type GlfwWindow struct {
-	*glfw.Window                // Embedded GLFW window
-	g3ncore.Dispatcher          // Embedded event dispatcher
-	gls                *gls.GLS // Associated OpenGL State
-	fullscreen         bool
-	lastX              int
-	lastY              int
-	lastWidth          int
-	lastHeight         int
-	scaleX             float64
-	scaleY             float64
+	*glfw.Window                   // Embedded GLFW window
+	dispatcher.Dispatcher          // Embedded event dispatcher
+	gls                   *gls.GLS // Associated OpenGL State
+	fullscreen            bool
+	lastX                 int
+	lastY                 int
+	lastWidth             int
+	lastHeight            int
+	scaleX                float64
+	scaleY                float64
 
 	// Events
 	keyEv    KeyEvent

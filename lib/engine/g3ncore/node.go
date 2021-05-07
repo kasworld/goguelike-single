@@ -8,6 +8,7 @@ import (
 	"math"
 	"strings"
 
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
@@ -19,16 +20,16 @@ const (
 
 // Node represents an object in 3D space existing within a hierarchy.
 type Node struct {
-	Dispatcher                 // Embedded event dispatcher
-	inode          NodeI       // The NodeI associated with this Node
-	parent         NodeI       // Parent node
-	children       []NodeI     // Children nodes
-	name           string      // Optional node name
-	loaderID       string      // ID used by loader
-	visible        bool        // Whether the node is visible
-	matNeedsUpdate bool        // Whether the the local matrix needs to be updated because position or scale has changed
-	rotNeedsUpdate bool        // Whether the euler rotation and local matrix need to be updated because the quaternion has changed
-	userData       interface{} // Generic user data
+	dispatcher.Dispatcher             // Embedded event dispatcher
+	inode                 NodeI       // The NodeI associated with this Node
+	parent                NodeI       // Parent node
+	children              []NodeI     // Children nodes
+	name                  string      // Optional node name
+	loaderID              string      // ID used by loader
+	visible               bool        // Whether the node is visible
+	matNeedsUpdate        bool        // Whether the the local matrix needs to be updated because position or scale has changed
+	rotNeedsUpdate        bool        // Whether the euler rotation and local matrix need to be updated because the quaternion has changed
+	userData              interface{} // Generic user data
 
 	// Spatial properties
 	position   math32.Vector3    // Node position in 3D space (relative to parent)

@@ -7,7 +7,7 @@ package camera
 import (
 	"math"
 
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -39,12 +39,12 @@ const (
 // OrbitControl is a camera controller that allows orbiting a target point while looking at it.
 // It allows the user to rotate, zoom, and pan a 3D scene using the mouse or keyboard.
 type OrbitControl struct {
-	g3ncore.Dispatcher                // Embedded event dispatcher
-	cam                *Camera        // Controlled camera
-	target             math32.Vector3 // Camera target, around which the camera orbits
-	up                 math32.Vector3 // The orbit axis (Y+)
-	enabled            OrbitEnabled   // Which controls are enabled
-	state              orbitState     // Current control state
+	dispatcher.Dispatcher                // Embedded event dispatcher
+	cam                   *Camera        // Controlled camera
+	target                math32.Vector3 // Camera target, around which the camera orbits
+	up                    math32.Vector3 // The orbit axis (Y+)
+	enabled               OrbitEnabled   // Which controls are enabled
+	state                 orbitState     // Current control state
 
 	// Public properties
 	MinDistance     float32 // Minimum distance from target (default is 1)

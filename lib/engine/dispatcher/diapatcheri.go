@@ -1,4 +1,4 @@
-package g3ncore
+package dispatcher
 
 // Callback is the type for Dispatcher callback functions.
 type Callback func(evname string, ev interface{})

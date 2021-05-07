@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -14,15 +15,15 @@ var gm *manager
 
 // manager routes GUI events to the appropriate panels.
 type manager struct {
-	g3ncore.Dispatcher                       // Embedded Dispatcher
-	g3ncore.TimerManager                     // Embedded TimerManager
-	win                  window.WindowI      // The current WindowI
-	scene                g3ncore.NodeI       // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
-	modal                IPanel              // Panel which along its descendants will exclusively receive all events
-	target               IPanel              // Panel immediately under the cursor
-	keyFocus             g3ncore.DispatcherI // DispatcherI which will exclusively receive all key and char events
-	cursorFocus          g3ncore.DispatcherI // DispatcherI which will exclusively receive all OnCursor events
-	cev                  *window.CursorEvent // DispatcherI which will exclusively receive all OnCursor events
+	dispatcher.Dispatcher                        // Embedded Dispatcher
+	g3ncore.TimerManager                         // Embedded TimerManager
+	win                   window.WindowI         // The current WindowI
+	scene                 g3ncore.NodeI          // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
+	modal                 IPanel                 // Panel which along its descendants will exclusively receive all events
+	target                IPanel                 // Panel immediately under the cursor
+	keyFocus              dispatcher.DispatcherI // DispatcherI which will exclusively receive all key and char events
+	cursorFocus           dispatcher.DispatcherI // DispatcherI which will exclusively receive all OnCursor events
+	cev                   *window.CursorEvent    // DispatcherI which will exclusively receive all OnCursor events
 }
 
 // Manager returns the GUI manager singleton (creating it the first time)
@@ -68,7 +69,7 @@ func (gm *manager) SetModal(ipan IPanel) {
 }
 
 // SetKeyFocus sets the key-focused DispatcherI, which will exclusively receive key and char events.
-func (gm *manager) SetKeyFocus(disp g3ncore.DispatcherI) {
+func (gm *manager) SetKeyFocus(disp dispatcher.DispatcherI) {
 
 	if gm.keyFocus == disp {
 		return
@@ -83,7 +84,7 @@ func (gm *manager) SetKeyFocus(disp g3ncore.DispatcherI) {
 }
 
 // SetCursorFocus sets the cursor-focused DispatcherI, which will exclusively receive OnCursor events.
-func (gm *manager) SetCursorFocus(disp g3ncore.DispatcherI) {
+func (gm *manager) SetCursorFocus(disp dispatcher.DispatcherI) {
 
 	if gm.cursorFocus == disp {
 		return

@@ -1,13 +1,14 @@
 package g3ncore
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
 // NodeI is the interface for all node types.
 type NodeI interface {
-	DispatcherI
+	dispatcher.DispatcherI
 	GetNode() *Node
 	GetINode() NodeI
 	Visible() bool
