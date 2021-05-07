@@ -7,6 +7,7 @@ package animation
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // A Channel associates an animation parameter channel to an interpolation sampler
@@ -107,13 +108,13 @@ type IChannel interface {
 // NodeChannel is the IChannel for all node transforms.
 type NodeChannel struct {
 	Channel
-	target g3ncore.NodeI
+	target node.NodeI
 }
 
 // PositionChannel is the animation channel for a node's position.
 type PositionChannel NodeChannel
 
-func NewPositionChannel(node g3ncore.NodeI) *PositionChannel {
+func NewPositionChannel(node node.NodeI) *PositionChannel {
 
 	pc := new(PositionChannel)
 	pc.target = node
@@ -153,7 +154,7 @@ func NewPositionChannel(node g3ncore.NodeI) *PositionChannel {
 // RotationChannel is the animation channel for a node's rotation.
 type RotationChannel NodeChannel
 
-func NewRotationChannel(node g3ncore.NodeI) *RotationChannel {
+func NewRotationChannel(node node.NodeI) *RotationChannel {
 
 	rc := new(RotationChannel)
 	rc.target = node
@@ -197,7 +198,7 @@ func NewRotationChannel(node g3ncore.NodeI) *RotationChannel {
 // ScaleChannel is the animation channel for a node's scale.
 type ScaleChannel NodeChannel
 
-func NewScaleChannel(node g3ncore.NodeI) *ScaleChannel {
+func NewScaleChannel(node node.NodeI) *ScaleChannel {
 
 	sc := new(ScaleChannel)
 	sc.target = node

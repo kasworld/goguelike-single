@@ -12,11 +12,12 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/object"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/solver"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // Simulation represents a physics simulation.
 type Simulation struct {
-	scene       *g3ncore.Node
+	scene       *node.Node
 	forceFields []ForceField
 
 	// Bodies under simulation
@@ -59,7 +60,7 @@ type Simulation struct {
 }
 
 // NewSimulation creates and returns a pointer to a new physics simulation.
-func NewSimulation(scene *g3ncore.Node) *Simulation {
+func NewSimulation(scene *node.Node) *Simulation {
 
 	s := new(Simulation)
 	s.time = 0
@@ -82,7 +83,7 @@ func NewSimulation(scene *g3ncore.Node) *Simulation {
 	return s
 }
 
-func (s *Simulation) Scene() *g3ncore.Node {
+func (s *Simulation) Scene() *node.Node {
 
 	return s.scene
 }

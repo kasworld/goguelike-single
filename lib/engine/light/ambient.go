@@ -5,18 +5,18 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Ambient represents an ambient light
 type Ambient struct {
-	g3ncore.Node              // Embedded node
-	color        math32.Color // Light color
-	intensity    float32      // Light intensity
-	uni          gls.Uniform  // Uniform location cache
+	node.Node              // Embedded node
+	color     math32.Color // Light color
+	intensity float32      // Light intensity
+	uni       gls.Uniform  // Uniform location cache
 }
 
 // NewAmbient returns a pointer to a new ambient color with the specified

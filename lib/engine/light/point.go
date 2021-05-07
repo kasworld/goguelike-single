@@ -5,19 +5,19 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Point is an omnidirectional light source
 type Point struct {
-	g3ncore.Node              // Embedded node
-	color        math32.Color // Light color
-	intensity    float32      // Light intensity
-	uni          gls.Uniform  // Uniform location cache
-	udata        struct {     // Combined uniform data in 3 vec3:
+	node.Node              // Embedded node
+	color     math32.Color // Light color
+	intensity float32      // Light intensity
+	uni       gls.Uniform  // Uniform location cache
+	udata     struct {     // Combined uniform data in 3 vec3:
 		color          math32.Color   // Light color
 		position       math32.Vector3 // Light position
 		linearDecay    float32        // Distance linear decay factor

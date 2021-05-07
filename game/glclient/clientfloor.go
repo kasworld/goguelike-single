@@ -24,8 +24,8 @@ import (
 	"github.com/kasworld/goguelike-single/game/tilearea"
 	"github.com/kasworld/goguelike-single/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike-single/game/visitarea"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
@@ -56,7 +56,7 @@ type ClientFloor struct {
 	FieldObjPosMan uuidposmani.UUIDPosManI `prettystring:"simple"`
 
 	// for g3n
-	Scene *g3ncore.Node
+	Scene *node.Node
 
 	meshMaker *MeshMaker
 	// tiles at x,y
@@ -81,7 +81,7 @@ func NewClientFloor(
 	cf.Tiles4PathFind = tilearea4pathfind.New(cf.Tiles)
 	cf.FieldObjPosMan = uuidposman_map.New(FloorInfo.W, FloorInfo.H)
 
-	cf.Scene = g3ncore.NewNode()
+	cf.Scene = node.NewNode()
 
 	for i := range cf.TileMeshs {
 		cf.TileMeshs[i] = make([][]*graphic.Mesh, cf.FloorInfo.W)

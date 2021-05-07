@@ -10,11 +10,11 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/animation"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // glTF Extensions.
@@ -193,7 +193,7 @@ type Mesh struct {
 	Extensions map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras     interface{}            // Application-specific data. Not required.
 
-	cache g3ncore.NodeI // Cached NodeI. We don't cache an GraphicI here because a glTFL mesh can contain multiple primitive IGraphics.
+	cache node.NodeI // Cached NodeI. We don't cache an GraphicI here because a glTFL mesh can contain multiple primitive IGraphics.
 }
 
 // Node is a node in the node hierarchy.
@@ -216,7 +216,7 @@ type Node struct {
 	Extensions  map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras      interface{}            // Application-specific data. Not required.
 
-	cache g3ncore.NodeI // Cached NodeI.
+	cache node.NodeI // Cached NodeI.
 }
 
 // TODO Why not combine NormalTextureInfo and OcclusionTextureInfo ? Or simply add Scale to TextureInfo and use only TextureInfo?

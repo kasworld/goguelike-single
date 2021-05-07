@@ -9,13 +9,13 @@ import (
 	"sort"
 
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/light"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
@@ -37,7 +37,7 @@ type Renderer struct {
 	dirLights    []*light.Directional       // Directional lights in the scene
 	pointLights  []*light.Point             // Point lights in the scene
 	spotLights   []*light.Spot              // Spot lights in the scene
-	others       []g3ncore.NodeI            // Other nodes (audio, players, etc)
+	others       []node.NodeI               // Other nodes (audio, players, etc)
 	graphics     []*graphic.Graphic         // Graphics to be rendered
 	grmatsOpaque []*graphic.GraphicMaterial // Opaque graphic materials to be rendered
 	grmatsTransp []*graphic.GraphicMaterial // Transparent graphic materials to be rendered
@@ -66,7 +66,7 @@ func NewRenderer(gs *gls.GLS) *Renderer {
 	r.dirLights = make([]*light.Directional, 0)
 	r.pointLights = make([]*light.Point, 0)
 	r.spotLights = make([]*light.Spot, 0)
-	r.others = make([]g3ncore.NodeI, 0)
+	r.others = make([]node.NodeI, 0)
 	r.graphics = make([]*graphic.Graphic, 0)
 	r.grmatsOpaque = make([]*graphic.GraphicMaterial, 0)
 	r.grmatsTransp = make([]*graphic.GraphicMaterial, 0)
@@ -97,7 +97,7 @@ func (r *Renderer) ObjectSorting() bool {
 }
 
 // Render renders the specified scene using the specified camera. Returns an an error.
-func (r *Renderer) Render(scene g3ncore.NodeI, cam camera.CameraI) error {
+func (r *Renderer) Render(scene node.NodeI, cam camera.CameraI) error {
 
 	// Updates world matrices of all scene nodes
 	scene.UpdateMatrixWorld()
@@ -210,7 +210,7 @@ func (r *Renderer) Render(scene g3ncore.NodeI, cam camera.CameraI) error {
 
 // classifyAndCull classifies the provided NodeI and all of its descendents.
 // It ignores (culls) renderable IGraphics which are fully outside of the specified frustum.
-func (r *Renderer) classifyAndCull(inode g3ncore.NodeI, frustum *math32.Frustum, zLayer int) {
+func (r *Renderer) classifyAndCull(inode node.NodeI, frustum *math32.Frustum, zLayer int) {
 
 	// Ignore invisible nodes and their descendants
 	if !inode.Visible() {

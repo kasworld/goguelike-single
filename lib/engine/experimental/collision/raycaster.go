@@ -8,11 +8,11 @@ import (
 	"sort"
 
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // Raycaster represents an empty object that can cast rays and check for ray intersections.
@@ -48,7 +48,7 @@ type Intersect struct {
 	// Point of intersection in world coordinates
 	Point math32.Vector3
 	// Intersected node
-	Object g3ncore.NodeI
+	Object node.NodeI
 	// If the geometry has indices, this field is the
 	// index in the Indices buffer of the vertex intersected
 	// or the first vertex of the intersected face.
@@ -75,7 +75,7 @@ func NewRaycaster(origin, direction *math32.Vector3) *Raycaster {
 // and the specified node. If recursive is true, it also checks
 // the intersection with the node's children.
 // Intersections are returned sorted by distance, closest first.
-func (rc *Raycaster) IntersectObject(inode g3ncore.NodeI, recursive bool) []Intersect {
+func (rc *Raycaster) IntersectObject(inode node.NodeI, recursive bool) []Intersect {
 
 	intersects := []Intersect{}
 	rc.intersectObject(inode, &intersects, recursive)
@@ -89,7 +89,7 @@ func (rc *Raycaster) IntersectObject(inode g3ncore.NodeI, recursive bool) []Inte
 // the specified array of scene nodes. If recursive is true, it also checks
 // the intersection with each nodes' children.
 // Intersections are returned sorted by distance, closest first.
-func (rc *Raycaster) IntersectObjects(inodes []g3ncore.NodeI, recursive bool) []Intersect {
+func (rc *Raycaster) IntersectObjects(inodes []node.NodeI, recursive bool) []Intersect {
 
 	intersects := []Intersect{}
 	for _, inode := range inodes {
@@ -101,7 +101,7 @@ func (rc *Raycaster) IntersectObjects(inodes []g3ncore.NodeI, recursive bool) []
 	return intersects
 }
 
-func (rc *Raycaster) intersectObject(inode g3ncore.NodeI, intersects *[]Intersect, recursive bool) {
+func (rc *Raycaster) intersectObject(inode node.NodeI, intersects *[]Intersect, recursive bool) {
 
 	node := inode.GetNode()
 	if !node.Visible() {

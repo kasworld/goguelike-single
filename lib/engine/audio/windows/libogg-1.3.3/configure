@@ -2054,7 +2054,7 @@ if ac_fn_c_try_run "$LINENO"; then :
 else
   ac_retval=1
 fi
-rm -f core *.core g3ncore.conftest.* gmon.out bb.out conftest$ac_exeext \
+rm -f core *.core node.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 rm -f conftest.val
 
@@ -2256,7 +2256,7 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
       $as_echo "$as_me: caught signal $ac_signal"
     $as_echo "$as_me: exit $exit_status"
   } >&5
-  rm -f core *.core g3ncore.conftest.* &&
+  rm -f core *.core node.conftest.* &&
     rm -f -r conftest* confdefs* conf$$* $ac_clean_files &&
     exit $exit_status
 ' 0
@@ -7822,7 +7822,7 @@ if ac_fn_c_try_run "$LINENO"; then :
 else
   ac_cv_header_stdc=no
 fi
-rm -f core *.core g3ncore.conftest.* gmon.out bb.out conftest$ac_exeext \
+rm -f core *.core node.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
@@ -12315,7 +12315,7 @@ if ac_fn_c_try_run "$LINENO"; then :
 else
   ac_cv_header_stdc=no
 fi
-rm -f core *.core g3ncore.conftest.* gmon.out bb.out conftest$ac_exeext \
+rm -f core *.core node.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
@@ -12898,7 +12898,7 @@ if ac_fn_c_try_run "$LINENO"; then :
 else
   ac_cv_func_memcmp_working=no
 fi
-rm -f core *.core g3ncore.conftest.* gmon.out bb.out conftest$ac_exeext \
+rm -f core *.core node.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 

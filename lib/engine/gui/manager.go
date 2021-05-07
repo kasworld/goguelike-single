@@ -6,7 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/timermanager"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -19,7 +19,7 @@ type manager struct {
 	dispatcher.Dispatcher                            // Embedded Dispatcher
 	timermanager.TimerManager                        // Embedded TimerManager
 	win                       window.WindowI         // The current WindowI
-	scene                     g3ncore.NodeI          // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
+	scene                     node.NodeI             // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
 	modal                     IPanel                 // Panel which along its descendants will exclusively receive all events
 	target                    IPanel                 // Panel immediately under the cursor
 	keyFocus                  dispatcher.DispatcherI // DispatcherI which will exclusively receive all key and char events
@@ -56,7 +56,7 @@ func Manager() *manager {
 // Set sets the NodeI to watch for events.
 // It's usually a scene containing a hierarchy of INodes.
 // The manager only cares about IPanels inside that hierarchy.
-func (gm *manager) Set(scene g3ncore.NodeI) {
+func (gm *manager) Set(scene node.NodeI) {
 
 	gm.scene = scene
 }
@@ -263,7 +263,7 @@ func traverseIPanel(ipan IPanel, f func(ipan IPanel)) {
 
 // traverseINode traverses the descendants of the specified NodeI,
 // executing the specified function for each IPanel.
-func traverseINode(inode g3ncore.NodeI, f func(ipan IPanel)) {
+func traverseINode(inode node.NodeI, f func(ipan IPanel)) {
 
 	if ipan, ok := inode.(IPanel); ok {
 		traverseIPanel(ipan, f)

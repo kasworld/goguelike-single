@@ -8,15 +8,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // NewScene returns a new collada empty scene
-func (d *Decoder) NewScene() (g3ncore.NodeI, error) {
+func (d *Decoder) NewScene() (node.NodeI, error) {
 
 	sc := d.dom.Scene
 	if sc == nil {
@@ -34,7 +34,7 @@ func (d *Decoder) NewScene() (g3ncore.NodeI, error) {
 	}
 
 	// Creates parent scene
-	scene := g3ncore.NewNode()
+	scene := node.NewNode()
 	// Rotate scene if necessary
 	if d.dom.Asset.UpAxis == "Z_UP" {
 		scene.SetRotationX(-math32.Pi / 2)
@@ -51,13 +51,13 @@ func (d *Decoder) NewScene() (g3ncore.NodeI, error) {
 	return scene, nil
 }
 
-func (d *Decoder) newNode(cnode *Node) (g3ncore.NodeI, error) {
+func (d *Decoder) newNode(cnode *Node) (node.NodeI, error) {
 
-	var node g3ncore.NodeI
+	var node node.NodeI
 	switch nt := cnode.Instance.(type) {
 	// Empty Node
 	case nil:
-		node = g3ncore.NewNode()
+		node = node.NewNode()
 		// Geometry
 	case *InstanceGeometry:
 

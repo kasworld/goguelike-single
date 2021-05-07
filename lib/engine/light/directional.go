@@ -5,19 +5,19 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Directional represents a directional, positionless light
 type Directional struct {
-	g3ncore.Node              // Embedded node
-	color        math32.Color // Light color
-	intensity    float32      // Light intensity
-	uni          gls.Uniform  // Uniform location cache
-	udata        struct {     // Combined uniform data in 2 vec3:
+	node.Node              // Embedded node
+	color     math32.Color // Light color
+	intensity float32      // Light intensity
+	uni       gls.Uniform  // Uniform location cache
+	udata     struct {     // Combined uniform data in 2 vec3:
 		color    math32.Color   // Light color
 		position math32.Vector3 // Light position
 	}

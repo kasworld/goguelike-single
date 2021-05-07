@@ -6,8 +6,8 @@
 package camera
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
 
@@ -34,16 +34,16 @@ const (
 
 // Camera represents a virtual camera, which specifies how to project a 3D scene onto an image.
 type Camera struct {
-	g3ncore.Node                // Embedded Node
-	aspect       float32        // Aspect ratio (width/height)
-	near         float32        // Near plane depth
-	far          float32        // Far plane depth
-	axis         Axis           // The reference axis
-	proj         Projection     // Projection method
-	fov          float32        // Perspective field-of-view along reference axis
-	size         float32        // Orthographic size along reference axis
-	projChanged  bool           // Flag indicating that the projection matrix needs to be recalculated
-	projMatrix   math32.Matrix4 // Last calculated projection matrix
+	node.Node                  // Embedded Node
+	aspect      float32        // Aspect ratio (width/height)
+	near        float32        // Near plane depth
+	far         float32        // Far plane depth
+	axis        Axis           // The reference axis
+	proj        Projection     // Projection method
+	fov         float32        // Perspective field-of-view along reference axis
+	size        float32        // Orthographic size along reference axis
+	projChanged bool           // Flag indicating that the projection matrix needs to be recalculated
+	projMatrix  math32.Matrix4 // Last calculated projection matrix
 }
 
 // New creates and returns a new perspective camera with the specified aspect ratio and default parameters.

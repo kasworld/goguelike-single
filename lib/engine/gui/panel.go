@@ -537,7 +537,7 @@ func (p *Panel) SetBounded(bounded bool) {
 	p.SetChanged(true)
 }
 
-// UpdateMatrixWorld overrides the standard g3ncore.Node version which is called by
+// UpdateMatrixWorld overrides the standard node.Node version which is called by
 // the Engine before rendering the frame.
 func (p *Panel) UpdateMatrixWorld() {
 

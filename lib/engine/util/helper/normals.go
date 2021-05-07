@@ -5,19 +5,19 @@
 package helper
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // Normals is the visual representation of the normals of a target object.
 type Normals struct {
 	graphic.Lines
 	size           float32
-	targetNode     *g3ncore.Node
+	targetNode     *node.Node
 	targetGeometry *geometry.Geometry
 }
 

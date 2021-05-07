@@ -6,11 +6,11 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
@@ -23,13 +23,13 @@ var log = logger.New("GRAPHIC", logger.Default)
 // It is the base type used by other graphics such as lines, line_strip,
 // points and meshes.
 type Graphic struct {
-	g3ncore.Node                    // Embedded Node
-	igeom        geometry.GeometryI // Associated GeometryI
-	materials    []GraphicMaterial  // Materials
-	mode         uint32             // OpenGL primitive
-	renderable   bool               // Renderable flag
-	cullable     bool               // Cullable flag
-	renderOrder  int                // Render order
+	node.Node                      // Embedded Node
+	igeom       geometry.GeometryI // Associated GeometryI
+	materials   []GraphicMaterial  // Materials
+	mode        uint32             // OpenGL primitive
+	renderable  bool               // Renderable flag
+	cullable    bool               // Cullable flag
+	renderOrder int                // Render order
 
 	ShaderDefines gls.ShaderDefines // Graphic-specific shader defines
 
@@ -95,10 +95,10 @@ func (gr *Graphic) Dispose() {
 // It should be called by Clone() implementations of GraphicI.
 // Note that the topmost implementation calling this method needs
 // to call clone.SetIGraphic(igraphic) after calling this method.
-func (gr *Graphic) Clone() g3ncore.NodeI {
+func (gr *Graphic) Clone() node.NodeI {
 
 	clone := new(Graphic)
-	clone.Node = *gr.Node.Clone().(*g3ncore.Node)
+	clone.Node = *gr.Node.Clone().(*node.Node)
 	clone.igeom = gr.igeom
 	clone.mode = gr.mode
 	clone.renderable = gr.renderable

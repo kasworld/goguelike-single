@@ -10,11 +10,12 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/audio/al"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // Listener is an audio listener positioned in space.
 type Listener struct {
-	g3ncore.Node
+	node.Node
 }
 
 // NewListener creates a Listener object.

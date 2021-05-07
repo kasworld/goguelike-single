@@ -5,11 +5,11 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
@@ -69,7 +69,7 @@ func (m *Mesh) AddGroupMaterial(imat material.MaterialI, gindex int) {
 }
 
 // Clone clones the mesh and satisfies the NodeI interface.
-func (m *Mesh) Clone() g3ncore.NodeI {
+func (m *Mesh) Clone() node.NodeI {
 
 	clone := new(Mesh)
 	clone.Graphic = *m.Graphic.Clone().(*Graphic)

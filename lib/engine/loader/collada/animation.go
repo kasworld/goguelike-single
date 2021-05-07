@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // AnimationTarget contains all animation channels for an specific target node
 type AnimationTarget struct {
-	target   g3ncore.NodeI
+	target   node.NodeI
 	matrix   math32.Matrix4 // original node transformation matrix
 	start    float32        // initial input offset value
 	last     float32        // last input value
@@ -101,7 +101,7 @@ func (at *AnimationTarget) Update(delta float32) bool {
 // NewAnimationTargets creates and returns a map of all animation targets
 // contained in the decoded Collada document and for the previously decoded scene.
 // The map is indexed by the node loaderID.
-func (d *Decoder) NewAnimationTargets(scene g3ncore.NodeI) (map[string]*AnimationTarget, error) {
+func (d *Decoder) NewAnimationTargets(scene node.NodeI) (map[string]*AnimationTarget, error) {
 
 	if d.dom.LibraryAnimations == nil {
 		return nil, fmt.Errorf("No animations found")

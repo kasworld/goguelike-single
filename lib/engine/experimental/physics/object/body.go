@@ -13,7 +13,7 @@ import (
 
 // Body represents a physics-driven body.
 type Body struct {
-	*graphic.Graphic // TODO future - embed g3ncore.Node instead and calculate properties recursively
+	*graphic.Graphic // TODO future - embed node.Node instead and calculate properties recursively
 
 	material *material.Material // Physics material specifying friction and restitution
 	index    int

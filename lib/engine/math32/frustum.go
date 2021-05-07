@@ -92,7 +92,7 @@ func (f *Frustum) SetFromMatrix(m *Matrix4) *Frustum {
 
 /**
 SHOULD NOT DEPEND on core package (Move to core ?)
-func (this *Frustum) IntersectsObject(geometry *g3ncore.Geometry) bool {
+func (this *Frustum) IntersectsObject(geometry *node.Geometry) bool {
 
 
     return false

@@ -21,9 +21,9 @@ import (
 	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
 	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/light"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/util"
 )
 
@@ -54,16 +54,16 @@ type GLClient struct {
 	// g3n field
 	meshMaker  *MeshMaker
 	app        *appbase.AppBase
-	scene      *g3ncore.Node
+	scene      *node.Node
 	cam        *camera.Camera
 	camZpos    float32
 	pLight     *light.Point
 	frameRater *util.FrameRater // Render loop frame rater
 	labelFPS   *gui.Label       // header FPS label
 
-	sceneAO *g3ncore.Node
-	sceneCO *g3ncore.Node
-	sceneDO *g3ncore.Node
+	sceneAO *node.Node
+	sceneCO *node.Node
+	sceneDO *node.Node
 }
 
 func New(

@@ -118,7 +118,7 @@ func main() {
 
 	// Create application and scene
 	a := app.App()
-	scene := g3ncore.NewNode()
+	scene := node.NewNode()
 
 	// Set the scene to be managed by the gui manager
 	gui.Manager().Set(scene)

@@ -1,15 +1,15 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // GraphicI is the interface for all Graphic objects.
 type GraphicI interface {
-	g3ncore.NodeI
+	node.NodeI
 	GetGraphic() *Graphic
 	GetGeometry() *geometry.Geometry
 	GeometryI() geometry.GeometryI

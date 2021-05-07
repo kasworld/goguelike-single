@@ -11,13 +11,14 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/node"
 )
 
 // This file contains helpful infrastructure for debugging physics
 type DebugHelper struct {
 }
 
-func ShowWorldFace(scene *g3ncore.Node, face []math32.Vector3, color *math32.Color) {
+func ShowWorldFace(scene *node.Node, face []math32.Vector3, color *math32.Color) {
 
 	if len(face) == 0 {
 		return
@@ -37,7 +38,7 @@ func ShowWorldFace(scene *g3ncore.Node, face []math32.Vector3, color *math32.Col
 	scene.Add(faceGraphic)
 }
 
-func ShowPenAxis(scene *g3ncore.Node, axis *math32.Vector3) { //}, min, max float32) {
+func ShowPenAxis(scene *node.Node, axis *math32.Vector3) { //}, min, max float32) {
 
 	vertices := math32.NewArrayF32(0, 16)
 
@@ -67,7 +68,7 @@ func ShowPenAxis(scene *g3ncore.Node, axis *math32.Vector3) { //}, min, max floa
 	scene.Add(faceGraphic)
 }
 
-func ShowContact(scene *g3ncore.Node, contact *collision.Contact) {
+func ShowContact(scene *node.Node, contact *collision.Contact) {
 
 	vertices := math32.NewArrayF32(0, 16)
 

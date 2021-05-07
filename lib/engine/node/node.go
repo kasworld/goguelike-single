@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package g3ncore
+package node
 
 import (
 	"math"
@@ -15,7 +15,7 @@ import (
 
 // Node events.
 const (
-	OnDescendant = "g3ncore.OnDescendant" // Dispatched when a descendent is added or removed
+	OnDescendant = "node.OnDescendant" // Dispatched when a descendent is added or removed
 )
 
 // Node represents an object in 3D space existing within a hierarchy.
