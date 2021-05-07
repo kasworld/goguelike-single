@@ -5,6 +5,7 @@
 package object
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -132,10 +133,15 @@ const (
 
 // Events
 const (
-	SleepyEvent  = "physics.SleepyEvent"  // Dispatched after a body has gone in to the sleepy state.
-	SleepEvent   = "physics.SleepEvent"   // Dispatched after a body has fallen asleep.
-	WakeUpEvent  = "physics.WakeUpEvent"  // Dispatched after a sleeping body has woken up.
-	CollideEvent = "physics.CollideEvent" // Dispatched after two bodies collide. This event is dispatched on each of the two bodies involved in the collision.
+	// Dispatched after a body has gone in to the sleepy state.
+	SleepyEvent = dispatcheri.EventName("physics.SleepyEvent")
+	// Dispatched after a body has fallen asleep.
+	SleepEvent = dispatcheri.EventName("physics.SleepEvent")
+	// Dispatched after a sleeping body has woken up.
+	WakeUpEvent = dispatcheri.EventName("physics.WakeUpEvent")
+	// Dispatched after two bodies collide.
+	// This event is dispatched on each of the two bodies involved in the collision.
+	CollideEvent = dispatcheri.EventName("physics.CollideEvent")
 )
 
 // TODO

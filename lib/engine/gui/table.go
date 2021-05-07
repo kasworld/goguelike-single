@@ -19,9 +19,9 @@ import (
 const (
 	// OnTableClick is the event generated when the table is right or left clicked
 	// Parameter is TableClickEvent
-	OnTableClick = "onTableClick"
+	OnTableClick = dispatcheri.EventName("onTableClick")
 	// OnTableRowCount is the event generated when the table row count changes (no parameters)
-	OnTableRowCount = "onTableRowCount"
+	OnTableRowCount = dispatcheri.EventName("onTableRowCount")
 )
 
 // TableSortType is the type used to specify the sort method for a table column

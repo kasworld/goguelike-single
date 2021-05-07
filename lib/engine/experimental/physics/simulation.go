@@ -5,6 +5,7 @@
 package physics
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/constraint"
@@ -306,9 +307,9 @@ type ContactEvent struct {
 }
 
 const (
-	BeginContactEvent = "physics.BeginContactEvent"
-	EndContactEvent   = "physics.EndContactEvent"
-	CollisionEv       = "physics.Collision"
+	BeginContactEvent = dispatcheri.EventName("physics.BeginContactEvent")
+	EndContactEvent   = dispatcheri.EventName("physics.EndContactEvent")
+	CollisionEv       = dispatcheri.EventName("physics.Collision")
 )
 
 // ===========================

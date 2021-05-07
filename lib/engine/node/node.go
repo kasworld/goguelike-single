@@ -16,7 +16,8 @@ import (
 
 // Node events.
 const (
-	OnDescendant = "node.OnDescendant" // Dispatched when a descendent is added or removed
+	// Dispatched when a descendent is added or removed
+	OnDescendant = dispatcheri.EventName("node.OnDescendant")
 )
 
 // Node represents an object in 3D space existing within a hierarchy.
