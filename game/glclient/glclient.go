@@ -19,7 +19,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
-	"github.com/kasworld/goguelike-single/lib/engine/app"
+	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -53,7 +53,7 @@ type GLClient struct {
 
 	// g3n field
 	meshMaker  *MeshMaker
-	app        *app.Application
+	app        *appbase.AppBase
 	scene      *core.Node
 	cam        *camera.Camera
 	camZpos    float32

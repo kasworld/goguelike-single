@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike-single/game/csprotocol"
-	"github.com/kasworld/goguelike-single/lib/engine/app"
+	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
@@ -35,9 +35,7 @@ import (
 
 func (ga *GLClient) glInit() error {
 	// Create application and scene
-	ga.app = app.App()
-	ga.app.IWindow.(*window.GlfwWindow).SetTitle("goguelike-single")
-	ga.app.IWindow.(*window.GlfwWindow).SetSize(1920, 1080)
+	ga.app = appbase.New("goguelike-single", 1920, 1080)
 	ga.scene = core.NewNode()
 
 	ga.sceneAO = core.NewNode()
