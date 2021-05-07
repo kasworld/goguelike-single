@@ -1,14 +1,14 @@
 package node
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
 // NodeI is the interface for all node types.
 type NodeI interface {
-	dispatcher.DispatcherI
+	dispatcheri.DispatcherI
 	GetNode() *Node
 	GetNodeI() NodeI
 	Visible() bool

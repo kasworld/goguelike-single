@@ -9,7 +9,7 @@ package window
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
@@ -31,7 +31,7 @@ func Get() WindowI {
 
 // WindowI is the interface for all windows
 type WindowI interface {
-	dispatcher.DispatcherI
+	dispatcheri.DispatcherI
 	Gls() *gls.GLS
 	GetFramebufferSize() (width int, height int)
 	GetSize() (width int, height int)

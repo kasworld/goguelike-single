@@ -4,16 +4,16 @@
 
 package window
 
-import "github.com/kasworld/goguelike-single/lib/engine/dispatcher"
+import "github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 
 // KeyState keeps track of the state of all keys.
 type KeyState struct {
-	win    dispatcher.DispatcherI
+	win    dispatcheri.DispatcherI
 	states map[Key]bool
 }
 
 // NewKeyState returns a new KeyState object.
-func NewKeyState(win dispatcher.DispatcherI) *KeyState {
+func NewKeyState(win dispatcheri.DispatcherI) *KeyState {
 
 	ks := new(KeyState)
 	ks.win = win

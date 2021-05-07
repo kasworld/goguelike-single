@@ -1,4 +1,4 @@
-package dispatcher
+package dispatcheri
 
 // Callback is the type for Dispatcher callback functions.
 type Callback func(evname string, ev interface{})

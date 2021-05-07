@@ -27,7 +27,7 @@ const (
 	// Event sent to the cursor-focused DispatcherI if any, else sent to target panel's lowest subscribed ancestor
 	OnCursor = window.OnCursor // Cursor is over the panel
 
-	// Event sent to the new key-focused DispatcherI, specified on a call to gui.Manager().SetKeyFocus(dispatcher.DispatcherI)
+	// Event sent to the new key-focused DispatcherI, specified on a call to gui.Manager().SetKeyFocus(dispatcheri.DispatcherI)
 	OnFocus = "gui.OnFocus" // All keyboard events will be exclusively sent to the receiving DispatcherI
 	// Event sent to the previous key-focused DispatcherI when another panel is key-focused
 	OnFocusLost = "gui.OnFocusLost" // Keyboard events will stop being sent to the receiving DispatcherI

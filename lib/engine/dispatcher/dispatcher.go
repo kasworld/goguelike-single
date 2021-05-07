@@ -4,15 +4,17 @@
 
 package dispatcher
 
+import "github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+
 // Dispatcher implements an event dispatcher.
 type Dispatcher struct {
 	evmap map[string][]subscription // Map of event names to subscription lists
 }
 
-// subscription links a Callback with a user-provided unique id.
+// subscription links a dispatcheri.Callback with a user-provided unique id.
 type subscription struct {
 	id       interface{}
-	callBack Callback
+	callBack dispatcheri.Callback
 }
 
 // NewDispatcher creates and returns a new event dispatcher.
@@ -32,14 +34,14 @@ func (d *Dispatcher) Initialize() {
 
 // Subscribe subscribes a callback to events with the given name.
 // If it is necessary to unsubscribe later, SubscribeID should be used instead.
-func (d *Dispatcher) Subscribe(evname string, callBack Callback) {
+func (d *Dispatcher) Subscribe(evname string, callBack dispatcheri.Callback) {
 
 	d.evmap[evname] = append(d.evmap[evname], subscription{nil, callBack})
 }
 
 // SubscribeID subscribes a callback to events events with the given name.
 // The user-provided unique id can be used to unsubscribe via UnsubscribeID.
-func (d *Dispatcher) SubscribeID(evname string, id interface{}, callBack Callback) {
+func (d *Dispatcher) SubscribeID(evname string, id interface{}, callBack dispatcheri.Callback) {
 
 	d.evmap[evname] = append(d.evmap[evname], subscription{id, callBack})
 }
