@@ -110,7 +110,7 @@ func (ed *Edit) SetStyles(es *EditStyles) {
 	ed.update()
 }
 
-// LostKeyFocus satisfies the IPanel interface and is called by gui root
+// LostKeyFocus satisfies the PanelI interface and is called by gui root
 // container when the panel loses the key focus
 func (ed *Edit) OnFocusLost(evname dispatcheri.EventName, ev interface{}) {
 

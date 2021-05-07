@@ -29,12 +29,12 @@ type Builder struct {
 
 // IBuilderLayout is the interface for all layout builders
 type IBuilderLayout interface {
-	BuildLayout(b *Builder, am map[string]interface{}) (ILayout, error)
+	BuildLayout(b *Builder, am map[string]interface{}) (LayoutI, error)
 	BuildParams(b *Builder, am map[string]interface{}) (interface{}, error)
 }
 
 // BuilderFunc is type for functions which build a gui object from an attribute map
-type BuilderFunc func(*Builder, map[string]interface{}) (IPanel, error)
+type BuilderFunc func(*Builder, map[string]interface{}) (PanelI, error)
 
 // AttribCheckFunc is the type for all attribute check functions
 type AttribCheckFunc func(b *Builder, am map[string]interface{}, fname string) error
@@ -443,7 +443,7 @@ func (b *Builder) Names() []string {
 // from a previously parsed description
 // If the descriptions contains a single object with no name,
 // It should be specified the empty string to build this object.
-func (b *Builder) Build(name string) (IPanel, error) {
+func (b *Builder) Build(name string) (PanelI, error) {
 
 	// Only one object
 	if name == "" {
@@ -487,7 +487,7 @@ func (b *Builder) AddAttrib(typename string, acf AttribCheckFunc) {
 // build builds the gui object from the specified description.
 // All its children are also built recursively
 // Returns the built object or an error
-func (b *Builder) build(am map[string]interface{}, iparent IPanel) (IPanel, error) {
+func (b *Builder) build(am map[string]interface{}, iparent PanelI) (PanelI, error) {
 
 	// Get panel type
 	itype := am[AttribType]
@@ -515,7 +515,7 @@ func (b *Builder) build(am map[string]interface{}, iparent IPanel) (IPanel, erro
 }
 
 // SetAttribs sets common attributes from the description to the specified panel
-func (b *Builder) SetAttribs(am map[string]interface{}, ipan IPanel) error {
+func (b *Builder) SetAttribs(am map[string]interface{}, ipan PanelI) error {
 
 	panel := ipan.GetPanel()
 	// Set optional position
@@ -579,7 +579,7 @@ func (b *Builder) SetAttribs(am map[string]interface{}, ipan IPanel) error {
 		panel.SetUserData(am[AttribUserData])
 	}
 
-	// Sets optional layout (must pass IPanel not *Panel)
+	// Sets optional layout (must pass PanelI not *Panel)
 	err := b.setLayout(am, ipan)
 	if err != nil {
 		return nil
@@ -591,7 +591,7 @@ func (b *Builder) SetAttribs(am map[string]interface{}, ipan IPanel) error {
 }
 
 // setLayout sets the optional layout of the specified panel
-func (b *Builder) setLayout(am map[string]interface{}, ipan IPanel) error {
+func (b *Builder) setLayout(am map[string]interface{}, ipan PanelI) error {
 
 	// Get layout type
 	lai := am[AttribLayout]
@@ -620,7 +620,7 @@ func (b *Builder) setLayout(am map[string]interface{}, ipan IPanel) error {
 }
 
 // setLayoutParams sets the optional layout params of the specified panel and its attributes
-func (b *Builder) setLayoutParams(am map[string]interface{}, ipan IPanel) error {
+func (b *Builder) setLayoutParams(am map[string]interface{}, ipan PanelI) error {
 
 	// Get layout params attributes
 	lpi := am[AttribLayoutParams]

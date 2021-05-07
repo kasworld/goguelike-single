@@ -10,7 +10,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
-// Scroller is the GUI element that allows scrolling of a target IPanel.
+// Scroller is the GUI element that allows scrolling of a target PanelI.
 // A scroller can have up to two scrollbars, one vertical and one horizontal.
 // The vertical scrollbar, if any, can be located either on the left or on the right.
 // The horizontal scrollbar, if any, can be located either on the top or on the bottom.
@@ -19,7 +19,7 @@ import (
 type Scroller struct {
 	Panel                     // Embedded panel
 	mode       ScrollMode     // ScrollMode specifies which scroll directions are allowed
-	target     IPanel         // The IPanel that will be scrolled through
+	target     PanelI         // The PanelI that will be scrolled through
 	hscroll    *ScrollBar     // Horizontal scrollbar (may be nil)
 	vscroll    *ScrollBar     // Vertical scrollbar (may be nil)
 	style      *ScrollerStyle // The current style
@@ -87,8 +87,8 @@ type ScrollerScrollbarStyle struct {
 const ScrollModifierKey = window.ModShift
 
 // NewScroller creates and returns a pointer to a new Scroller with the specified
-// target IPanel and ScrollMode.
-func NewScroller(width, height float32, mode ScrollMode, target IPanel) *Scroller {
+// target PanelI and ScrollMode.
+func NewScroller(width, height float32, mode ScrollMode, target PanelI) *Scroller {
 
 	s := new(Scroller)
 	s.initialize(width, height, mode, target)
@@ -96,7 +96,7 @@ func NewScroller(width, height float32, mode ScrollMode, target IPanel) *Scrolle
 }
 
 // initialize initializes this scroller and can be called by other types which embed a scroller
-func (s *Scroller) initialize(width, height float32, mode ScrollMode, target IPanel) {
+func (s *Scroller) initialize(width, height float32, mode ScrollMode, target PanelI) {
 
 	s.Panel.Initialize(s, width, height)
 	s.style = &StyleDefault().Scroller

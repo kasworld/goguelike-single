@@ -16,7 +16,7 @@ type ItemScroller struct {
 	Panel                              // Embedded panel
 	vert           bool                // vertical/horizontal scroller flag
 	styles         *ItemScrollerStyles // pointer to current styles
-	items          []IPanel            // list of panels in the scroller
+	items          []PanelI            // list of panels in the scroller
 	hscroll        *ScrollBar          // horizontal scroll bar
 	vscroll        *ScrollBar          // vertical scroll bar
 	maxAutoWidth   float32             // maximum auto width (if 0, auto width disabled)
@@ -82,13 +82,13 @@ func (s *ItemScroller) Len() int {
 }
 
 // Add appends the specified item to the end of the scroller
-func (s *ItemScroller) Add(item IPanel) {
+func (s *ItemScroller) Add(item PanelI) {
 
 	s.InsertAt(len(s.items), item)
 }
 
 // InsertAt inserts an item at the specified position
-func (s *ItemScroller) InsertAt(pos int, item IPanel) {
+func (s *ItemScroller) InsertAt(pos int, item PanelI) {
 
 	// Validates position
 	if pos < 0 || pos > len(s.items) {
@@ -117,7 +117,7 @@ func (s *ItemScroller) InsertAt(pos int, item IPanel) {
 }
 
 // RemoveAt removes item from the specified position
-func (s *ItemScroller) RemoveAt(pos int) IPanel {
+func (s *ItemScroller) RemoveAt(pos int) PanelI {
 
 	// Validates position
 	if pos < 0 || pos >= len(s.items) {
@@ -140,7 +140,7 @@ func (s *ItemScroller) RemoveAt(pos int) IPanel {
 }
 
 // Remove removes the specified item from the ItemScroller
-func (s *ItemScroller) Remove(item IPanel) {
+func (s *ItemScroller) Remove(item PanelI) {
 
 	for p, curr := range s.items {
 		if curr == item {
@@ -152,7 +152,7 @@ func (s *ItemScroller) Remove(item IPanel) {
 
 // ItemAt returns the item at the specified position.
 // Returns nil if the position is invalid.
-func (s *ItemScroller) ItemAt(pos int) IPanel {
+func (s *ItemScroller) ItemAt(pos int) PanelI {
 
 	if pos < 0 || pos >= len(s.items) {
 		return nil
@@ -162,7 +162,7 @@ func (s *ItemScroller) ItemAt(pos int) IPanel {
 
 // ItemPosition returns the position of the specified item in
 // the scroller of -1 if not found
-func (s *ItemScroller) ItemPosition(item IPanel) int {
+func (s *ItemScroller) ItemPosition(item PanelI) int {
 
 	for pos := 0; pos < len(s.items); pos++ {
 		if s.items[pos] == item {

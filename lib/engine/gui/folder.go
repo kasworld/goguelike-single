@@ -14,7 +14,7 @@ type Folder struct {
 	Panel               // Embedded panel
 	label        Label  // Folder label
 	icon         Label  // Folder icon
-	contentPanel IPanel // Content panel
+	contentPanel PanelI // Content panel
 	styles       *FolderStyles
 	cursorOver   bool
 	alignRight   bool
@@ -37,7 +37,7 @@ type FolderStyles struct {
 
 // NewFolder creates and returns a pointer to a new folder widget
 // with the specified text and initial width.
-func NewFolder(text string, width float32, contentPanel IPanel) *Folder {
+func NewFolder(text string, width float32, contentPanel PanelI) *Folder {
 
 	f := new(Folder)
 	f.Initialize(text, width, contentPanel)
@@ -46,7 +46,7 @@ func NewFolder(text string, width float32, contentPanel IPanel) *Folder {
 
 // Initialize initializes the Folder with the specified text and initial width
 // It is normally used when the folder is embedded in another object.
-func (f *Folder) Initialize(text string, width float32, contentPanel IPanel) {
+func (f *Folder) Initialize(text string, width float32, contentPanel PanelI) {
 
 	f.Panel.Initialize(f, width, 0)
 	f.styles = &StyleDefault().Folder

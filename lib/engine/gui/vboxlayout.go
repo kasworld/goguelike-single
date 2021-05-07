@@ -27,7 +27,7 @@ package gui
 // If the layout method SetAutoWidth(true) is called, the panel minimum content width will be the
 // width of the widest child.
 type VBoxLayout struct {
-	pan        IPanel
+	pan        PanelI
 	spacing    float32
 	alignV     Align
 	autoHeight bool
@@ -83,7 +83,7 @@ func (bl *VBoxLayout) SetAutoWidth(state bool) {
 }
 
 // Recalc recalculates and sets the position and sizes of all children
-func (bl *VBoxLayout) Recalc(ipan IPanel) {
+func (bl *VBoxLayout) Recalc(ipan PanelI) {
 
 	// Saves the received panel
 	bl.pan = ipan
@@ -100,7 +100,7 @@ func (bl *VBoxLayout) Recalc(ipan IPanel) {
 	if bl.autoHeight {
 		var totalHeight float32
 		for _, ichild := range parent.Children() {
-			child := ichild.(IPanel).GetPanel()
+			child := ichild.(PanelI).GetPanel()
 			if !child.Visible() || !child.Bounded() {
 				continue
 			}
@@ -118,7 +118,7 @@ func (bl *VBoxLayout) Recalc(ipan IPanel) {
 	if bl.autoWidth {
 		var maxWidth float32
 		for _, ichild := range parent.Children() {
-			child := ichild.(IPanel).GetPanel()
+			child := ichild.(PanelI).GetPanel()
 			if !child.Visible() || !child.Bounded() {
 				continue
 			}
@@ -140,7 +140,7 @@ func (bl *VBoxLayout) Recalc(ipan IPanel) {
 	ecount := 0
 	paramsDef := VBoxLayoutParams{Expand: 0, AlignH: AlignLeft}
 	for pos, obj := range parent.Children() {
-		pan := obj.(IPanel).GetPanel()
+		pan := obj.(PanelI).GetPanel()
 		if !pan.Visible() || !pan.Bounded() {
 			continue
 		}
@@ -179,7 +179,7 @@ func (bl *VBoxLayout) Recalc(ipan IPanel) {
 		totalSpace := parent.ContentHeight() - theight
 		if totalSpace > 0 {
 			for _, obj := range parent.Children() {
-				pan := obj.(IPanel).GetPanel()
+				pan := obj.(PanelI).GetPanel()
 				if !pan.Visible() || !pan.Bounded() {
 					continue
 				}
@@ -196,7 +196,7 @@ func (bl *VBoxLayout) Recalc(ipan IPanel) {
 			// No free space: distribute expanded items heights
 		} else {
 			for _, obj := range parent.Children() {
-				pan := obj.(IPanel).GetPanel()
+				pan := obj.(PanelI).GetPanel()
 				if !pan.Visible() || !pan.Bounded() {
 					continue
 				}
@@ -240,7 +240,7 @@ func (bl *VBoxLayout) Recalc(ipan IPanel) {
 	var posX float32
 	width := parent.ContentWidth()
 	for pos, obj := range parent.Children() {
-		pan := obj.(IPanel).GetPanel()
+		pan := obj.(PanelI).GetPanel()
 		if !pan.Visible() || !pan.Bounded() {
 			continue
 		}

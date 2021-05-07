@@ -36,26 +36,6 @@ import (
 
 *********************************************/
 
-// IPanel is the interface for all panel types
-type IPanel interface {
-	graphic.GraphicI
-	GetPanel() *Panel
-	Width() float32
-	Height() float32
-	Enabled() bool
-	SetEnabled(bool)
-	SetLayout(ILayout)
-	InsideBorders(x, y float32) bool
-	SetZLayerDelta(zLayerDelta int)
-	ZLayerDelta() int
-
-	// TODO these methods here should probably be defined in NodeI
-	SetPosition(x, y float32)
-	SetPositionX(x float32)
-	SetPositionY(y float32)
-	SetPositionZ(y float32)
-}
-
 // Panel is 2D rectangular graphic which by default has a quad (2 triangles) geometry.
 // When using the default geometry, a panel has margins, borders, paddings
 // and a content area. The content area can be associated with a texture
@@ -68,7 +48,7 @@ type Panel struct {
 	bounded bool // Whether panel is bounded by its parent
 	enabled bool // Whether event should be processed for this panel
 
-	layout       ILayout     // current layout for children
+	layout       LayoutI     // current layout for children
 	layoutParams interface{} // current layout parameters used by container panel
 
 	marginSizes  RectBounds // external margin sizes in pixel coordinates
@@ -131,7 +111,7 @@ func NewPanel(width, height float32) *Panel {
 }
 
 // Initialize initializes this panel and is normally used by other types which embed a panel.
-func (p *Panel) Initialize(ipan IPanel, width, height float32) { // TODO rename to Init
+func (p *Panel) Initialize(ipan PanelI, width, height float32) { // TODO rename to Init
 
 	p.width = width
 	p.height = height
@@ -205,7 +185,7 @@ func (p *Panel) InitializeGraphic(width, height float32, gr *graphic.Graphic) {
 	p.resize(width, height, true)
 }
 
-// GetPanel satisfies the IPanel interface and
+// GetPanel satisfies the PanelI interface and
 // returns pointer to this panel
 func (p *Panel) GetPanel() *Panel {
 
@@ -222,7 +202,7 @@ func (p *Panel) Material() *material.Material { // TODO remove - allow for setti
 // be on top of all other children of this panel.
 // The function does not check if the specified panel is a
 // child of this one.
-func (p *Panel) SetTopChild(ipan IPanel) {
+func (p *Panel) SetTopChild(ipan PanelI) {
 
 	// Remove panel and if found appends to the end
 	found := p.Remove(ipan)
@@ -503,7 +483,7 @@ func (p *Panel) Pospix() math32.Vector3 {
 
 // Add adds a child panel to this one
 // This overrides the Node method to enforce that IPanels can only have IPanels as children
-func (p *Panel) Add(ichild IPanel) *Panel {
+func (p *Panel) Add(ichild PanelI) *Panel {
 
 	p.Node.Add(ichild)
 	if p.layout != nil {
@@ -513,7 +493,7 @@ func (p *Panel) Add(ichild IPanel) *Panel {
 }
 
 // Remove removes the specified child from this panel
-func (p *Panel) Remove(ichild IPanel) bool {
+func (p *Panel) Remove(ichild PanelI) bool {
 
 	res := p.Node.Remove(ichild)
 	if res {
@@ -546,7 +526,7 @@ func (p *Panel) UpdateMatrixWorld() {
 		p.updateBounds(nil)
 		// Panel has parent
 	} else {
-		parpan, ok := par.(IPanel)
+		parpan, ok := par.(PanelI)
 		if ok {
 			p.updateBounds(parpan.GetPanel())
 		} else {
@@ -607,7 +587,7 @@ func (p *Panel) Enabled() bool {
 
 // SetLayout sets the layout to use to position the children of this panel
 // To remove the layout, call this function passing nil as parameter.
-func (p *Panel) SetLayout(ilayout ILayout) {
+func (p *Panel) SetLayout(ilayout LayoutI) {
 
 	p.layout = ilayout
 	if p.layout != nil {
@@ -616,7 +596,7 @@ func (p *Panel) SetLayout(ilayout ILayout) {
 }
 
 // Layout returns this panel current layout
-func (p *Panel) Layout() ILayout {
+func (p *Panel) Layout() LayoutI {
 
 	return p.layout
 }

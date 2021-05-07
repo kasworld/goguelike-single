@@ -42,7 +42,7 @@ type TreeNode struct {
 	icon     Label     // Node icon
 	tree     *Tree     // Parent tree
 	parNode  *TreeNode // Parent node
-	items    []IPanel  // List of node items
+	items    []PanelI  // List of node items
 	expanded bool      // Node expanded flag
 	litem    *ListItem // Reference to ListItem
 }
@@ -74,13 +74,13 @@ func (t *Tree) SetStyles(s *TreeStyles) {
 }
 
 // InsertAt inserts a child panel at the specified position in the tree.
-func (t *Tree) InsertAt(pos int, child IPanel) {
+func (t *Tree) InsertAt(pos int, child PanelI) {
 
 	t.List.InsertAt(pos, child)
 }
 
 // Add child panel to the end tree.
-func (t *Tree) Add(ichild IPanel) {
+func (t *Tree) Add(ichild PanelI) {
 
 	t.List.Add(ichild)
 }
@@ -110,7 +110,7 @@ func (t *Tree) AddNode(text string) *TreeNode {
 
 // Remove removes the specified child from the tree or any
 // of its children nodes.
-func (t *Tree) Remove(child IPanel) {
+func (t *Tree) Remove(child PanelI) {
 
 	for idx := 0; idx < t.List.Len(); idx++ {
 		curr := t.List.ItemAt(idx)
@@ -131,7 +131,7 @@ func (t *Tree) Remove(child IPanel) {
 }
 
 // Selected returns the currently selected element or nil
-func (t *Tree) Selected() IPanel {
+func (t *Tree) Selected() PanelI {
 
 	sel := t.List.Selected()
 	if len(sel) == 0 {
@@ -145,7 +145,7 @@ func (t *Tree) Selected() IPanel {
 // its position relative to the parent.
 // If the parent is the tree returns nil as the parent
 // If not found returns nil and -1
-func (t *Tree) FindChild(child IPanel) (*TreeNode, int) {
+func (t *Tree) FindChild(child PanelI) (*TreeNode, int) {
 
 	for idx := 0; idx < t.List.Len(); idx++ {
 		curr := t.List.ItemAt(idx)
@@ -239,7 +239,7 @@ func (n *TreeNode) SetExpanded(state bool) {
 // all its children. If found, returns the parent node and
 // its position relative to the parent.
 // If not found returns nil and -1
-func (n *TreeNode) FindChild(child IPanel) (*TreeNode, int) {
+func (n *TreeNode) FindChild(child PanelI) (*TreeNode, int) {
 
 	for pos, curr := range n.items {
 		if curr == child {
@@ -258,7 +258,7 @@ func (n *TreeNode) FindChild(child IPanel) (*TreeNode, int) {
 
 // InsertAt inserts a child panel at the specified position in this node
 // If the position is invalid, the function panics
-func (n *TreeNode) InsertAt(pos int, child IPanel) {
+func (n *TreeNode) InsertAt(pos int, child PanelI) {
 
 	if pos < 0 || pos > len(n.items) {
 		panic("TreeNode.InsertAt(): Invalid position")
@@ -273,7 +273,7 @@ func (n *TreeNode) InsertAt(pos int, child IPanel) {
 }
 
 // Add adds a child panel to this node
-func (n *TreeNode) Add(child IPanel) {
+func (n *TreeNode) Add(child PanelI) {
 
 	n.InsertAt(n.Len(), child)
 }
@@ -304,7 +304,7 @@ func (n *TreeNode) AddNode(text string) *TreeNode {
 
 // Remove removes the specified child from this node or any
 // of its children nodes
-func (n *TreeNode) Remove(child IPanel) {
+func (n *TreeNode) Remove(child PanelI) {
 
 	for pos, curr := range n.items {
 		if curr == child {

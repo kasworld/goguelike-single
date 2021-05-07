@@ -23,7 +23,7 @@ type List struct {
 // ListItem encapsulates each item inserted into the list
 type ListItem struct {
 	Panel               // Container panel
-	item        IPanel  // Original item
+	item        PanelI  // Original item
 	selected    bool    // Item selected flag
 	highlighted bool    // Item highlighted flag
 	padLeft     float32 // Additional left padding
@@ -117,14 +117,14 @@ func (li *List) SetStyles(s *ListStyles) {
 }
 
 // Add add a list item at the end of the list
-func (li *List) Add(item IPanel) *ListItem {
+func (li *List) Add(item PanelI) *ListItem {
 
 	return li.InsertAt(len(li.items), item)
 }
 
 // InsertAt inserts a list item at the specified position
 // Returs true if the item was successfully inserted
-func (li *List) InsertAt(pos int, item IPanel) *ListItem {
+func (li *List) InsertAt(pos int, item PanelI) *ListItem {
 
 	litem := newListItem(li, item)
 	li.ItemScroller.InsertAt(pos, litem)
@@ -134,7 +134,7 @@ func (li *List) InsertAt(pos int, item IPanel) *ListItem {
 }
 
 // RemoveAt removes the list item from the specified position
-func (li *List) RemoveAt(pos int) IPanel {
+func (li *List) RemoveAt(pos int) PanelI {
 
 	// Remove the list item from the internal scroller
 	pan := li.ItemScroller.RemoveAt(pos)
@@ -148,7 +148,7 @@ func (li *List) RemoveAt(pos int) IPanel {
 }
 
 // Remove removes the specified item from the list
-func (li *List) Remove(item IPanel) {
+func (li *List) Remove(item PanelI) {
 
 	for p, curr := range li.items {
 		if curr.(*ListItem).item == item {
@@ -159,7 +159,7 @@ func (li *List) Remove(item IPanel) {
 }
 
 // ItemAt returns the list item at the specified position
-func (li *List) ItemAt(pos int) IPanel {
+func (li *List) ItemAt(pos int) PanelI {
 
 	item := li.ItemScroller.ItemAt(pos)
 	if item == nil {
@@ -171,7 +171,7 @@ func (li *List) ItemAt(pos int) IPanel {
 
 // ItemPosition returns the position of the specified item in
 // the list or -1 if not found
-func (li *List) ItemPosition(item IPanel) int {
+func (li *List) ItemPosition(item PanelI) int {
 
 	for pos := 0; pos < len(li.items); pos++ {
 		if li.items[pos].(*ListItem).item == item {
@@ -182,9 +182,9 @@ func (li *List) ItemPosition(item IPanel) int {
 }
 
 // Selected returns list with the currently selected items
-func (li *List) Selected() []IPanel {
+func (li *List) Selected() []PanelI {
 
-	sel := []IPanel{}
+	sel := []PanelI{}
 	for _, item := range li.items {
 		litem := item.(*ListItem)
 		if litem.selected {
@@ -195,7 +195,7 @@ func (li *List) Selected() []IPanel {
 }
 
 // SetSelected selects or unselects the specified item
-func (li *List) SetSelected(item IPanel, state bool) {
+func (li *List) SetSelected(item PanelI, state bool) {
 
 	for _, curr := range li.items {
 		litem := curr.(*ListItem)
@@ -455,7 +455,7 @@ func (li *List) update() {
 // ListItem methods
 //
 
-func newListItem(list *List, item IPanel) *ListItem {
+func newListItem(list *List, item PanelI) *ListItem {
 
 	litem := new(ListItem)
 	litem.Panel.Initialize(litem, 0, 0)

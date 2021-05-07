@@ -59,14 +59,14 @@ func (f *ControlFolder) Clear() {
 	f.tree.Clear()
 }
 
-// RemoveAt removes the IPanel at the specified position from the control folder's tree
-func (f *ControlFolder) RemoveAt(pos int) IPanel {
+// RemoveAt removes the PanelI at the specified position from the control folder's tree
+func (f *ControlFolder) RemoveAt(pos int) PanelI {
 
 	return f.tree.RemoveAt(pos)
 }
 
-// AddPanel adds an IPanel to the control folder's tree
-func (f *ControlFolder) AddPanel(pan IPanel) {
+// AddPanel adds an PanelI to the control folder's tree
+func (f *ControlFolder) AddPanel(pan PanelI) {
 
 	f.tree.Add(pan)
 }
@@ -126,12 +126,12 @@ func (g *ControlFolderGroup) AddSlider(text string, sf, v float32) *Slider {
 }
 
 // AddPanel adds a panel to the control folder group
-func (g *ControlFolderGroup) AddPanel(pan IPanel) {
+func (g *ControlFolderGroup) AddPanel(pan PanelI) {
 
 	g.node.Add(pan)
 }
 
-func (f *ControlFolder) newSlider(text string, sf, value float32) (IPanel, *Slider) {
+func (f *ControlFolder) newSlider(text string, sf, value float32) (PanelI, *Slider) {
 
 	// Creates container panel for the label and slider
 	cont := NewPanel(200, 32)

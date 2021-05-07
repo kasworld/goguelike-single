@@ -20,14 +20,14 @@ func NewFillLayout(width, height bool) *FillLayout {
 }
 
 // Recalc is called by the panel which has this layout
-func (f *FillLayout) Recalc(ipan IPanel) {
+func (f *FillLayout) Recalc(ipan PanelI) {
 
 	parent := ipan.GetPanel()
 	children := parent.Children()
 	if len(children) == 0 {
 		return
 	}
-	child := children[0].(IPanel).GetPanel()
+	child := children[0].(PanelI).GetPanel()
 
 	if f.width {
 		child.SetWidth(parent.ContentWidth())

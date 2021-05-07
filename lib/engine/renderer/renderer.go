@@ -41,7 +41,7 @@ type Renderer struct {
 	graphics     []*graphic.Graphic         // Graphics to be rendered
 	grmatsOpaque []*graphic.GraphicMaterial // Opaque graphic materials to be rendered
 	grmatsTransp []*graphic.GraphicMaterial // Transparent graphic materials to be rendered
-	zLayers      map[int][]gui.IPanel       // All IPanels to be rendered organized by Z-layer
+	zLayers      map[int][]gui.PanelI       // All IPanels to be rendered organized by Z-layer
 	zLayerKeys   []int                      // Z-layers being used (initially in no particular order, sorted later)
 }
 
@@ -70,8 +70,8 @@ func NewRenderer(gs *gls.GLS) *Renderer {
 	r.graphics = make([]*graphic.Graphic, 0)
 	r.grmatsOpaque = make([]*graphic.GraphicMaterial, 0)
 	r.grmatsTransp = make([]*graphic.GraphicMaterial, 0)
-	r.zLayers = make(map[int][]gui.IPanel)
-	r.zLayers[0] = make([]gui.IPanel, 0)
+	r.zLayers = make(map[int][]gui.PanelI)
+	r.zLayers[0] = make([]gui.PanelI, 0)
 	r.zLayerKeys = append(r.zLayerKeys, 0)
 
 	return r
@@ -116,8 +116,8 @@ func (r *Renderer) Render(scene node.NodeI, cam camerai.CameraI) error {
 	r.graphics = r.graphics[0:0]
 	r.grmatsOpaque = r.grmatsOpaque[0:0]
 	r.grmatsTransp = r.grmatsTransp[0:0]
-	r.zLayers = make(map[int][]gui.IPanel)
-	r.zLayers[0] = make([]gui.IPanel, 0)
+	r.zLayers = make(map[int][]gui.PanelI)
+	r.zLayers[0] = make([]gui.PanelI, 0)
 	r.zLayerKeys = r.zLayerKeys[0:1]
 	r.zLayerKeys[0] = 0
 
@@ -216,15 +216,15 @@ func (r *Renderer) classifyAndCull(inode node.NodeI, frustum *math32.Frustum, zL
 	if !inode.Visible() {
 		return
 	}
-	// If node is an IPanel append it to appropriate list
-	if ipan, ok := inode.(gui.IPanel); ok {
+	// If node is an PanelI append it to appropriate list
+	if ipan, ok := inode.(gui.PanelI); ok {
 		zLayer += ipan.ZLayerDelta()
 		if ipan.Renderable() {
 			// TODO cull panels
 			_, ok := r.zLayers[zLayer]
 			if !ok {
 				r.zLayerKeys = append(r.zLayerKeys, zLayer)
-				r.zLayers[zLayer] = make([]gui.IPanel, 0)
+				r.zLayers[zLayer] = make([]gui.PanelI, 0)
 			}
 			r.zLayers[zLayer] = append(r.zLayers[zLayer], ipan)
 			r.stats.Panels++

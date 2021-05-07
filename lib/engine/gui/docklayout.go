@@ -28,8 +28,8 @@ func NewDockLayout() *DockLayout {
 	return new(DockLayout)
 }
 
-// Recalc (which satisfies the ILayout interface) recalculates the positions and sizes of the children panels.
-func (dl *DockLayout) Recalc(ipan IPanel) {
+// Recalc (which satisfies the LayoutI interface) recalculates the positions and sizes of the children panels.
+func (dl *DockLayout) Recalc(ipan PanelI) {
 
 	pan := ipan.GetPanel()
 	width := pan.Width()
@@ -40,7 +40,7 @@ func (dl *DockLayout) Recalc(ipan IPanel) {
 
 	// Top and bottom first
 	for _, iobj := range pan.Children() {
-		child := iobj.(IPanel).GetPanel()
+		child := iobj.(PanelI).GetPanel()
 		if child.layoutParams == nil {
 			continue
 		}
@@ -60,7 +60,7 @@ func (dl *DockLayout) Recalc(ipan IPanel) {
 	}
 	// Left and right
 	for _, iobj := range pan.Children() {
-		child := iobj.(IPanel).GetPanel()
+		child := iobj.(PanelI).GetPanel()
 		if child.layoutParams == nil {
 			continue
 		}
@@ -80,7 +80,7 @@ func (dl *DockLayout) Recalc(ipan IPanel) {
 	}
 	// Center (only the first found)
 	for _, iobj := range pan.Children() {
-		child := iobj.(IPanel).GetPanel()
+		child := iobj.(PanelI).GetPanel()
 		if child.layoutParams == nil {
 			continue
 		}

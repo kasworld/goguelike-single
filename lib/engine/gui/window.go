@@ -118,19 +118,19 @@ func (w *Window) SetTitle(text string) {
 }
 
 // Add adds a child panel to the client area of this window
-func (w *Window) Add(ichild IPanel) *Window {
+func (w *Window) Add(ichild PanelI) *Window {
 
 	w.client.Add(ichild)
 	return w
 }
 
 // Removes a child from the client (content) panel
-func (w *Window) Remove(ichild IPanel) bool {
+func (w *Window) Remove(ichild PanelI) bool {
 	return w.client.Remove(ichild)
 }
 
 // SetLayout sets the layout of the client panel.
-func (w *Window) SetLayout(layout ILayout) {
+func (w *Window) SetLayout(layout LayoutI) {
 
 	w.client.SetLayout(layout)
 }
@@ -141,7 +141,7 @@ func (w *Window) onMouse(evname dispatcheri.EventName, ev interface{}) {
 	switch evname {
 	case OnMouseDown:
 		// Move the window above everything contained in its parent
-		parent := w.Parent().(IPanel).GetPanel()
+		parent := w.Parent().(PanelI).GetPanel()
 		parent.SetTopChild(w)
 		// If the click happened inside the draggable area, then set drag to true
 		if w.overTop || w.overRight || w.overBottom || w.overLeft {

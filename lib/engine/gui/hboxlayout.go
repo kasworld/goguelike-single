@@ -27,7 +27,7 @@ package gui
 // If the layout method SetAutoWidth(true) is called, the panel minimum content width will be the
 // sum of its children's widths plus the spacing.
 type HBoxLayout struct {
-	pan        IPanel
+	pan        PanelI
 	spacing    float32
 	alignH     Align
 	autoHeight bool
@@ -83,7 +83,7 @@ func (bl *HBoxLayout) SetAutoWidth(state bool) {
 }
 
 // Recalc recalculates and sets the position and sizes of all children
-func (bl *HBoxLayout) Recalc(ipan IPanel) {
+func (bl *HBoxLayout) Recalc(ipan PanelI) {
 
 	// Saves the received panel
 	bl.pan = ipan
@@ -100,7 +100,7 @@ func (bl *HBoxLayout) Recalc(ipan IPanel) {
 	if bl.autoHeight {
 		var maxHeight float32
 		for _, ichild := range parent.Children() {
-			child := ichild.(IPanel).GetPanel()
+			child := ichild.(PanelI).GetPanel()
 			if !child.Visible() {
 				continue
 			}
@@ -118,7 +118,7 @@ func (bl *HBoxLayout) Recalc(ipan IPanel) {
 	if bl.minHeight {
 		var totalWidth float32
 		for _, ichild := range parent.Children() {
-			child := ichild.(IPanel).GetPanel()
+			child := ichild.(PanelI).GetPanel()
 			if !child.Visible() {
 				continue
 			}
@@ -140,7 +140,7 @@ func (bl *HBoxLayout) Recalc(ipan IPanel) {
 	ecount := 0
 	paramsDef := HBoxLayoutParams{Expand: 0, AlignV: AlignTop}
 	for pos, obj := range parent.Children() {
-		pan := obj.(IPanel).GetPanel()
+		pan := obj.(PanelI).GetPanel()
 		if !pan.Visible() {
 			continue
 		}
@@ -179,7 +179,7 @@ func (bl *HBoxLayout) Recalc(ipan IPanel) {
 		totalSpace := parent.ContentWidth() - twidth
 		if totalSpace > 0 {
 			for _, obj := range parent.Children() {
-				pan := obj.(IPanel).GetPanel()
+				pan := obj.(PanelI).GetPanel()
 				if !pan.Visible() {
 					continue
 				}
@@ -196,7 +196,7 @@ func (bl *HBoxLayout) Recalc(ipan IPanel) {
 			// No free space: distribute expanded items widths
 		} else {
 			for _, obj := range parent.Children() {
-				pan := obj.(IPanel).GetPanel()
+				pan := obj.(PanelI).GetPanel()
 				if !pan.Visible() {
 					continue
 				}
@@ -239,7 +239,7 @@ func (bl *HBoxLayout) Recalc(ipan IPanel) {
 	var posY float32
 	height := parent.ContentHeight()
 	for pos, obj := range parent.Children() {
-		pan := obj.(IPanel).GetPanel()
+		pan := obj.(PanelI).GetPanel()
 		if !pan.Visible() {
 			continue
 		}

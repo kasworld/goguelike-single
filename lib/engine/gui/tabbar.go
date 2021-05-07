@@ -393,7 +393,7 @@ type Tab struct {
 	icon       *Label     // Tab optional user icon
 	image      *Image     // Tab optional user image
 	bottom     Panel      // Panel to cover the bottom edge of the Tab
-	content    IPanel     // User content panel
+	content    PanelI     // User content panel
 	cursorOver bool
 	selected   bool
 	pinned     bool
@@ -549,7 +549,7 @@ func (tab *Tab) Header() *Panel {
 }
 
 // SetContent sets or replaces this tab content panel.
-func (tab *Tab) SetContent(ipan IPanel) {
+func (tab *Tab) SetContent(ipan PanelI) {
 
 	// Remove previous content if any
 	if tab.content != nil {
@@ -563,7 +563,7 @@ func (tab *Tab) SetContent(ipan IPanel) {
 }
 
 // Content returns a pointer to the specified Tab content panel
-func (tab *Tab) Content() IPanel {
+func (tab *Tab) Content() PanelI {
 
 	return tab.content
 }

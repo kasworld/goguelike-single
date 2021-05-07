@@ -21,8 +21,8 @@ type manager struct {
 	timermanager.TimerManager                         // Embedded TimerManager
 	win                       window.WindowI          // The current WindowI
 	scene                     node.NodeI              // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
-	modal                     IPanel                  // Panel which along its descendants will exclusively receive all events
-	target                    IPanel                  // Panel immediately under the cursor
+	modal                     PanelI                  // Panel which along its descendants will exclusively receive all events
+	target                    PanelI                  // Panel immediately under the cursor
 	keyFocus                  dispatcheri.DispatcherI // DispatcherI which will exclusively receive all key and char events
 	cursorFocus               dispatcheri.DispatcherI // DispatcherI which will exclusively receive all OnCursor events
 	cev                       *window.CursorEvent     // DispatcherI which will exclusively receive all OnCursor events
@@ -63,7 +63,7 @@ func (gm *manager) Set(scene node.NodeI) {
 }
 
 // SetModal sets the specified panel and its descendants to be the exclusive receivers of events.
-func (gm *manager) SetModal(ipan IPanel) {
+func (gm *manager) SetModal(ipan PanelI) {
 
 	gm.modal = ipan
 	gm.SetKeyFocus(nil)
@@ -104,7 +104,7 @@ func (gm *manager) onKeyboard(evname dispatcheri.EventName, ev interface{}) {
 	if gm.keyFocus != nil {
 		if gm.modal == nil {
 			gm.keyFocus.Dispatch(evname, ev)
-		} else if ipan, ok := gm.keyFocus.(IPanel); ok && gm.modal.IsAncestorOf(ipan) {
+		} else if ipan, ok := gm.keyFocus.(PanelI); ok && gm.modal.IsAncestorOf(ipan) {
 			gm.keyFocus.Dispatch(evname, ev)
 		}
 	} else {
@@ -124,7 +124,7 @@ func (gm *manager) onMouse(evname dispatcheri.EventName, ev interface{}) {
 	}
 
 	// Dispatch OnMouseDownOut/OnMouseUpOut to all panels except ancestors of target
-	gm.forEachIPanel(func(ipan IPanel) {
+	gm.forEachIPanel(func(ipan PanelI) {
 		if gm.target == nil || !ipan.IsAncestorOf(gm.target) {
 			switch evname {
 			case OnMouseDown:
@@ -188,8 +188,8 @@ func (gm *manager) onCursor(evname dispatcheri.EventName, ev interface{}) {
 	oldTarget := gm.target
 	gm.target = nil
 
-	// Find IPanel immediately under the cursor and store it in gm.target
-	gm.forEachIPanel(func(ipan IPanel) {
+	// Find PanelI immediately under the cursor and store it in gm.target
+	gm.forEachIPanel(func(ipan PanelI) {
 		if ipan.InsideBorders(gm.cev.Xpos, gm.cev.Ypos) && (gm.target == nil || ipan.Position().Z < gm.target.GetPanel().Position().Z) {
 			gm.target = ipan
 		}
@@ -198,9 +198,9 @@ func (gm *manager) onCursor(evname dispatcheri.EventName, ev interface{}) {
 	// If the cursor is now over a different panel, dispatch OnCursorLeave/OnCursorEnter
 	if gm.target != oldTarget {
 		// We are only interested in sending events up to the lowest common ancestor of target and oldTarget
-		var commonAnc IPanel
+		var commonAnc PanelI
 		if gm.target != nil && oldTarget != nil {
-			commonAnc, _ = gm.target.LowestCommonAncestor(oldTarget).(IPanel)
+			commonAnc, _ = gm.target.LowestCommonAncestor(oldTarget).(PanelI)
 		}
 		// If just left a panel and the new panel is not a descendant of the old panel
 		if oldTarget != nil && !oldTarget.IsAncestorOf(gm.target) && (gm.modal == nil || gm.modal.IsAncestorOf(oldTarget)) {
@@ -227,7 +227,7 @@ func (gm *manager) onCursor(evname dispatcheri.EventName, ev interface{}) {
 // If uptoEx (i.e. excluding) is not nil then the event will not be dispatched to that ancestor nor any higher ancestors.
 // If uptoIn (i.e. including) is not nil then the event will be dispatched to that ancestor but not to any higher ancestors.
 // uptoEx and uptoIn can both be defined.
-func sendAncestry(ipan IPanel, all bool, uptoEx IPanel, uptoIn IPanel, evname dispatcheri.EventName, ev interface{}) {
+func sendAncestry(ipan PanelI, all bool, uptoEx PanelI, uptoIn PanelI, evname dispatcheri.EventName, ev interface{}) {
 
 	var ok bool
 	for ipan != nil {
@@ -238,16 +238,16 @@ func sendAncestry(ipan IPanel, all bool, uptoEx IPanel, uptoIn IPanel, evname di
 		if (uptoIn != nil && ipan == uptoIn) || (!all && count > 0) {
 			break
 		}
-		ipan, ok = ipan.Parent().(IPanel)
+		ipan, ok = ipan.Parent().(PanelI)
 		if !ok {
 			break
 		}
 	}
 }
 
-// traverseIPanel traverses the descendants of the provided IPanel,
-// executing the specified function for each IPanel.
-func traverseIPanel(ipan IPanel, f func(ipan IPanel)) {
+// traverseIPanel traverses the descendants of the provided PanelI,
+// executing the specified function for each PanelI.
+func traverseIPanel(ipan PanelI, f func(ipan PanelI)) {
 
 	// If panel not visible, ignore entire hierarchy below this point
 	if !ipan.Visible() {
@@ -258,15 +258,15 @@ func traverseIPanel(ipan IPanel, f func(ipan IPanel)) {
 	}
 	// Check descendants (can assume they are IPanels)
 	for _, child := range ipan.Children() {
-		traverseIPanel(child.(IPanel), f)
+		traverseIPanel(child.(PanelI), f)
 	}
 }
 
 // traverseINode traverses the descendants of the specified NodeI,
-// executing the specified function for each IPanel.
-func traverseINode(inode node.NodeI, f func(ipan IPanel)) {
+// executing the specified function for each PanelI.
+func traverseINode(inode node.NodeI, f func(ipan PanelI)) {
 
-	if ipan, ok := inode.(IPanel); ok {
+	if ipan, ok := inode.(PanelI); ok {
 		traverseIPanel(ipan, f)
 	} else {
 		for _, child := range inode.Children() {
@@ -275,8 +275,8 @@ func traverseINode(inode node.NodeI, f func(ipan IPanel)) {
 	}
 }
 
-// forEachIPanel executes the specified function for each enabled and visible IPanel in gm.scene.
-func (gm *manager) forEachIPanel(f func(ipan IPanel)) {
+// forEachIPanel executes the specified function for each enabled and visible PanelI in gm.scene.
+func (gm *manager) forEachIPanel(f func(ipan PanelI)) {
 
 	traverseINode(gm.scene, f)
 }

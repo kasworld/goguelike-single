@@ -4,7 +4,7 @@
 
 package gui
 
-// ILayout is the interface for layouts
-type ILayout interface {
-	Recalc(ipan IPanel)
+// LayoutI is the interface for layouts
+type LayoutI interface {
+	Recalc(ipan PanelI)
 }

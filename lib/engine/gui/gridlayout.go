@@ -11,7 +11,7 @@ package gui
 // The height of each row is determined by the height of the heightest child in the row.
 // The width of each column is determined by the width of the widest child in the column
 type GridLayout struct {
-	pan     IPanel    // parent panel
+	pan     PanelI    // parent panel
 	columns []colInfo // columns alignment info
 	alignh  Align     // global cell horizontal alignment
 	alignv  Align     // global cell vertical alignment
@@ -104,7 +104,7 @@ func (g *GridLayout) SetColAlignH(col int, align Align) {
 // Recalc sets the position and sizes of all of the panel's children.
 // It is normally called by the parent panel when its size changes or
 // a child is added or removed.
-func (g *GridLayout) Recalc(ipan IPanel) {
+func (g *GridLayout) Recalc(ipan PanelI) {
 
 	type cell struct {
 		panel     *Panel           // pointer to cell panel
@@ -130,7 +130,7 @@ func (g *GridLayout) Recalc(ipan IPanel) {
 	rows := []row{}
 	for _, node := range pan.Children() {
 		// Ignore invisible child
-		child := node.(IPanel).GetPanel()
+		child := node.(PanelI).GetPanel()
 		if !child.Visible() {
 			continue
 		}

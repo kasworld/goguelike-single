@@ -10,7 +10,7 @@ package gui
 type BuilderLayoutHBox struct{}
 
 // BuildLayout builds and returns an HBoxLayout with the specified attributes
-func (bl *BuilderLayoutHBox) BuildLayout(b *Builder, am map[string]interface{}) (ILayout, error) {
+func (bl *BuilderLayoutHBox) BuildLayout(b *Builder, am map[string]interface{}) (LayoutI, error) {
 
 	// Creates layout and sets optional spacing
 	l := NewHBoxLayout()
@@ -61,7 +61,7 @@ func (bl *BuilderLayoutHBox) BuildParams(b *Builder, am map[string]interface{}) 
 type BuilderLayoutVBox struct{}
 
 // BuildLayout builds and returns an VBoxLayout with the specified attributes
-func (bl *BuilderLayoutVBox) BuildLayout(b *Builder, am map[string]interface{}) (ILayout, error) {
+func (bl *BuilderLayoutVBox) BuildLayout(b *Builder, am map[string]interface{}) (LayoutI, error) {
 
 	// Creates layout and sets optional spacing
 	l := NewVBoxLayout()
@@ -112,7 +112,7 @@ func (bl *BuilderLayoutVBox) BuildParams(b *Builder, am map[string]interface{}) 
 type BuilderLayoutGrid struct{}
 
 // BuildLayout builds and returns a GridLayout with the specified attributes
-func (bl *BuilderLayoutGrid) BuildLayout(b *Builder, am map[string]interface{}) (ILayout, error) {
+func (bl *BuilderLayoutGrid) BuildLayout(b *Builder, am map[string]interface{}) (LayoutI, error) {
 
 	// Get number of columns
 	v := am[AttribCols]
@@ -183,7 +183,7 @@ func (bl *BuilderLayoutGrid) BuildParams(b *Builder, am map[string]interface{}) 
 type BuilderLayoutDock struct{}
 
 // BuildLayout builds and returns a DockLayout with the specified attributes
-func (bl *BuilderLayoutDock) BuildLayout(b *Builder, am map[string]interface{}) (ILayout, error) {
+func (bl *BuilderLayoutDock) BuildLayout(b *Builder, am map[string]interface{}) (LayoutI, error) {
 
 	return NewDockLayout(), nil
 }
