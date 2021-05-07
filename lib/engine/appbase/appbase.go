@@ -38,24 +38,22 @@ type AppBase struct {
 
 // New returns the AppBase object
 func New(title string, width, height int) *AppBase {
-
-	// Return singleton if already created
-	a := new(AppBase)
+	appBase := new(AppBase)
 	// Initialize window
 	err := window.Init(width, height, title)
 	if err != nil {
 		panic(err)
 	}
-	a.WindowI = window.Get()
-	a.openDefaultAudioDevice()         // Set up audio
-	a.keyState = window.NewKeyState(a) // Create KeyState
+	appBase.WindowI = window.Get()
+	appBase.openDefaultAudioDevice()               // Set up audio
+	appBase.keyState = window.NewKeyState(appBase) // Create KeyState
 	// Create renderer and add default shaders
-	a.renderer = renderer.NewRenderer(a.Gls())
-	err = a.renderer.AddDefaultShaders()
+	appBase.renderer = renderer.NewRenderer(appBase.Gls())
+	err = appBase.renderer.AddDefaultShaders()
 	if err != nil {
 		panic(fmt.Errorf("AddDefaultShaders:%v", err))
 	}
-	return a
+	return appBase
 }
 
 // Run starts the update loop.
