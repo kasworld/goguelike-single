@@ -9,13 +9,10 @@ type Dispatcher struct {
 	evmap map[string][]subscription // Map of event names to subscription lists
 }
 
-// Callback is the type for Dispatcher callback functions.
-type Callback func(string, interface{})
-
 // subscription links a Callback with a user-provided unique id.
 type subscription struct {
-	id interface{}
-	cb Callback
+	id       interface{}
+	callBack Callback
 }
 
 // NewDispatcher creates and returns a new event dispatcher.
@@ -35,19 +32,20 @@ func (d *Dispatcher) Initialize() {
 
 // Subscribe subscribes a callback to events with the given name.
 // If it is necessary to unsubscribe later, SubscribeID should be used instead.
-func (d *Dispatcher) Subscribe(evname string, cb Callback) {
+func (d *Dispatcher) Subscribe(evname string, callBack Callback) {
 
-	d.evmap[evname] = append(d.evmap[evname], subscription{nil, cb})
+	d.evmap[evname] = append(d.evmap[evname], subscription{nil, callBack})
 }
 
 // SubscribeID subscribes a callback to events events with the given name.
 // The user-provided unique id can be used to unsubscribe via UnsubscribeID.
-func (d *Dispatcher) SubscribeID(evname string, id interface{}, cb Callback) {
+func (d *Dispatcher) SubscribeID(evname string, id interface{}, callBack Callback) {
 
-	d.evmap[evname] = append(d.evmap[evname], subscription{id, cb})
+	d.evmap[evname] = append(d.evmap[evname], subscription{id, callBack})
 }
 
-// UnsubscribeID removes all subscribed callbacks with the specified unique id from the specified event.
+// UnsubscribeID removes all subscribed callbacks with the specified unique id
+//	from the specified event.
 // Returns the number of subscriptions removed.
 func (d *Dispatcher) UnsubscribeID(evname string, id interface{}) int {
 
@@ -57,7 +55,8 @@ func (d *Dispatcher) UnsubscribeID(evname string, id interface{}) int {
 		return 0
 	}
 
-	// Remove all subscribers of the specified event with the specified id, counting how many were removed
+	// Remove all subscribers of the specified event with the specified id,
+	// counting how many were removed
 	rm := 0
 	i := 0
 	for _, s := range subs {
@@ -97,7 +96,7 @@ func (d *Dispatcher) Dispatch(evname string, ev interface{}) int {
 
 	// Dispatch event to all subscribers
 	for _, s := range subs {
-		s.cb(evname, ev)
+		s.callBack(evname, ev)
 	}
 	return nsubs
 }

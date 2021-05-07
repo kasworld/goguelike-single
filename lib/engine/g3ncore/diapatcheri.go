@@ -1,5 +1,8 @@
 package g3ncore
 
+// Callback is the type for Dispatcher callback functions.
+type Callback func(evname string, ev interface{})
+
 // DispatcherI is the interface for event dispatchers.
 type DispatcherI interface {
 	Subscribe(evname string, cb Callback)
