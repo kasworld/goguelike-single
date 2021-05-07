@@ -10,7 +10,7 @@ import (
 type NodeI interface {
 	dispatcher.DispatcherI
 	GetNode() *Node
-	GetINode() NodeI
+	GetNodeI() NodeI
 	Visible() bool
 	SetVisible(state bool)
 	Name() string

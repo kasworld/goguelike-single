@@ -78,8 +78,8 @@ func (n *Node) Init(inode NodeI) {
 	})
 }
 
-// GetINode returns the NodeI associated with this Node.
-func (n *Node) GetINode() NodeI {
+// GetNodeI returns the NodeI associated with this Node.
+func (n *Node) GetNodeI() NodeI {
 
 	return n.inode
 }
@@ -288,7 +288,7 @@ func (n *Node) Children() []NodeI {
 // If the specified node had a parent, the specified node is removed from the original parent's list of children.
 func (n *Node) Add(ichild NodeI) *Node {
 
-	setParent(n.GetINode(), ichild)
+	setParent(n.GetNodeI(), ichild)
 	n.children = append(n.children, ichild)
 	n.Dispatch(OnDescendant, nil)
 	return n
@@ -303,7 +303,7 @@ func (n *Node) AddAt(idx int, ichild NodeI) *Node {
 		panic("Node.AddAt: invalid position")
 	}
 
-	setParent(n.GetINode(), ichild)
+	setParent(n.GetNodeI(), ichild)
 
 	// Insert child in the specified position
 	n.children = append(n.children, nil)
@@ -376,7 +376,7 @@ func (n *Node) LowestCommonAncestor(other NodeI) NodeI {
 	if other == nil {
 		return nil
 	}
-	n1 := n.GetINode()
+	n1 := n.GetNodeI()
 	for n1 != nil {
 		n2 := other
 		for n2 != nil {
