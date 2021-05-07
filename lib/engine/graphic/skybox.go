@@ -5,11 +5,11 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 	"github.com/kasworld/goguelike-single/lib/engine/texture"
 )
 
@@ -69,7 +69,7 @@ func NewSkybox(data SkyboxData) (*Skybox, error) {
 // RenderSetup is called by the engine before drawing the skybox geometry
 // It is responsible to updating the current shader uniforms with
 // the model matrices.
-func (skybox *Skybox) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (skybox *Skybox) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	mvm := *skybox.ModelViewMatrix()
 

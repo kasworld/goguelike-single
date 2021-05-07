@@ -10,6 +10,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Mesh is a Graphic with uniforms for the model, view, projection, and normal matrices.
@@ -86,7 +87,7 @@ func (m *Mesh) Clone() g3ncore.NodeI {
 // RenderSetup is called by the engine before drawing the mesh geometry
 // It is responsible to updating the current shader uniforms with
 // the model matrices.
-func (m *Mesh) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (m *Mesh) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	// Transfer uniform for model matrix
 	mm := m.ModelMatrix()

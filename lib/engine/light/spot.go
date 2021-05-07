@@ -8,6 +8,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Spot represents a spotlight
@@ -122,7 +123,7 @@ func (l *Spot) QuadraticDecay() float32 {
 }
 
 // RenderSetup is called by the engine before rendering the scene
-func (l *Spot) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int) {
+func (l *Spot) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo, idx int) {
 
 	// Calculates and updates light position uniform in camera coordinates
 	var pos math32.Vector3

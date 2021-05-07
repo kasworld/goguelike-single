@@ -16,6 +16,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/light"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
 
@@ -24,12 +25,12 @@ var log = logger.New("RENDERER", logger.Default)
 
 // Renderer renders a scene containing 3D objects and/or 2D GUI elements.
 type Renderer struct {
-	Shaman                         // Embedded shader manager
-	gs          *gls.GLS           // Reference to OpenGL state
-	rinfo       g3ncore.RenderInfo // Preallocated Render info
-	specs       ShaderSpecs        // Preallocated Shader specs
-	sortObjects bool               // Flag indicating whether objects should be sorted before rendering
-	stats       Stats              // Renderer statistics
+	Shaman                            // Embedded shader manager
+	gs          *gls.GLS              // Reference to OpenGL state
+	rinfo       renderinfo.RenderInfo // Preallocated Render info
+	specs       ShaderSpecs           // Preallocated Shader specs
+	sortObjects bool                  // Flag indicating whether objects should be sorted before rendering
+	stats       Stats                 // Renderer statistics
 
 	// Populated each frame
 	ambLights    []*light.Ambient           // Ambient lights in the scene

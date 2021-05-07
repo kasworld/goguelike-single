@@ -5,10 +5,10 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Points represents a geometry containing only points
@@ -33,7 +33,7 @@ func NewPoints(igeom geometry.GeometryI, imat material.MaterialI) *Points {
 }
 
 // RenderSetup is called by the engine before rendering this graphic.
-func (p *Points) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (p *Points) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	// Transfer model view projection matrix uniform
 	mvpm := p.ModelViewProjectionMatrix()

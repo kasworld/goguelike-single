@@ -5,11 +5,11 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Sprite is a potentially animated image positioned in space that always faces the camera.
@@ -56,7 +56,7 @@ func NewSprite(width, height float32, imat material.MaterialI) *Sprite {
 }
 
 // RenderSetup sets up the rendering of the sprite.
-func (s *Sprite) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (s *Sprite) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	// Calculates model view matrix
 	mw := s.MatrixWorld()

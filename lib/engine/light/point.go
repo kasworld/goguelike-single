@@ -8,6 +8,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Point is an omnidirectional light source
@@ -95,7 +96,7 @@ func (lp *Point) QuadraticDecay() float32 {
 }
 
 // RenderSetup is called by the engine before rendering the scene
-func (lp *Point) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int) {
+func (lp *Point) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo, idx int) {
 
 	// Calculates light position in camera coordinates and updates uniform
 	var pos math32.Vector3

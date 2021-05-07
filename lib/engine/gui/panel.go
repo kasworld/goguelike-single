@@ -5,12 +5,12 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 /*********************************************
@@ -841,7 +841,7 @@ func (p *Panel) resize(width, height float32, dispatch bool) {
 }
 
 // RenderSetup is called by the Engine before drawing the object
-func (p *Panel) RenderSetup(gl *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (p *Panel) RenderSetup(gl *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	// Sets texture valid flag in uniforms
 	// depending if the material has texture

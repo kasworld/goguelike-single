@@ -5,10 +5,10 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // LineStrip is a Graphic which is rendered as a collection of connected lines.
@@ -29,7 +29,7 @@ func NewLineStrip(igeom geometry.GeometryI, imat material.MaterialI) *LineStrip 
 }
 
 // RenderSetup is called by the engine before drawing this geometry.
-func (l *LineStrip) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (l *LineStrip) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	// Transfer model view projection matrix uniform
 	mvpm := l.ModelViewProjectionMatrix()

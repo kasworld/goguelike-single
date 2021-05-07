@@ -4,6 +4,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // GraphicI is the interface for all Graphic objects.
@@ -16,5 +17,5 @@ type GraphicI interface {
 	Renderable() bool
 	SetCullable(bool)
 	Cullable() bool
-	RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo)
+	RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo)
 }

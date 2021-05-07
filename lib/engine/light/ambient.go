@@ -8,6 +8,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 )
 
 // Ambient represents an ambient light
@@ -55,7 +56,7 @@ func (la *Ambient) Intensity() float32 {
 }
 
 // RenderSetup is called by the engine before rendering the scene
-func (la *Ambient) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int) {
+func (la *Ambient) RenderSetup(gs *gls.GLS, rinfo *renderinfo.RenderInfo, idx int) {
 
 	color := la.color
 	color.MultiplyScalar(la.intensity)

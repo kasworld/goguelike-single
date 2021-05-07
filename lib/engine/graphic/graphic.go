@@ -11,6 +11,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
+	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
 
@@ -232,7 +233,7 @@ func (gr *Graphic) BoundingBox() math32.Box3 {
 }
 
 // CalculateMatrices calculates the model view and model view projection matrices.
-func (gr *Graphic) CalculateMatrices(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (gr *Graphic) CalculateMatrices(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	gr.mm = gr.MatrixWorld()
 	gr.mvm.MultiplyMatrices(&rinfo.ViewMatrix, &gr.mm)
@@ -280,7 +281,7 @@ func (grmat *GraphicMaterial) GraphicI() GraphicI {
 }
 
 // Render is called by the renderer to render this graphic material.
-func (grmat *GraphicMaterial) Render(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
+func (grmat *GraphicMaterial) Render(gs *gls.GLS, rinfo *renderinfo.RenderInfo) {
 
 	// Setup the associated material (set states and transfer material uniforms and textures)
 	grmat.imat.RenderSetup(gs)

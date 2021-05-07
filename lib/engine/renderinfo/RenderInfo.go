@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package g3ncore
+package renderinfo
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
