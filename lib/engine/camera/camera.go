@@ -32,12 +32,6 @@ const (
 	Orthographic
 )
 
-// CameraI is the interface for all cameras.
-type CameraI interface {
-	ViewMatrix(m *math32.Matrix4)
-	ProjMatrix(m *math32.Matrix4)
-}
-
 // Camera represents a virtual camera, which specifies how to project a 3D scene onto an image.
 type Camera struct {
 	g3ncore.Node                // Embedded Node
