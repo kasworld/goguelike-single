@@ -7,7 +7,7 @@ package graphic
 import (
 	"strconv"
 
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
@@ -49,7 +49,7 @@ func (rm *RiggedMesh) Skeleton() *Skeleton {
 }
 
 // RenderSetup is called by the renderer before drawing the geometry.
-func (rm *RiggedMesh) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (rm *RiggedMesh) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Call base mesh's RenderSetup
 	rm.Mesh.RenderSetup(gs, rinfo)

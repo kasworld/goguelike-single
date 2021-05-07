@@ -18,7 +18,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -217,9 +216,9 @@ func DecodeReader(objreader, mtlreader io.Reader) (*Decoder, error) {
 // NewGroup creates and returns a group containing as children meshes
 // with all the decoded objects.
 // A group is returned even if there is only one object decoded.
-func (dec *Decoder) NewGroup() (*core.Node, error) {
+func (dec *Decoder) NewGroup() (*g3ncore.Node, error) {
 
-	group := core.NewNode()
+	group := g3ncore.NewNode()
 	for i := 0; i < len(dec.Objects); i++ {
 		mesh, err := dec.NewMesh(&dec.Objects[i])
 		if err != nil {

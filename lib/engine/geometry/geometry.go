@@ -17,13 +17,6 @@ import (
 // Package logger
 var log = logger.New("GEOMETRY", logger.Default)
 
-// IGeometry is the interface for all geometries.
-type IGeometry interface {
-	GetGeometry() *Geometry
-	RenderSetup(gs *gls.GLS)
-	Dispose()
-}
-
 // Geometry encapsulates a three-dimensional vertex-based geometry.
 type Geometry struct {
 	gs            *gls.GLS          // Reference to OpenGL state (valid after first RenderSetup)
@@ -80,7 +73,7 @@ func (g *Geometry) Init() {
 	g.ShaderDefines = *gls.NewShaderDefines()
 }
 
-// GetGeometry satisfies the IGeometry interface.
+// GetGeometry satisfies the GeometryI interface.
 func (g *Geometry) GetGeometry() *Geometry {
 
 	return g

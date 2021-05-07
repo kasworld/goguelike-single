@@ -5,7 +5,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -24,7 +24,7 @@ type Mesh struct {
 // NewMesh creates and returns a pointer to a mesh with the specified geometry and material.
 // If the mesh has multi materials, the material specified here must be nil and the
 // individual materials must be add using "AddMaterial" or AddGroupMaterial".
-func NewMesh(igeom geometry.IGeometry, imat material.IMaterial) *Mesh {
+func NewMesh(igeom geometry.GeometryI, imat material.MaterialI) *Mesh {
 
 	m := new(Mesh)
 	m.Init(igeom, imat)
@@ -32,7 +32,7 @@ func NewMesh(igeom geometry.IGeometry, imat material.IMaterial) *Mesh {
 }
 
 // Init initializes the Mesh and its uniforms.
-func (m *Mesh) Init(igeom geometry.IGeometry, imat material.IMaterial) {
+func (m *Mesh) Init(igeom geometry.GeometryI, imat material.MaterialI) {
 
 	m.Graphic.Init(m, igeom, gls.TRIANGLES)
 
@@ -49,26 +49,26 @@ func (m *Mesh) Init(igeom geometry.IGeometry, imat material.IMaterial) {
 }
 
 // SetMaterial clears all materials and adds the specified material for all vertices.
-func (m *Mesh) SetMaterial(imat material.IMaterial) {
+func (m *Mesh) SetMaterial(imat material.MaterialI) {
 
 	m.Graphic.ClearMaterials()
 	m.Graphic.AddMaterial(m, imat, 0, 0)
 }
 
 // AddMaterial adds a material for the specified subset of vertices.
-func (m *Mesh) AddMaterial(imat material.IMaterial, start, count int) {
+func (m *Mesh) AddMaterial(imat material.MaterialI, start, count int) {
 
 	m.Graphic.AddMaterial(m, imat, start, count)
 }
 
 // AddGroupMaterial adds a material for the specified geometry group.
-func (m *Mesh) AddGroupMaterial(imat material.IMaterial, gindex int) {
+func (m *Mesh) AddGroupMaterial(imat material.MaterialI, gindex int) {
 
 	m.Graphic.AddGroupMaterial(m, imat, gindex)
 }
 
-// Clone clones the mesh and satisfies the INode interface.
-func (m *Mesh) Clone() core.INode {
+// Clone clones the mesh and satisfies the NodeI interface.
+func (m *Mesh) Clone() g3ncore.NodeI {
 
 	clone := new(Mesh)
 	clone.Graphic = *m.Graphic.Clone().(*Graphic)
@@ -86,7 +86,7 @@ func (m *Mesh) Clone() core.INode {
 // RenderSetup is called by the engine before drawing the mesh geometry
 // It is responsible to updating the current shader uniforms with
 // the model matrices.
-func (m *Mesh) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (m *Mesh) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Transfer uniform for model matrix
 	mm := m.ModelMatrix()

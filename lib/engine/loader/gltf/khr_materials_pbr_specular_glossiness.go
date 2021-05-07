@@ -9,7 +9,7 @@ import (
 // decodes it and returns a Material closest to the specified description.
 // The specification of this extension is at:
 // https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_pbrSpecularGlossiness
-func (g *GLTF) loadMaterialPbrSpecularGlossiness(ext interface{}) (material.IMaterial, error) {
+func (g *GLTF) loadMaterialPbrSpecularGlossiness(ext interface{}) (material.MaterialI, error) {
 
 	return nil, nil
 }

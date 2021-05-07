@@ -5,7 +5,6 @@
 package physics
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
@@ -18,7 +17,7 @@ import (
 type DebugHelper struct {
 }
 
-func ShowWorldFace(scene *core.Node, face []math32.Vector3, color *math32.Color) {
+func ShowWorldFace(scene *g3ncore.Node, face []math32.Vector3, color *math32.Color) {
 
 	if len(face) == 0 {
 		return
@@ -38,7 +37,7 @@ func ShowWorldFace(scene *core.Node, face []math32.Vector3, color *math32.Color)
 	scene.Add(faceGraphic)
 }
 
-func ShowPenAxis(scene *core.Node, axis *math32.Vector3) { //}, min, max float32) {
+func ShowPenAxis(scene *g3ncore.Node, axis *math32.Vector3) { //}, min, max float32) {
 
 	vertices := math32.NewArrayF32(0, 16)
 
@@ -68,7 +67,7 @@ func ShowPenAxis(scene *core.Node, axis *math32.Vector3) { //}, min, max float32
 	scene.Add(faceGraphic)
 }
 
-func ShowContact(scene *core.Node, contact *collision.Contact) {
+func ShowContact(scene *g3ncore.Node, contact *collision.Contact) {
 
 	vertices := math32.NewArrayF32(0, 16)
 

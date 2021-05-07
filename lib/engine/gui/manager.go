@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -14,15 +14,15 @@ var gm *manager
 
 // manager routes GUI events to the appropriate panels.
 type manager struct {
-	core.Dispatcher                       // Embedded Dispatcher
-	core.TimerManager                     // Embedded TimerManager
-	win               window.WindowI      // The current WindowI
-	scene             core.INode          // INode containing IPanels to dispatch events to (can contain non-IPanels as well)
-	modal             IPanel              // Panel which along its descendants will exclusively receive all events
-	target            IPanel              // Panel immediately under the cursor
-	keyFocus          core.IDispatcher    // IDispatcher which will exclusively receive all key and char events
-	cursorFocus       core.IDispatcher    // IDispatcher which will exclusively receive all OnCursor events
-	cev               *window.CursorEvent // IDispatcher which will exclusively receive all OnCursor events
+	g3ncore.Dispatcher                       // Embedded Dispatcher
+	g3ncore.TimerManager                     // Embedded TimerManager
+	win                  window.WindowI      // The current WindowI
+	scene                g3ncore.NodeI       // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
+	modal                IPanel              // Panel which along its descendants will exclusively receive all events
+	target               IPanel              // Panel immediately under the cursor
+	keyFocus             g3ncore.DispatcherI // DispatcherI which will exclusively receive all key and char events
+	cursorFocus          g3ncore.DispatcherI // DispatcherI which will exclusively receive all OnCursor events
+	cev                  *window.CursorEvent // DispatcherI which will exclusively receive all OnCursor events
 }
 
 // Manager returns the GUI manager singleton (creating it the first time)
@@ -51,10 +51,10 @@ func Manager() *manager {
 	return gm
 }
 
-// Set sets the INode to watch for events.
+// Set sets the NodeI to watch for events.
 // It's usually a scene containing a hierarchy of INodes.
 // The manager only cares about IPanels inside that hierarchy.
-func (gm *manager) Set(scene core.INode) {
+func (gm *manager) Set(scene g3ncore.NodeI) {
 
 	gm.scene = scene
 }
@@ -67,8 +67,8 @@ func (gm *manager) SetModal(ipan IPanel) {
 	gm.SetCursorFocus(nil)
 }
 
-// SetKeyFocus sets the key-focused IDispatcher, which will exclusively receive key and char events.
-func (gm *manager) SetKeyFocus(disp core.IDispatcher) {
+// SetKeyFocus sets the key-focused DispatcherI, which will exclusively receive key and char events.
+func (gm *manager) SetKeyFocus(disp g3ncore.DispatcherI) {
 
 	if gm.keyFocus == disp {
 		return
@@ -82,8 +82,8 @@ func (gm *manager) SetKeyFocus(disp core.IDispatcher) {
 	}
 }
 
-// SetCursorFocus sets the cursor-focused IDispatcher, which will exclusively receive OnCursor events.
-func (gm *manager) SetCursorFocus(disp core.IDispatcher) {
+// SetCursorFocus sets the cursor-focused DispatcherI, which will exclusively receive OnCursor events.
+func (gm *manager) SetCursorFocus(disp g3ncore.DispatcherI) {
 
 	if gm.cursorFocus == disp {
 		return
@@ -95,7 +95,7 @@ func (gm *manager) SetCursorFocus(disp core.IDispatcher) {
 }
 
 // onKeyboard is called when char or key events are received.
-// The events are dispatched to the focused IDispatcher or to non-GUI.
+// The events are dispatched to the focused DispatcherI or to non-GUI.
 func (gm *manager) onKeyboard(evname string, ev interface{}) {
 
 	if gm.keyFocus != nil {
@@ -166,7 +166,7 @@ func (gm *manager) onScroll(evname string, ev interface{}) {
 // Updates the target/click panels and dispatches OnCursor, OnCursorEnter, OnCursorLeave events.
 func (gm *manager) onCursor(evname string, ev interface{}) {
 
-	// If an IDispatcher is capturing cursor events dispatch to it and return
+	// If an DispatcherI is capturing cursor events dispatch to it and return
 	if gm.cursorFocus != nil {
 		gm.cursorFocus.Dispatch(evname, ev)
 		return
@@ -259,9 +259,9 @@ func traverseIPanel(ipan IPanel, f func(ipan IPanel)) {
 	}
 }
 
-// traverseINode traverses the descendants of the specified INode,
+// traverseINode traverses the descendants of the specified NodeI,
 // executing the specified function for each IPanel.
-func traverseINode(inode core.INode, f func(ipan IPanel)) {
+func traverseINode(inode g3ncore.NodeI, f func(ipan IPanel)) {
 
 	if ipan, ok := inode.(IPanel); ok {
 		traverseIPanel(ipan, f)

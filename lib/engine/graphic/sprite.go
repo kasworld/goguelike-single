@@ -5,7 +5,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -19,7 +19,7 @@ type Sprite struct {
 }
 
 // NewSprite creates and returns a pointer to a sprite with the specified dimensions and material
-func NewSprite(width, height float32, imat material.IMaterial) *Sprite {
+func NewSprite(width, height float32, imat material.MaterialI) *Sprite {
 
 	s := new(Sprite)
 
@@ -56,7 +56,7 @@ func NewSprite(width, height float32, imat material.IMaterial) *Sprite {
 }
 
 // RenderSetup sets up the rendering of the sprite.
-func (s *Sprite) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (s *Sprite) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Calculates model view matrix
 	mw := s.MatrixWorld()

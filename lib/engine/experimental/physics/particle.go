@@ -21,7 +21,7 @@ package physics
 //}
 //
 //// NewParticle creates and returns a pointer to a new Particle.
-//func  NewParticle(igraphic graphic.IGraphic) *Particle {
+//func  NewParticle(igraphic graphic.GraphicI) *Particle {
 //
 //	p := new(Particle)
 //	p.Graphic = igraphic.GetGraphic()

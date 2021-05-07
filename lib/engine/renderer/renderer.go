@@ -9,7 +9,7 @@ import (
 	"sort"
 
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -24,19 +24,19 @@ var log = logger.New("RENDERER", logger.Default)
 
 // Renderer renders a scene containing 3D objects and/or 2D GUI elements.
 type Renderer struct {
-	Shaman                      // Embedded shader manager
-	gs          *gls.GLS        // Reference to OpenGL state
-	rinfo       core.RenderInfo // Preallocated Render info
-	specs       ShaderSpecs     // Preallocated Shader specs
-	sortObjects bool            // Flag indicating whether objects should be sorted before rendering
-	stats       Stats           // Renderer statistics
+	Shaman                         // Embedded shader manager
+	gs          *gls.GLS           // Reference to OpenGL state
+	rinfo       g3ncore.RenderInfo // Preallocated Render info
+	specs       ShaderSpecs        // Preallocated Shader specs
+	sortObjects bool               // Flag indicating whether objects should be sorted before rendering
+	stats       Stats              // Renderer statistics
 
 	// Populated each frame
 	ambLights    []*light.Ambient           // Ambient lights in the scene
 	dirLights    []*light.Directional       // Directional lights in the scene
 	pointLights  []*light.Point             // Point lights in the scene
 	spotLights   []*light.Spot              // Spot lights in the scene
-	others       []core.INode               // Other nodes (audio, players, etc)
+	others       []g3ncore.NodeI            // Other nodes (audio, players, etc)
 	graphics     []*graphic.Graphic         // Graphics to be rendered
 	grmatsOpaque []*graphic.GraphicMaterial // Opaque graphic materials to be rendered
 	grmatsTransp []*graphic.GraphicMaterial // Transparent graphic materials to be rendered
@@ -65,7 +65,7 @@ func NewRenderer(gs *gls.GLS) *Renderer {
 	r.dirLights = make([]*light.Directional, 0)
 	r.pointLights = make([]*light.Point, 0)
 	r.spotLights = make([]*light.Spot, 0)
-	r.others = make([]core.INode, 0)
+	r.others = make([]g3ncore.NodeI, 0)
 	r.graphics = make([]*graphic.Graphic, 0)
 	r.grmatsOpaque = make([]*graphic.GraphicMaterial, 0)
 	r.grmatsTransp = make([]*graphic.GraphicMaterial, 0)
@@ -96,7 +96,7 @@ func (r *Renderer) ObjectSorting() bool {
 }
 
 // Render renders the specified scene using the specified camera. Returns an an error.
-func (r *Renderer) Render(scene core.INode, cam camera.ICamera) error {
+func (r *Renderer) Render(scene g3ncore.NodeI, cam camera.CameraI) error {
 
 	// Updates world matrices of all scene nodes
 	scene.UpdateMatrixWorld()
@@ -142,7 +142,7 @@ func (r *Renderer) Render(scene core.INode, cam camera.ICamera) error {
 		materials := gr.Materials()
 		for i := range materials {
 			r.stats.GraphicMats++
-			if materials[i].IMaterial().GetMaterial().Transparent() {
+			if materials[i].MaterialI().GetMaterial().Transparent() {
 				r.grmatsTransp = append(r.grmatsTransp, &materials[i])
 			} else {
 				r.grmatsOpaque = append(r.grmatsOpaque, &materials[i])
@@ -170,7 +170,7 @@ func (r *Renderer) Render(scene core.INode, cam camera.ICamera) error {
 			panZ -= deltaZ
 			// Append the panel's graphic material to lists of graphic materials to be rendered
 			mat := ipan.GetGraphic().Materials()[0]
-			if mat.IMaterial().GetMaterial().Transparent() {
+			if mat.MaterialI().GetMaterial().Transparent() {
 				r.grmatsTransp = append(r.grmatsTransp, &mat)
 			} else {
 				r.grmatsOpaque = append(r.grmatsOpaque, &mat)
@@ -207,9 +207,9 @@ func (r *Renderer) Render(scene core.INode, cam camera.ICamera) error {
 	return nil
 }
 
-// classifyAndCull classifies the provided INode and all of its descendents.
+// classifyAndCull classifies the provided NodeI and all of its descendents.
 // It ignores (culls) renderable IGraphics which are fully outside of the specified frustum.
-func (r *Renderer) classifyAndCull(inode core.INode, frustum *math32.Frustum, zLayer int) {
+func (r *Renderer) classifyAndCull(inode g3ncore.NodeI, frustum *math32.Frustum, zLayer int) {
 
 	// Ignore invisible nodes and their descendants
 	if !inode.Visible() {
@@ -228,8 +228,8 @@ func (r *Renderer) classifyAndCull(inode core.INode, frustum *math32.Frustum, zL
 			r.zLayers[zLayer] = append(r.zLayers[zLayer], ipan)
 			r.stats.Panels++
 		}
-		// Check if node is an IGraphic
-	} else if igr, ok := inode.(graphic.IGraphic); ok {
+		// Check if node is an GraphicI
+	} else if igr, ok := inode.(graphic.GraphicI); ok {
 		if igr.Renderable() {
 			gr := igr.GetGraphic()
 			// Frustum culling
@@ -249,7 +249,7 @@ func (r *Renderer) classifyAndCull(inode core.INode, frustum *math32.Frustum, zL
 		// Node is not a Graphic
 	} else {
 		// Check if node is a Light
-		if il, ok := inode.(light.ILight); ok {
+		if il, ok := inode.(light.LightI); ok {
 			switch l := il.(type) {
 			case *light.Ambient:
 				r.ambLights = append(r.ambLights, l)
@@ -279,8 +279,8 @@ func (r *Renderer) classifyAndCull(inode core.INode, frustum *math32.Frustum, zL
 func zSort(grmats []*graphic.GraphicMaterial) {
 
 	sort.Slice(grmats, func(i, j int) bool {
-		gr1 := grmats[i].IGraphic().GetGraphic()
-		gr2 := grmats[j].IGraphic().GetGraphic()
+		gr1 := grmats[i].GraphicI().GetGraphic()
+		gr2 := grmats[j].GraphicI().GetGraphic()
 		// Check for user-supplied render order
 		rO1 := gr1.RenderOrder()
 		rO2 := gr2.RenderOrder()
@@ -300,9 +300,9 @@ func zSort(grmats []*graphic.GraphicMaterial) {
 // renderGraphicMaterial renders the specified graphic material.
 func (r *Renderer) renderGraphicMaterial(grmat *graphic.GraphicMaterial) error {
 
-	mat := grmat.IMaterial().GetMaterial()
-	geom := grmat.IGraphic().GetGeometry()
-	gr := grmat.IGraphic().GetGraphic()
+	mat := grmat.MaterialI().GetMaterial()
+	geom := grmat.GraphicI().GetGeometry()
+	gr := grmat.GraphicI().GetGraphic()
 
 	// Add defines from material, geometry and graphic
 	r.specs.Defines = *gls.NewShaderDefines()

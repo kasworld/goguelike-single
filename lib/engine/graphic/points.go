@@ -5,7 +5,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -20,7 +20,7 @@ type Points struct {
 
 // NewPoints creates and returns a graphic points object with the specified
 // geometry and material.
-func NewPoints(igeom geometry.IGeometry, imat material.IMaterial) *Points {
+func NewPoints(igeom geometry.GeometryI, imat material.MaterialI) *Points {
 
 	p := new(Points)
 	p.Graphic.Init(p, igeom, gls.POINTS)
@@ -33,7 +33,7 @@ func NewPoints(igeom geometry.IGeometry, imat material.IMaterial) *Points {
 }
 
 // RenderSetup is called by the engine before rendering this graphic.
-func (p *Points) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (p *Points) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Transfer model view projection matrix uniform
 	mvpm := p.ModelViewProjectionMatrix()

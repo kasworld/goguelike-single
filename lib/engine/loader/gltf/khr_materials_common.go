@@ -10,7 +10,7 @@ import (
 // decodes it and returns a Material closest to the specified description.
 // The specification of this extension is at:
 // https://github.com/KhronosGroup/glTF/tree/master/extensions/1.0/Khronos/KHR_materials_common
-func (g *GLTF) loadMaterialCommon(ext interface{}) (material.IMaterial, error) {
+func (g *GLTF) loadMaterialCommon(ext interface{}) (material.MaterialI, error) {
 
 	// The extension must be an object
 	m := ext.(map[string]interface{})

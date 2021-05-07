@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -503,7 +503,7 @@ func (sx *chartScaleX) recalc() {
 // RenderSetup is called by the renderer before drawing this graphic
 // It overrides the original panel RenderSetup
 // Calculates the model matrix and transfer to OpenGL.
-func (sx *chartScaleX) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (sx *chartScaleX) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Sets model matrix
 	var mm math32.Matrix4
@@ -588,7 +588,7 @@ func (sy *chartScaleY) recalc() {
 // RenderSetup is called by the renderer before drawing this graphic
 // It overrides the original panel RenderSetup
 // Calculates the model matrix and transfer to OpenGL.
-func (sy *chartScaleY) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (sy *chartScaleY) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Sets model matrix
 	var mm math32.Matrix4
@@ -701,7 +701,7 @@ func (lg *Graph) recalc() {
 // RenderSetup is called by the renderer before drawing this graphic
 // It overrides the original panel RenderSetup
 // Calculates the model matrix and transfer to OpenGL.
-func (lg *Graph) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (lg *Graph) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Sets model matrix
 	var mm math32.Matrix4

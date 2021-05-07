@@ -5,18 +5,18 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
 // Point is an omnidirectional light source
 type Point struct {
-	core.Node              // Embedded node
-	color     math32.Color // Light color
-	intensity float32      // Light intensity
-	uni       gls.Uniform  // Uniform location cache
-	udata     struct {     // Combined uniform data in 3 vec3:
+	g3ncore.Node              // Embedded node
+	color        math32.Color // Light color
+	intensity    float32      // Light intensity
+	uni          gls.Uniform  // Uniform location cache
+	udata        struct {     // Combined uniform data in 3 vec3:
 		color          math32.Color   // Light color
 		position       math32.Vector3 // Light position
 		linearDecay    float32        // Distance linear decay factor
@@ -95,7 +95,7 @@ func (lp *Point) QuadraticDecay() float32 {
 }
 
 // RenderSetup is called by the engine before rendering the scene
-func (lp *Point) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo, idx int) {
+func (lp *Point) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int) {
 
 	// Calculates light position in camera coordinates and updates uniform
 	var pos math32.Vector3

@@ -21,7 +21,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/animation"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -151,7 +151,7 @@ func readChunk(r io.Reader, chunkType uint32) ([]byte, error) {
 
 // LoadScene creates a parent Node which contains all nodes contained by
 // the specified scene index from the GLTF Scenes array.
-func (g *GLTF) LoadScene(sceneIdx int) (core.INode, error) {
+func (g *GLTF) LoadScene(sceneIdx int) (g3ncore.NodeI, error) {
 
 	// Check if provided scene index is valid
 	if sceneIdx < 0 || sceneIdx >= len(g.Scenes) {
@@ -160,7 +160,7 @@ func (g *GLTF) LoadScene(sceneIdx int) (core.INode, error) {
 	log.Debug("Loading Scene %d", sceneIdx)
 	sceneData := g.Scenes[sceneIdx]
 
-	scene := core.NewNode()
+	scene := g3ncore.NewNode()
 	scene.SetName(sceneData.Name)
 
 	// Load all nodes
@@ -176,7 +176,7 @@ func (g *GLTF) LoadScene(sceneIdx int) (core.INode, error) {
 
 // LoadNode creates and returns a new Node described by the specified index
 // in the decoded GLTF Nodes array.
-func (g *GLTF) LoadNode(nodeIdx int) (core.INode, error) {
+func (g *GLTF) LoadNode(nodeIdx int) (g3ncore.NodeI, error) {
 
 	// Check if provided node index is valid
 	if nodeIdx < 0 || nodeIdx >= len(g.Nodes) {
@@ -190,7 +190,7 @@ func (g *GLTF) LoadNode(nodeIdx int) (core.INode, error) {
 	}
 	log.Debug("Loading Node %d", nodeIdx)
 
-	var in core.INode
+	var in g3ncore.NodeI
 	var err error
 	// Check if the node is a Mesh (triangles, lines, etc...)
 	if nodeData.Mesh != nil {
@@ -229,10 +229,10 @@ func (g *GLTF) LoadNode(nodeIdx int) (core.INode, error) {
 		// Other cases, return empty node
 	} else {
 		log.Debug("Empty Node")
-		in = core.NewNode()
+		in = g3ncore.NewNode()
 	}
 
-	// Get *core.Node from core.INode
+	// Get *g3ncore.Node from g3ncore.NodeI
 	node := in.GetNode()
 	node.SetName(nodeData.Name)
 
@@ -369,7 +369,7 @@ func (g *GLTF) LoadAnimation(animIdx int) (*animation.Animation, error) {
 			if len(children) > 1 {
 				return nil, fmt.Errorf("animating meshes with more than a single primitive is not supported")
 			}
-			morphGeom := children[0].(graphic.IGraphic).IGeometry().(*geometry.MorphGeometry)
+			morphGeom := children[0].(graphic.GraphicI).GeometryI().(*geometry.MorphGeometry)
 			ch = animation.NewMorphChannel(morphGeom)
 		}
 
@@ -392,7 +392,7 @@ func (g *GLTF) LoadAnimation(animIdx int) (*animation.Animation, error) {
 
 // LoadCamera creates and returns a Camera Node
 // from the specified GLTF.Cameras index.
-func (g *GLTF) LoadCamera(camIdx int) (core.INode, error) {
+func (g *GLTF) LoadCamera(camIdx int) (g3ncore.NodeI, error) {
 
 	// Check if provided camera index is valid
 	if camIdx < 0 || camIdx >= len(g.Cameras) {
@@ -429,7 +429,7 @@ func (g *GLTF) LoadCamera(camIdx int) (core.INode, error) {
 
 // LoadMesh creates and returns a Graphic Node (graphic.Mesh, graphic.Lines, graphic.Points, etc)
 // from the specified GLTF.Meshes index.
-func (g *GLTF) LoadMesh(meshIdx int) (core.INode, error) {
+func (g *GLTF) LoadMesh(meshIdx int) (g3ncore.NodeI, error) {
 
 	// Check if provided mesh index is valid
 	if meshIdx < 0 || meshIdx >= len(g.Meshes) {
@@ -447,8 +447,8 @@ func (g *GLTF) LoadMesh(meshIdx int) (core.INode, error) {
 	var err error
 
 	// Create container node
-	var meshNode core.INode
-	meshNode = core.NewNode()
+	var meshNode g3ncore.NodeI
+	meshNode = g3ncore.NewNode()
 
 	for i := 0; i < len(meshData.Primitives); i++ {
 
@@ -469,7 +469,7 @@ func (g *GLTF) LoadMesh(meshIdx int) (core.INode, error) {
 		}
 
 		// Load primitive material
-		var grMat material.IMaterial
+		var grMat material.MaterialI
 		if p.Material != nil {
 			grMat, err = g.LoadMaterial(*p.Material)
 			if err != nil {
@@ -480,7 +480,7 @@ func (g *GLTF) LoadMesh(meshIdx int) (core.INode, error) {
 		}
 
 		// Create geometry
-		var igeom geometry.IGeometry
+		var igeom geometry.GeometryI
 		igeom = geometry.NewGeometry()
 		geom := igeom.GetGeometry()
 
@@ -688,13 +688,13 @@ func (g *GLTF) validateAccessor(ac Accessor, usage string, validTypes []string, 
 }
 
 // newDefaultMaterial creates and returns the default material.
-func (g *GLTF) newDefaultMaterial() material.IMaterial {
+func (g *GLTF) newDefaultMaterial() material.MaterialI {
 
 	return material.NewStandard(&math32.Color{0.5, 0.5, 0.5})
 }
 
 // LoadMaterial creates and returns a new material based on the material data with the specified index.
-func (g *GLTF) LoadMaterial(matIdx int) (material.IMaterial, error) {
+func (g *GLTF) LoadMaterial(matIdx int) (material.MaterialI, error) {
 
 	// Check if provided material index is valid
 	if matIdx < 0 || matIdx >= len(g.Materials) {
@@ -709,7 +709,7 @@ func (g *GLTF) LoadMaterial(matIdx int) (material.IMaterial, error) {
 	log.Debug("Loading Material %d", matIdx)
 
 	var err error
-	var imat material.IMaterial
+	var imat material.MaterialI
 
 	// Check for material extensions
 	if matData.Extensions != nil {

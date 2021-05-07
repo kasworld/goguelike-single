@@ -5,18 +5,18 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
 // Directional represents a directional, positionless light
 type Directional struct {
-	core.Node              // Embedded node
-	color     math32.Color // Light color
-	intensity float32      // Light intensity
-	uni       gls.Uniform  // Uniform location cache
-	udata     struct {     // Combined uniform data in 2 vec3:
+	g3ncore.Node              // Embedded node
+	color        math32.Color // Light color
+	intensity    float32      // Light intensity
+	uni          gls.Uniform  // Uniform location cache
+	udata        struct {     // Combined uniform data in 2 vec3:
 		color    math32.Color   // Light color
 		position math32.Vector3 // Light position
 	}
@@ -65,7 +65,7 @@ func (ld *Directional) Intensity() float32 {
 }
 
 // RenderSetup is called by the engine before rendering the scene
-func (ld *Directional) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo, idx int) {
+func (ld *Directional) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int) {
 
 	// Calculates light position in camera coordinates and updates uniform
 	var pos math32.Vector3

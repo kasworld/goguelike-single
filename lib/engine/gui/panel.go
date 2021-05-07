@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -38,7 +38,7 @@ import (
 
 // IPanel is the interface for all panel types
 type IPanel interface {
-	graphic.IGraphic
+	graphic.GraphicI
 	GetPanel() *Panel
 	Width() float32
 	Height() float32
@@ -49,7 +49,7 @@ type IPanel interface {
 	SetZLayerDelta(zLayerDelta int)
 	ZLayerDelta() int
 
-	// TODO these methods here should probably be defined in INode
+	// TODO these methods here should probably be defined in NodeI
 	SetPosition(x, y float32)
 	SetPositionX(x float32)
 	SetPositionY(y float32)
@@ -537,7 +537,7 @@ func (p *Panel) SetBounded(bounded bool) {
 	p.SetChanged(true)
 }
 
-// UpdateMatrixWorld overrides the standard core.Node version which is called by
+// UpdateMatrixWorld overrides the standard g3ncore.Node version which is called by
 // the Engine before rendering the frame.
 func (p *Panel) UpdateMatrixWorld() {
 
@@ -841,7 +841,7 @@ func (p *Panel) resize(width, height float32, dispatch bool) {
 }
 
 // RenderSetup is called by the Engine before drawing the object
-func (p *Panel) RenderSetup(gl *gls.GLS, rinfo *core.RenderInfo) {
+func (p *Panel) RenderSetup(gl *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Sets texture valid flag in uniforms
 	// depending if the material has texture

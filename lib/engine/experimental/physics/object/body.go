@@ -13,7 +13,7 @@ import (
 
 // Body represents a physics-driven body.
 type Body struct {
-	*graphic.Graphic // TODO future - embed core.Node instead and calculate properties recursively
+	*graphic.Graphic // TODO future - embed g3ncore.Node instead and calculate properties recursively
 
 	material *material.Material // Physics material specifying friction and restitution
 	index    int
@@ -149,7 +149,7 @@ const (
 
 // NewBody creates and returns a pointer to a new RigidBody.
 // The igraphic's geometry *must* be convex.
-func NewBody(igraphic graphic.IGraphic) *Body {
+func NewBody(igraphic graphic.GraphicI) *Body {
 
 	b := new(Body)
 	b.Graphic = igraphic.GetGraphic()

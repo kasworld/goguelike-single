@@ -4,16 +4,16 @@
 
 package window
 
-import "github.com/kasworld/goguelike-single/lib/engine/core"
+import "github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 
 // KeyState keeps track of the state of all keys.
 type KeyState struct {
-	win    core.IDispatcher
+	win    g3ncore.DispatcherI
 	states map[Key]bool
 }
 
 // NewKeyState returns a new KeyState object.
-func NewKeyState(win core.IDispatcher) *KeyState {
+func NewKeyState(win g3ncore.DispatcherI) *KeyState {
 
 	ks := new(KeyState)
 	ks.win = win

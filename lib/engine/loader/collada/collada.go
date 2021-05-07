@@ -23,12 +23,12 @@ type Decoder struct {
 	dom        Collada                       // Collada dom
 	dirImages  string                        // Base directory for images
 	geometries map[string]geomInstance       // Instanced geometries by id
-	materials  map[string]material.IMaterial // Instanced materials by id
+	materials  map[string]material.MaterialI // Instanced materials by id
 	tex2D      map[string]*texture.Texture2D // Instanced textures 2D by id
 }
 
 type geomInstance struct {
-	geom  geometry.IGeometry
+	geom  geometry.GeometryI
 	ptype uint32
 }
 
@@ -51,7 +51,7 @@ func DecodeReader(f io.Reader) (*Decoder, error) {
 	d := new(Decoder)
 	d.xmldec = xml.NewDecoder(f)
 	d.geometries = make(map[string]geomInstance)
-	d.materials = make(map[string]material.IMaterial)
+	d.materials = make(map[string]material.MaterialI)
 	d.tex2D = make(map[string]*texture.Texture2D)
 
 	err := d.decCollada(&d.dom)

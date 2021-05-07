@@ -5,7 +5,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
@@ -13,7 +13,7 @@ import (
 type Skeleton struct {
 	inverseBindMatrices []math32.Matrix4
 	boneMatrices        []math32.Matrix4
-	bones               []*core.Node
+	bones               []*g3ncore.Node
 }
 
 // NewSkeleton creates and returns a pointer to a new Skeleton.
@@ -21,12 +21,12 @@ func NewSkeleton() *Skeleton {
 
 	sk := new(Skeleton)
 	sk.boneMatrices = make([]math32.Matrix4, 0)
-	sk.bones = make([]*core.Node, 0)
+	sk.bones = make([]*g3ncore.Node, 0)
 	return sk
 }
 
 // AddBone adds a bone to the skeleton along with an optional inverseBindMatrix.
-func (sk *Skeleton) AddBone(node *core.Node, inverseBindMatrix *math32.Matrix4) {
+func (sk *Skeleton) AddBone(node *g3ncore.Node, inverseBindMatrix *math32.Matrix4) {
 
 	// Useful for debugging:
 	//node.Add(NewAxisHelper(0.2))
@@ -41,7 +41,7 @@ func (sk *Skeleton) AddBone(node *core.Node, inverseBindMatrix *math32.Matrix4) 
 }
 
 // Bones returns the list of bones in the skeleton.
-func (sk *Skeleton) Bones() []*core.Node {
+func (sk *Skeleton) Bones() []*g3ncore.Node {
 
 	return sk.bones
 }

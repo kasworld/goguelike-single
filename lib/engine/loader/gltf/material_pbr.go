@@ -7,7 +7,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
-func (g *GLTF) loadMaterialPBR(m *Material) (material.IMaterial, error) {
+func (g *GLTF) loadMaterialPBR(m *Material) (material.MaterialI, error) {
 
 	// Get pbr information
 	pbr := m.PbrMetallicRoughness

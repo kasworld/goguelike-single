@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -16,7 +15,7 @@ import (
 )
 
 // NewScene returns a new collada empty scene
-func (d *Decoder) NewScene() (core.INode, error) {
+func (d *Decoder) NewScene() (g3ncore.NodeI, error) {
 
 	sc := d.dom.Scene
 	if sc == nil {
@@ -34,7 +33,7 @@ func (d *Decoder) NewScene() (core.INode, error) {
 	}
 
 	// Creates parent scene
-	scene := core.NewNode()
+	scene := g3ncore.NewNode()
 	// Rotate scene if necessary
 	if d.dom.Asset.UpAxis == "Z_UP" {
 		scene.SetRotationX(-math32.Pi / 2)
@@ -51,13 +50,13 @@ func (d *Decoder) NewScene() (core.INode, error) {
 	return scene, nil
 }
 
-func (d *Decoder) newNode(cnode *Node) (core.INode, error) {
+func (d *Decoder) newNode(cnode *Node) (g3ncore.NodeI, error) {
 
-	var node core.INode
+	var node g3ncore.NodeI
 	switch nt := cnode.Instance.(type) {
 	// Empty Node
 	case nil:
-		node = core.NewNode()
+		node = g3ncore.NewNode()
 		// Geometry
 	case *InstanceGeometry:
 

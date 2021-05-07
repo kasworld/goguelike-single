@@ -5,7 +5,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -19,7 +19,7 @@ type LineStrip struct {
 
 // NewLineStrip creates and returns a pointer to a new LineStrip graphic
 // with the specified geometry and material.
-func NewLineStrip(igeom geometry.IGeometry, imat material.IMaterial) *LineStrip {
+func NewLineStrip(igeom geometry.GeometryI, imat material.MaterialI) *LineStrip {
 
 	l := new(LineStrip)
 	l.Graphic.Init(l, igeom, gls.LINE_STRIP)
@@ -29,7 +29,7 @@ func NewLineStrip(igeom geometry.IGeometry, imat material.IMaterial) *LineStrip 
 }
 
 // RenderSetup is called by the engine before drawing this geometry.
-func (l *LineStrip) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (l *LineStrip) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Transfer model view projection matrix uniform
 	mvpm := l.ModelViewProjectionMatrix()

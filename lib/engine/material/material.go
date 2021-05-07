@@ -51,13 +51,6 @@ const (
 	UseLightAll         UseLights = 0xFF
 )
 
-// IMaterial is the interface for all materials.
-type IMaterial interface {
-	GetMaterial() *Material
-	RenderSetup(gs *gls.GLS)
-	Dispose()
-}
-
 // Material is the base material.
 type Material struct {
 	refcount int // Current number of references
@@ -123,7 +116,7 @@ func (mat *Material) Init() *Material {
 	return mat
 }
 
-// GetMaterial satisfies the IMaterial interface.
+// GetMaterial satisfies the MaterialI interface.
 func (mat *Material) GetMaterial() *Material {
 
 	return mat

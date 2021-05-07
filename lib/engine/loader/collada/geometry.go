@@ -18,7 +18,7 @@ import (
 // with the specified id in the Collada document, its primitive type
 // and an error. If no previous instance of the geometry was found
 // the geometry is created
-func (d *Decoder) GetGeometry(id string) (geometry.IGeometry, uint32, error) {
+func (d *Decoder) GetGeometry(id string) (geometry.GeometryI, uint32, error) {
 
 	// If geometry already created, returns it
 	ginst, ok := d.geometries[id]
@@ -38,7 +38,7 @@ func (d *Decoder) GetGeometry(id string) (geometry.IGeometry, uint32, error) {
 
 // NewGeometry creates and returns a pointer to a new instance of the geometry
 // with the specified id in the Collada document, its primitive type and and error.
-func (d *Decoder) NewGeometry(id string) (geometry.IGeometry, uint32, error) {
+func (d *Decoder) NewGeometry(id string) (geometry.GeometryI, uint32, error) {
 
 	id = strings.TrimPrefix(id, "#")
 	// Look for geometry with specified id in the dom

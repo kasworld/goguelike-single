@@ -5,7 +5,6 @@
 package physics
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/constraint"
@@ -17,7 +16,7 @@ import (
 
 // Simulation represents a physics simulation.
 type Simulation struct {
-	scene       *core.Node
+	scene       *g3ncore.Node
 	forceFields []ForceField
 
 	// Bodies under simulation
@@ -60,7 +59,7 @@ type Simulation struct {
 }
 
 // NewSimulation creates and returns a pointer to a new physics simulation.
-func NewSimulation(scene *core.Node) *Simulation {
+func NewSimulation(scene *g3ncore.Node) *Simulation {
 
 	s := new(Simulation)
 	s.time = 0
@@ -83,7 +82,7 @@ func NewSimulation(scene *core.Node) *Simulation {
 	return s
 }
 
-func (s *Simulation) Scene() *core.Node {
+func (s *Simulation) Scene() *g3ncore.Node {
 
 	return s.scene
 }

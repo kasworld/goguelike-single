@@ -5,18 +5,18 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
 // Spot represents a spotlight
 type Spot struct {
-	core.Node              // Embedded node
-	color     math32.Color // Light color
-	intensity float32      // Light intensity
-	uni       gls.Uniform  // Uniform location cache
-	udata     struct {     // Combined uniform data in 5 vec3:
+	g3ncore.Node              // Embedded node
+	color        math32.Color // Light color
+	intensity    float32      // Light intensity
+	uni          gls.Uniform  // Uniform location cache
+	udata        struct {     // Combined uniform data in 5 vec3:
 		color          math32.Color   // Light color
 		position       math32.Vector3 // Light position
 		direction      math32.Vector3 // Light direction
@@ -122,7 +122,7 @@ func (l *Spot) QuadraticDecay() float32 {
 }
 
 // RenderSetup is called by the engine before rendering the scene
-func (l *Spot) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo, idx int) {
+func (l *Spot) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int) {
 
 	// Calculates and updates light position uniform in camera coordinates
 	var pos math32.Vector3

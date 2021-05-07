@@ -17,7 +17,7 @@ import (
 // GetMaterial returns a pointer to an instance of the material
 // with the specified id in the Collada document and an error.
 // If no previous instance of the material was found it is created.
-func (d *Decoder) GetMaterial(id string) (material.IMaterial, error) {
+func (d *Decoder) GetMaterial(id string) (material.MaterialI, error) {
 
 	// If material already created, returns it
 	mat := d.materials[id]
@@ -36,7 +36,7 @@ func (d *Decoder) GetMaterial(id string) (material.IMaterial, error) {
 
 // NewMaterial creates and returns a pointer to a new material
 // from the specified material id/url in the dom
-func (d *Decoder) NewMaterial(id string) (material.IMaterial, error) {
+func (d *Decoder) NewMaterial(id string) (material.MaterialI, error) {
 
 	id = strings.TrimPrefix(id, "#")
 	// Looks for material with specified id
@@ -146,22 +146,22 @@ func (d *Decoder) NewTexture2D(id string) (*texture.Texture2D, error) {
 	return tex, nil
 }
 
-func (d *Decoder) newBlinnMaterial(se *Blinn) (material.IMaterial, error) {
+func (d *Decoder) newBlinnMaterial(se *Blinn) (material.MaterialI, error) {
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (d *Decoder) newConstantMaterial(se *Constant) (material.IMaterial, error) {
+func (d *Decoder) newConstantMaterial(se *Constant) (material.MaterialI, error) {
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (d *Decoder) newLambertMaterial(se *Lambert) (material.IMaterial, error) {
+func (d *Decoder) newLambertMaterial(se *Lambert) (material.MaterialI, error) {
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (d *Decoder) newPhongMaterial(se *Phong) (material.IMaterial, error) {
+func (d *Decoder) newPhongMaterial(se *Phong) (material.MaterialI, error) {
 
 	// Creates material with default color
 	m := material.NewStandard(&math32.Color{0.5, 0.5, 0.5})

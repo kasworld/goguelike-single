@@ -38,7 +38,7 @@ func NewMorphGeometry(baseGeometry *Geometry) *MorphGeometry {
 	return mg
 }
 
-// GetGeometry satisfies the IGeometry interface.
+// GetGeometry satisfies the GeometryI interface.
 func (mg *MorphGeometry) GetGeometry() *Geometry {
 
 	return mg.baseGeometry

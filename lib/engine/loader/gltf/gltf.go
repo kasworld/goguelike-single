@@ -10,7 +10,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/animation"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -134,7 +134,7 @@ type Camera struct {
 	Extensions   map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras       interface{}            // Application-specific data. Not required.
 
-	cache camera.ICamera // Cached ICamera. // TODO
+	cache camera.CameraI // Cached CameraI. // TODO
 }
 
 // Channel targets an animation's sampler at a node's property.
@@ -181,7 +181,7 @@ type Material struct {
 	Extensions           map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras               interface{}            // Application-specific data. Not required.
 
-	cache material.IMaterial // Cached IMaterial.
+	cache material.MaterialI // Cached MaterialI.
 }
 
 // Mesh is a set of primitives to be rendered.
@@ -193,7 +193,7 @@ type Mesh struct {
 	Extensions map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras     interface{}            // Application-specific data. Not required.
 
-	cache core.INode // Cached INode. We don't cache an IGraphic here because a glTFL mesh can contain multiple primitive IGraphics.
+	cache g3ncore.NodeI // Cached NodeI. We don't cache an GraphicI here because a glTFL mesh can contain multiple primitive IGraphics.
 }
 
 // Node is a node in the node hierarchy.
@@ -216,7 +216,7 @@ type Node struct {
 	Extensions  map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras      interface{}            // Application-specific data. Not required.
 
-	cache core.INode // Cached INode.
+	cache g3ncore.NodeI // Cached NodeI.
 }
 
 // TODO Why not combine NormalTextureInfo and OcclusionTextureInfo ? Or simply add Scale to TextureInfo and use only TextureInfo?

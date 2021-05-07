@@ -8,7 +8,7 @@ import (
 	"sort"
 
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -48,7 +48,7 @@ type Intersect struct {
 	// Point of intersection in world coordinates
 	Point math32.Vector3
 	// Intersected node
-	Object core.INode
+	Object g3ncore.NodeI
 	// If the geometry has indices, this field is the
 	// index in the Indices buffer of the vertex intersected
 	// or the first vertex of the intersected face.
@@ -75,7 +75,7 @@ func NewRaycaster(origin, direction *math32.Vector3) *Raycaster {
 // and the specified node. If recursive is true, it also checks
 // the intersection with the node's children.
 // Intersections are returned sorted by distance, closest first.
-func (rc *Raycaster) IntersectObject(inode core.INode, recursive bool) []Intersect {
+func (rc *Raycaster) IntersectObject(inode g3ncore.NodeI, recursive bool) []Intersect {
 
 	intersects := []Intersect{}
 	rc.intersectObject(inode, &intersects, recursive)
@@ -89,7 +89,7 @@ func (rc *Raycaster) IntersectObject(inode core.INode, recursive bool) []Interse
 // the specified array of scene nodes. If recursive is true, it also checks
 // the intersection with each nodes' children.
 // Intersections are returned sorted by distance, closest first.
-func (rc *Raycaster) IntersectObjects(inodes []core.INode, recursive bool) []Intersect {
+func (rc *Raycaster) IntersectObjects(inodes []g3ncore.NodeI, recursive bool) []Intersect {
 
 	intersects := []Intersect{}
 	for _, inode := range inodes {
@@ -101,7 +101,7 @@ func (rc *Raycaster) IntersectObjects(inodes []core.INode, recursive bool) []Int
 	return intersects
 }
 
-func (rc *Raycaster) intersectObject(inode core.INode, intersects *[]Intersect, recursive bool) {
+func (rc *Raycaster) intersectObject(inode g3ncore.NodeI, intersects *[]Intersect, recursive bool) {
 
 	node := inode.GetNode()
 	if !node.Visible() {
@@ -131,7 +131,7 @@ func (rc *Raycaster) intersectObject(inode core.INode, intersects *[]Intersect, 
 
 // SetRaycaster sets the specified raycaster with this camera position in world coordinates
 // pointing to the direction defined by the specified coordinates unprojected using this camera.
-func (rc *Raycaster) SetFromCamera(cam *camera.Camera, sx, sy float32) error { // TODO maybe use ICamera
+func (rc *Raycaster) SetFromCamera(cam *camera.Camera, sx, sy float32) error { // TODO maybe use CameraI
 
 	var origin, direction math32.Vector3
 	matrixWorld := cam.MatrixWorld()
@@ -370,7 +370,7 @@ func (rc *Raycaster) RaycastLineStrip(l *graphic.LineStrip, intersects *[]Inters
 }
 
 // Internal function used by raycasting for Lines and LineStrip.
-func lineRaycast(igr graphic.IGraphic, rc *Raycaster, intersects *[]Intersect, step int) {
+func lineRaycast(igr graphic.GraphicI, rc *Raycaster, intersects *[]Intersect, step int) {
 
 	// Get the bounding sphere
 	gr := igr.GetGraphic()

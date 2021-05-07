@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -36,13 +36,13 @@ import (
 func (ga *GLClient) glInit() error {
 	// Create application and scene
 	ga.app = appbase.New("goguelike-single", 1920, 1080)
-	ga.scene = core.NewNode()
+	ga.scene = g3ncore.NewNode()
 
-	ga.sceneAO = core.NewNode()
+	ga.sceneAO = g3ncore.NewNode()
 	ga.scene.Add(ga.sceneAO)
-	ga.sceneCO = core.NewNode()
+	ga.sceneCO = g3ncore.NewNode()
 	ga.scene.Add(ga.sceneCO)
-	ga.sceneDO = core.NewNode()
+	ga.sceneDO = g3ncore.NewNode()
 	ga.scene.Add(ga.sceneDO)
 
 	// Set the scene to be managed by the gui manager

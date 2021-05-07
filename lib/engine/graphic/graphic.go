@@ -6,7 +6,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -17,31 +17,18 @@ import (
 // Package logger
 var log = logger.New("GRAPHIC", logger.Default)
 
-// IGraphic is the interface for all Graphic objects.
-type IGraphic interface {
-	core.INode
-	GetGraphic() *Graphic
-	GetGeometry() *geometry.Geometry
-	IGeometry() geometry.IGeometry
-	SetRenderable(bool)
-	Renderable() bool
-	SetCullable(bool)
-	Cullable() bool
-	RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo)
-}
-
 // Graphic is a Node which has a visible representation in the scene.
 // It has an associated geometry and one or more materials.
 // It is the base type used by other graphics such as lines, line_strip,
 // points and meshes.
 type Graphic struct {
-	core.Node                      // Embedded Node
-	igeom       geometry.IGeometry // Associated IGeometry
-	materials   []GraphicMaterial  // Materials
-	mode        uint32             // OpenGL primitive
-	renderable  bool               // Renderable flag
-	cullable    bool               // Cullable flag
-	renderOrder int                // Render order
+	g3ncore.Node                    // Embedded Node
+	igeom        geometry.GeometryI // Associated GeometryI
+	materials    []GraphicMaterial  // Materials
+	mode         uint32             // OpenGL primitive
+	renderable   bool               // Renderable flag
+	cullable     bool               // Cullable flag
+	renderOrder  int                // Render order
 
 	ShaderDefines gls.ShaderDefines // Graphic-specific shader defines
 
@@ -53,7 +40,7 @@ type Graphic struct {
 // NewGraphic creates and returns a pointer to a new graphic object with
 // the specified geometry and OpenGL primitive.
 // The created graphic object, though, has not materials.
-func NewGraphic(igr IGraphic, igeom geometry.IGeometry, mode uint32) *Graphic {
+func NewGraphic(igr GraphicI, igeom geometry.GeometryI, mode uint32) *Graphic {
 
 	gr := new(Graphic)
 	return gr.Init(igr, igeom, mode)
@@ -61,7 +48,7 @@ func NewGraphic(igr IGraphic, igeom geometry.IGeometry, mode uint32) *Graphic {
 
 // Init initializes a Graphic type embedded in another type
 // with the specified geometry and OpenGL mode.
-func (gr *Graphic) Init(igr IGraphic, igeom geometry.IGeometry, mode uint32) *Graphic {
+func (gr *Graphic) Init(igr GraphicI, igeom geometry.GeometryI, mode uint32) *Graphic {
 
 	gr.Node.Init(igr)
 	gr.igeom = igeom
@@ -73,23 +60,23 @@ func (gr *Graphic) Init(igr IGraphic, igeom geometry.IGeometry, mode uint32) *Gr
 	return gr
 }
 
-// GetGraphic satisfies the IGraphic interface and
+// GetGraphic satisfies the GraphicI interface and
 // returns pointer to the base Graphic.
 func (gr *Graphic) GetGraphic() *Graphic {
 
 	return gr
 }
 
-// GetGeometry satisfies the IGraphic interface and returns
+// GetGeometry satisfies the GraphicI interface and returns
 // a pointer to the geometry associated with this graphic.
 func (gr *Graphic) GetGeometry() *geometry.Geometry {
 
 	return gr.igeom.GetGeometry()
 }
 
-// IGeometry satisfies the IGraphic interface and returns
-// a pointer to the IGeometry associated with this graphic.
-func (gr *Graphic) IGeometry() geometry.IGeometry {
+// GeometryI satisfies the GraphicI interface and returns
+// a pointer to the GeometryI associated with this graphic.
+func (gr *Graphic) GeometryI() geometry.GeometryI {
 
 	return gr.igeom
 }
@@ -103,14 +90,14 @@ func (gr *Graphic) Dispose() {
 	}
 }
 
-// Clone clones the graphic and satisfies the INode interface.
-// It should be called by Clone() implementations of IGraphic.
+// Clone clones the graphic and satisfies the NodeI interface.
+// It should be called by Clone() implementations of GraphicI.
 // Note that the topmost implementation calling this method needs
 // to call clone.SetIGraphic(igraphic) after calling this method.
-func (gr *Graphic) Clone() core.INode {
+func (gr *Graphic) Clone() g3ncore.NodeI {
 
 	clone := new(Graphic)
-	clone.Node = *gr.Node.Clone().(*core.Node)
+	clone.Node = *gr.Node.Clone().(*g3ncore.Node)
 	clone.igeom = gr.igeom
 	clone.mode = gr.mode
 	clone.renderable = gr.renderable
@@ -126,28 +113,28 @@ func (gr *Graphic) Clone() core.INode {
 	return clone
 }
 
-// SetRenderable satisfies the IGraphic interface and
+// SetRenderable satisfies the GraphicI interface and
 // sets the renderable state of this Graphic (default = true).
 func (gr *Graphic) SetRenderable(state bool) {
 
 	gr.renderable = state
 }
 
-// Renderable satisfies the IGraphic interface and
+// Renderable satisfies the GraphicI interface and
 // returns the renderable state of this graphic.
 func (gr *Graphic) Renderable() bool {
 
 	return gr.renderable
 }
 
-// SetCullable satisfies the IGraphic interface and
+// SetCullable satisfies the GraphicI interface and
 // sets the cullable state of this Graphic (default = true).
 func (gr *Graphic) SetCullable(state bool) {
 
 	gr.cullable = state
 }
 
-// Cullable satisfies the IGraphic interface and
+// Cullable satisfies the GraphicI interface and
 // returns the cullable state of this graphic.
 func (gr *Graphic) Cullable() bool {
 
@@ -171,7 +158,7 @@ func (gr *Graphic) RenderOrder() int {
 
 // AddMaterial adds a material for the specified subset of vertices.
 // If the material applies to all vertices, start and count must be 0.
-func (gr *Graphic) AddMaterial(igr IGraphic, imat material.IMaterial, start, count int) {
+func (gr *Graphic) AddMaterial(igr GraphicI, imat material.MaterialI, start, count int) {
 
 	gmat := GraphicMaterial{
 		imat:     imat,
@@ -183,7 +170,7 @@ func (gr *Graphic) AddMaterial(igr IGraphic, imat material.IMaterial, start, cou
 }
 
 // AddGroupMaterial adds a material for the specified geometry group.
-func (gr *Graphic) AddGroupMaterial(igr IGraphic, imat material.IMaterial, gindex int) {
+func (gr *Graphic) AddGroupMaterial(igr GraphicI, imat material.MaterialI, gindex int) {
 
 	geom := gr.igeom.GetGeometry()
 	if gindex < 0 || gindex >= geom.GroupCount() {
@@ -200,7 +187,7 @@ func (gr *Graphic) Materials() []GraphicMaterial {
 }
 
 // GetMaterial returns the material associated with the specified vertex position.
-func (gr *Graphic) GetMaterial(vpos int) material.IMaterial {
+func (gr *Graphic) GetMaterial(vpos int) material.MaterialI {
 
 	for _, gmat := range gr.materials {
 		// Case for unimaterial
@@ -220,8 +207,8 @@ func (gr *Graphic) ClearMaterials() {
 	gr.materials = gr.materials[0:0]
 }
 
-// SetIGraphic sets the IGraphic on all this Graphic's GraphicMaterials.
-func (gr *Graphic) SetIGraphic(igr IGraphic) {
+// SetIGraphic sets the GraphicI on all this Graphic's GraphicMaterials.
+func (gr *Graphic) SetIGraphic(igr GraphicI) {
 
 	for i := range gr.materials {
 		gr.materials[i].igraphic = igr
@@ -245,7 +232,7 @@ func (gr *Graphic) BoundingBox() math32.Box3 {
 }
 
 // CalculateMatrices calculates the model view and model view projection matrices.
-func (gr *Graphic) CalculateMatrices(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (gr *Graphic) CalculateMatrices(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	gr.mm = gr.MatrixWorld()
 	gr.mvm.MultiplyMatrices(&rinfo.ViewMatrix, &gr.mm)
@@ -274,26 +261,26 @@ func (gr *Graphic) ModelViewProjectionMatrix() *math32.Matrix4 {
 // a subset of vertices from the Graphic geometry
 // A Graphic object has at least one GraphicMaterial.
 type GraphicMaterial struct {
-	imat     material.IMaterial // Associated material
+	imat     material.MaterialI // Associated material
 	start    int                // Index of first element in the geometry
 	count    int                // Number of elements
-	igraphic IGraphic           // Graphic which contains this GraphicMaterial
+	igraphic GraphicI           // Graphic which contains this GraphicMaterial
 }
 
-// IMaterial returns the material associated with the GraphicMaterial.
-func (grmat *GraphicMaterial) IMaterial() material.IMaterial {
+// MaterialI returns the material associated with the GraphicMaterial.
+func (grmat *GraphicMaterial) MaterialI() material.MaterialI {
 
 	return grmat.imat
 }
 
-// IGraphic returns the graphic associated with the GraphicMaterial.
-func (grmat *GraphicMaterial) IGraphic() IGraphic {
+// GraphicI returns the graphic associated with the GraphicMaterial.
+func (grmat *GraphicMaterial) GraphicI() GraphicI {
 
 	return grmat.igraphic
 }
 
 // Render is called by the renderer to render this graphic material.
-func (grmat *GraphicMaterial) Render(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (grmat *GraphicMaterial) Render(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Setup the associated material (set states and transfer material uniforms and textures)
 	grmat.imat.RenderSetup(gs)

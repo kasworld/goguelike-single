@@ -5,7 +5,7 @@
 package graphic
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -18,7 +18,7 @@ type Lines struct {
 }
 
 // NewLines returns a pointer to a new Lines object.
-func NewLines(igeom geometry.IGeometry, imat material.IMaterial) *Lines {
+func NewLines(igeom geometry.GeometryI, imat material.MaterialI) *Lines {
 
 	l := new(Lines)
 	l.Init(igeom, imat)
@@ -26,7 +26,7 @@ func NewLines(igeom geometry.IGeometry, imat material.IMaterial) *Lines {
 }
 
 // Init initializes the Lines object and adds the specified material.
-func (l *Lines) Init(igeom geometry.IGeometry, imat material.IMaterial) {
+func (l *Lines) Init(igeom geometry.GeometryI, imat material.MaterialI) {
 
 	l.Graphic.Init(l, igeom, gls.LINES)
 	l.AddMaterial(l, imat, 0, 0)
@@ -34,7 +34,7 @@ func (l *Lines) Init(igeom geometry.IGeometry, imat material.IMaterial) {
 }
 
 // RenderSetup is called by the engine before drawing this geometry.
-func (l *Lines) RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo) {
+func (l *Lines) RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo) {
 
 	// Transfer model view projection matrix uniform
 	mvpm := l.ModelViewProjectionMatrix()

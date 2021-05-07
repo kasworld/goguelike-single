@@ -15,7 +15,6 @@ import (
 	"unsafe"
 
 	"github.com/kasworld/goguelike-single/lib/engine/audio/al"
-	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
@@ -26,16 +25,16 @@ const (
 )
 
 // Player is a 3D (spatial) audio file player
-// It embeds a core.Node so it can be inserted as a child in any other 3D object.
+// It embeds a g3ncore.Node so it can be inserted as a child in any other 3D object.
 type Player struct {
-	core.Node                // Embedded node
-	af        *AudioFile     // Pointer to media audio file
-	buffers   []uint32       // OpenAL buffer names
-	source    uint32         // OpenAL source name
-	nextBuf   int            // Index of next buffer to fill
-	pdata     unsafe.Pointer // Pointer to C allocated storage
-	disposed  bool           // Disposed flag
-	gchan     chan (string)  // Channel for informing of goroutine end
+	g3ncore.Node                // Embedded node
+	af           *AudioFile     // Pointer to media audio file
+	buffers      []uint32       // OpenAL buffer names
+	source       uint32         // OpenAL source name
+	nextBuf      int            // Index of next buffer to fill
+	pdata        unsafe.Pointer // Pointer to C allocated storage
+	disposed     bool           // Disposed flag
+	gchan        chan (string)  // Channel for informing of goroutine end
 }
 
 // NewPlayer creates and returns a pointer to a new audio player object
@@ -292,7 +291,7 @@ func (p *Player) SetRolloffFactor(rfactor float32) {
 	al.Sourcef(p.source, al.RolloffFactor, rfactor)
 }
 
-// Render satisfies the INode interface.
+// Render satisfies the NodeI interface.
 // It is called by renderer at every frame and is used to
 // update the audio source position and direction
 func (p *Player) Render(gl *gls.GLS) {

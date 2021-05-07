@@ -24,15 +24,15 @@ const (
 	OnCursorEnter = "gui.OnCursorEnter" // Cursor entered the panel or a descendant
 	// Event sent to old target panel and all of its ancestors up to (not including) the common ancestor of the new and old targets
 	OnCursorLeave = "gui.OnCursorLeave" // Cursor left the panel or a descendant
-	// Event sent to the cursor-focused IDispatcher if any, else sent to target panel's lowest subscribed ancestor
+	// Event sent to the cursor-focused DispatcherI if any, else sent to target panel's lowest subscribed ancestor
 	OnCursor = window.OnCursor // Cursor is over the panel
 
-	// Event sent to the new key-focused IDispatcher, specified on a call to gui.Manager().SetKeyFocus(core.IDispatcher)
-	OnFocus = "gui.OnFocus" // All keyboard events will be exclusively sent to the receiving IDispatcher
-	// Event sent to the previous key-focused IDispatcher when another panel is key-focused
-	OnFocusLost = "gui.OnFocusLost" // Keyboard events will stop being sent to the receiving IDispatcher
+	// Event sent to the new key-focused DispatcherI, specified on a call to gui.Manager().SetKeyFocus(g3ncore.DispatcherI)
+	OnFocus = "gui.OnFocus" // All keyboard events will be exclusively sent to the receiving DispatcherI
+	// Event sent to the previous key-focused DispatcherI when another panel is key-focused
+	OnFocusLost = "gui.OnFocusLost" // Keyboard events will stop being sent to the receiving DispatcherI
 
-	// Events sent to the key-focused IDispatcher
+	// Events sent to the key-focused DispatcherI
 	OnKeyDown   = window.OnKeyDown   // A key is pressed
 	OnKeyUp     = window.OnKeyUp     // A key is released
 	OnKeyRepeat = window.OnKeyRepeat // A key was pressed and is now automatically repeating

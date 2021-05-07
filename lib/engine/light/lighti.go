@@ -5,11 +5,11 @@
 package light
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
+	"github.com/kasworld/goguelike-single/lib/engine/g3ncore"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 )
 
-// ILight is the interface that must be implemented for all light types.
-type ILight interface {
-	RenderSetup(gs *gls.GLS, rinfo *core.RenderInfo, idx int)
+// LightI is the interface that must be implemented for all light types.
+type LightI interface {
+	RenderSetup(gs *gls.GLS, rinfo *g3ncore.RenderInfo, idx int)
 }

@@ -5,7 +5,6 @@
 package animation
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/core"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
@@ -108,13 +107,13 @@ type IChannel interface {
 // NodeChannel is the IChannel for all node transforms.
 type NodeChannel struct {
 	Channel
-	target core.INode
+	target g3ncore.NodeI
 }
 
 // PositionChannel is the animation channel for a node's position.
 type PositionChannel NodeChannel
 
-func NewPositionChannel(node core.INode) *PositionChannel {
+func NewPositionChannel(node g3ncore.NodeI) *PositionChannel {
 
 	pc := new(PositionChannel)
 	pc.target = node
@@ -154,7 +153,7 @@ func NewPositionChannel(node core.INode) *PositionChannel {
 // RotationChannel is the animation channel for a node's rotation.
 type RotationChannel NodeChannel
 
-func NewRotationChannel(node core.INode) *RotationChannel {
+func NewRotationChannel(node g3ncore.NodeI) *RotationChannel {
 
 	rc := new(RotationChannel)
 	rc.target = node
@@ -198,7 +197,7 @@ func NewRotationChannel(node core.INode) *RotationChannel {
 // ScaleChannel is the animation channel for a node's scale.
 type ScaleChannel NodeChannel
 
-func NewScaleChannel(node core.INode) *ScaleChannel {
+func NewScaleChannel(node g3ncore.NodeI) *ScaleChannel {
 
 	sc := new(ScaleChannel)
 	sc.target = node
