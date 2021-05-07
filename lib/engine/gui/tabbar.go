@@ -7,6 +7,7 @@ package gui
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -71,7 +72,7 @@ func NewTabBar(width, height float32) *TabBar {
 
 	// Create list for contained tabs not visible
 	tb.list = NewVList(0, 0)
-	tb.list.Subscribe(OnMouseDownOut, func(evname string, ev interface{}) {
+	tb.list.Subscribe(OnMouseDownOut, func(evname dispatcheri.EventName, ev interface{}) {
 		tb.list.SetVisible(false)
 	})
 	tb.list.Subscribe(OnChange, tb.onListChange)
@@ -86,8 +87,8 @@ func NewTabBar(width, height float32) *TabBar {
 	// Subscribe to panel events
 	tb.Subscribe(OnCursorEnter, tb.onCursor)
 	tb.Subscribe(OnCursorLeave, tb.onCursor)
-	tb.Subscribe(OnEnable, func(name string, ev interface{}) { tb.update() })
-	tb.Subscribe(OnResize, func(name string, ev interface{}) { tb.recalc() })
+	tb.Subscribe(OnEnable, func(name dispatcheri.EventName, ev interface{}) { tb.update() })
+	tb.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { tb.recalc() })
 
 	tb.recalc()
 	tb.update()
@@ -238,7 +239,7 @@ func (tb *TabBar) Selected() int {
 }
 
 // onCursor process subscribed cursor events
-func (tb *TabBar) onCursor(evname string, ev interface{}) {
+func (tb *TabBar) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnCursorEnter:
@@ -253,7 +254,7 @@ func (tb *TabBar) onCursor(evname string, ev interface{}) {
 }
 
 // onListButtonMouse process subscribed MouseButton events over the list button
-func (tb *TabBar) onListButton(evname string, ev interface{}) {
+func (tb *TabBar) onListButton(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnMouseDown:
@@ -266,7 +267,7 @@ func (tb *TabBar) onListButton(evname string, ev interface{}) {
 }
 
 // onListChange process OnChange event from the tab list
-func (tb *TabBar) onListChange(evname string, ev interface{}) {
+func (tb *TabBar) onListChange(evname dispatcheri.EventName, ev interface{}) {
 
 	selected := tb.list.Selected()
 	pos := selected[0].GetPanel().UserData().(int)
@@ -427,7 +428,7 @@ func newTab(text string, tb *TabBar, styles *TabStyles) *Tab {
 }
 
 // onCursor process subscribed cursor events over the tab header
-func (tab *Tab) onCursor(evname string, ev interface{}) {
+func (tab *Tab) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnCursorEnter:
@@ -442,7 +443,7 @@ func (tab *Tab) onCursor(evname string, ev interface{}) {
 }
 
 // onMouse process subscribed mouse events over the tab header
-func (tab *Tab) onMouseHeader(evname string, ev interface{}) {
+func (tab *Tab) onMouseHeader(evname dispatcheri.EventName, ev interface{}) {
 
 	if evname == OnMouseDown && ev.(*window.MouseEvent).Button == window.MouseButtonLeft {
 		tab.tb.SetSelected(tab.tb.TabPosition(tab))
@@ -450,7 +451,7 @@ func (tab *Tab) onMouseHeader(evname string, ev interface{}) {
 }
 
 // onMouseIcon process subscribed mouse events over the tab close icon
-func (tab *Tab) onMouseIcon(evname string, ev interface{}) {
+func (tab *Tab) onMouseIcon(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnMouseDown:

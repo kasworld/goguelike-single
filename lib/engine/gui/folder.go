@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
@@ -71,17 +72,17 @@ func (f *Folder) Initialize(text string, width float32, contentPanel IPanel) {
 	f.Panel.Subscribe(OnCursorEnter, f.onCursor)
 	f.Panel.Subscribe(OnCursorLeave, f.onCursor)
 
-	f.Subscribe(OnMouseDownOut, func(s string, i interface{}) {
+	f.Subscribe(OnMouseDownOut, func(s dispatcheri.EventName, i interface{}) {
 		// Hide list when clicked out
 		if f.contentPanel.Visible() {
 			f.contentPanel.SetVisible(false)
 		}
 	})
 
-	f.contentPanel.Subscribe(OnCursorEnter, func(evname string, ev interface{}) {
+	f.contentPanel.Subscribe(OnCursorEnter, func(evname dispatcheri.EventName, ev interface{}) {
 		f.Dispatch(OnCursorLeave, ev)
 	})
-	f.contentPanel.Subscribe(OnCursorLeave, func(evname string, ev interface{}) {
+	f.contentPanel.Subscribe(OnCursorLeave, func(evname dispatcheri.EventName, ev interface{}) {
 		f.Dispatch(OnCursorEnter, ev)
 	})
 
@@ -117,7 +118,7 @@ func (f *Folder) Height() float32 {
 }
 
 // onMouse receives mouse button events over the folder panel.
-func (f *Folder) onMouse(evname string, ev interface{}) {
+func (f *Folder) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnMouseDown:
@@ -135,7 +136,7 @@ func (f *Folder) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor receives cursor events over the folder panel
-func (f *Folder) onCursor(evname string, ev interface{}) {
+func (f *Folder) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnCursorEnter:

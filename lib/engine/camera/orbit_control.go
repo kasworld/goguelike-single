@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -209,7 +210,7 @@ func (oc *OrbitControl) Pan(deltaX, deltaY float32) {
 }
 
 // onMouse is called when an OnMouseDown/OnMouseUp event is received.
-func (oc *OrbitControl) onMouse(evname string, ev interface{}) {
+func (oc *OrbitControl) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	// If nothing enabled ignore event
 	if oc.enabled == OrbitNone {
@@ -244,7 +245,7 @@ func (oc *OrbitControl) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor is called when an OnCursor event is received.
-func (oc *OrbitControl) onCursor(evname string, ev interface{}) {
+func (oc *OrbitControl) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	// If nothing enabled ignore event
 	if oc.enabled == OrbitNone || oc.state == stateNone {
@@ -269,7 +270,7 @@ func (oc *OrbitControl) onCursor(evname string, ev interface{}) {
 }
 
 // onScroll is called when an OnScroll event is received.
-func (oc *OrbitControl) onScroll(evname string, ev interface{}) {
+func (oc *OrbitControl) onScroll(evname dispatcheri.EventName, ev interface{}) {
 
 	if oc.enabled&OrbitZoom != 0 {
 		sev := ev.(*window.ScrollEvent)
@@ -278,7 +279,7 @@ func (oc *OrbitControl) onScroll(evname string, ev interface{}) {
 }
 
 // onKey is called when an OnKeyDown/OnKeyRepeat event is received.
-func (oc *OrbitControl) onKey(evname string, ev interface{}) {
+func (oc *OrbitControl) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	// If keyboard control is disabled ignore event
 	if oc.enabled&OrbitKeys == 0 {

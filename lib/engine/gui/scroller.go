@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -274,7 +275,7 @@ func (s *Scroller) ScrollTo(x, y float32) {
 }
 
 // onScroll receives mouse scroll events when this scroller has the scroll focus (set by OnMouseEnter)
-func (s *Scroller) onScroll(evname string, ev interface{}) {
+func (s *Scroller) onScroll(evname dispatcheri.EventName, ev interface{}) {
 
 	sev := ev.(*window.ScrollEvent)
 
@@ -313,7 +314,7 @@ func (s *Scroller) onScroll(evname string, ev interface{}) {
 }
 
 // onResize receives resize events
-func (s *Scroller) onResize(evname string, ev interface{}) {
+func (s *Scroller) onResize(evname dispatcheri.EventName, ev interface{}) {
 
 	s.Update()
 }
@@ -407,7 +408,7 @@ func (s *Scroller) updateScrollbarsVisibility() {
 }
 
 // onScrollEvent is called when the scrollbar value changes
-func (s *Scroller) onScrollBarEvent(evname string, ev interface{}) {
+func (s *Scroller) onScrollBarEvent(evname dispatcheri.EventName, ev interface{}) {
 
 	s.recalc()
 }

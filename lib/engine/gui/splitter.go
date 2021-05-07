@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -107,13 +108,13 @@ func (s *Splitter) Split() float32 {
 }
 
 // onResize receives subscribed resize events for the whole splitter panel
-func (s *Splitter) onResize(evname string, ev interface{}) {
+func (s *Splitter) onResize(evname dispatcheri.EventName, ev interface{}) {
 
 	s.recalc()
 }
 
 // onMouse receives subscribed mouse events over the spacer panel
-func (s *Splitter) onMouse(evname string, ev interface{}) {
+func (s *Splitter) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	mev := ev.(*window.MouseEvent)
 	if mev.Button != window.MouseButtonLeft {
@@ -136,7 +137,7 @@ func (s *Splitter) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events over the spacer panel
-func (s *Splitter) onCursor(evname string, ev interface{}) {
+func (s *Splitter) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	if evname == OnCursorEnter {
 		if s.horiz {

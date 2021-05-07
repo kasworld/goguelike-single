@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -213,7 +214,7 @@ func (m *Menu) RemoveItem(mi *MenuItem) {
 }
 
 // onKey process subscribed key events
-func (m *Menu) onKey(evname string, ev interface{}) {
+func (m *Menu) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	sel := m.selectedPos()
 	kev := ev.(*window.KeyEvent)
@@ -331,7 +332,7 @@ func (m *Menu) onKey(evname string, ev interface{}) {
 }
 
 // onMouse process subscribed mouse events for the menu
-func (m *Menu) onMouse(evname string, ev interface{}) {
+func (m *Menu) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	// Clear menu bar after some time, to give time for menu items
 	// to receive onMouse events.
@@ -342,7 +343,7 @@ func (m *Menu) onMouse(evname string, ev interface{}) {
 }
 
 // onResize process menu onResize events
-func (m *Menu) onResize(evname string, ev interface{}) {
+func (m *Menu) onResize(evname dispatcheri.EventName, ev interface{}) {
 
 	if m.bar {
 		m.recalcBar(false)
@@ -698,7 +699,7 @@ func (mi *MenuItem) IdPath() []string {
 }
 
 // onCursor processes subscribed cursor events over the menu item
-func (mi *MenuItem) onCursor(evname string, ev interface{}) {
+func (mi *MenuItem) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnCursorEnter:
@@ -707,7 +708,7 @@ func (mi *MenuItem) onCursor(evname string, ev interface{}) {
 }
 
 // onMouse processes subscribed mouse events over the menu item
-func (mi *MenuItem) onMouse(evname string, ev interface{}) {
+func (mi *MenuItem) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnMouseDown:
@@ -752,7 +753,7 @@ func (mi *MenuItem) rootMenu() *Menu {
 
 // dispatchAll dispatch the specified event for this menu item
 // and all its parents
-func (mi *MenuItem) dispatchAll(evname string, ev interface{}) {
+func (mi *MenuItem) dispatchAll(evname dispatcheri.EventName, ev interface{}) {
 
 	mi.Dispatch(evname, ev)
 	pmenu := mi.menu

@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -81,7 +82,7 @@ func newSlider(horiz bool, width, height float32) *Slider {
 	s.Panel.Subscribe(OnKeyDown, s.onKey)
 	s.Panel.Subscribe(OnKeyRepeat, s.onKey)
 	s.Panel.Subscribe(OnResize, s.onResize)
-	s.Panel.Subscribe(OnEnable, func(evname string, ev interface{}) { s.update() })
+	s.Panel.Subscribe(OnEnable, func(evname dispatcheri.EventName, ev interface{}) { s.update() })
 
 	// Initialize slider panel
 	s.slider.Initialize(&s.slider, 0, 0)
@@ -161,7 +162,7 @@ func (s *Slider) setPos(pos float32) {
 }
 
 // onMouse process subscribed mouse events over the outer panel
-func (s *Slider) onMouse(evname string, ev interface{}) {
+func (s *Slider) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	mev := ev.(*window.MouseEvent)
 	if mev.Button != window.MouseButtonLeft {
@@ -186,7 +187,7 @@ func (s *Slider) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor process subscribed cursor events
-func (s *Slider) onCursor(evname string, ev interface{}) {
+func (s *Slider) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	if evname == OnCursorEnter {
 		s.cursorOver = true
@@ -222,7 +223,7 @@ func (s *Slider) onCursor(evname string, ev interface{}) {
 }
 
 // onScroll process subscribed scroll events
-func (s *Slider) onScroll(evname string, ev interface{}) {
+func (s *Slider) onScroll(evname dispatcheri.EventName, ev interface{}) {
 
 	sev := ev.(*window.ScrollEvent)
 	v := s.pos
@@ -231,7 +232,7 @@ func (s *Slider) onScroll(evname string, ev interface{}) {
 }
 
 // onKey process subscribed key events
-func (s *Slider) onKey(evname string, ev interface{}) {
+func (s *Slider) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	delta := float32(0.01)
@@ -259,7 +260,7 @@ func (s *Slider) onKey(evname string, ev interface{}) {
 }
 
 // onResize process subscribed resize events
-func (s *Slider) onResize(evname string, ev interface{}) {
+func (s *Slider) onResize(evname dispatcheri.EventName, ev interface{}) {
 
 	s.recalc()
 }

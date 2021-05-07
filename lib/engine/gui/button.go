@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -63,12 +64,12 @@ func NewButton(text string) *Button {
 	b.Subscribe(OnCursor, b.onCursor)
 	b.Subscribe(OnCursorEnter, b.onCursor)
 	b.Subscribe(OnCursorLeave, b.onCursor)
-	b.Subscribe(OnEnable, func(name string, ev interface{}) { b.update() })
-	b.Subscribe(OnResize, func(name string, ev interface{}) { b.recalc() })
+	b.Subscribe(OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
+	b.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
 
 	// Creates label
 	b.Label = NewLabel(text)
-	b.Label.Subscribe(OnResize, func(name string, ev interface{}) { b.recalc() })
+	b.Label.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
 	b.Panel.Add(b.Label)
 
 	b.recalc() // recalc first then update!
@@ -121,7 +122,7 @@ func (b *Button) SetStyles(bs *ButtonStyles) {
 }
 
 // onCursor process subscribed cursor events
-func (b *Button) onCursor(evname string, ev interface{}) {
+func (b *Button) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnCursorEnter:
@@ -134,7 +135,7 @@ func (b *Button) onCursor(evname string, ev interface{}) {
 }
 
 // onMouseEvent process subscribed mouse events
-func (b *Button) onMouse(evname string, ev interface{}) {
+func (b *Button) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	if !b.Enabled() {
 		return
@@ -159,7 +160,7 @@ func (b *Button) onMouse(evname string, ev interface{}) {
 }
 
 // onKey processes subscribed key events
-func (b *Button) onKey(evname string, ev interface{}) {
+func (b *Button) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if kev.Key != window.KeyEnter {

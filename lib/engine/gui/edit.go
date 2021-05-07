@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/text"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -72,7 +73,7 @@ func NewEdit(width int, placeHolder string) *Edit {
 	ed.Label.Subscribe(OnMouseDown, ed.onMouse)
 	ed.Label.Subscribe(OnCursorEnter, ed.onCursor)
 	ed.Label.Subscribe(OnCursorLeave, ed.onCursor)
-	ed.Label.Subscribe(OnEnable, func(evname string, ev interface{}) { ed.update() })
+	ed.Label.Subscribe(OnEnable, func(evname dispatcheri.EventName, ev interface{}) { ed.update() })
 	ed.Subscribe(OnFocusLost, ed.OnFocusLost)
 
 	ed.update()
@@ -111,7 +112,7 @@ func (ed *Edit) SetStyles(es *EditStyles) {
 
 // LostKeyFocus satisfies the IPanel interface and is called by gui root
 // container when the panel loses the key focus
-func (ed *Edit) OnFocusLost(evname string, ev interface{}) {
+func (ed *Edit) OnFocusLost(evname dispatcheri.EventName, ev interface{}) {
 
 	ed.focus = false
 	ed.update()
@@ -220,7 +221,7 @@ func (ed *Edit) redraw(caret bool) {
 }
 
 // onKey receives subscribed key events
-func (ed *Edit) onKey(evname string, ev interface{}) {
+func (ed *Edit) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	switch kev.Key {
@@ -242,14 +243,14 @@ func (ed *Edit) onKey(evname string, ev interface{}) {
 }
 
 // onChar receives subscribed char events
-func (ed *Edit) onChar(evname string, ev interface{}) {
+func (ed *Edit) onChar(evname dispatcheri.EventName, ev interface{}) {
 
 	cev := ev.(*window.CharEvent)
 	ed.CursorInput(string(cev.Char))
 }
 
 // onMouseEvent receives subscribed mouse down events
-func (ed *Edit) onMouse(evname string, ev interface{}) {
+func (ed *Edit) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	if e.Button != window.MouseButtonLeft {
@@ -276,7 +277,7 @@ func (ed *Edit) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events
-func (ed *Edit) onCursor(evname string, ev interface{}) {
+func (ed *Edit) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	if evname == OnCursorEnter {
 		window.Get().SetCursor(window.IBeamCursor)

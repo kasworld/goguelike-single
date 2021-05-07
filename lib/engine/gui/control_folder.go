@@ -6,6 +6,8 @@ package gui
 
 import (
 	"fmt"
+
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 )
 
 // ControlFolder represents a folder with controls.
@@ -148,7 +150,7 @@ func (f *ControlFolder) newSlider(text string, sf, value float32) (IPanel, *Slid
 	s.SetScaleFactor(sf)
 	s.SetValue(value)
 	s.SetText(fmt.Sprintf("%1.1f", value))
-	s.Subscribe(OnChange, func(evname string, ev interface{}) {
+	s.Subscribe(OnChange, func(evname dispatcheri.EventName, ev interface{}) {
 		s.SetText(fmt.Sprintf("%1.1f", s.Value()))
 	})
 	s.SetLayoutParams(&HBoxLayoutParams{AlignV: AlignCenter, Expand: 1})

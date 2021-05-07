@@ -8,7 +8,7 @@ import "github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 
 // Dispatcher implements an event dispatcher.
 type Dispatcher struct {
-	evmap map[string][]subscription // Map of event names to subscription lists
+	evmap map[dispatcheri.EventName][]subscription // Map of event names to subscription lists
 }
 
 // subscription links a dispatcheri.Callback with a user-provided unique id.
@@ -29,19 +29,19 @@ func NewDispatcher() *Dispatcher {
 // It is normally used by other types which embed a dispatcher.
 func (d *Dispatcher) Initialize() {
 
-	d.evmap = make(map[string][]subscription)
+	d.evmap = make(map[dispatcheri.EventName][]subscription)
 }
 
 // Subscribe subscribes a callback to events with the given name.
 // If it is necessary to unsubscribe later, SubscribeID should be used instead.
-func (d *Dispatcher) Subscribe(evname string, callBack dispatcheri.Callback) {
+func (d *Dispatcher) Subscribe(evname dispatcheri.EventName, callBack dispatcheri.Callback) {
 
 	d.evmap[evname] = append(d.evmap[evname], subscription{nil, callBack})
 }
 
 // SubscribeID subscribes a callback to events events with the given name.
 // The user-provided unique id can be used to unsubscribe via UnsubscribeID.
-func (d *Dispatcher) SubscribeID(evname string, id interface{}, callBack dispatcheri.Callback) {
+func (d *Dispatcher) SubscribeID(evname dispatcheri.EventName, id interface{}, callBack dispatcheri.Callback) {
 
 	d.evmap[evname] = append(d.evmap[evname], subscription{id, callBack})
 }
@@ -49,7 +49,7 @@ func (d *Dispatcher) SubscribeID(evname string, id interface{}, callBack dispatc
 // UnsubscribeID removes all subscribed callbacks with the specified unique id
 //	from the specified event.
 // Returns the number of subscriptions removed.
-func (d *Dispatcher) UnsubscribeID(evname string, id interface{}) int {
+func (d *Dispatcher) UnsubscribeID(evname dispatcheri.EventName, id interface{}) int {
 
 	// Get list of subscribers for this event
 	subs := d.evmap[evname]
@@ -87,7 +87,7 @@ func (d *Dispatcher) UnsubscribeAllID(id interface{}) int {
 
 // Dispatch dispatches the specified event to all registered subscribers.
 // The function returns the number of subscribers to which the event was dispatched.
-func (d *Dispatcher) Dispatch(evname string, ev interface{}) int {
+func (d *Dispatcher) Dispatch(evname dispatcheri.EventName, ev interface{}) int {
 
 	// Get list of subscribers for this event
 	subs := d.evmap[evname]

@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -82,11 +83,11 @@ func newCheckRadio(check bool, text string) *CheckRadio {
 	cb.Panel.Subscribe(OnCursorEnter, cb.onCursor)
 	cb.Panel.Subscribe(OnCursorLeave, cb.onCursor)
 	cb.Panel.Subscribe(OnMouseDown, cb.onMouse)
-	cb.Panel.Subscribe(OnEnable, func(evname string, ev interface{}) { cb.update() })
+	cb.Panel.Subscribe(OnEnable, func(evname dispatcheri.EventName, ev interface{}) { cb.update() })
 
 	// Creates label
 	cb.Label = NewLabel(text)
-	cb.Label.Subscribe(OnResize, func(evname string, ev interface{}) { cb.recalc() })
+	cb.Label.Subscribe(OnResize, func(evname dispatcheri.EventName, ev interface{}) { cb.recalc() })
 	cb.Panel.Add(cb.Label)
 
 	// Creates icon label
@@ -142,7 +143,7 @@ func (cb *CheckRadio) toggleState() {
 	// Subscribes once to the root panel for OnRadioGroup events
 	// The root panel is used to dispatch events to all checkradios
 	if !cb.subroot {
-		Manager().Subscribe(OnRadioGroup, func(name string, ev interface{}) {
+		Manager().Subscribe(OnRadioGroup, func(name dispatcheri.EventName, ev interface{}) {
 			cb.onRadioGroup(ev.(*CheckRadio))
 		})
 		cb.subroot = true
@@ -168,7 +169,7 @@ func (cb *CheckRadio) toggleState() {
 }
 
 // onMouse process OnMouseDown events
-func (cb *CheckRadio) onMouse(evname string, ev interface{}) {
+func (cb *CheckRadio) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	// Dispatch OnClick for left mouse button down
 	if evname == OnMouseDown {
@@ -182,7 +183,7 @@ func (cb *CheckRadio) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor process OnCursor* events
-func (cb *CheckRadio) onCursor(evname string, ev interface{}) {
+func (cb *CheckRadio) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	if evname == OnCursorEnter {
 		cb.cursorOver = true
@@ -193,7 +194,7 @@ func (cb *CheckRadio) onCursor(evname string, ev interface{}) {
 }
 
 // onKey receives subscribed key events
-func (cb *CheckRadio) onKey(evname string, ev interface{}) {
+func (cb *CheckRadio) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if evname == OnKeyDown && kev.Key == window.KeyEnter {

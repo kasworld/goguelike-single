@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -148,7 +149,7 @@ func (sb *ScrollBar) SetValue(v float32) {
 }
 
 // onMouse receives subscribed mouse events over the scrollbar outer panel
-func (sb *ScrollBar) onMouse(evname string, ev interface{}) {
+func (sb *ScrollBar) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	if e.Button != window.MouseButtonLeft {
@@ -201,7 +202,7 @@ func (sb *ScrollBar) applyStyle(sbs *ScrollBarStyle) {
 }
 
 // onMouse receives subscribed mouse events for the scroll bar button
-func (button *scrollBarButton) onMouse(evname string, ev interface{}) {
+func (button *scrollBarButton) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	if e.Button != window.MouseButtonLeft {
@@ -222,7 +223,7 @@ func (button *scrollBarButton) onMouse(evname string, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events for the scroll bar button
-func (button *scrollBarButton) onCursor(evname string, ev interface{}) {
+func (button *scrollBarButton) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	e := ev.(*window.CursorEvent)
 	if !button.pressed {

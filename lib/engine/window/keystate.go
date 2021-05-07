@@ -162,7 +162,7 @@ func (ks *KeyState) Pressed(k Key) bool {
 }
 
 // onKey receives key events and updates the internal map of states.
-func (ks *KeyState) onKey(evname string, ev interface{}) {
+func (ks *KeyState) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*KeyEvent)
 	switch evname {

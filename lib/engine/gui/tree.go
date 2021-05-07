@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -163,7 +164,7 @@ func (t *Tree) FindChild(child IPanel) (*TreeNode, int) {
 }
 
 // onKey receives key down events for the embedded list
-func (t *Tree) onKey(evname string, ev interface{}) {
+func (t *Tree) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	// Get selected item
 	item := t.Selected()
@@ -209,7 +210,7 @@ func newTreeNode(text string, tree *Tree, parNode *TreeNode) *TreeNode {
 
 	// Subscribe to events
 	n.Panel.Subscribe(OnMouseDown, n.onMouse)
-	n.Panel.Subscribe(OnListItemResize, func(evname string, ev interface{}) {
+	n.Panel.Subscribe(OnListItemResize, func(evname dispatcheri.EventName, ev interface{}) {
 		n.recalc()
 	})
 	n.tree = tree
@@ -327,7 +328,7 @@ func (n *TreeNode) Remove(child IPanel) {
 }
 
 // onMouse receives mouse button events over the tree node panel
-func (n *TreeNode) onMouse(evname string, ev interface{}) {
+func (n *TreeNode) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
 	case OnMouseDown:

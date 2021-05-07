@@ -132,7 +132,7 @@ func main() {
 	camera.NewOrbitControl(cam)
 
 	// Set up callback to update viewport and camera aspect ratio when the window is resized
-	onResize := func(evname string, ev interface{}) {
+	onResize := func(evname dispatcheri.EventName, ev interface{}) {
 		// Get framebuffer size and update viewport accordingly
 		width, height := a.GetSize()
 		a.Gls().Viewport(0, 0, int32(width), int32(height))

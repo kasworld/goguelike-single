@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
+	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
@@ -71,7 +72,7 @@ func (n *Node) Init(inode NodeI) {
 	n.matrixWorld.Identity()
 
 	// Subscribe to events
-	n.Subscribe(OnDescendant, func(evname string, ev interface{}) {
+	n.Subscribe(OnDescendant, func(evname dispatcheri.EventName, ev interface{}) {
 		if n.parent != nil {
 			n.parent.Dispatch(evname, ev)
 		}
