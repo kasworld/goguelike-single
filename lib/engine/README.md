@@ -33,3 +33,7 @@ rename app to appbase, Application to AppBase
 typed event name 
 
     evname string -> evname EventName
+
+## TODO 
+
+split interface package more 
