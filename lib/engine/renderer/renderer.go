@@ -8,7 +8,7 @@ package renderer
 import (
 	"sort"
 
-	"github.com/kasworld/goguelike-single/lib/engine/camera"
+	"github.com/kasworld/goguelike-single/lib/engine/camerai"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -97,7 +97,7 @@ func (r *Renderer) ObjectSorting() bool {
 }
 
 // Render renders the specified scene using the specified camera. Returns an an error.
-func (r *Renderer) Render(scene node.NodeI, cam camera.CameraI) error {
+func (r *Renderer) Render(scene node.NodeI, cam camerai.CameraI) error {
 
 	// Updates world matrices of all scene nodes
 	scene.UpdateMatrixWorld()

@@ -1,4 +1,4 @@
-package camera
+package camerai
 
 import "github.com/kasworld/goguelike-single/lib/engine/math32"
 

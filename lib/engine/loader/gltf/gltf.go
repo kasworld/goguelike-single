@@ -9,7 +9,7 @@ import (
 	"image"
 
 	"github.com/kasworld/goguelike-single/lib/engine/animation"
-	"github.com/kasworld/goguelike-single/lib/engine/camera"
+	"github.com/kasworld/goguelike-single/lib/engine/camerai"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -134,7 +134,7 @@ type Camera struct {
 	Extensions   map[string]interface{} // Dictionary object with extension-specific objects. Not required.
 	Extras       interface{}            // Application-specific data. Not required.
 
-	cache camera.CameraI // Cached CameraI. // TODO
+	cache camerai.CameraI // Cached CameraI. // TODO
 }
 
 // Channel targets an animation's sampler at a node's property.

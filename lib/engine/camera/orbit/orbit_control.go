@@ -2,11 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package camera
+package orbit
 
 import (
 	"math"
 
+	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -41,7 +42,7 @@ const (
 // It allows the user to rotate, zoom, and pan a 3D scene using the mouse or keyboard.
 type OrbitControl struct {
 	dispatcher.Dispatcher                // Embedded event dispatcher
-	cam                   *Camera        // Controlled camera
+	cam                   *camera.Camera // Controlled camera
 	target                math32.Vector3 // Camera target, around which the camera orbits
 	up                    math32.Vector3 // The orbit axis (Y+)
 	enabled               OrbitEnabled   // Which controls are enabled
@@ -67,7 +68,7 @@ type OrbitControl struct {
 }
 
 // NewOrbitControl creates and returns a pointer to a new orbit control for the specified camera.
-func NewOrbitControl(cam *Camera) *OrbitControl {
+func NewOrbitControl(cam *camera.Camera) *OrbitControl {
 
 	oc := new(OrbitControl)
 	oc.Dispatcher.Initialize()
@@ -325,7 +326,7 @@ func (oc *OrbitControl) onKey(evname dispatcheri.EventName, ev interface{}) {
 func (oc *OrbitControl) winSize() float32 {
 
 	width, size := window.Get().GetSize()
-	if oc.cam.Axis() == Horizontal {
+	if oc.cam.Axis() == camera.Horizontal {
 		size = width
 	}
 	return float32(size)
