@@ -16,7 +16,7 @@ var gm *manager
 type manager struct {
 	core.Dispatcher                       // Embedded Dispatcher
 	core.TimerManager                     // Embedded TimerManager
-	win               window.IWindow      // The current IWindow
+	win               window.WindowI      // The current WindowI
 	scene             core.INode          // INode containing IPanels to dispatch events to (can contain non-IPanels as well)
 	modal             IPanel              // Panel which along its descendants will exclusively receive all events
 	target            IPanel              // Panel immediately under the cursor

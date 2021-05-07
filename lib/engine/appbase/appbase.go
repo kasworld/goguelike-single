@@ -26,7 +26,7 @@ const OnExit = "app.OnExit"
 
 // AppBase
 type AppBase struct {
-	window.IWindow                    // Embedded GlfwWindow
+	window.WindowI                    // Embedded GlfwWindow
 	keyState       *window.KeyState   // Keep track of keyboard state
 	renderer       *renderer.Renderer // Renderer object
 	audioDev       *al.Device         // Default audio device
@@ -45,7 +45,7 @@ func New(title string, width, height int) *AppBase {
 	if err != nil {
 		panic(err)
 	}
-	a.IWindow = window.Get()
+	a.WindowI = window.Get()
 	a.openDefaultAudioDevice()         // Set up audio
 	a.keyState = window.NewKeyState(a) // Create KeyState
 	// Create renderer and add default shaders
@@ -69,11 +69,11 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 	for true {
 		// If Exit() was called or there was an attempt to close the window dispatch OnExit event for subscribers.
 		// If no subscriber cancelled the event, terminate the application.
-		if a.IWindow.(*window.GlfwWindow).ShouldClose() {
+		if a.WindowI.(*window.GlfwWindow).ShouldClose() {
 			a.Dispatch(OnExit, nil)
 			// TODO allow for cancelling exit e.g. showing dialog asking the user if he/she wants to save changes
 			// if exit was cancelled {
-			//     a.IWindow.(*window.GlfwWindow).SetShouldClose(false)
+			//     a.WindowI.(*window.GlfwWindow).SetShouldClose(false)
 			// } else {
 			break
 			// }
@@ -85,8 +85,8 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 		// Call user's update function
 		update(a.renderer, a.frameDelta)
 		// Swap buffers and poll events
-		a.IWindow.(*window.GlfwWindow).SwapBuffers()
-		a.IWindow.(*window.GlfwWindow).PollEvents()
+		a.WindowI.(*window.GlfwWindow).SwapBuffers()
+		a.WindowI.(*window.GlfwWindow).PollEvents()
 	}
 
 	// Close default audio device
@@ -102,7 +102,7 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 // can cancel the process by calling CancelDispatch().
 func (a *AppBase) Exit() {
 
-	a.IWindow.(*window.GlfwWindow).SetShouldClose(true)
+	a.WindowI.(*window.GlfwWindow).SetShouldClose(true)
 }
 
 // Renderer returns the application's renderer.

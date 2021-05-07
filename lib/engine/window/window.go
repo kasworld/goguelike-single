@@ -17,11 +17,11 @@ import (
 // Package logger
 var log = logger.New("WIN", logger.Default)
 
-// IWindow singleton
-var win IWindow
+// WindowI singleton
+var win WindowI
 
-// Get returns the IWindow singleton.
-func Get() IWindow {
+// Get returns the WindowI singleton.
+func Get() WindowI {
 	// Return singleton if already created
 	if win != nil {
 		return win
@@ -29,8 +29,8 @@ func Get() IWindow {
 	panic(fmt.Errorf("need to call window.Init() first"))
 }
 
-// IWindow is the interface for all windows
-type IWindow interface {
+// WindowI is the interface for all windows
+type WindowI interface {
 	core.IDispatcher
 	Gls() *gls.GLS
 	GetFramebufferSize() (width int, height int)
