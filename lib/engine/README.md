@@ -1,6 +1,10 @@
 # Modified G3N for my taste
 
-## change
+## require to modify eventtype enum 
+
+https://github.com/kasworld/genenum
+
+## change from G3N (https://github.com/g3n/engine)
 
 remove wasm support 
 
@@ -14,6 +18,9 @@ rename interface I*** -> ***I
     GraphicI
     GeometryI
     CameraI
+    LayoutI
+    PanelI
+    MaterialI
     BuilderLayoutI
     SolverI
     BodyI
@@ -44,3 +51,4 @@ merge event to one file and to enum by genenum
 ## TODO 
 
 split interface package more 
+del no need interface
