@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -73,16 +74,16 @@ func newSlider(horiz bool, width, height float32) *Slider {
 
 	// Initialize main panel
 	s.Panel.Initialize(s, width, height)
-	s.Panel.Subscribe(OnMouseDown, s.onMouse)
-	s.Panel.Subscribe(OnMouseUp, s.onMouse)
-	s.Panel.Subscribe(OnCursor, s.onCursor)
-	s.Panel.Subscribe(OnCursorEnter, s.onCursor)
-	s.Panel.Subscribe(OnCursorLeave, s.onCursor)
-	s.Panel.Subscribe(OnScroll, s.onScroll)
-	s.Panel.Subscribe(OnKeyDown, s.onKey)
-	s.Panel.Subscribe(OnKeyRepeat, s.onKey)
-	s.Panel.Subscribe(OnResize, s.onResize)
-	s.Panel.Subscribe(OnEnable, func(evname dispatcheri.EventName, ev interface{}) { s.update() })
+	s.Panel.Subscribe(eventenum.OnMouseDown, s.onMouse)
+	s.Panel.Subscribe(eventenum.OnMouseUp, s.onMouse)
+	s.Panel.Subscribe(eventenum.OnCursor, s.onCursor)
+	s.Panel.Subscribe(eventenum.OnCursorEnter, s.onCursor)
+	s.Panel.Subscribe(eventenum.OnCursorLeave, s.onCursor)
+	s.Panel.Subscribe(eventenum.OnScroll, s.onScroll)
+	s.Panel.Subscribe(eventenum.OnKeyDown, s.onKey)
+	s.Panel.Subscribe(eventenum.OnKeyRepeat, s.onKey)
+	s.Panel.Subscribe(eventenum.OnResize, s.onResize)
+	s.Panel.Subscribe(eventenum.OnEnable, func(evname dispatcheri.EventName, ev interface{}) { s.update() })
 
 	// Initialize slider panel
 	s.slider.Initialize(&s.slider, 0, 0)
@@ -158,7 +159,7 @@ func (s *Slider) setPos(pos float32) {
 	}
 	s.pos = pos
 	s.recalc()
-	s.Dispatch(OnChange, nil)
+	s.Dispatch(eventenum.OnChange, nil)
 }
 
 // onMouse process subscribed mouse events over the outer panel
@@ -169,7 +170,7 @@ func (s *Slider) onMouse(evname dispatcheri.EventName, ev interface{}) {
 		return
 	}
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		s.pressed = true
 		if s.horiz {
 			s.posLast = mev.Xpos
@@ -178,7 +179,7 @@ func (s *Slider) onMouse(evname dispatcheri.EventName, ev interface{}) {
 		}
 		Manager().SetKeyFocus(s)
 		Manager().SetCursorFocus(s)
-	case OnMouseUp:
+	case eventenum.OnMouseUp:
 		s.pressed = false
 		Manager().SetCursorFocus(nil)
 	default:
@@ -189,7 +190,7 @@ func (s *Slider) onMouse(evname dispatcheri.EventName, ev interface{}) {
 // onCursor process subscribed cursor events
 func (s *Slider) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
-	if evname == OnCursorEnter {
+	if evname == eventenum.OnCursorEnter {
 		s.cursorOver = true
 		if s.horiz {
 			window.Get().SetCursor(window.HResizeCursor)
@@ -197,11 +198,11 @@ func (s *Slider) onCursor(evname dispatcheri.EventName, ev interface{}) {
 			window.Get().SetCursor(window.VResizeCursor)
 		}
 		s.update()
-	} else if evname == OnCursorLeave {
+	} else if evname == eventenum.OnCursorLeave {
 		s.cursorOver = false
 		window.Get().SetCursor(window.ArrowCursor)
 		s.update()
-	} else if evname == OnCursor {
+	} else if evname == eventenum.OnCursor {
 		if !s.pressed {
 			return
 		}

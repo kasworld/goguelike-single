@@ -139,7 +139,7 @@ func main() {
 		// Update the camera's aspect ratio
 		cam.SetAspect(float32(width) / float32(height))
 	}
-	a.Subscribe(window.OnWindowSize, onResize)
+	a.Subscribe(eventenum.window.OnWindowSize, onResize)
 	onResize("", nil)
 
 	// Create a blue torus and add it to the scene
@@ -152,7 +152,7 @@ func main() {
 	btn := gui.NewButton("Make Red")
 	btn.SetPosition(100, 40)
 	btn.SetSize(40, 40)
-	btn.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+	btn.Subscribe(eventenum.gui.OnClick, func(name string, ev interface{}) {
 		mat.SetColor(math32.NewColor("DarkRed"))
 	})
 	scene.Add(btn)

@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -295,10 +296,10 @@ func (s *ItemScroller) initialize(vert bool, width, height float32) {
 	s.Panel.Initialize(s, width, height)
 	s.styles = &StyleDefault().ItemScroller
 
-	s.Panel.Subscribe(OnCursorEnter, s.onCursor)
-	s.Panel.Subscribe(OnCursorLeave, s.onCursor)
-	s.Panel.Subscribe(OnScroll, s.onScroll)
-	s.Panel.Subscribe(OnResize, s.onResize)
+	s.Panel.Subscribe(eventenum.OnCursorEnter, s.onCursor)
+	s.Panel.Subscribe(eventenum.OnCursorLeave, s.onCursor)
+	s.Panel.Subscribe(eventenum.OnScroll, s.onScroll)
+	s.Panel.Subscribe(eventenum.OnResize, s.onResize)
 
 	s.update()
 	s.recalc()
@@ -308,10 +309,10 @@ func (s *ItemScroller) initialize(vert bool, width, height float32) {
 func (s *ItemScroller) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		s.cursorOver = true
 		s.update()
-	case OnCursorLeave:
+	case eventenum.OnCursorLeave:
 		s.cursorOver = false
 		s.update()
 	}
@@ -559,7 +560,7 @@ func (s *ItemScroller) setVScrollBar(state bool) {
 		if s.vscroll == nil {
 			s.vscroll = NewVScrollBar(0, 0)
 			s.vscroll.SetBorders(0, 0, 0, 1)
-			s.vscroll.Subscribe(OnChange, s.onScrollBarEvent)
+			s.vscroll.Subscribe(eventenum.OnChange, s.onScrollBarEvent)
 			s.Panel.Add(s.vscroll)
 		}
 		s.vscroll.SetSize(scrollWidth, s.ContentHeight())
@@ -584,7 +585,7 @@ func (s *ItemScroller) setHScrollBar(state bool) {
 		if s.hscroll == nil {
 			s.hscroll = NewHScrollBar(0, 0)
 			s.hscroll.SetBorders(1, 0, 0, 0)
-			s.hscroll.Subscribe(OnChange, s.onScrollBarEvent)
+			s.hscroll.Subscribe(eventenum.OnChange, s.onScrollBarEvent)
 			s.Panel.Add(s.hscroll)
 		}
 		s.hscroll.SetSize(s.ContentWidth(), scrollHeight)

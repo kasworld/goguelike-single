@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -79,15 +80,15 @@ func newCheckRadio(check bool, text string) *CheckRadio {
 	cb.Panel.Initialize(cb, 0, 0)
 
 	// Subscribe to events
-	cb.Panel.Subscribe(OnKeyDown, cb.onKey)
-	cb.Panel.Subscribe(OnCursorEnter, cb.onCursor)
-	cb.Panel.Subscribe(OnCursorLeave, cb.onCursor)
-	cb.Panel.Subscribe(OnMouseDown, cb.onMouse)
-	cb.Panel.Subscribe(OnEnable, func(evname dispatcheri.EventName, ev interface{}) { cb.update() })
+	cb.Panel.Subscribe(eventenum.OnKeyDown, cb.onKey)
+	cb.Panel.Subscribe(eventenum.OnCursorEnter, cb.onCursor)
+	cb.Panel.Subscribe(eventenum.OnCursorLeave, cb.onCursor)
+	cb.Panel.Subscribe(eventenum.OnMouseDown, cb.onMouse)
+	cb.Panel.Subscribe(eventenum.OnEnable, func(evname dispatcheri.EventName, ev interface{}) { cb.update() })
 
 	// Creates label
 	cb.Label = NewLabel(text)
-	cb.Label.Subscribe(OnResize, func(evname dispatcheri.EventName, ev interface{}) { cb.recalc() })
+	cb.Label.Subscribe(eventenum.OnResize, func(evname dispatcheri.EventName, ev interface{}) { cb.recalc() })
 	cb.Panel.Add(cb.Label)
 
 	// Creates icon label
@@ -113,7 +114,7 @@ func (cb *CheckRadio) SetValue(state bool) *CheckRadio {
 	}
 	cb.state = state
 	cb.update()
-	cb.Dispatch(OnChange, nil)
+	cb.Dispatch(eventenum.OnChange, nil)
 	return cb
 }
 
@@ -143,7 +144,7 @@ func (cb *CheckRadio) toggleState() {
 	// Subscribes once to the root panel for OnRadioGroup events
 	// The root panel is used to dispatch events to all checkradios
 	if !cb.subroot {
-		Manager().Subscribe(OnRadioGroup, func(name dispatcheri.EventName, ev interface{}) {
+		Manager().Subscribe(eventenum.OnRadioGroup, func(name dispatcheri.EventName, ev interface{}) {
 			cb.onRadioGroup(ev.(*CheckRadio))
 		})
 		cb.subroot = true
@@ -162,9 +163,9 @@ func (cb *CheckRadio) toggleState() {
 		}
 	}
 	cb.update()
-	cb.Dispatch(OnChange, nil)
+	cb.Dispatch(eventenum.OnChange, nil)
 	if !cb.check && len(cb.group) > 0 {
-		Manager().Dispatch(OnRadioGroup, cb)
+		Manager().Dispatch(eventenum.OnRadioGroup, cb)
 	}
 }
 
@@ -172,12 +173,12 @@ func (cb *CheckRadio) toggleState() {
 func (cb *CheckRadio) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	// Dispatch OnClick for left mouse button down
-	if evname == OnMouseDown {
+	if evname == eventenum.OnMouseDown {
 		mev := ev.(*window.MouseEvent)
 		if mev.Button == window.MouseButtonLeft && cb.Enabled() {
 			Manager().SetKeyFocus(cb)
 			cb.toggleState()
-			cb.Dispatch(OnClick, nil)
+			cb.Dispatch(eventenum.OnClick, nil)
 		}
 	}
 }
@@ -185,7 +186,7 @@ func (cb *CheckRadio) onMouse(evname dispatcheri.EventName, ev interface{}) {
 // onCursor process OnCursor* events
 func (cb *CheckRadio) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
-	if evname == OnCursorEnter {
+	if evname == eventenum.OnCursorEnter {
 		cb.cursorOver = true
 	} else {
 		cb.cursorOver = false
@@ -197,10 +198,10 @@ func (cb *CheckRadio) onCursor(evname dispatcheri.EventName, ev interface{}) {
 func (cb *CheckRadio) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
-	if evname == OnKeyDown && kev.Key == window.KeyEnter {
+	if evname == eventenum.OnKeyDown && kev.Key == window.KeyEnter {
 		cb.toggleState()
 		cb.update()
-		cb.Dispatch(OnClick, nil)
+		cb.Dispatch(eventenum.OnClick, nil)
 		return
 	}
 	return

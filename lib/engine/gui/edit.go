@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/text"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -67,14 +68,14 @@ func NewEdit(width int, placeHolder string) *Edit {
 	ed.focus = false
 
 	ed.Label.initialize("", StyleDefault().Font)
-	ed.Label.Subscribe(OnKeyDown, ed.onKey)
-	ed.Label.Subscribe(OnKeyRepeat, ed.onKey)
-	ed.Label.Subscribe(OnChar, ed.onChar)
-	ed.Label.Subscribe(OnMouseDown, ed.onMouse)
-	ed.Label.Subscribe(OnCursorEnter, ed.onCursor)
-	ed.Label.Subscribe(OnCursorLeave, ed.onCursor)
-	ed.Label.Subscribe(OnEnable, func(evname dispatcheri.EventName, ev interface{}) { ed.update() })
-	ed.Subscribe(OnFocusLost, ed.OnFocusLost)
+	ed.Label.Subscribe(eventenum.OnKeyDown, ed.onKey)
+	ed.Label.Subscribe(eventenum.OnKeyRepeat, ed.onKey)
+	ed.Label.Subscribe(eventenum.OnChar, ed.onChar)
+	ed.Label.Subscribe(eventenum.OnMouseDown, ed.onMouse)
+	ed.Label.Subscribe(eventenum.OnCursorEnter, ed.onCursor)
+	ed.Label.Subscribe(eventenum.OnCursorLeave, ed.onCursor)
+	ed.Label.Subscribe(eventenum.OnEnable, func(evname dispatcheri.EventName, ev interface{}) { ed.update() })
+	ed.Subscribe(eventenum.OnFocusLost, ed.OnFocusLost)
 
 	ed.update()
 	return ed
@@ -154,7 +155,7 @@ func (ed *Edit) CursorBack() {
 		ed.col--
 		ed.text = text.StrRemove(ed.text, ed.col)
 		ed.redraw(ed.focus)
-		ed.Dispatch(OnChange, nil)
+		ed.Dispatch(eventenum.OnChange, nil)
 	}
 }
 
@@ -178,7 +179,7 @@ func (ed *Edit) CursorDelete() {
 	if ed.col < text.StrCount(ed.text) {
 		ed.text = text.StrRemove(ed.text, ed.col)
 		ed.redraw(ed.focus)
-		ed.Dispatch(OnChange, nil)
+		ed.Dispatch(eventenum.OnChange, nil)
 	}
 }
 
@@ -206,7 +207,7 @@ func (ed *Edit) CursorInput(s string) {
 	ed.text = newText
 	ed.col++
 
-	ed.Dispatch(OnChange, nil)
+	ed.Dispatch(eventenum.OnChange, nil)
 	ed.redraw(ed.focus)
 }
 
@@ -279,13 +280,13 @@ func (ed *Edit) onMouse(evname dispatcheri.EventName, ev interface{}) {
 // onCursor receives subscribed cursor events
 func (ed *Edit) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
-	if evname == OnCursorEnter {
+	if evname == eventenum.OnCursorEnter {
 		window.Get().SetCursor(window.IBeamCursor)
 		ed.cursorOver = true
 		ed.update()
 		return
 	}
-	if evname == OnCursorLeave {
+	if evname == eventenum.OnCursorLeave {
 		window.Get().SetCursor(window.ArrowCursor)
 		ed.cursorOver = false
 		ed.update()

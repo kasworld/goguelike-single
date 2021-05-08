@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
@@ -41,11 +42,11 @@ func NewImageLabel(text string) *ImageLabel {
 
 	// Initializes the panel
 	il.Panel.Initialize(il, 0, 0)
-	il.Panel.Subscribe(OnResize, func(evname dispatcheri.EventName, ev interface{}) { il.recalc() })
+	il.Panel.Subscribe(eventenum.OnResize, func(evname dispatcheri.EventName, ev interface{}) { il.recalc() })
 
 	// Initializes the label
 	il.label.initialize(text, StyleDefault().Font)
-	il.label.Subscribe(OnResize, func(evname dispatcheri.EventName, ev interface{}) { il.recalc() })
+	il.label.Subscribe(eventenum.OnResize, func(evname dispatcheri.EventName, ev interface{}) { il.recalc() })
 	il.Panel.Add(&il.label)
 
 	il.recalc()

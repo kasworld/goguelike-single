@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -48,9 +49,6 @@ type ListItemStyles struct {
 // ListItemStyle contains the styling of a list item.
 type ListItemStyle BasicStyle
 
-// OnListItemResize is the identifier of the event dispatched when a ListItem's child panel is resized
-const OnListItemResize = "gui.OnListItemResize"
-
 // NewVList creates and returns a pointer to a new vertical list panel
 // with the specified dimensions
 func NewVList(width, height float32) *List {
@@ -82,8 +80,8 @@ func (li *List) initialize(vert bool, width, height float32) {
 	li.ItemScroller.initialize(vert, width, height)
 	li.ItemScroller.SetStyles(li.styles.Scroller)
 	li.ItemScroller.adjustItem = true
-	li.ItemScroller.Subscribe(OnKeyDown, li.onKeyEvent)
-	li.ItemScroller.Subscribe(OnKeyRepeat, li.onKeyEvent)
+	li.ItemScroller.Subscribe(eventenum.OnKeyDown, li.onKeyEvent)
+	li.ItemScroller.Subscribe(eventenum.OnKeyRepeat, li.onKeyEvent)
 
 	if vert {
 		li.keyNext = window.KeyDown
@@ -128,8 +126,8 @@ func (li *List) InsertAt(pos int, item PanelI) *ListItem {
 
 	litem := newListItem(li, item)
 	li.ItemScroller.InsertAt(pos, litem)
-	litem.Panel.Subscribe(OnMouseDown, litem.onMouse)
-	litem.Panel.Subscribe(OnCursorEnter, litem.onCursor)
+	litem.Panel.Subscribe(eventenum.OnMouseDown, litem.onMouse)
+	litem.Panel.Subscribe(eventenum.OnCursorEnter, litem.onCursor)
 	return litem
 }
 
@@ -202,7 +200,7 @@ func (li *List) SetSelected(item PanelI, state bool) {
 		if litem.item == item {
 			litem.SetSelected(state)
 			li.update()
-			li.Dispatch(OnChange, nil)
+			li.Dispatch(eventenum.OnChange, nil)
 			return
 		}
 	}
@@ -220,7 +218,7 @@ func (li *List) SelectPos(pos int, state bool) {
 	}
 	litem.SetSelected(state)
 	li.update()
-	li.Dispatch(OnChange, nil)
+	li.Dispatch(eventenum.OnChange, nil)
 }
 
 // SetItemPadLeftAt sets the additional left padding for this item
@@ -286,7 +284,7 @@ func (li *List) selNext(sel bool, update bool) *ListItem {
 		li.update()
 	}
 	if sel && newSel {
-		li.Dispatch(OnChange, nil)
+		li.Dispatch(eventenum.OnChange, nil)
 	}
 	return newItem
 }
@@ -340,7 +338,7 @@ func (li *List) selPrev(sel bool, update bool) *ListItem {
 		li.update()
 	}
 	if sel && newSel {
-		li.Dispatch(OnChange, nil)
+		li.Dispatch(eventenum.OnChange, nil)
 	}
 	return newItem
 }
@@ -438,7 +436,7 @@ func (li *List) setSelection(litem *ListItem, state bool, force bool, dispatch b
 	}
 	li.update()
 	if dispatch {
-		li.Dispatch(OnChange, nil)
+		li.Dispatch(eventenum.OnChange, nil)
 	}
 }
 
@@ -465,8 +463,8 @@ func newListItem(list *List, item PanelI) *ListItem {
 	litem.SetContentWidth(item.GetPanel().Width())
 	litem.SetContentHeight(item.GetPanel().Height())
 	// If this list item is resized, sends event to its child panel
-	litem.Subscribe(OnResize, func(evname dispatcheri.EventName, ev interface{}) {
-		item.GetPanel().Dispatch(OnListItemResize, nil)
+	litem.Subscribe(eventenum.OnResize, func(evname dispatcheri.EventName, ev interface{}) {
+		item.GetPanel().Dispatch(eventenum.OnListItemResize, nil)
 	})
 	litem.update()
 	return litem

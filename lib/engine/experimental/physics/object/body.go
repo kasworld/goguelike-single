@@ -5,7 +5,7 @@
 package object
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -129,19 +129,6 @@ const (
 	Awake = BodySleepState(iota)
 	Sleepy
 	Sleeping
-)
-
-// Events
-const (
-	// Dispatched after a body has gone in to the sleepy state.
-	SleepyEvent = dispatcheri.EventName("physics.SleepyEvent")
-	// Dispatched after a body has fallen asleep.
-	SleepEvent = dispatcheri.EventName("physics.SleepEvent")
-	// Dispatched after a sleeping body has woken up.
-	WakeUpEvent = dispatcheri.EventName("physics.WakeUpEvent")
-	// Dispatched after two bodies collide.
-	// This event is dispatched on each of the two bodies involved in the collision.
-	CollideEvent = dispatcheri.EventName("physics.CollideEvent")
 )
 
 // TODO
@@ -476,7 +463,7 @@ func (b *Body) WakeUp() {
 	b.sleepState = Awake
 	b.wakeUpAfterNarrowphase = false
 	if state == Sleeping {
-		b.Dispatch(WakeUpEvent, nil)
+		b.Dispatch(eventenum.WakeUpEvent, nil)
 	}
 }
 
@@ -499,12 +486,12 @@ func (b *Body) SleepTick(time float32) {
 		if b.sleepState == Awake && speedSquared < speedLimitSquared {
 			b.sleepState = Sleepy
 			b.timeLastSleepy = time
-			b.Dispatch(SleepyEvent, nil)
+			b.Dispatch(eventenum.SleepyEvent, nil)
 		} else if b.sleepState == Sleepy && speedSquared > speedLimitSquared {
 			b.WakeUp() // Wake up
 		} else if b.sleepState == Sleepy && (time-b.timeLastSleepy) > b.sleepTimeLimit {
 			b.Sleep() // Sleeping
-			b.Dispatch(SleepEvent, nil)
+			b.Dispatch(eventenum.SleepEvent, nil)
 		}
 	}
 }

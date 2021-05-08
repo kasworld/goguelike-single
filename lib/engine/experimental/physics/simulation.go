@@ -5,7 +5,7 @@
 package physics
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/constraint"
@@ -140,7 +140,7 @@ func (s *Simulation) AddBody(body *object.Body, name string) {
 	body.SetName(name)
 
 	// TODO dispatch add-body event
-	//s.Dispatch(AddBodyEvent, BodyEvent{body})
+	//s.Dispatch(eventenum.AddBodyEvent, BodyEvent{body})
 }
 
 // RemoveBody removes the specified body from the simulation.
@@ -151,7 +151,7 @@ func (s *Simulation) RemoveBody(body *object.Body) bool {
 		if current == body {
 			s.bodies[idx] = nil
 			// TODO dispatch remove-body event
-			//s.Dispatch(AddBodyEvent, BodyEvent{body})
+			//s.Dispatch(eventenum.AddBodyEvent, BodyEvent{body})
 			return true
 		}
 	}
@@ -305,12 +305,6 @@ type ContactEvent struct {
 	bodyA *object.Body
 	bodyB *object.Body
 }
-
-const (
-	BeginContactEvent = dispatcheri.EventName("physics.BeginContactEvent")
-	EndContactEvent   = dispatcheri.EventName("physics.EndContactEvent")
-	CollisionEv       = dispatcheri.EventName("physics.Collision")
-)
 
 // ===========================
 
@@ -469,7 +463,7 @@ func (s *Simulation) internalStep(dt float32) {
 		}
 	}
 
-	// TODO s.Dispatch(World_step_preStepEvent)
+	// TODO s.Dispatch(eventenum.World_step_preStepEvent)
 
 	// Integrate the forces into velocities and the velocities into position deltas for all bodies
 	// TODO future: quatNormalize := s.stepnumber % (s.quatNormalizeSkip + 1) == 0
@@ -486,7 +480,7 @@ func (s *Simulation) internalStep(dt float32) {
 	s.time += dt
 	s.stepnumber += 1
 
-	// TODO s.Dispatch(World_step_postStepEvent)
+	// TODO s.Dispatch(eventenum.World_step_postStepEvent)
 
 	// Sleeping update
 	if s.allowSleep {
@@ -566,8 +560,8 @@ func (s *Simulation) updateSleepAndCollisionMatrix(contactEq *equation.Contact) 
 
 	if s.prevCollisionMatrix.Get(bodyA.Index(), bodyB.Index()) == false {
 		// First contact!
-		bodyA.Dispatch(CollisionEv, &CollideEvent{bodyB, contactEq})
-		bodyB.Dispatch(CollisionEv, &CollideEvent{bodyA, contactEq})
+		bodyA.Dispatch(eventenum.CollisionEv, &CollideEvent{bodyB, contactEq})
+		bodyB.Dispatch(eventenum.CollisionEv, &CollideEvent{bodyA, contactEq})
 	}
 
 	// TODO this is only for events

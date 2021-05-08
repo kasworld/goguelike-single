@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -104,8 +105,8 @@ func (s *Scroller) initialize(width, height float32, mode ScrollMode, target Pan
 	s.Panel.Add(s.target)
 	s.mode = mode
 
-	s.Subscribe(OnResize, s.onResize)
-	s.Subscribe(OnScroll, s.onScroll)
+	s.Subscribe(eventenum.OnResize, s.onResize)
+	s.Subscribe(eventenum.OnScroll, s.onScroll)
 
 	s.Update()
 }
@@ -324,7 +325,7 @@ func (s *Scroller) setVerticalScrollbarVisible() {
 	if s.vscroll == nil {
 		s.vscroll = NewVScrollBar(s.style.VerticalScrollbar.Broadness, 0)
 		s.vscroll.applyStyle(&s.style.VerticalScrollbar.ScrollBarStyle)
-		s.vscroll.Subscribe(OnChange, s.onScrollBarEvent)
+		s.vscroll.Subscribe(eventenum.OnChange, s.onScrollBarEvent)
 		s.Add(s.vscroll)
 	}
 	s.vscroll.SetVisible(true)
@@ -335,7 +336,7 @@ func (s *Scroller) setHorizontalScrollbarVisible() {
 	if s.hscroll == nil {
 		s.hscroll = NewHScrollBar(0, s.style.HorizontalScrollbar.Broadness)
 		s.hscroll.applyStyle(&s.style.HorizontalScrollbar.ScrollBarStyle)
-		s.hscroll.Subscribe(OnChange, s.onScrollBarEvent)
+		s.hscroll.Subscribe(eventenum.OnChange, s.onScrollBarEvent)
 		s.Add(s.hscroll)
 	}
 	s.hscroll.SetVisible(true)

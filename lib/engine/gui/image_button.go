@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/texture"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -67,15 +68,15 @@ func NewImageButton(normalImgPath string) (*ImageButton, error) {
 	b.Panel.Add(b.image)
 
 	// Subscribe to panel events
-	b.Panel.Subscribe(OnKeyDown, b.onKey)
-	b.Panel.Subscribe(OnKeyUp, b.onKey)
-	b.Panel.Subscribe(OnMouseUp, b.onMouse)
-	b.Panel.Subscribe(OnMouseDown, b.onMouse)
-	b.Panel.Subscribe(OnCursor, b.onCursor)
-	b.Panel.Subscribe(OnCursorEnter, b.onCursor)
-	b.Panel.Subscribe(OnCursorLeave, b.onCursor)
-	b.Panel.Subscribe(OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
-	b.Panel.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
+	b.Panel.Subscribe(eventenum.OnKeyDown, b.onKey)
+	b.Panel.Subscribe(eventenum.OnKeyUp, b.onKey)
+	b.Panel.Subscribe(eventenum.OnMouseUp, b.onMouse)
+	b.Panel.Subscribe(eventenum.OnMouseDown, b.onMouse)
+	b.Panel.Subscribe(eventenum.OnCursor, b.onCursor)
+	b.Panel.Subscribe(eventenum.OnCursorEnter, b.onCursor)
+	b.Panel.Subscribe(eventenum.OnCursorLeave, b.onCursor)
+	b.Panel.Subscribe(eventenum.OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
+	b.Panel.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
 
 	b.recalc()
 	b.update()
@@ -170,10 +171,10 @@ func (b *ImageButton) SetStyles(bs *ImageButtonStyles) {
 func (b *ImageButton) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		b.mouseOver = true
 		b.update()
-	case OnCursorLeave:
+	case eventenum.OnCursorLeave:
 		b.pressed = false
 		b.mouseOver = false
 		b.update()
@@ -184,12 +185,12 @@ func (b *ImageButton) onCursor(evname dispatcheri.EventName, ev interface{}) {
 func (b *ImageButton) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		Manager().SetKeyFocus(b)
 		b.pressed = true
 		b.update()
-		b.Dispatch(OnClick, nil)
-	case OnMouseUp:
+		b.Dispatch(eventenum.OnClick, nil)
+	case eventenum.OnMouseUp:
 		b.pressed = false
 		b.update()
 	default:
@@ -201,13 +202,13 @@ func (b *ImageButton) onMouse(evname dispatcheri.EventName, ev interface{}) {
 func (b *ImageButton) onKey(evname dispatcheri.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
-	if evname == OnKeyDown && kev.Key == window.KeyEnter {
+	if evname == eventenum.OnKeyDown && kev.Key == window.KeyEnter {
 		b.pressed = true
 		b.update()
-		b.Dispatch(OnClick, nil)
+		b.Dispatch(eventenum.OnClick, nil)
 		return
 	}
-	if evname == OnKeyUp && kev.Key == window.KeyEnter {
+	if evname == eventenum.OnKeyUp && kev.Key == window.KeyEnter {
 		b.pressed = false
 		b.update()
 		return

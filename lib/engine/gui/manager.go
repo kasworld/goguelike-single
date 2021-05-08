@@ -7,6 +7,7 @@ package gui
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/timermanager"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -42,14 +43,14 @@ func Manager() *manager {
 
 	// Subscribe to window events
 	gm.win = window.Get()
-	gm.win.Subscribe(window.OnKeyUp, gm.onKeyboard)
-	gm.win.Subscribe(window.OnKeyDown, gm.onKeyboard)
-	gm.win.Subscribe(window.OnKeyRepeat, gm.onKeyboard)
-	gm.win.Subscribe(window.OnChar, gm.onKeyboard)
-	gm.win.Subscribe(window.OnCursor, gm.onCursor)
-	gm.win.Subscribe(window.OnMouseUp, gm.onMouse)
-	gm.win.Subscribe(window.OnMouseDown, gm.onMouse)
-	gm.win.Subscribe(window.OnScroll, gm.onScroll)
+	gm.win.Subscribe(eventenum.OnKeyUp, gm.onKeyboard)
+	gm.win.Subscribe(eventenum.OnKeyDown, gm.onKeyboard)
+	gm.win.Subscribe(eventenum.OnKeyRepeat, gm.onKeyboard)
+	gm.win.Subscribe(eventenum.OnChar, gm.onKeyboard)
+	gm.win.Subscribe(eventenum.OnCursor, gm.onCursor)
+	gm.win.Subscribe(eventenum.OnMouseUp, gm.onMouse)
+	gm.win.Subscribe(eventenum.OnMouseDown, gm.onMouse)
+	gm.win.Subscribe(eventenum.OnScroll, gm.onScroll)
 
 	return gm
 }
@@ -77,11 +78,11 @@ func (gm *manager) SetKeyFocus(disp dispatcheri.DispatcherI) {
 		return
 	}
 	if gm.keyFocus != nil {
-		gm.keyFocus.Dispatch(OnFocusLost, nil)
+		gm.keyFocus.Dispatch(eventenum.OnFocusLost, nil)
 	}
 	gm.keyFocus = disp
 	if gm.keyFocus != nil {
-		gm.keyFocus.Dispatch(OnFocus, nil)
+		gm.keyFocus.Dispatch(eventenum.OnFocus, nil)
 	}
 }
 
@@ -93,7 +94,7 @@ func (gm *manager) SetCursorFocus(disp dispatcheri.DispatcherI) {
 	}
 	gm.cursorFocus = disp
 	if gm.cursorFocus == nil {
-		gm.onCursor(OnCursor, gm.cev)
+		gm.onCursor(eventenum.OnCursor, gm.cev)
 	}
 }
 
@@ -127,10 +128,10 @@ func (gm *manager) onMouse(evname dispatcheri.EventName, ev interface{}) {
 	gm.forEachIPanel(func(ipan PanelI) {
 		if gm.target == nil || !ipan.IsAncestorOf(gm.target) {
 			switch evname {
-			case OnMouseDown:
-				ipan.Dispatch(OnMouseDownOut, ev)
-			case OnMouseUp:
-				ipan.Dispatch(OnMouseUpOut, ev)
+			case eventenum.OnMouseDown:
+				ipan.Dispatch(eventenum.OnMouseDownOut, ev)
+			case eventenum.OnMouseUp:
+				ipan.Dispatch(eventenum.OnMouseUpOut, ev)
 			}
 		}
 	})
@@ -204,11 +205,11 @@ func (gm *manager) onCursor(evname dispatcheri.EventName, ev interface{}) {
 		}
 		// If just left a panel and the new panel is not a descendant of the old panel
 		if oldTarget != nil && !oldTarget.IsAncestorOf(gm.target) && (gm.modal == nil || gm.modal.IsAncestorOf(oldTarget)) {
-			sendAncestry(oldTarget, true, commonAnc, gm.modal, OnCursorLeave, ev)
+			sendAncestry(oldTarget, true, commonAnc, gm.modal, eventenum.OnCursorLeave, ev)
 		}
 		// If just entered a panel and it's not an ancestor of the old panel
 		if gm.target != nil && !gm.target.IsAncestorOf(oldTarget) && (gm.modal == nil || gm.modal.IsAncestorOf(gm.target)) {
-			sendAncestry(gm.target, true, commonAnc, gm.modal, OnCursorEnter, ev)
+			sendAncestry(gm.target, true, commonAnc, gm.modal, eventenum.OnCursorEnter, ev)
 		}
 	}
 

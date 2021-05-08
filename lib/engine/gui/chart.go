@@ -9,6 +9,7 @@ import (
 	"math"
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -82,7 +83,7 @@ func (ch *Chart) Init(width float32, height float32) {
 	ch.formatY = "%v"
 	ch.fontSizeX = 14
 	ch.fontSizeY = 14
-	ch.Subscribe(OnResize, ch.onResize)
+	ch.Subscribe(eventenum.OnResize, ch.onResize)
 }
 
 // SetTitle sets the chart title text and font size.

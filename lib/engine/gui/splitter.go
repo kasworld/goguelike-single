@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -81,12 +82,12 @@ func newSplitter(horiz bool, width, height float32) *Splitter {
 		s.pos = 0.5
 	}
 
-	s.Subscribe(OnResize, s.onResize)
-	s.spacer.Subscribe(OnMouseDown, s.onMouse)
-	s.spacer.Subscribe(OnMouseUp, s.onMouse)
-	s.spacer.Subscribe(OnCursor, s.onCursor)
-	s.spacer.Subscribe(OnCursorEnter, s.onCursor)
-	s.spacer.Subscribe(OnCursorLeave, s.onCursor)
+	s.Subscribe(eventenum.OnResize, s.onResize)
+	s.spacer.Subscribe(eventenum.OnMouseDown, s.onMouse)
+	s.spacer.Subscribe(eventenum.OnMouseUp, s.onMouse)
+	s.spacer.Subscribe(eventenum.OnCursor, s.onCursor)
+	s.spacer.Subscribe(eventenum.OnCursorEnter, s.onCursor)
+	s.spacer.Subscribe(eventenum.OnCursorLeave, s.onCursor)
 	s.update()
 	s.recalc()
 	return s
@@ -121,7 +122,7 @@ func (s *Splitter) onMouse(evname dispatcheri.EventName, ev interface{}) {
 		return
 	}
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		s.pressed = true
 		if s.horiz {
 			s.posLast = mev.Xpos
@@ -129,7 +130,7 @@ func (s *Splitter) onMouse(evname dispatcheri.EventName, ev interface{}) {
 			s.posLast = mev.Ypos
 		}
 		Manager().SetCursorFocus(&s.spacer)
-	case OnMouseUp:
+	case eventenum.OnMouseUp:
 		s.pressed = false
 		window.Get().SetCursor(window.ArrowCursor)
 		Manager().SetCursorFocus(nil)
@@ -139,7 +140,7 @@ func (s *Splitter) onMouse(evname dispatcheri.EventName, ev interface{}) {
 // onCursor receives subscribed cursor events over the spacer panel
 func (s *Splitter) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
-	if evname == OnCursorEnter {
+	if evname == eventenum.OnCursorEnter {
 		if s.horiz {
 			window.Get().SetCursor(window.HResizeCursor)
 		} else {
@@ -147,11 +148,11 @@ func (s *Splitter) onCursor(evname dispatcheri.EventName, ev interface{}) {
 		}
 		s.mouseOver = true
 		s.update()
-	} else if evname == OnCursorLeave {
+	} else if evname == eventenum.OnCursorLeave {
 		window.Get().SetCursor(window.ArrowCursor)
 		s.mouseOver = false
 		s.update()
-	} else if evname == OnCursor {
+	} else if evname == eventenum.OnCursor {
 		if !s.pressed {
 			return
 		}

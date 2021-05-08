@@ -10,14 +10,9 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-)
-
-// Node events.
-const (
-	// Dispatched when a descendent is added or removed
-	OnDescendant = dispatcheri.EventName("node.OnDescendant")
 )
 
 // Node represents an object in 3D space existing within a hierarchy.
@@ -73,7 +68,7 @@ func (n *Node) Init(inode NodeI) {
 	n.matrixWorld.Identity()
 
 	// Subscribe to events
-	n.Subscribe(OnDescendant, func(evname dispatcheri.EventName, ev interface{}) {
+	n.Subscribe(eventenum.OnDescendant, func(evname dispatcheri.EventName, ev interface{}) {
 		if n.parent != nil {
 			n.parent.Dispatch(evname, ev)
 		}
@@ -292,7 +287,7 @@ func (n *Node) Add(ichild NodeI) *Node {
 
 	setParent(n.GetNodeI(), ichild)
 	n.children = append(n.children, ichild)
-	n.Dispatch(OnDescendant, nil)
+	n.Dispatch(eventenum.OnDescendant, nil)
 	return n
 }
 
@@ -312,7 +307,7 @@ func (n *Node) AddAt(idx int, ichild NodeI) *Node {
 	copy(n.children[idx+1:], n.children[idx:])
 	n.children[idx] = ichild
 
-	n.Dispatch(OnDescendant, nil)
+	n.Dispatch(eventenum.OnDescendant, nil)
 
 	return n
 }
@@ -402,7 +397,7 @@ func (n *Node) Remove(ichild NodeI) bool {
 			n.children[len(n.children)-1] = nil
 			n.children = n.children[:len(n.children)-1]
 			ichild.GetNode().parent = nil
-			n.Dispatch(OnDescendant, nil)
+			n.Dispatch(eventenum.OnDescendant, nil)
 			return true
 		}
 	}
@@ -424,7 +419,7 @@ func (n *Node) RemoveAt(idx int) NodeI {
 	n.children[len(n.children)-1] = nil
 	n.children = n.children[:len(n.children)-1]
 
-	n.Dispatch(OnDescendant, nil)
+	n.Dispatch(eventenum.OnDescendant, nil)
 
 	return child
 }

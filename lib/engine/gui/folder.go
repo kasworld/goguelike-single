@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
@@ -68,22 +69,22 @@ func (f *Folder) Initialize(text string, width float32, contentPanel PanelI) {
 	f.Panel.Add(f.contentPanel)
 
 	// Set event callbacks
-	f.Panel.Subscribe(OnMouseDown, f.onMouse)
-	f.Panel.Subscribe(OnCursorEnter, f.onCursor)
-	f.Panel.Subscribe(OnCursorLeave, f.onCursor)
+	f.Panel.Subscribe(eventenum.OnMouseDown, f.onMouse)
+	f.Panel.Subscribe(eventenum.OnCursorEnter, f.onCursor)
+	f.Panel.Subscribe(eventenum.OnCursorLeave, f.onCursor)
 
-	f.Subscribe(OnMouseDownOut, func(s dispatcheri.EventName, i interface{}) {
+	f.Subscribe(eventenum.OnMouseDownOut, func(s dispatcheri.EventName, i interface{}) {
 		// Hide list when clicked out
 		if f.contentPanel.Visible() {
 			f.contentPanel.SetVisible(false)
 		}
 	})
 
-	f.contentPanel.Subscribe(OnCursorEnter, func(evname dispatcheri.EventName, ev interface{}) {
-		f.Dispatch(OnCursorLeave, ev)
+	f.contentPanel.Subscribe(eventenum.OnCursorEnter, func(evname dispatcheri.EventName, ev interface{}) {
+		f.Dispatch(eventenum.OnCursorLeave, ev)
 	})
-	f.contentPanel.Subscribe(OnCursorLeave, func(evname dispatcheri.EventName, ev interface{}) {
-		f.Dispatch(OnCursorEnter, ev)
+	f.contentPanel.Subscribe(eventenum.OnCursorLeave, func(evname dispatcheri.EventName, ev interface{}) {
+		f.Dispatch(eventenum.OnCursorEnter, ev)
 	})
 
 	f.alignRight = true
@@ -121,7 +122,7 @@ func (f *Folder) Height() float32 {
 func (f *Folder) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		cont := f.contentPanel.GetPanel()
 		if !cont.Visible() {
 			cont.SetVisible(true)
@@ -139,10 +140,10 @@ func (f *Folder) onMouse(evname dispatcheri.EventName, ev interface{}) {
 func (f *Folder) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		f.cursorOver = true
 		f.update()
-	case OnCursorLeave:
+	case eventenum.OnCursorLeave:
 		f.cursorOver = false
 		f.update()
 	default:

@@ -1,7 +1,5 @@
 package window
 
-import "github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
-
 // Key corresponds to a keyboard key.
 type Key int
 
@@ -31,20 +29,6 @@ const (
 	DiagResize1Cursor
 	DiagResize2Cursor
 	CursorLast = DiagResize2Cursor
-)
-
-// Window event names. See availability per platform below ("x" indicates available).
-const ( //                             Desktop | Browser |
-	OnWindowPos  = dispatcheri.EventName("w.OnWindowPos")  //    x    |         |
-	OnWindowSize = dispatcheri.EventName("w.OnWindowSize") //    x    |         |
-	OnKeyUp      = dispatcheri.EventName("w.OnKeyUp")      //    x    |    x    |
-	OnKeyDown    = dispatcheri.EventName("w.OnKeyDown")    //    x    |    x    |
-	OnKeyRepeat  = dispatcheri.EventName("w.OnKeyRepeat")  //    x    |         |
-	OnChar       = dispatcheri.EventName("w.OnChar")       //    x    |    x    |
-	OnCursor     = dispatcheri.EventName("w.OnCursor")     //    x    |    x    |
-	OnMouseUp    = dispatcheri.EventName("w.OnMouseUp")    //    x    |    x    |
-	OnMouseDown  = dispatcheri.EventName("w.OnMouseDown")  //    x    |    x    |
-	OnScroll     = dispatcheri.EventName("w.OnScroll")     //    x    |    x    |
 )
 
 // PosEvent describes a windows position changed event

@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -143,7 +144,7 @@ func NewMenuBar() *Menu {
 
 	m := NewMenu()
 	m.bar = true
-	m.Panel.Subscribe(OnMouseDownOut, m.onMouse)
+	m.Panel.Subscribe(eventenum.OnMouseDownOut, m.onMouse)
 	return m
 }
 
@@ -154,8 +155,8 @@ func NewMenu() *Menu {
 	m.Panel.Initialize(m, 0, 0)
 	m.styles = &StyleDefault().Menu
 	m.items = make([]*MenuItem, 0)
-	m.Panel.Subscribe(OnKeyDown, m.onKey)
-	m.Panel.Subscribe(OnResize, m.onResize)
+	m.Panel.Subscribe(eventenum.OnKeyDown, m.onKey)
+	m.Panel.Subscribe(eventenum.OnResize, m.onResize)
 	m.update()
 	return m
 }
@@ -566,9 +567,9 @@ func newMenuItem(text string, styles *MenuItemStyles) *MenuItem {
 	if text != "" {
 		mi.label = NewLabel(text)
 		mi.Panel.Add(mi.label)
-		mi.Panel.Subscribe(OnCursorEnter, mi.onCursor)
-		mi.Panel.Subscribe(OnCursor, mi.onCursor)
-		mi.Panel.Subscribe(OnMouseDown, mi.onMouse)
+		mi.Panel.Subscribe(eventenum.OnCursorEnter, mi.onCursor)
+		mi.Panel.Subscribe(eventenum.OnCursor, mi.onCursor)
+		mi.Panel.Subscribe(eventenum.OnMouseDown, mi.onMouse)
 	}
 	mi.update()
 	return mi
@@ -702,7 +703,7 @@ func (mi *MenuItem) IdPath() []string {
 func (mi *MenuItem) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		mi.menu.setSelectedItem(mi)
 	}
 }
@@ -711,7 +712,7 @@ func (mi *MenuItem) onCursor(evname dispatcheri.EventName, ev interface{}) {
 func (mi *MenuItem) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		// MenuBar option
 		if mi.menu.bar {
 			mi.menu.autoOpen = !mi.menu.autoOpen
@@ -738,7 +739,7 @@ func (mi *MenuItem) activate() {
 	}
 	rm.setSelectedPos(-1)
 	Manager().SetKeyFocus(rm)
-	mi.dispatchAll(OnClick, mi)
+	mi.dispatchAll(eventenum.OnClick, mi)
 }
 
 // rootMenu returns the root menu for this menu item

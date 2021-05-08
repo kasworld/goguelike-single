@@ -19,6 +19,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -59,7 +60,7 @@ func (ga *GLClient) glInit() error {
 	// Set up orbit control for the camera
 	// camera.NewOrbitControl(ga.cam)
 
-	ga.app.Subscribe(window.OnWindowSize, ga.onResize)
+	ga.app.Subscribe(eventenum.OnWindowSize, ga.onResize)
 	ga.onResize("", nil)
 
 	// Create and add lights to the scene
@@ -79,9 +80,9 @@ func (ga *GLClient) glInit() error {
 	ga.labelFPS.SetColor4(&lightTextColor)
 	ga.scene.Add(ga.labelFPS)
 
-	gui.Manager().SubscribeID(window.OnMouseUp, ga, ga.onMouse)
-	gui.Manager().SubscribeID(window.OnMouseDown, ga, ga.onMouse)
-	gui.Manager().SubscribeID(window.OnScroll, &ga, ga.onScroll)
+	gui.Manager().SubscribeID(eventenum.OnMouseUp, ga, ga.onMouse)
+	gui.Manager().SubscribeID(eventenum.OnMouseDown, ga, ga.onMouse)
+	gui.Manager().SubscribeID(eventenum.OnScroll, &ga, ga.onScroll)
 
 	return nil
 }
@@ -90,7 +91,7 @@ func (ga *GLClient) glInit() error {
 func (ga *GLClient) onMouse(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case window.OnMouseDown:
+	case eventenum.OnMouseDown:
 		// gui.Manager().SetCursorFocus(ga)
 		mev := ev.(*window.MouseEvent)
 		switch mev.Button {
@@ -98,7 +99,7 @@ func (ga *GLClient) onMouse(evname dispatcheri.EventName, ev interface{}) {
 		case window.MouseButtonMiddle: // Zoom
 		case window.MouseButtonRight: // Pan
 		}
-	case window.OnMouseUp:
+	case eventenum.OnMouseUp:
 		// gui.Manager().SetCursorFocus(nil)
 	}
 }
@@ -130,7 +131,7 @@ func (ga *GLClient) Run() error {
 	// btn := gui.NewButton("Make Red")
 	// btn.SetPosition(100, 40)
 	// btn.SetSize(40, 40)
-	// btn.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+	// btn.Subscribe(eventenum.gui.OnClick, func(name string, ev interface{}) {
 	// 	mat.SetColor(math32.NewColor("DarkRed"))
 	// })
 	// ga.scene.Add(btn)

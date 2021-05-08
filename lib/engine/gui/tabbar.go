@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -72,23 +73,23 @@ func NewTabBar(width, height float32) *TabBar {
 
 	// Create list for contained tabs not visible
 	tb.list = NewVList(0, 0)
-	tb.list.Subscribe(OnMouseDownOut, func(evname dispatcheri.EventName, ev interface{}) {
+	tb.list.Subscribe(eventenum.OnMouseDownOut, func(evname dispatcheri.EventName, ev interface{}) {
 		tb.list.SetVisible(false)
 	})
-	tb.list.Subscribe(OnChange, tb.onListChange)
+	tb.list.Subscribe(eventenum.OnChange, tb.onListChange)
 	tb.Add(tb.list)
 
 	// Creates list icon button
 	tb.listButton = NewIcon(tb.styles.ListButtonIcon)
 	tb.listButton.SetPaddingsFrom(&tb.styles.ListButtonPaddings)
-	tb.listButton.Subscribe(OnMouseDown, tb.onListButton)
+	tb.listButton.Subscribe(eventenum.OnMouseDown, tb.onListButton)
 	tb.Add(tb.listButton)
 
 	// Subscribe to panel events
-	tb.Subscribe(OnCursorEnter, tb.onCursor)
-	tb.Subscribe(OnCursorLeave, tb.onCursor)
-	tb.Subscribe(OnEnable, func(name dispatcheri.EventName, ev interface{}) { tb.update() })
-	tb.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { tb.recalc() })
+	tb.Subscribe(eventenum.OnCursorEnter, tb.onCursor)
+	tb.Subscribe(eventenum.OnCursorLeave, tb.onCursor)
+	tb.Subscribe(eventenum.OnEnable, func(name dispatcheri.EventName, ev interface{}) { tb.update() })
+	tb.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { tb.recalc() })
 
 	tb.recalc()
 	tb.update()
@@ -242,10 +243,10 @@ func (tb *TabBar) Selected() int {
 func (tb *TabBar) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		tb.cursorOver = true
 		tb.update()
-	case OnCursorLeave:
+	case eventenum.OnCursorLeave:
 		tb.cursorOver = false
 		tb.update()
 	default:
@@ -257,7 +258,7 @@ func (tb *TabBar) onCursor(evname dispatcheri.EventName, ev interface{}) {
 func (tb *TabBar) onListButton(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		if !tb.list.Visible() {
 			tb.list.SetVisible(true)
 		}
@@ -418,10 +419,10 @@ func newTab(text string, tb *TabBar, styles *TabStyles) *Tab {
 	tab.header.Add(&tab.bottom)
 
 	// Subscribe to header panel events
-	tab.header.Subscribe(OnCursorEnter, tab.onCursor)
-	tab.header.Subscribe(OnCursorLeave, tab.onCursor)
-	tab.header.Subscribe(OnMouseDown, tab.onMouseHeader)
-	tab.iconClose.Subscribe(OnMouseDown, tab.onMouseIcon)
+	tab.header.Subscribe(eventenum.OnCursorEnter, tab.onCursor)
+	tab.header.Subscribe(eventenum.OnCursorLeave, tab.onCursor)
+	tab.header.Subscribe(eventenum.OnMouseDown, tab.onMouseHeader)
+	tab.iconClose.Subscribe(eventenum.OnMouseDown, tab.onMouseIcon)
 
 	tab.update()
 	return tab
@@ -431,10 +432,10 @@ func newTab(text string, tb *TabBar, styles *TabStyles) *Tab {
 func (tab *Tab) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		tab.cursorOver = true
 		tab.update()
-	case OnCursorLeave:
+	case eventenum.OnCursorLeave:
 		tab.cursorOver = false
 		tab.update()
 	default:
@@ -445,7 +446,7 @@ func (tab *Tab) onCursor(evname dispatcheri.EventName, ev interface{}) {
 // onMouse process subscribed mouse events over the tab header
 func (tab *Tab) onMouseHeader(evname dispatcheri.EventName, ev interface{}) {
 
-	if evname == OnMouseDown && ev.(*window.MouseEvent).Button == window.MouseButtonLeft {
+	if evname == eventenum.OnMouseDown && ev.(*window.MouseEvent).Button == window.MouseButtonLeft {
 		tab.tb.SetSelected(tab.tb.TabPosition(tab))
 	}
 }
@@ -454,7 +455,7 @@ func (tab *Tab) onMouseHeader(evname dispatcheri.EventName, ev interface{}) {
 func (tab *Tab) onMouseIcon(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		tab.tb.RemoveTab(tab.tb.TabPosition(tab))
 	default:
 		return

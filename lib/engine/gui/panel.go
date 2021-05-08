@@ -5,6 +5,7 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -576,7 +577,7 @@ func (p *Panel) Intersects(other *Panel) bool {
 func (p *Panel) SetEnabled(state bool) {
 
 	p.enabled = state
-	p.Dispatch(OnEnable, nil)
+	p.Dispatch(eventenum.OnEnable, nil)
 }
 
 // Enabled returns the current enabled state of this panel
@@ -817,7 +818,7 @@ func (p *Panel) resize(width, height float32, dispatch bool) {
 	if p.layout != nil {
 		p.layout.Recalc(p)
 	}
-	p.Dispatch(OnResize, nil)
+	p.Dispatch(eventenum.OnResize, nil)
 }
 
 // RenderSetup is called by the Engine before drawing the object

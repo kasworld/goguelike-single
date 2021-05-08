@@ -6,6 +6,7 @@ package gui
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -56,20 +57,20 @@ func NewButton(text string) *Button {
 	b.Panel.Initialize(b, 0, 0)
 
 	// Subscribe to panel events
-	b.Subscribe(OnKeyDown, b.onKey)
-	b.Subscribe(OnKeyUp, b.onKey)
-	b.Subscribe(OnMouseUp, b.onMouse)
-	b.Subscribe(OnMouseDown, b.onMouse)
-	b.Subscribe(OnMouseUpOut, b.onMouse)
-	b.Subscribe(OnCursor, b.onCursor)
-	b.Subscribe(OnCursorEnter, b.onCursor)
-	b.Subscribe(OnCursorLeave, b.onCursor)
-	b.Subscribe(OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
-	b.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
+	b.Subscribe(eventenum.OnKeyDown, b.onKey)
+	b.Subscribe(eventenum.OnKeyUp, b.onKey)
+	b.Subscribe(eventenum.OnMouseUp, b.onMouse)
+	b.Subscribe(eventenum.OnMouseDown, b.onMouse)
+	b.Subscribe(eventenum.OnMouseUpOut, b.onMouse)
+	b.Subscribe(eventenum.OnCursor, b.onCursor)
+	b.Subscribe(eventenum.OnCursorEnter, b.onCursor)
+	b.Subscribe(eventenum.OnCursorLeave, b.onCursor)
+	b.Subscribe(eventenum.OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
+	b.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
 
 	// Creates label
 	b.Label = NewLabel(text)
-	b.Label.Subscribe(OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
+	b.Label.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
 	b.Panel.Add(b.Label)
 
 	b.recalc() // recalc first then update!
@@ -125,10 +126,10 @@ func (b *Button) SetStyles(bs *ButtonStyles) {
 func (b *Button) onCursor(evname dispatcheri.EventName, ev interface{}) {
 
 	switch evname {
-	case OnCursorEnter:
+	case eventenum.OnCursorEnter:
 		b.mouseOver = true
 		b.update()
-	case OnCursorLeave:
+	case eventenum.OnCursorLeave:
 		b.mouseOver = false
 		b.update()
 	}
@@ -142,15 +143,15 @@ func (b *Button) onMouse(evname dispatcheri.EventName, ev interface{}) {
 	}
 
 	switch evname {
-	case OnMouseDown:
+	case eventenum.OnMouseDown:
 		Manager().SetKeyFocus(b)
 		b.pressed = true
 		b.update()
-	case OnMouseUpOut:
+	case eventenum.OnMouseUpOut:
 		fallthrough
-	case OnMouseUp:
+	case eventenum.OnMouseUp:
 		if b.pressed && b.mouseOver {
-			b.Dispatch(OnClick, nil)
+			b.Dispatch(eventenum.OnClick, nil)
 		}
 		b.pressed = false
 		b.update()
@@ -167,11 +168,11 @@ func (b *Button) onKey(evname dispatcheri.EventName, ev interface{}) {
 		return
 	}
 	switch evname {
-	case OnKeyDown:
+	case eventenum.OnKeyDown:
 		b.pressed = true
 		b.update()
-		b.Dispatch(OnClick, nil)
-	case OnKeyUp:
+		b.Dispatch(eventenum.OnClick, nil)
+	case eventenum.OnKeyUp:
 		b.pressed = false
 		b.update()
 	}

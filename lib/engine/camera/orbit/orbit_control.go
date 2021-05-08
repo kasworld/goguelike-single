@@ -10,6 +10,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
+	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -90,12 +91,12 @@ func NewOrbitControl(cam *camera.Camera) *OrbitControl {
 	oc.KeyPanSpeed = 35.0
 
 	// Subscribe to events
-	gui.Manager().SubscribeID(window.OnMouseUp, &oc, oc.onMouse)
-	gui.Manager().SubscribeID(window.OnMouseDown, &oc, oc.onMouse)
-	gui.Manager().SubscribeID(window.OnScroll, &oc, oc.onScroll)
-	gui.Manager().SubscribeID(window.OnKeyDown, &oc, oc.onKey)
-	gui.Manager().SubscribeID(window.OnKeyRepeat, &oc, oc.onKey)
-	oc.SubscribeID(window.OnCursor, &oc, oc.onCursor)
+	gui.Manager().SubscribeID(eventenum.OnMouseUp, &oc, oc.onMouse)
+	gui.Manager().SubscribeID(eventenum.OnMouseDown, &oc, oc.onMouse)
+	gui.Manager().SubscribeID(eventenum.OnScroll, &oc, oc.onScroll)
+	gui.Manager().SubscribeID(eventenum.OnKeyDown, &oc, oc.onKey)
+	gui.Manager().SubscribeID(eventenum.OnKeyRepeat, &oc, oc.onKey)
+	oc.SubscribeID(eventenum.OnCursor, &oc, oc.onCursor)
 
 	return oc
 }
@@ -103,12 +104,12 @@ func NewOrbitControl(cam *camera.Camera) *OrbitControl {
 // Dispose unsubscribes from all events.
 func (oc *OrbitControl) Dispose() {
 
-	gui.Manager().UnsubscribeID(window.OnMouseUp, &oc)
-	gui.Manager().UnsubscribeID(window.OnMouseDown, &oc)
-	gui.Manager().UnsubscribeID(window.OnScroll, &oc)
-	gui.Manager().UnsubscribeID(window.OnKeyDown, &oc)
-	gui.Manager().UnsubscribeID(window.OnKeyRepeat, &oc)
-	oc.UnsubscribeID(window.OnCursor, &oc)
+	gui.Manager().UnsubscribeID(eventenum.OnMouseUp, &oc)
+	gui.Manager().UnsubscribeID(eventenum.OnMouseDown, &oc)
+	gui.Manager().UnsubscribeID(eventenum.OnScroll, &oc)
+	gui.Manager().UnsubscribeID(eventenum.OnKeyDown, &oc)
+	gui.Manager().UnsubscribeID(eventenum.OnKeyRepeat, &oc)
+	oc.UnsubscribeID(eventenum.OnCursor, &oc)
 }
 
 // Reset resets the orbit control.
