@@ -41,6 +41,9 @@ genenum -typename=Way9Type            -packagename=way9type            -basedir=
 
 goimports -w enum
 
+genenum -typename=EventType           -packagename=eventtype            -basedir=lib/engine 
+goimports -w lib/engine/eventtype
+
 $Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
 echo "Data Version: ${Data_VERSION}"
 mkdir -ErrorAction SilentlyContinue config/dataversion
