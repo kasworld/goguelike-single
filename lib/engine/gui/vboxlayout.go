@@ -4,6 +4,8 @@
 
 package gui
 
+import "log"
+
 // VBoxLayout implements a panel layout which arranges the panel children vertically.
 // The children can be separated by a space in pixels set by SetSpacing().
 // The whole group of children can be aligned vertically by SetAlignV() which can

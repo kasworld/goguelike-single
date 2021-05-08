@@ -14,13 +14,8 @@ import (
 	_ "image/png"
 	"os"
 
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
-
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 )
-
-// Package logger
-var log = logger.New("TEX", logger.Default)
 
 // Texture2D represents a texture
 type Texture2D struct {

@@ -8,6 +8,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/equation"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/physics/object"
+	"github.com/kasworld/goguelike-single/lib/engine/log"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 

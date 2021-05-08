@@ -70,6 +70,12 @@ func New(
 	config *goguelikeconfig.GoguelikeConfig,
 	gameInfo *csprotocol.GameInfo,
 	c2tch, t2cch chan *csprotocol.Packet) *GLClient {
+
+	// init engine logger
+	// log.GlobalLogger.SetFlags(log.GlobalLogger.GetFlags().BitClear(
+	// 	logflags.LF_functionname | logflags.LF_date))
+	// log.GlobalLogger.SetLevel(config.LogLevel)
+
 	app := &GLClient{
 		Name2Floor:        make(map[string]*ClientFloor),
 		pid2recv:          pid2rspfn.New(),

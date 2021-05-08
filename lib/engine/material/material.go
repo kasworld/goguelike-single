@@ -9,11 +9,7 @@ package material
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/texture"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("MATERIAL", logger.Default)
 
 // Side represents the material's visible side(s).
 type Side int

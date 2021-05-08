@@ -15,12 +15,7 @@ package gls
 import (
 	"math"
 	"unsafe"
-
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("GLS", logger.Default)
 
 // Stats contains counters of WebGL resources being used as well
 // the cumulative numbers of some WebGL calls for performance evaluation.

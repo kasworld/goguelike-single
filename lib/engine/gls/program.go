@@ -11,6 +11,8 @@ import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/kasworld/goguelike-single/lib/engine/log"
 )
 
 // Program represents an OpenGL program.

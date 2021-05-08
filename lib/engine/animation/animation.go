@@ -5,11 +5,6 @@
 // Package animation
 package animation
 
-import "github.com/kasworld/goguelike-single/lib/engine/util/logger"
-
-// Package logger
-var log = logger.New("ANIMATION", logger.Default)
-
 // Animation is a keyframe animation, containing channels.
 // Each channel animates a specific property of an object.
 // Animations can span multiple objects and properties.

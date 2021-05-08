@@ -12,11 +12,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("GRAPHIC", logger.Default)
 
 // Graphic is a Node which has a visible representation in the scene.
 // It has an associated geometry and one or more materials.

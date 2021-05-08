@@ -4,6 +4,8 @@
 
 package gui
 
+import "log"
+
 // HBoxLayout implements a panel layout which arranges the panel children horizontally.
 // The children can be separated by a space in pixels set by SetSpacing().
 // The whole group of children can be aligned horizontally by SetAlignH() which can

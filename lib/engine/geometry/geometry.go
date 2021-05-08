@@ -11,11 +11,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("GEOMETRY", logger.Default)
 
 // Geometry encapsulates a three-dimensional vertex-based geometry.
 type Geometry struct {

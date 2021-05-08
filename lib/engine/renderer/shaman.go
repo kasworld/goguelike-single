@@ -12,6 +12,7 @@ import (
 	"strconv"
 
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
+	"github.com/kasworld/goguelike-single/lib/engine/log"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
 	"github.com/kasworld/goguelike-single/lib/engine/renderer/shaders"
 )

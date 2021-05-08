@@ -13,13 +13,10 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/audio/al"
 	"github.com/kasworld/goguelike-single/lib/engine/audio/vorbis"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
+	"github.com/kasworld/goguelike-single/lib/engine/log"
 	"github.com/kasworld/goguelike-single/lib/engine/renderer"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
-
-// Package logger
-var log = logger.New("APP", logger.Default)
 
 // AppBase
 type AppBase struct {

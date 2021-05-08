@@ -11,11 +11,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("WIN", logger.Default)
 
 // WindowI singleton
 var win WindowI

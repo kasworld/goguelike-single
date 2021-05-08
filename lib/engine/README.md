@@ -62,6 +62,8 @@ merge event to one file and to enum by genenum
 
     evname string -> evname eventtype.EventType
 
+replace logger 
+
 ## TODO 
 
 split interface package more 

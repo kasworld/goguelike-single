@@ -8,6 +8,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+
+	"github.com/kasworld/goguelike-single/lib/engine/log"
 )
 
 //

@@ -8,11 +8,7 @@ package camera
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("CAMERA", logger.Default)
 
 // Axis represents a camera axis.
 type Axis int

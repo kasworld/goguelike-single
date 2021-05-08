@@ -17,11 +17,7 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/renderinfo"
-	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 )
-
-// Package logger
-var log = logger.New("RENDERER", logger.Default)
 
 // Renderer renders a scene containing 3D objects and/or 2D GUI elements.
 type Renderer struct {
