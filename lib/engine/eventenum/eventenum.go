@@ -75,7 +75,6 @@ const (
 	OnTableRowCount = EventName("onTableRowCount")
 )
 
-// Events
 const (
 	// Dispatched after a body has gone in to the sleepy state.
 	SleepyEvent = EventName("physics.SleepyEvent")
@@ -95,4 +94,4 @@ const (
 )
 
 // OnListItemResize is the identifier of the event dispatched when a ListItem's child panel is resized
-const OnListItemResize = "gui.OnListItemResize"
+const OnListItemResize = EventName("gui.OnListItemResize")
