@@ -25,7 +25,7 @@ type Lock struct {
 }
 
 // NewLock creates and returns a pointer to a new Lock constraint object.
-func NewLock(bodyA, bodyB IBody, maxForce float32) *Lock {
+func NewLock(bodyA, bodyB BodyI, maxForce float32) *Lock {
 
 	lc := new(Lock)
 

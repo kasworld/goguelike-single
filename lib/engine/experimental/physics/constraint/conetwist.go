@@ -21,7 +21,7 @@ type ConeTwist struct {
 }
 
 // NewConeTwist creates and returns a pointer to a new ConeTwist constraint object.
-func NewConeTwist(bodyA, bodyB IBody, pivotA, pivotB, axisA, axisB *math32.Vector3, angle, twistAngle, maxForce float32) *ConeTwist {
+func NewConeTwist(bodyA, bodyB BodyI, pivotA, pivotB, axisA, axisB *math32.Vector3, angle, twistAngle, maxForce float32) *ConeTwist {
 
 	ctc := new(ConeTwist)
 

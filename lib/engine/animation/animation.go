@@ -22,7 +22,7 @@ type Animation struct {
 	minTime  float32    // Minimum time value across all channels
 	maxTime  float32    // Maximum time value across all channels
 	speed    float32    // Animation speed multiplier
-	channels []IChannel // List of channels
+	channels []ChannelI // List of channels
 }
 
 // NewAnimation creates and returns a pointer to a new Animation object.
@@ -133,7 +133,7 @@ func (anim *Animation) Update(delta float32) {
 }
 
 // AddChannel adds a channel to the animation.
-func (anim *Animation) AddChannel(ch IChannel) {
+func (anim *Animation) AddChannel(ch ChannelI) {
 
 	// TODO (maybe) prevent user from adding two channels of the same type that share target ?
 

@@ -21,7 +21,7 @@ type PointToPoint struct {
 }
 
 // NewPointToPoint creates and returns a pointer to a new PointToPoint constraint object.
-func NewPointToPoint(bodyA, bodyB IBody, pivotA, pivotB *math32.Vector3, maxForce float32) *PointToPoint {
+func NewPointToPoint(bodyA, bodyB BodyI, pivotA, pivotB *math32.Vector3, maxForce float32) *PointToPoint {
 
 	ptpc := new(PointToPoint)
 	ptpc.initialize(bodyA, bodyB, pivotA, pivotB, maxForce)
@@ -29,7 +29,7 @@ func NewPointToPoint(bodyA, bodyB IBody, pivotA, pivotB *math32.Vector3, maxForc
 	return ptpc
 }
 
-func (ptpc *PointToPoint) initialize(bodyA, bodyB IBody, pivotA, pivotB *math32.Vector3, maxForce float32) {
+func (ptpc *PointToPoint) initialize(bodyA, bodyB BodyI, pivotA, pivotB *math32.Vector3, maxForce float32) {
 
 	ptpc.Constraint.initialize(bodyA, bodyB, true, true)
 

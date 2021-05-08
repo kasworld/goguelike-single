@@ -10,14 +10,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
-// ISolver is the interface type for all constraint solvers.
-type ISolver interface {
-	Solve(dt float32, nBodies int) *Solution // Solve should return the number of iterations performed
-	AddEquation(eq equation.IEquation)
-	RemoveEquation(eq equation.IEquation) bool
-	ClearEquations()
-}
-
 // Solution represents a solver solution
 type Solution struct {
 	VelocityDeltas        []math32.Vector3
@@ -28,18 +20,18 @@ type Solution struct {
 // Constraint equation solver base class.
 type Solver struct {
 	Solution
-	equations []equation.IEquation // All equations to be solved
+	equations []equation.EquationI // All equations to be solved
 }
 
 // AddEquation adds an equation to the solver.
-func (s *Solver) AddEquation(eq equation.IEquation) {
+func (s *Solver) AddEquation(eq equation.EquationI) {
 
 	s.equations = append(s.equations, eq)
 }
 
 // RemoveEquation removes the specified equation from the solver.
 // Returns true if found, false otherwise.
-func (s *Solver) RemoveEquation(eq equation.IEquation) bool {
+func (s *Solver) RemoveEquation(eq equation.EquationI) bool {
 
 	for pos, current := range s.equations {
 		if current == eq {

@@ -23,14 +23,8 @@ type Builder struct {
 	am       map[string]interface{}     // parsed attribute map
 	builders map[string]BuilderFunc     // map of builder functions by type
 	attribs  map[string]AttribCheckFunc // map of attribute name with check functions
-	layouts  map[string]IBuilderLayout  // map of layout type to layout builder
+	layouts  map[string]BuilderLayoutI  // map of layout type to layout builder
 	imgpath  string                     // base path for image panels files
-}
-
-// IBuilderLayout is the interface for all layout builders
-type IBuilderLayout interface {
-	BuildLayout(b *Builder, am map[string]interface{}) (LayoutI, error)
-	BuildParams(b *Builder, am map[string]interface{}) (interface{}, error)
 }
 
 // BuilderFunc is type for functions which build a gui object from an attribute map
@@ -214,7 +208,7 @@ func NewBuilder() *Builder {
 		TypeTabBar:      buildTabBar,
 	}
 	// Sets map of layout type name to layout function
-	b.layouts = map[string]IBuilderLayout{
+	b.layouts = map[string]BuilderLayoutI{
 		TypeHBoxLayout: &BuilderLayoutHBox{},
 		TypeVBoxLayout: &BuilderLayoutVBox{},
 		TypeGridLayout: &BuilderLayoutGrid{},
@@ -472,7 +466,7 @@ func (b *Builder) AddBuilderPanel(typename string, bf BuilderFunc) {
 
 // AddBuilderLayout adds a layout builder object for the specified type name.
 // If the type name already exists it is replaced.
-func (b *Builder) AddBuilderLayout(typename string, bl IBuilderLayout) {
+func (b *Builder) AddBuilderLayout(typename string, bl BuilderLayoutI) {
 
 	b.layouts[typename] = bl
 }

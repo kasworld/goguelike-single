@@ -31,7 +31,7 @@ func (s *Sphere) Radius() float32 {
 	return s.radius
 }
 
-// IShape =============================================================
+// ShapeI =============================================================
 
 // BoundingBox computes and returns the bounding box of the analytical collision sphere.
 func (s *Sphere) BoundingBox() math32.Box3 {

@@ -18,7 +18,7 @@ type Rotational struct {
 }
 
 // NewRotational creates and returns a pointer to a new Rotational equation object.
-func NewRotational(bodyA, bodyB IBody, maxForce float32) *Rotational {
+func NewRotational(bodyA, bodyB BodyI, maxForce float32) *Rotational {
 
 	re := new(Rotational)
 

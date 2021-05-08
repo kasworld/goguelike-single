@@ -18,7 +18,7 @@ type Contact struct {
 }
 
 // NewContact creates and returns a pointer to a new Contact equation object.
-func NewContact(bodyA, bodyB IBody, minForce, maxForce float32) *Contact {
+func NewContact(bodyA, bodyB BodyI, minForce, maxForce float32) *Contact {
 
 	ce := new(Contact)
 

@@ -18,7 +18,7 @@ type Cone struct {
 }
 
 // NewCone creates and returns a pointer to a new Cone equation object.
-func NewCone(bodyA, bodyB IBody, axisA, axisB *math32.Vector3, angle, maxForce float32) *Cone {
+func NewCone(bodyA, bodyB BodyI, axisA, axisB *math32.Vector3, angle, maxForce float32) *Cone {
 
 	ce := new(Cone)
 

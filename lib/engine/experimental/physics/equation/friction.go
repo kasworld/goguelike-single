@@ -18,7 +18,7 @@ type Friction struct {
 
 // NewFriction creates and returns a pointer to a new Friction equation object.
 // slipForce should be +-F_friction = +-mu * F_normal = +-mu * m * g
-func NewFriction(bodyA, bodyB IBody, slipForce float32) *Friction {
+func NewFriction(bodyA, bodyB BodyI, slipForce float32) *Friction {
 
 	fe := new(Friction)
 

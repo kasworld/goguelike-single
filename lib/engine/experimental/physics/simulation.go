@@ -19,7 +19,7 @@ import (
 // Simulation represents a physics simulation.
 type Simulation struct {
 	scene       *node.Node
-	forceFields []ForceField
+	forceFields []ForceFieldI
 
 	// Bodies under simulation
 	bodies    []*object.Body // Slice of bodies. May contain nil values.
@@ -46,9 +46,9 @@ type Simulation struct {
 
 	broadphase  *Broadphase    // The broadphase algorithm to use, default is NaiveBroadphase
 	narrowphase *Narrowphase   // The narrowphase algorithm to use
-	solver      solver.ISolver // The solver algorithm to use, default is Gauss-Seidel
+	solver      solver.SolverI // The solver algorithm to use, default is Gauss-Seidel
 
-	constraints []constraint.IConstraint // All constraints
+	constraints []constraint.ConstraintI // All constraints
 
 	materials  []*Material // All added materials
 	cMaterials []*ContactMaterial
@@ -90,14 +90,14 @@ func (s *Simulation) Scene() *node.Node {
 }
 
 // AddForceField adds a force field to the simulation.
-func (s *Simulation) AddForceField(ff ForceField) {
+func (s *Simulation) AddForceField(ff ForceFieldI) {
 
 	s.forceFields = append(s.forceFields, ff)
 }
 
 // RemoveForceField removes the specified force field from the simulation.
 // Returns true if found, false otherwise.
-func (s *Simulation) RemoveForceField(ff ForceField) bool {
+func (s *Simulation) RemoveForceField(ff ForceFieldI) bool {
 
 	for pos, current := range s.forceFields {
 		if current == ff {
@@ -248,12 +248,12 @@ func (s *Simulation) ClearForces() {
 }
 
 // AddConstraint adds a constraint to the simulation.
-func (s *Simulation) AddConstraint(c constraint.IConstraint) {
+func (s *Simulation) AddConstraint(c constraint.ConstraintI) {
 
 	s.constraints = append(s.constraints, c)
 }
 
-func (s *Simulation) RemoveConstraint(c constraint.IConstraint) {
+func (s *Simulation) RemoveConstraint(c constraint.ConstraintI) {
 
 	// TODO
 }

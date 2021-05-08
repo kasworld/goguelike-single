@@ -349,7 +349,7 @@ func (g *GLTF) LoadAnimation(animIdx int) (*animation.Animation, error) {
 		var validTypes []string
 		var validComponentTypes []int
 
-		var ch animation.IChannel
+		var ch animation.ChannelI
 		if target.Path == "translation" {
 			validTypes = []string{VEC3}
 			validComponentTypes = []int{FLOAT}

@@ -8,47 +8,13 @@
 // Interactive Simulations of Multibodies with Dry Frictional Contacts"
 package equation
 
-import (
-	"github.com/kasworld/goguelike-single/lib/engine/math32"
-)
-
-// IBody is the interface of all body types.
-type IBody interface {
-	Index() int
-	Position() math32.Vector3
-	Velocity() math32.Vector3
-	AngularVelocity() math32.Vector3
-	Force() math32.Vector3
-	Torque() math32.Vector3
-	InvMassEff() float32
-	InvRotInertiaWorldEff() *math32.Matrix3
-}
-
-// IEquation is the interface type for all equations types.
-type IEquation interface {
-	SetBodyA(IBody)
-	BodyA() IBody
-	SetBodyB(IBody)
-	BodyB() IBody
-	JeA() JacobianElement
-	JeB() JacobianElement
-	SetEnabled(state bool)
-	Enabled() bool
-	MinForce() float32
-	MaxForce() float32
-	Eps() float32
-	SetMultiplier(multiplier float32)
-	ComputeB(h float32) float32
-	ComputeC() float32
-}
-
 // Equation is a SPOOK constraint equation.
 type Equation struct {
 	id         int
 	minForce   float32 // Minimum (read: negative max) force to be applied by the constraint.
 	maxForce   float32 // Maximum (read: positive max) force to be applied by the constraint.
-	bA         IBody   // Body "i"
-	bB         IBody   // Body "j"
+	bA         BodyI   // Body "i"
+	bB         BodyI   // Body "j"
 	a          float32 // SPOOK parameter
 	b          float32 // SPOOK parameter
 	eps        float32 // SPOOK parameter
@@ -59,14 +25,14 @@ type Equation struct {
 }
 
 // NewEquation creates and returns a pointer to a new Equation object.
-func NewEquation(bi, bj IBody, minForce, maxForce float32) *Equation {
+func NewEquation(bi, bj BodyI, minForce, maxForce float32) *Equation {
 
 	e := new(Equation)
 	e.initialize(bi, bj, minForce, maxForce)
 	return e
 }
 
-func (e *Equation) initialize(bi, bj IBody, minForce, maxForce float32) {
+func (e *Equation) initialize(bi, bj BodyI, minForce, maxForce float32) {
 
 	//e.id = Equation.id++
 	e.minForce = minForce //-1e6
@@ -84,22 +50,22 @@ func (e *Equation) initialize(bi, bj IBody, minForce, maxForce float32) {
 	e.SetSpookParams(1e7, 3, 1/60)
 }
 
-func (e *Equation) SetBodyA(ibody IBody) {
+func (e *Equation) SetBodyA(ibody BodyI) {
 
 	e.bA = ibody
 }
 
-func (e *Equation) BodyA() IBody {
+func (e *Equation) BodyA() BodyI {
 
 	return e.bA
 }
 
-func (e *Equation) SetBodyB(ibody IBody) {
+func (e *Equation) SetBodyB(ibody BodyI) {
 
 	e.bB = ibody
 }
 
-func (e *Equation) BodyB() IBody {
+func (e *Equation) BodyB() BodyI {
 
 	return e.bB
 }

@@ -22,7 +22,7 @@ type Hinge struct {
 }
 
 // NewHinge creates and returns a pointer to a new Hinge constraint object.
-func NewHinge(bodyA, bodyB IBody, pivotA, pivotB, axisA, axisB *math32.Vector3, maxForce float32) *Hinge {
+func NewHinge(bodyA, bodyB BodyI, pivotA, pivotB, axisA, axisB *math32.Vector3, maxForce float32) *Hinge {
 
 	hc := new(Hinge)
 

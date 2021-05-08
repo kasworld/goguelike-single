@@ -17,7 +17,7 @@ type Distance struct {
 }
 
 // NewDistance creates and returns a pointer to a new Distance constraint object.
-func NewDistance(bodyA, bodyB IBody, distance, maxForce float32) *Distance {
+func NewDistance(bodyA, bodyB BodyI, distance, maxForce float32) *Distance {
 
 	dc := new(Distance)
 	dc.initialize(bodyA, bodyB, true, true)

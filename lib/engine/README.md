@@ -14,7 +14,14 @@ rename interface I*** -> ***I
     GraphicI
     GeometryI
     CameraI
-
+    BuilderLayoutI
+    SolverI
+    BodyI
+    EquationI
+    ConstraintI
+    ForceFieldI
+    ShapeI
+    ChannelI
 
 split package, file 
 

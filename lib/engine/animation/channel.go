@@ -96,16 +96,7 @@ func (c *Channel) Update(time float32) {
 	c.interpAction(idx, relativeDelta)
 }
 
-// IChannel is the interface for all channel types.
-type IChannel interface {
-	Update(time float32)
-	SetBuffers(keyframes, values math32.ArrayF32)
-	Keyframes() math32.ArrayF32
-	Values() math32.ArrayF32
-	SetInterpolationType(it InterpolationType)
-}
-
-// NodeChannel is the IChannel for all node transforms.
+// NodeChannel is the ChannelI for all node transforms.
 type NodeChannel struct {
 	Channel
 	target node.NodeI
@@ -235,7 +226,7 @@ func NewScaleChannel(node node.NodeI) *ScaleChannel {
 	return sc
 }
 
-// MorphChannel is the IChannel for morph geometries.
+// MorphChannel is the ChannelI for morph geometries.
 type MorphChannel struct {
 	Channel
 	target *geometry.MorphGeometry

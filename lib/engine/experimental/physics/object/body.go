@@ -88,7 +88,7 @@ type Body struct {
 	uniqueEdges      []math32.Vector3
 	worldUniqueEdges []math32.Vector3
 
-	shape shape.IShape
+	shape shape.ShapeI
 
 	// TODO future (for now a body is a single graphic with a single geometry)
 	// shapes          []*Shape
@@ -211,12 +211,12 @@ func NewBody(igraphic graphic.GraphicI) *Body {
 
 // TODO future: modify this to be "AddShape" and keep track of list of shapes, their positions and orientations
 // For now each body can only be a single shape or a single geometry
-func (b *Body) SetShape(shape shape.IShape) {
+func (b *Body) SetShape(shape shape.ShapeI) {
 
 	b.shape = shape
 }
 
-func (b *Body) Shape() shape.IShape {
+func (b *Body) Shape() shape.ShapeI {
 
 	return b.shape
 }

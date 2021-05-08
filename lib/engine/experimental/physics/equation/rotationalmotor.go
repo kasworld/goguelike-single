@@ -18,7 +18,7 @@ type RotationalMotor struct {
 }
 
 // NewRotationalMotor creates and returns a pointer to a new RotationalMotor equation object.
-func NewRotationalMotor(bodyA, bodyB IBody, maxForce float32) *RotationalMotor {
+func NewRotationalMotor(bodyA, bodyB BodyI, maxForce float32) *RotationalMotor {
 
 	re := new(RotationalMotor)
 	re.Equation.initialize(bodyA, bodyB, -maxForce, maxForce)

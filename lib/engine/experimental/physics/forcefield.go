@@ -6,11 +6,6 @@ package physics
 
 import "github.com/kasworld/goguelike-single/lib/engine/math32"
 
-// ForceField represents a force field. A force is defined for every point.
-type ForceField interface {
-	ForceAt(pos *math32.Vector3) math32.Vector3
-}
-
 //
 // ConstantForceField is a constant force field.
 // It can be used to simulate surface gravity.
@@ -39,7 +34,7 @@ func (g *ConstantForceField) Force() *math32.Vector3 {
 	return &g.force
 }
 
-// ForceAt satisfies the ForceField interface and returns the force at the specified position.
+// ForceAt satisfies the ForceFieldI interface and returns the force at the specified position.
 func (g *ConstantForceField) ForceAt(pos *math32.Vector3) math32.Vector3 {
 
 	return g.force
@@ -88,7 +83,7 @@ func (pa *AttractorForceField) Mass() float32 {
 	return pa.mass
 }
 
-// ForceAt satisfies the ForceField interface and returns the force at the specified position.
+// ForceAt satisfies the ForceFieldI interface and returns the force at the specified position.
 func (pa *AttractorForceField) ForceAt(pos *math32.Vector3) math32.Vector3 {
 
 	dir := pos
@@ -151,7 +146,7 @@ func (pr *RepellerForceField) Mass() float32 {
 	return pr.mass
 }
 
-// ForceAt satisfies the ForceField interface and returns the force at the specified position.
+// ForceAt satisfies the ForceFieldI interface and returns the force at the specified position.
 func (pr *RepellerForceField) ForceAt(pos *math32.Vector3) math32.Vector3 {
 
 	dir := pr.position

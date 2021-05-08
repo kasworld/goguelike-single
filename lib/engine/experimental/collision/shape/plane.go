@@ -32,7 +32,7 @@ func (p *Plane) Normal() math32.Vector3 {
 	return p.normal
 }
 
-// IShape =============================================================
+// ShapeI =============================================================
 
 // BoundingBox computes and returns the bounding box of the analytical collision plane.
 func (p *Plane) BoundingBox() math32.Box3 {
