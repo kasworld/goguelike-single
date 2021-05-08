@@ -5,7 +5,7 @@
 package object
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/experimental/collision/shape"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/material"
@@ -463,7 +463,7 @@ func (b *Body) WakeUp() {
 	b.sleepState = Awake
 	b.wakeUpAfterNarrowphase = false
 	if state == Sleeping {
-		b.Dispatch(eventenum.WakeUpEvent, nil)
+		b.Dispatch(eventtype.WakeUpEvent, nil)
 	}
 }
 
@@ -486,12 +486,12 @@ func (b *Body) SleepTick(time float32) {
 		if b.sleepState == Awake && speedSquared < speedLimitSquared {
 			b.sleepState = Sleepy
 			b.timeLastSleepy = time
-			b.Dispatch(eventenum.SleepyEvent, nil)
+			b.Dispatch(eventtype.SleepyEvent, nil)
 		} else if b.sleepState == Sleepy && speedSquared > speedLimitSquared {
 			b.WakeUp() // Wake up
 		} else if b.sleepState == Sleepy && (time-b.timeLastSleepy) > b.sleepTimeLimit {
 			b.Sleep() // Sleeping
-			b.Dispatch(eventenum.SleepEvent, nil)
+			b.Dispatch(eventtype.SleepEvent, nil)
 		}
 	}
 }

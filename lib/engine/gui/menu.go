@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -143,7 +143,7 @@ func NewMenuBar() *Menu {
 
 	m := NewMenu()
 	m.bar = true
-	m.Panel.Subscribe(eventenum.OnMouseDownOut, m.onMouse)
+	m.Panel.Subscribe(eventtype.OnMouseDownOut, m.onMouse)
 	return m
 }
 
@@ -154,8 +154,8 @@ func NewMenu() *Menu {
 	m.Panel.Initialize(m, 0, 0)
 	m.styles = &StyleDefault().Menu
 	m.items = make([]*MenuItem, 0)
-	m.Panel.Subscribe(eventenum.OnKeyDown, m.onKey)
-	m.Panel.Subscribe(eventenum.OnResize, m.onResize)
+	m.Panel.Subscribe(eventtype.OnKeyDown, m.onKey)
+	m.Panel.Subscribe(eventtype.OnResize, m.onResize)
 	m.update()
 	return m
 }
@@ -214,7 +214,7 @@ func (m *Menu) RemoveItem(mi *MenuItem) {
 }
 
 // onKey process subscribed key events
-func (m *Menu) onKey(evname eventenum.EventName, ev interface{}) {
+func (m *Menu) onKey(evname eventtype.EventType, ev interface{}) {
 
 	sel := m.selectedPos()
 	kev := ev.(*window.KeyEvent)
@@ -332,7 +332,7 @@ func (m *Menu) onKey(evname eventenum.EventName, ev interface{}) {
 }
 
 // onMouse process subscribed mouse events for the menu
-func (m *Menu) onMouse(evname eventenum.EventName, ev interface{}) {
+func (m *Menu) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	// Clear menu bar after some time, to give time for menu items
 	// to receive onMouse events.
@@ -343,7 +343,7 @@ func (m *Menu) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onResize process menu onResize events
-func (m *Menu) onResize(evname eventenum.EventName, ev interface{}) {
+func (m *Menu) onResize(evname eventtype.EventType, ev interface{}) {
 
 	if m.bar {
 		m.recalcBar(false)
@@ -566,9 +566,9 @@ func newMenuItem(text string, styles *MenuItemStyles) *MenuItem {
 	if text != "" {
 		mi.label = NewLabel(text)
 		mi.Panel.Add(mi.label)
-		mi.Panel.Subscribe(eventenum.OnCursorEnter, mi.onCursor)
-		mi.Panel.Subscribe(eventenum.OnCursor, mi.onCursor)
-		mi.Panel.Subscribe(eventenum.OnMouseDown, mi.onMouse)
+		mi.Panel.Subscribe(eventtype.OnCursorEnter, mi.onCursor)
+		mi.Panel.Subscribe(eventtype.OnCursor, mi.onCursor)
+		mi.Panel.Subscribe(eventtype.OnMouseDown, mi.onMouse)
 	}
 	mi.update()
 	return mi
@@ -699,19 +699,19 @@ func (mi *MenuItem) IdPath() []string {
 }
 
 // onCursor processes subscribed cursor events over the menu item
-func (mi *MenuItem) onCursor(evname eventenum.EventName, ev interface{}) {
+func (mi *MenuItem) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnCursorEnter:
+	case eventtype.OnCursorEnter:
 		mi.menu.setSelectedItem(mi)
 	}
 }
 
 // onMouse processes subscribed mouse events over the menu item
-func (mi *MenuItem) onMouse(evname eventenum.EventName, ev interface{}) {
+func (mi *MenuItem) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		// MenuBar option
 		if mi.menu.bar {
 			mi.menu.autoOpen = !mi.menu.autoOpen
@@ -738,7 +738,7 @@ func (mi *MenuItem) activate() {
 	}
 	rm.setSelectedPos(-1)
 	Manager().SetKeyFocus(rm)
-	mi.dispatchAll(eventenum.OnClick, mi)
+	mi.dispatchAll(eventtype.OnClick, mi)
 }
 
 // rootMenu returns the root menu for this menu item
@@ -753,7 +753,7 @@ func (mi *MenuItem) rootMenu() *Menu {
 
 // dispatchAll dispatch the specified event for this menu item
 // and all its parents
-func (mi *MenuItem) dispatchAll(evname eventenum.EventName, ev interface{}) {
+func (mi *MenuItem) dispatchAll(evname eventtype.EventType, ev interface{}) {
 
 	mi.Dispatch(evname, ev)
 	pmenu := mi.menu

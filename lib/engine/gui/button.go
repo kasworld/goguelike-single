@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -56,20 +56,20 @@ func NewButton(text string) *Button {
 	b.Panel.Initialize(b, 0, 0)
 
 	// Subscribe to panel events
-	b.Subscribe(eventenum.OnKeyDown, b.onKey)
-	b.Subscribe(eventenum.OnKeyUp, b.onKey)
-	b.Subscribe(eventenum.OnMouseUp, b.onMouse)
-	b.Subscribe(eventenum.OnMouseDown, b.onMouse)
-	b.Subscribe(eventenum.OnMouseUpOut, b.onMouse)
-	b.Subscribe(eventenum.OnCursor, b.onCursor)
-	b.Subscribe(eventenum.OnCursorEnter, b.onCursor)
-	b.Subscribe(eventenum.OnCursorLeave, b.onCursor)
-	b.Subscribe(eventenum.OnEnable, func(name eventenum.EventName, ev interface{}) { b.update() })
-	b.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { b.recalc() })
+	b.Subscribe(eventtype.OnKeyDown, b.onKey)
+	b.Subscribe(eventtype.OnKeyUp, b.onKey)
+	b.Subscribe(eventtype.OnMouseUp, b.onMouse)
+	b.Subscribe(eventtype.OnMouseDown, b.onMouse)
+	b.Subscribe(eventtype.OnMouseUpOut, b.onMouse)
+	b.Subscribe(eventtype.OnCursor, b.onCursor)
+	b.Subscribe(eventtype.OnCursorEnter, b.onCursor)
+	b.Subscribe(eventtype.OnCursorLeave, b.onCursor)
+	b.Subscribe(eventtype.OnEnable, func(name eventtype.EventType, ev interface{}) { b.update() })
+	b.Subscribe(eventtype.OnResize, func(name eventtype.EventType, ev interface{}) { b.recalc() })
 
 	// Creates label
 	b.Label = NewLabel(text)
-	b.Label.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { b.recalc() })
+	b.Label.Subscribe(eventtype.OnResize, func(name eventtype.EventType, ev interface{}) { b.recalc() })
 	b.Panel.Add(b.Label)
 
 	b.recalc() // recalc first then update!
@@ -122,35 +122,35 @@ func (b *Button) SetStyles(bs *ButtonStyles) {
 }
 
 // onCursor process subscribed cursor events
-func (b *Button) onCursor(evname eventenum.EventName, ev interface{}) {
+func (b *Button) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnCursorEnter:
+	case eventtype.OnCursorEnter:
 		b.mouseOver = true
 		b.update()
-	case eventenum.OnCursorLeave:
+	case eventtype.OnCursorLeave:
 		b.mouseOver = false
 		b.update()
 	}
 }
 
 // onMouseEvent process subscribed mouse events
-func (b *Button) onMouse(evname eventenum.EventName, ev interface{}) {
+func (b *Button) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	if !b.Enabled() {
 		return
 	}
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		Manager().SetKeyFocus(b)
 		b.pressed = true
 		b.update()
-	case eventenum.OnMouseUpOut:
+	case eventtype.OnMouseUpOut:
 		fallthrough
-	case eventenum.OnMouseUp:
+	case eventtype.OnMouseUp:
 		if b.pressed && b.mouseOver {
-			b.Dispatch(eventenum.OnClick, nil)
+			b.Dispatch(eventtype.OnClick, nil)
 		}
 		b.pressed = false
 		b.update()
@@ -160,18 +160,18 @@ func (b *Button) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onKey processes subscribed key events
-func (b *Button) onKey(evname eventenum.EventName, ev interface{}) {
+func (b *Button) onKey(evname eventtype.EventType, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if kev.Key != window.KeyEnter {
 		return
 	}
 	switch evname {
-	case eventenum.OnKeyDown:
+	case eventtype.OnKeyDown:
 		b.pressed = true
 		b.update()
-		b.Dispatch(eventenum.OnClick, nil)
-	case eventenum.OnKeyUp:
+		b.Dispatch(eventtype.OnClick, nil)
+	case eventtype.OnKeyUp:
 		b.pressed = false
 		b.update()
 	}

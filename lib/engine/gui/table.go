@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -231,7 +231,7 @@ func NewTable(width, height float32, cols []TableColumn) (*Table, error) {
 		if c.sort != TableSortNone {
 			c.ricon = NewIcon(string(tableSortedNoneIcon))
 			c.Add(c.ricon)
-			c.ricon.Subscribe(eventenum.OnMouseDown, func(evname eventenum.EventName, ev interface{}) {
+			c.ricon.Subscribe(eventtype.OnMouseDown, func(evname eventtype.EventType, ev interface{}) {
 				t.onRicon(evname, c)
 			})
 		}
@@ -275,13 +275,13 @@ func NewTable(width, height float32, cols []TableColumn) (*Table, error) {
 	t.Panel.Add(&t.statusPanel)
 
 	// Subscribe to events
-	t.Panel.Subscribe(eventenum.OnCursor, t.onCursorPos)
-	t.Panel.Subscribe(eventenum.OnScroll, t.onScroll)
-	t.Panel.Subscribe(eventenum.OnMouseUp, t.onMouse)
-	t.Panel.Subscribe(eventenum.OnMouseDown, t.onMouse)
-	t.Panel.Subscribe(eventenum.OnKeyDown, t.onKey)
-	t.Panel.Subscribe(eventenum.OnKeyRepeat, t.onKey)
-	t.Panel.Subscribe(eventenum.OnResize, t.onResize)
+	t.Panel.Subscribe(eventtype.OnCursor, t.onCursorPos)
+	t.Panel.Subscribe(eventtype.OnScroll, t.onScroll)
+	t.Panel.Subscribe(eventtype.OnMouseUp, t.onMouse)
+	t.Panel.Subscribe(eventtype.OnMouseDown, t.onMouse)
+	t.Panel.Subscribe(eventtype.OnKeyDown, t.onKey)
+	t.Panel.Subscribe(eventtype.OnKeyRepeat, t.onKey)
+	t.Panel.Subscribe(eventtype.OnResize, t.onResize)
 	t.recalc()
 	return t, nil
 }
@@ -504,7 +504,7 @@ func (t *Table) InsertRow(row int, values map[string]interface{}) {
 	}
 	t.insertRow(row, values)
 	t.recalc()
-	t.Dispatch(eventenum.OnTableRowCount, nil)
+	t.Dispatch(eventtype.OnTableRowCount, nil)
 }
 
 // RemoveRow removes from the specified row from the table
@@ -520,7 +520,7 @@ func (t *Table) RemoveRow(row int) {
 		t.firstRow = maxFirst
 	}
 	t.recalc()
-	t.Dispatch(eventenum.OnTableRowCount, nil)
+	t.Dispatch(eventtype.OnTableRowCount, nil)
 }
 
 // Clear removes all rows from the table
@@ -536,7 +536,7 @@ func (t *Table) Clear() {
 	t.firstRow = 0
 	t.rowCursor = -1
 	t.recalc()
-	t.Dispatch(eventenum.OnTableRowCount, nil)
+	t.Dispatch(eventtype.OnTableRowCount, nil)
 }
 
 // SelectedRows returns a slice with the indexes of the currently selected rows
@@ -726,7 +726,7 @@ func (t *Table) scrollDown(n int) {
 	t.firstRow += n
 	if t.rowCursor < t.firstRow {
 		t.rowCursor = t.firstRow
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 	}
 	t.recalc()
 	return
@@ -746,7 +746,7 @@ func (t *Table) scrollUp(n int) {
 	lastRow := t.lastRow - n
 	if t.rowCursor > lastRow {
 		t.rowCursor = lastRow
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 	}
 	t.recalc()
 }
@@ -771,7 +771,7 @@ func (t *Table) removeRow(row int) {
 }
 
 // onCursorPos process subscribed cursor position events
-func (t *Table) onCursorPos(evname eventenum.EventName, ev interface{}) {
+func (t *Table) onCursorPos(evname eventtype.EventType, ev interface{}) {
 
 	// Convert mouse window coordinates to table content coordinates
 	cev := ev.(*window.CursorEvent)
@@ -807,12 +807,12 @@ func (t *Table) onCursorPos(evname eventenum.EventName, ev interface{}) {
 }
 
 // onMouseEvent process subscribed mouse events
-func (t *Table) onMouse(evname eventenum.EventName, ev interface{}) {
+func (t *Table) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	Manager().SetKeyFocus(t)
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		// If over a resizable column border, shows the resizer panel
 		if t.resizeCol >= 0 && e.Button == window.MouseButtonLeft {
 			t.resizing = true
@@ -838,11 +838,11 @@ func (t *Table) onMouse(evname eventenum.EventName, ev interface{}) {
 				t.toggleRowSel(t.rowCursor)
 			}
 			t.recalc()
-			t.Dispatch(eventenum.OnChange, nil)
+			t.Dispatch(eventtype.OnChange, nil)
 		}
 		// Creates and dispatch TableClickEvent for user's context menu
-		t.Dispatch(eventenum.OnTableClick, tce)
-	case eventenum.OnMouseUp:
+		t.Dispatch(eventtype.OnTableClick, tce)
+	case eventtype.OnMouseUp:
 		// If user was resizing a column, hides the resizer and
 		// sets the new column width if possible
 		if t.resizing {
@@ -861,7 +861,7 @@ func (t *Table) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onKeyEvent receives subscribed key events for this table
-func (t *Table) onKey(evname eventenum.EventName, ev interface{}) {
+func (t *Table) onKey(evname eventtype.EventType, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if kev.Key == window.KeyUp && kev.Mods == 0 {
@@ -884,14 +884,14 @@ func (t *Table) onKey(evname eventenum.EventName, ev interface{}) {
 }
 
 // onResize receives subscribed resize events for this table
-func (t *Table) onResize(evname eventenum.EventName, ev interface{}) {
+func (t *Table) onResize(evname eventtype.EventType, ev interface{}) {
 
 	t.recalc()
 	t.recalcStatus()
 }
 
 // onScroll receives subscribed scroll events for this table
-func (t *Table) onScroll(evname eventenum.EventName, ev interface{}) {
+func (t *Table) onScroll(evname eventtype.EventType, ev interface{}) {
 
 	sev := ev.(*window.ScrollEvent)
 	if sev.Yoffset > 0 {
@@ -902,7 +902,7 @@ func (t *Table) onScroll(evname eventenum.EventName, ev interface{}) {
 }
 
 // onRicon receives subscribed events for column header right icon
-func (t *Table) onRicon(evname eventenum.EventName, c *tableColHeader) {
+func (t *Table) onRicon(evname eventtype.EventType, c *tableColHeader) {
 
 	ico := tableSortedNoneIcon
 	var asc bool
@@ -987,12 +987,12 @@ func (t *Table) selNext() {
 	if t.rowCursor < 0 {
 		t.rowCursor = t.firstRow
 		t.recalc()
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 		return
 	}
 	// Selects next row
 	t.rowCursor++
-	t.Dispatch(eventenum.OnChange, nil)
+	t.Dispatch(eventtype.OnChange, nil)
 
 	// Scroll down if necessary
 	if t.rowCursor > t.lastRow {
@@ -1014,7 +1014,7 @@ func (t *Table) selPrev() {
 	if sel < 0 {
 		t.rowCursor = t.lastRow
 		t.recalc()
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 		return
 	}
 	// Selects previous row and selects previous
@@ -1027,7 +1027,7 @@ func (t *Table) selPrev() {
 	} else {
 		t.recalc()
 	}
-	t.Dispatch(eventenum.OnChange, nil)
+	t.Dispatch(eventtype.OnChange, nil)
 }
 
 // nextPage shows the next page of rows and selects its first row
@@ -1039,7 +1039,7 @@ func (t *Table) nextPage() {
 	if t.lastRow == len(t.rows)-1 {
 		t.rowCursor = t.lastRow
 		t.recalc()
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 		return
 	}
 	plen := t.lastRow - t.firstRow
@@ -1055,7 +1055,7 @@ func (t *Table) prevPage() {
 	if t.firstRow == 0 {
 		t.rowCursor = 0
 		t.recalc()
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 		return
 	}
 	plen := t.lastRow - t.firstRow
@@ -1074,7 +1074,7 @@ func (t *Table) firstPage() {
 	t.firstRow = 0
 	t.rowCursor = 0
 	t.recalc()
-	t.Dispatch(eventenum.OnChange, nil)
+	t.Dispatch(eventtype.OnChange, nil)
 }
 
 // lastPage shows the last page of rows and selects the last row
@@ -1087,7 +1087,7 @@ func (t *Table) lastPage() {
 	t.firstRow = maxFirst
 	t.rowCursor = len(t.rows) - 1
 	t.recalc()
-	t.Dispatch(eventenum.OnChange, nil)
+	t.Dispatch(eventtype.OnChange, nil)
 }
 
 // selectRow selects the specified row.
@@ -1096,7 +1096,7 @@ func (t *Table) selectRow(ri int) {
 
 	trow := t.rows[ri]
 	trow.selected = true
-	t.Dispatch(eventenum.OnChange, nil)
+	t.Dispatch(eventtype.OnChange, nil)
 }
 
 // toggleRowSel toogles the specified row selection state
@@ -1105,7 +1105,7 @@ func (t *Table) toggleRowSel(ri int) {
 
 	trow := t.rows[ri]
 	trow.selected = !trow.selected
-	t.Dispatch(eventenum.OnChange, nil)
+	t.Dispatch(eventtype.OnChange, nil)
 }
 
 // setColWidth sets the width of the specified column
@@ -1437,7 +1437,7 @@ func (t *Table) setVScrollBar(state bool) {
 		if t.vscroll == nil {
 			t.vscroll = NewVScrollBar(0, 0)
 			t.vscroll.SetBorders(0, 0, 0, 1)
-			t.vscroll.Subscribe(eventenum.OnChange, t.onVScrollBar)
+			t.vscroll.Subscribe(eventtype.OnChange, t.onVScrollBar)
 			t.Panel.Add(t.vscroll)
 		}
 		// Sets the scroll bar size and positions
@@ -1464,7 +1464,7 @@ func (t *Table) setVScrollBar(state bool) {
 }
 
 // onVScrollBar is called when a vertical scroll bar event is received
-func (t *Table) onVScrollBar(evname eventenum.EventName, ev interface{}) {
+func (t *Table) onVScrollBar(evname eventtype.EventType, ev interface{}) {
 
 	// Calculates the new first visible line
 	pos := t.vscroll.Value()
@@ -1489,7 +1489,7 @@ func (t *Table) onVScrollBar(evname eventenum.EventName, ev interface{}) {
 	t.firstRow = first
 	t.recalc()
 	if selChange {
-		t.Dispatch(eventenum.OnChange, nil)
+		t.Dispatch(eventtype.OnChange, nil)
 	}
 }
 

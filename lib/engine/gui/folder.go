@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 )
 
@@ -68,22 +68,22 @@ func (f *Folder) Initialize(text string, width float32, contentPanel PanelI) {
 	f.Panel.Add(f.contentPanel)
 
 	// Set event callbacks
-	f.Panel.Subscribe(eventenum.OnMouseDown, f.onMouse)
-	f.Panel.Subscribe(eventenum.OnCursorEnter, f.onCursor)
-	f.Panel.Subscribe(eventenum.OnCursorLeave, f.onCursor)
+	f.Panel.Subscribe(eventtype.OnMouseDown, f.onMouse)
+	f.Panel.Subscribe(eventtype.OnCursorEnter, f.onCursor)
+	f.Panel.Subscribe(eventtype.OnCursorLeave, f.onCursor)
 
-	f.Subscribe(eventenum.OnMouseDownOut, func(s eventenum.EventName, i interface{}) {
+	f.Subscribe(eventtype.OnMouseDownOut, func(s eventtype.EventType, i interface{}) {
 		// Hide list when clicked out
 		if f.contentPanel.Visible() {
 			f.contentPanel.SetVisible(false)
 		}
 	})
 
-	f.contentPanel.Subscribe(eventenum.OnCursorEnter, func(evname eventenum.EventName, ev interface{}) {
-		f.Dispatch(eventenum.OnCursorLeave, ev)
+	f.contentPanel.Subscribe(eventtype.OnCursorEnter, func(evname eventtype.EventType, ev interface{}) {
+		f.Dispatch(eventtype.OnCursorLeave, ev)
 	})
-	f.contentPanel.Subscribe(eventenum.OnCursorLeave, func(evname eventenum.EventName, ev interface{}) {
-		f.Dispatch(eventenum.OnCursorEnter, ev)
+	f.contentPanel.Subscribe(eventtype.OnCursorLeave, func(evname eventtype.EventType, ev interface{}) {
+		f.Dispatch(eventtype.OnCursorEnter, ev)
 	})
 
 	f.alignRight = true
@@ -118,10 +118,10 @@ func (f *Folder) Height() float32 {
 }
 
 // onMouse receives mouse button events over the folder panel.
-func (f *Folder) onMouse(evname eventenum.EventName, ev interface{}) {
+func (f *Folder) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		cont := f.contentPanel.GetPanel()
 		if !cont.Visible() {
 			cont.SetVisible(true)
@@ -136,13 +136,13 @@ func (f *Folder) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onCursor receives cursor events over the folder panel
-func (f *Folder) onCursor(evname eventenum.EventName, ev interface{}) {
+func (f *Folder) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnCursorEnter:
+	case eventtype.OnCursorEnter:
 		f.cursorOver = true
 		f.update()
-	case eventenum.OnCursorLeave:
+	case eventtype.OnCursorLeave:
 		f.cursorOver = false
 		f.update()
 	default:

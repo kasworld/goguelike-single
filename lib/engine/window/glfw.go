@@ -16,7 +16,7 @@ import (
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets"
 )
@@ -136,11 +136,11 @@ func Init(width, height int, title string) error {
 		w.keyEv.Mods = ModifierKey(mods)
 		w.mods = w.keyEv.Mods
 		if action == glfw.Press {
-			w.Dispatch(eventenum.OnKeyDown, &w.keyEv)
+			w.Dispatch(eventtype.OnKeyDown, &w.keyEv)
 		} else if action == glfw.Release {
-			w.Dispatch(eventenum.OnKeyUp, &w.keyEv)
+			w.Dispatch(eventtype.OnKeyUp, &w.keyEv)
 		} else if action == glfw.Repeat {
-			w.Dispatch(eventenum.OnKeyRepeat, &w.keyEv)
+			w.Dispatch(eventtype.OnKeyRepeat, &w.keyEv)
 		}
 	})
 
@@ -148,7 +148,7 @@ func Init(width, height int, title string) error {
 	w.SetCharModsCallback(func(x *glfw.Window, char rune, mods glfw.ModifierKey) {
 		w.charEv.Char = char
 		w.charEv.Mods = ModifierKey(mods)
-		w.Dispatch(eventenum.OnChar, &w.charEv)
+		w.Dispatch(eventtype.OnChar, &w.charEv)
 	})
 
 	// Set up mouse button callback to dispatch event
@@ -159,9 +159,9 @@ func Init(width, height int, title string) error {
 		w.mouseEv.Xpos = float32(xpos * w.scaleX)
 		w.mouseEv.Ypos = float32(ypos * w.scaleY)
 		if action == glfw.Press {
-			w.Dispatch(eventenum.OnMouseDown, &w.mouseEv)
+			w.Dispatch(eventtype.OnMouseDown, &w.mouseEv)
 		} else if action == glfw.Release {
-			w.Dispatch(eventenum.OnMouseUp, &w.mouseEv)
+			w.Dispatch(eventtype.OnMouseUp, &w.mouseEv)
 		}
 	})
 
@@ -172,14 +172,14 @@ func Init(width, height int, title string) error {
 		w.sizeEv.Height = height
 		w.scaleX = float64(fbw) / float64(width)
 		w.scaleY = float64(fbh) / float64(height)
-		w.Dispatch(eventenum.OnWindowSize, &w.sizeEv)
+		w.Dispatch(eventtype.OnWindowSize, &w.sizeEv)
 	})
 
 	// Set up window position callback to dispatch event
 	w.SetPosCallback(func(x *glfw.Window, xpos int, ypos int) {
 		w.posEv.Xpos = xpos
 		w.posEv.Ypos = ypos
-		w.Dispatch(eventenum.OnWindowPos, &w.posEv)
+		w.Dispatch(eventtype.OnWindowPos, &w.posEv)
 	})
 
 	// Set up window cursor position callback to dispatch event
@@ -187,7 +187,7 @@ func Init(width, height int, title string) error {
 		w.cursorEv.Xpos = float32(xpos)
 		w.cursorEv.Ypos = float32(ypos)
 		w.cursorEv.Mods = w.mods
-		w.Dispatch(eventenum.OnCursor, &w.cursorEv)
+		w.Dispatch(eventtype.OnCursor, &w.cursorEv)
 	})
 
 	// Set up mouse wheel scroll callback to dispatch event
@@ -195,7 +195,7 @@ func Init(width, height int, title string) error {
 		w.scrollEv.Xoffset = float32(xoff)
 		w.scrollEv.Yoffset = float32(yoff)
 		w.scrollEv.Mods = w.mods
-		w.Dispatch(eventenum.OnScroll, &w.scrollEv)
+		w.Dispatch(eventtype.OnScroll, &w.scrollEv)
 	})
 
 	win = w // Set singleton

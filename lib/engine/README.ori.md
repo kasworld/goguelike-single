@@ -132,14 +132,14 @@ func main() {
 	camera.NewOrbitControl(cam)
 
 	// Set up callback to update viewport and camera aspect ratio when the window is resized
-	onResize := func(evname eventenum.EventName, ev interface{}) {
+	onResize := func(evname eventtype.EventType, ev interface{}) {
 		// Get framebuffer size and update viewport accordingly
 		width, height := a.GetSize()
 		a.Gls().Viewport(0, 0, int32(width), int32(height))
 		// Update the camera's aspect ratio
 		cam.SetAspect(float32(width) / float32(height))
 	}
-	a.Subscribe(eventenum.window.OnWindowSize, onResize)
+	a.Subscribe(eventtype.window.OnWindowSize, onResize)
 	onResize("", nil)
 
 	// Create a blue torus and add it to the scene
@@ -152,7 +152,7 @@ func main() {
 	btn := gui.NewButton("Make Red")
 	btn.SetPosition(100, 40)
 	btn.SetSize(40, 40)
-	btn.Subscribe(eventenum.gui.OnClick, func(name string, ev interface{}) {
+	btn.Subscribe(eventtype.gui.OnClick, func(name string, ev interface{}) {
 		mat.SetColor(math32.NewColor("DarkRed"))
 	})
 	scene.Add(btn)

@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -104,8 +104,8 @@ func (s *Scroller) initialize(width, height float32, mode ScrollMode, target Pan
 	s.Panel.Add(s.target)
 	s.mode = mode
 
-	s.Subscribe(eventenum.OnResize, s.onResize)
-	s.Subscribe(eventenum.OnScroll, s.onScroll)
+	s.Subscribe(eventtype.OnResize, s.onResize)
+	s.Subscribe(eventtype.OnScroll, s.onScroll)
 
 	s.Update()
 }
@@ -275,7 +275,7 @@ func (s *Scroller) ScrollTo(x, y float32) {
 }
 
 // onScroll receives mouse scroll events when this scroller has the scroll focus (set by OnMouseEnter)
-func (s *Scroller) onScroll(evname eventenum.EventName, ev interface{}) {
+func (s *Scroller) onScroll(evname eventtype.EventType, ev interface{}) {
 
 	sev := ev.(*window.ScrollEvent)
 
@@ -314,7 +314,7 @@ func (s *Scroller) onScroll(evname eventenum.EventName, ev interface{}) {
 }
 
 // onResize receives resize events
-func (s *Scroller) onResize(evname eventenum.EventName, ev interface{}) {
+func (s *Scroller) onResize(evname eventtype.EventType, ev interface{}) {
 
 	s.Update()
 }
@@ -324,7 +324,7 @@ func (s *Scroller) setVerticalScrollbarVisible() {
 	if s.vscroll == nil {
 		s.vscroll = NewVScrollBar(s.style.VerticalScrollbar.Broadness, 0)
 		s.vscroll.applyStyle(&s.style.VerticalScrollbar.ScrollBarStyle)
-		s.vscroll.Subscribe(eventenum.OnChange, s.onScrollBarEvent)
+		s.vscroll.Subscribe(eventtype.OnChange, s.onScrollBarEvent)
 		s.Add(s.vscroll)
 	}
 	s.vscroll.SetVisible(true)
@@ -335,7 +335,7 @@ func (s *Scroller) setHorizontalScrollbarVisible() {
 	if s.hscroll == nil {
 		s.hscroll = NewHScrollBar(0, s.style.HorizontalScrollbar.Broadness)
 		s.hscroll.applyStyle(&s.style.HorizontalScrollbar.ScrollBarStyle)
-		s.hscroll.Subscribe(eventenum.OnChange, s.onScrollBarEvent)
+		s.hscroll.Subscribe(eventtype.OnChange, s.onScrollBarEvent)
 		s.Add(s.hscroll)
 	}
 	s.hscroll.SetVisible(true)
@@ -408,7 +408,7 @@ func (s *Scroller) updateScrollbarsVisibility() {
 }
 
 // onScrollEvent is called when the scrollbar value changes
-func (s *Scroller) onScrollBarEvent(evname eventenum.EventName, ev interface{}) {
+func (s *Scroller) onScrollBarEvent(evname eventtype.EventType, ev interface{}) {
 
 	s.recalc()
 }

@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -79,8 +79,8 @@ func (li *List) initialize(vert bool, width, height float32) {
 	li.ItemScroller.initialize(vert, width, height)
 	li.ItemScroller.SetStyles(li.styles.Scroller)
 	li.ItemScroller.adjustItem = true
-	li.ItemScroller.Subscribe(eventenum.OnKeyDown, li.onKeyEvent)
-	li.ItemScroller.Subscribe(eventenum.OnKeyRepeat, li.onKeyEvent)
+	li.ItemScroller.Subscribe(eventtype.OnKeyDown, li.onKeyEvent)
+	li.ItemScroller.Subscribe(eventtype.OnKeyRepeat, li.onKeyEvent)
 
 	if vert {
 		li.keyNext = window.KeyDown
@@ -125,8 +125,8 @@ func (li *List) InsertAt(pos int, item PanelI) *ListItem {
 
 	litem := newListItem(li, item)
 	li.ItemScroller.InsertAt(pos, litem)
-	litem.Panel.Subscribe(eventenum.OnMouseDown, litem.onMouse)
-	litem.Panel.Subscribe(eventenum.OnCursorEnter, litem.onCursor)
+	litem.Panel.Subscribe(eventtype.OnMouseDown, litem.onMouse)
+	litem.Panel.Subscribe(eventtype.OnCursorEnter, litem.onCursor)
 	return litem
 }
 
@@ -199,7 +199,7 @@ func (li *List) SetSelected(item PanelI, state bool) {
 		if litem.item == item {
 			litem.SetSelected(state)
 			li.update()
-			li.Dispatch(eventenum.OnChange, nil)
+			li.Dispatch(eventtype.OnChange, nil)
 			return
 		}
 	}
@@ -217,7 +217,7 @@ func (li *List) SelectPos(pos int, state bool) {
 	}
 	litem.SetSelected(state)
 	li.update()
-	li.Dispatch(eventenum.OnChange, nil)
+	li.Dispatch(eventtype.OnChange, nil)
 }
 
 // SetItemPadLeftAt sets the additional left padding for this item
@@ -283,7 +283,7 @@ func (li *List) selNext(sel bool, update bool) *ListItem {
 		li.update()
 	}
 	if sel && newSel {
-		li.Dispatch(eventenum.OnChange, nil)
+		li.Dispatch(eventtype.OnChange, nil)
 	}
 	return newItem
 }
@@ -337,7 +337,7 @@ func (li *List) selPrev(sel bool, update bool) *ListItem {
 		li.update()
 	}
 	if sel && newSel {
-		li.Dispatch(eventenum.OnChange, nil)
+		li.Dispatch(eventtype.OnChange, nil)
 	}
 	return newItem
 }
@@ -365,7 +365,7 @@ func (li *List) highlighted() (pos int) {
 }
 
 // onKeyEvent receives subscribed key events for the list
-func (li *List) onKeyEvent(evname eventenum.EventName, ev interface{}) {
+func (li *List) onKeyEvent(evname eventtype.EventType, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	// Dropdown mode
@@ -435,7 +435,7 @@ func (li *List) setSelection(litem *ListItem, state bool, force bool, dispatch b
 	}
 	li.update()
 	if dispatch {
-		li.Dispatch(eventenum.OnChange, nil)
+		li.Dispatch(eventtype.OnChange, nil)
 	}
 }
 
@@ -462,15 +462,15 @@ func newListItem(list *List, item PanelI) *ListItem {
 	litem.SetContentWidth(item.GetPanel().Width())
 	litem.SetContentHeight(item.GetPanel().Height())
 	// If this list item is resized, sends event to its child panel
-	litem.Subscribe(eventenum.OnResize, func(evname eventenum.EventName, ev interface{}) {
-		item.GetPanel().Dispatch(eventenum.OnListItemResize, nil)
+	litem.Subscribe(eventtype.OnResize, func(evname eventtype.EventType, ev interface{}) {
+		item.GetPanel().Dispatch(eventtype.OnListItemResize, nil)
 	})
 	litem.update()
 	return litem
 }
 
 // onMouse receives mouse button events over the list item
-func (litem *ListItem) onMouse(evname eventenum.EventName, ev interface{}) {
+func (litem *ListItem) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	if litem.list.single {
 		litem.list.setSelection(litem, true, true, true)
@@ -483,7 +483,7 @@ func (litem *ListItem) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events over the list item
-func (litem *ListItem) onCursor(evname eventenum.EventName, ev interface{}) {
+func (litem *ListItem) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	if litem.list.dropdown {
 		litem.list.setSelection(litem, true, true, false)

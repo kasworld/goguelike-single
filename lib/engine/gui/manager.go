@@ -7,7 +7,7 @@ package gui
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/timermanager"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -43,14 +43,14 @@ func Manager() *manager {
 
 	// Subscribe to window events
 	gm.win = window.Get()
-	gm.win.Subscribe(eventenum.OnKeyUp, gm.onKeyboard)
-	gm.win.Subscribe(eventenum.OnKeyDown, gm.onKeyboard)
-	gm.win.Subscribe(eventenum.OnKeyRepeat, gm.onKeyboard)
-	gm.win.Subscribe(eventenum.OnChar, gm.onKeyboard)
-	gm.win.Subscribe(eventenum.OnCursor, gm.onCursor)
-	gm.win.Subscribe(eventenum.OnMouseUp, gm.onMouse)
-	gm.win.Subscribe(eventenum.OnMouseDown, gm.onMouse)
-	gm.win.Subscribe(eventenum.OnScroll, gm.onScroll)
+	gm.win.Subscribe(eventtype.OnKeyUp, gm.onKeyboard)
+	gm.win.Subscribe(eventtype.OnKeyDown, gm.onKeyboard)
+	gm.win.Subscribe(eventtype.OnKeyRepeat, gm.onKeyboard)
+	gm.win.Subscribe(eventtype.OnChar, gm.onKeyboard)
+	gm.win.Subscribe(eventtype.OnCursor, gm.onCursor)
+	gm.win.Subscribe(eventtype.OnMouseUp, gm.onMouse)
+	gm.win.Subscribe(eventtype.OnMouseDown, gm.onMouse)
+	gm.win.Subscribe(eventtype.OnScroll, gm.onScroll)
 
 	return gm
 }
@@ -78,11 +78,11 @@ func (gm *manager) SetKeyFocus(disp dispatcheri.DispatcherI) {
 		return
 	}
 	if gm.keyFocus != nil {
-		gm.keyFocus.Dispatch(eventenum.OnFocusLost, nil)
+		gm.keyFocus.Dispatch(eventtype.OnFocusLost, nil)
 	}
 	gm.keyFocus = disp
 	if gm.keyFocus != nil {
-		gm.keyFocus.Dispatch(eventenum.OnFocus, nil)
+		gm.keyFocus.Dispatch(eventtype.OnFocus, nil)
 	}
 }
 
@@ -94,13 +94,13 @@ func (gm *manager) SetCursorFocus(disp dispatcheri.DispatcherI) {
 	}
 	gm.cursorFocus = disp
 	if gm.cursorFocus == nil {
-		gm.onCursor(eventenum.OnCursor, gm.cev)
+		gm.onCursor(eventtype.OnCursor, gm.cev)
 	}
 }
 
 // onKeyboard is called when char or key events are received.
 // The events are dispatched to the focused DispatcherI or to non-GUI.
-func (gm *manager) onKeyboard(evname eventenum.EventName, ev interface{}) {
+func (gm *manager) onKeyboard(evname eventtype.EventType, ev interface{}) {
 
 	if gm.keyFocus != nil {
 		if gm.modal == nil {
@@ -116,7 +116,7 @@ func (gm *manager) onKeyboard(evname eventenum.EventName, ev interface{}) {
 // onMouse is called when mouse events are received.
 // OnMouseDown/OnMouseUp are dispatched to gm.target or to non-GUI, while
 // OnMouseDownOut/OnMouseUpOut are dispatched to all non-target panels.
-func (gm *manager) onMouse(evname eventenum.EventName, ev interface{}) {
+func (gm *manager) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	// Check if gm.scene is nil and if so then there are no IPanels to send events to
 	if gm.scene == nil {
@@ -128,10 +128,10 @@ func (gm *manager) onMouse(evname eventenum.EventName, ev interface{}) {
 	gm.forEachIPanel(func(ipan PanelI) {
 		if gm.target == nil || !ipan.IsAncestorOf(gm.target) {
 			switch evname {
-			case eventenum.OnMouseDown:
-				ipan.Dispatch(eventenum.OnMouseDownOut, ev)
-			case eventenum.OnMouseUp:
-				ipan.Dispatch(eventenum.OnMouseUpOut, ev)
+			case eventtype.OnMouseDown:
+				ipan.Dispatch(eventtype.OnMouseDownOut, ev)
+			case eventtype.OnMouseUp:
+				ipan.Dispatch(eventtype.OnMouseUpOut, ev)
 			}
 		}
 	})
@@ -148,7 +148,7 @@ func (gm *manager) onMouse(evname eventenum.EventName, ev interface{}) {
 
 // onScroll is called when scroll events are received.
 // The events are dispatched to the target panel or to non-GUI.
-func (gm *manager) onScroll(evname eventenum.EventName, ev interface{}) {
+func (gm *manager) onScroll(evname eventtype.EventType, ev interface{}) {
 
 	// Check if gm.scene is nil and if so then there are no IPanels to send events to
 	if gm.scene == nil {
@@ -168,7 +168,7 @@ func (gm *manager) onScroll(evname eventenum.EventName, ev interface{}) {
 
 // onCursor is called when (mouse) cursor events are received.
 // Updates the target/click panels and dispatches OnCursor, OnCursorEnter, OnCursorLeave events.
-func (gm *manager) onCursor(evname eventenum.EventName, ev interface{}) {
+func (gm *manager) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	// If an DispatcherI is capturing cursor events dispatch to it and return
 	if gm.cursorFocus != nil {
@@ -205,11 +205,11 @@ func (gm *manager) onCursor(evname eventenum.EventName, ev interface{}) {
 		}
 		// If just left a panel and the new panel is not a descendant of the old panel
 		if oldTarget != nil && !oldTarget.IsAncestorOf(gm.target) && (gm.modal == nil || gm.modal.IsAncestorOf(oldTarget)) {
-			sendAncestry(oldTarget, true, commonAnc, gm.modal, eventenum.OnCursorLeave, ev)
+			sendAncestry(oldTarget, true, commonAnc, gm.modal, eventtype.OnCursorLeave, ev)
 		}
 		// If just entered a panel and it's not an ancestor of the old panel
 		if gm.target != nil && !gm.target.IsAncestorOf(oldTarget) && (gm.modal == nil || gm.modal.IsAncestorOf(gm.target)) {
-			sendAncestry(gm.target, true, commonAnc, gm.modal, eventenum.OnCursorEnter, ev)
+			sendAncestry(gm.target, true, commonAnc, gm.modal, eventtype.OnCursorEnter, ev)
 		}
 	}
 
@@ -228,7 +228,7 @@ func (gm *manager) onCursor(evname eventenum.EventName, ev interface{}) {
 // If uptoEx (i.e. excluding) is not nil then the event will not be dispatched to that ancestor nor any higher ancestors.
 // If uptoIn (i.e. including) is not nil then the event will be dispatched to that ancestor but not to any higher ancestors.
 // uptoEx and uptoIn can both be defined.
-func sendAncestry(ipan PanelI, all bool, uptoEx PanelI, uptoIn PanelI, evname eventenum.EventName, ev interface{}) {
+func sendAncestry(ipan PanelI, all bool, uptoEx PanelI, uptoIn PanelI, evname eventtype.EventType, ev interface{}) {
 
 	var ok bool
 	for ipan != nil {

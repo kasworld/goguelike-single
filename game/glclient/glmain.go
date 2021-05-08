@@ -18,7 +18,7 @@ import (
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
@@ -59,8 +59,8 @@ func (ga *GLClient) glInit() error {
 	// Set up orbit control for the camera
 	// camera.NewOrbitControl(ga.cam)
 
-	ga.app.Subscribe(eventenum.OnWindowSize, ga.onResize)
-	ga.onResize("", nil)
+	ga.app.Subscribe(eventtype.OnWindowSize, ga.onResize)
+	ga.onResize(eventtype.OnResize, nil)
 
 	// Create and add lights to the scene
 	ga.scene.Add(light.NewAmbient(&math32.Color{1.0, 1.0, 1.0}, 0.8))
@@ -79,18 +79,18 @@ func (ga *GLClient) glInit() error {
 	ga.labelFPS.SetColor4(&lightTextColor)
 	ga.scene.Add(ga.labelFPS)
 
-	gui.Manager().SubscribeID(eventenum.OnMouseUp, ga, ga.onMouse)
-	gui.Manager().SubscribeID(eventenum.OnMouseDown, ga, ga.onMouse)
-	gui.Manager().SubscribeID(eventenum.OnScroll, &ga, ga.onScroll)
+	gui.Manager().SubscribeID(eventtype.OnMouseUp, ga, ga.onMouse)
+	gui.Manager().SubscribeID(eventtype.OnMouseDown, ga, ga.onMouse)
+	gui.Manager().SubscribeID(eventtype.OnScroll, &ga, ga.onScroll)
 
 	return nil
 }
 
 // onMouse is called when an OnMouseDown/OnMouseUp event is received.
-func (ga *GLClient) onMouse(evname eventenum.EventName, ev interface{}) {
+func (ga *GLClient) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		// gui.Manager().SetCursorFocus(ga)
 		mev := ev.(*window.MouseEvent)
 		switch mev.Button {
@@ -98,13 +98,13 @@ func (ga *GLClient) onMouse(evname eventenum.EventName, ev interface{}) {
 		case window.MouseButtonMiddle: // Zoom
 		case window.MouseButtonRight: // Pan
 		}
-	case eventenum.OnMouseUp:
+	case eventtype.OnMouseUp:
 		// gui.Manager().SetCursorFocus(nil)
 	}
 }
 
 // onScroll is called when an OnScroll event is received.
-func (ga *GLClient) onScroll(evname eventenum.EventName, ev interface{}) {
+func (ga *GLClient) onScroll(evname eventtype.EventType, ev interface{}) {
 	zF := float32(1.5)
 	sev := ev.(*window.ScrollEvent)
 	if sev.Yoffset > 0 {
@@ -130,7 +130,7 @@ func (ga *GLClient) Run() error {
 	// btn := gui.NewButton("Make Red")
 	// btn.SetPosition(100, 40)
 	// btn.SetSize(40, 40)
-	// btn.Subscribe(eventenum.gui.OnClick, func(name string, ev interface{}) {
+	// btn.Subscribe(eventtype.gui.OnClick, func(name string, ev interface{}) {
 	// 	mat.SetColor(math32.NewColor("DarkRed"))
 	// })
 	// ga.scene.Add(btn)
@@ -165,7 +165,7 @@ func (ga *GLClient) moveGLPos() {
 }
 
 // Set up callback to update viewport and camera aspect ratio when the window is resized
-func (ga *GLClient) onResize(evname eventenum.EventName, ev interface{}) {
+func (ga *GLClient) onResize(evname eventtype.EventType, ev interface{}) {
 	// Get framebuffer size and update viewport accordingly
 	width, height := ga.app.GetSize()
 	ga.app.Gls().Viewport(0, 0, int32(width), int32(height))

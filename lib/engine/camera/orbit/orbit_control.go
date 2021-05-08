@@ -9,7 +9,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -90,12 +90,12 @@ func NewOrbitControl(cam *camera.Camera) *OrbitControl {
 	oc.KeyPanSpeed = 35.0
 
 	// Subscribe to events
-	gui.Manager().SubscribeID(eventenum.OnMouseUp, &oc, oc.onMouse)
-	gui.Manager().SubscribeID(eventenum.OnMouseDown, &oc, oc.onMouse)
-	gui.Manager().SubscribeID(eventenum.OnScroll, &oc, oc.onScroll)
-	gui.Manager().SubscribeID(eventenum.OnKeyDown, &oc, oc.onKey)
-	gui.Manager().SubscribeID(eventenum.OnKeyRepeat, &oc, oc.onKey)
-	oc.SubscribeID(eventenum.OnCursor, &oc, oc.onCursor)
+	gui.Manager().SubscribeID(eventtype.OnMouseUp, &oc, oc.onMouse)
+	gui.Manager().SubscribeID(eventtype.OnMouseDown, &oc, oc.onMouse)
+	gui.Manager().SubscribeID(eventtype.OnScroll, &oc, oc.onScroll)
+	gui.Manager().SubscribeID(eventtype.OnKeyDown, &oc, oc.onKey)
+	gui.Manager().SubscribeID(eventtype.OnKeyRepeat, &oc, oc.onKey)
+	oc.SubscribeID(eventtype.OnCursor, &oc, oc.onCursor)
 
 	return oc
 }
@@ -103,12 +103,12 @@ func NewOrbitControl(cam *camera.Camera) *OrbitControl {
 // Dispose unsubscribes from all events.
 func (oc *OrbitControl) Dispose() {
 
-	gui.Manager().UnsubscribeID(eventenum.OnMouseUp, &oc)
-	gui.Manager().UnsubscribeID(eventenum.OnMouseDown, &oc)
-	gui.Manager().UnsubscribeID(eventenum.OnScroll, &oc)
-	gui.Manager().UnsubscribeID(eventenum.OnKeyDown, &oc)
-	gui.Manager().UnsubscribeID(eventenum.OnKeyRepeat, &oc)
-	oc.UnsubscribeID(eventenum.OnCursor, &oc)
+	gui.Manager().UnsubscribeID(eventtype.OnMouseUp, &oc)
+	gui.Manager().UnsubscribeID(eventtype.OnMouseDown, &oc)
+	gui.Manager().UnsubscribeID(eventtype.OnScroll, &oc)
+	gui.Manager().UnsubscribeID(eventtype.OnKeyDown, &oc)
+	gui.Manager().UnsubscribeID(eventtype.OnKeyRepeat, &oc)
+	oc.UnsubscribeID(eventtype.OnCursor, &oc)
 }
 
 // Reset resets the orbit control.
@@ -211,7 +211,7 @@ func (oc *OrbitControl) Pan(deltaX, deltaY float32) {
 }
 
 // onMouse is called when an OnMouseDown/OnMouseUp event is received.
-func (oc *OrbitControl) onMouse(evname eventenum.EventName, ev interface{}) {
+func (oc *OrbitControl) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	// If nothing enabled ignore event
 	if oc.enabled == OrbitNone {
@@ -246,7 +246,7 @@ func (oc *OrbitControl) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onCursor is called when an OnCursor event is received.
-func (oc *OrbitControl) onCursor(evname eventenum.EventName, ev interface{}) {
+func (oc *OrbitControl) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	// If nothing enabled ignore event
 	if oc.enabled == OrbitNone || oc.state == stateNone {
@@ -271,7 +271,7 @@ func (oc *OrbitControl) onCursor(evname eventenum.EventName, ev interface{}) {
 }
 
 // onScroll is called when an OnScroll event is received.
-func (oc *OrbitControl) onScroll(evname eventenum.EventName, ev interface{}) {
+func (oc *OrbitControl) onScroll(evname eventtype.EventType, ev interface{}) {
 
 	if oc.enabled&OrbitZoom != 0 {
 		sev := ev.(*window.ScrollEvent)
@@ -280,7 +280,7 @@ func (oc *OrbitControl) onScroll(evname eventenum.EventName, ev interface{}) {
 }
 
 // onKey is called when an OnKeyDown/OnKeyRepeat event is received.
-func (oc *OrbitControl) onKey(evname eventenum.EventName, ev interface{}) {
+func (oc *OrbitControl) onKey(evname eventtype.EventType, ev interface{}) {
 
 	// If keyboard control is disabled ignore event
 	if oc.enabled&OrbitKeys == 0 {

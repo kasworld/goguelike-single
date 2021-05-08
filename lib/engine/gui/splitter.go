@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -81,12 +81,12 @@ func newSplitter(horiz bool, width, height float32) *Splitter {
 		s.pos = 0.5
 	}
 
-	s.Subscribe(eventenum.OnResize, s.onResize)
-	s.spacer.Subscribe(eventenum.OnMouseDown, s.onMouse)
-	s.spacer.Subscribe(eventenum.OnMouseUp, s.onMouse)
-	s.spacer.Subscribe(eventenum.OnCursor, s.onCursor)
-	s.spacer.Subscribe(eventenum.OnCursorEnter, s.onCursor)
-	s.spacer.Subscribe(eventenum.OnCursorLeave, s.onCursor)
+	s.Subscribe(eventtype.OnResize, s.onResize)
+	s.spacer.Subscribe(eventtype.OnMouseDown, s.onMouse)
+	s.spacer.Subscribe(eventtype.OnMouseUp, s.onMouse)
+	s.spacer.Subscribe(eventtype.OnCursor, s.onCursor)
+	s.spacer.Subscribe(eventtype.OnCursorEnter, s.onCursor)
+	s.spacer.Subscribe(eventtype.OnCursorLeave, s.onCursor)
 	s.update()
 	s.recalc()
 	return s
@@ -108,20 +108,20 @@ func (s *Splitter) Split() float32 {
 }
 
 // onResize receives subscribed resize events for the whole splitter panel
-func (s *Splitter) onResize(evname eventenum.EventName, ev interface{}) {
+func (s *Splitter) onResize(evname eventtype.EventType, ev interface{}) {
 
 	s.recalc()
 }
 
 // onMouse receives subscribed mouse events over the spacer panel
-func (s *Splitter) onMouse(evname eventenum.EventName, ev interface{}) {
+func (s *Splitter) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	mev := ev.(*window.MouseEvent)
 	if mev.Button != window.MouseButtonLeft {
 		return
 	}
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		s.pressed = true
 		if s.horiz {
 			s.posLast = mev.Xpos
@@ -129,7 +129,7 @@ func (s *Splitter) onMouse(evname eventenum.EventName, ev interface{}) {
 			s.posLast = mev.Ypos
 		}
 		Manager().SetCursorFocus(&s.spacer)
-	case eventenum.OnMouseUp:
+	case eventtype.OnMouseUp:
 		s.pressed = false
 		window.Get().SetCursor(window.ArrowCursor)
 		Manager().SetCursorFocus(nil)
@@ -137,9 +137,9 @@ func (s *Splitter) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events over the spacer panel
-func (s *Splitter) onCursor(evname eventenum.EventName, ev interface{}) {
+func (s *Splitter) onCursor(evname eventtype.EventType, ev interface{}) {
 
-	if evname == eventenum.OnCursorEnter {
+	if evname == eventtype.OnCursorEnter {
 		if s.horiz {
 			window.Get().SetCursor(window.HResizeCursor)
 		} else {
@@ -147,11 +147,11 @@ func (s *Splitter) onCursor(evname eventenum.EventName, ev interface{}) {
 		}
 		s.mouseOver = true
 		s.update()
-	} else if evname == eventenum.OnCursorLeave {
+	} else if evname == eventtype.OnCursorLeave {
 		window.Get().SetCursor(window.ArrowCursor)
 		s.mouseOver = false
 		s.update()
-	} else if evname == eventenum.OnCursor {
+	} else if evname == eventtype.OnCursor {
 		if !s.pressed {
 			return
 		}

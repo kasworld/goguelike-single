@@ -12,7 +12,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/audio/al"
 	"github.com/kasworld/goguelike-single/lib/engine/audio/vorbis"
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/renderer"
 	"github.com/kasworld/goguelike-single/lib/engine/util/logger"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -65,7 +65,7 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 		// If Exit() was called or there was an attempt to close the window dispatch OnExit event for subscribers.
 		// If no subscriber cancelled the event, terminate the application.
 		if a.WindowI.(*window.GlfwWindow).ShouldClose() {
-			a.Dispatch(eventenum.OnExit, nil)
+			a.Dispatch(eventtype.OnExit, nil)
 			// TODO allow for cancelling exit e.g. showing dialog asking the user if he/she wants to save changes
 			// if exit was cancelled {
 			//     a.WindowI.(*window.GlfwWindow).SetShouldClose(false)

@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -74,12 +74,12 @@ func NewWindow(width, height float32) *Window {
 	w.styles = &StyleDefault().Window
 
 	w.Panel.Initialize(w, width, height)
-	w.Panel.Subscribe(eventenum.OnMouseDown, w.onMouse)
-	w.Panel.Subscribe(eventenum.OnMouseUp, w.onMouse)
-	w.Panel.Subscribe(eventenum.OnCursor, w.onCursor)
-	w.Panel.Subscribe(eventenum.OnCursorEnter, w.onCursor)
-	w.Panel.Subscribe(eventenum.OnCursorLeave, w.onCursor)
-	w.Panel.Subscribe(eventenum.OnResize, func(evname eventenum.EventName, ev interface{}) { w.recalc() })
+	w.Panel.Subscribe(eventtype.OnMouseDown, w.onMouse)
+	w.Panel.Subscribe(eventtype.OnMouseUp, w.onMouse)
+	w.Panel.Subscribe(eventtype.OnCursor, w.onCursor)
+	w.Panel.Subscribe(eventtype.OnCursorEnter, w.onCursor)
+	w.Panel.Subscribe(eventtype.OnCursorLeave, w.onCursor)
+	w.Panel.Subscribe(eventtype.OnResize, func(evname eventtype.EventType, ev interface{}) { w.recalc() })
 
 	w.client.Initialize(&w.client, 0, 0)
 	w.Panel.Add(&w.client)
@@ -108,7 +108,7 @@ func (w *Window) SetTitle(text string) {
 
 	if w.title == nil {
 		w.title = newWindowTitle(w, text)
-		w.title.Subscribe(eventenum.OnCursor, w.onCursor)
+		w.title.Subscribe(eventtype.OnCursor, w.onCursor)
 		w.Panel.Add(w.title)
 	} else {
 		w.title.label.SetText(text)
@@ -136,10 +136,10 @@ func (w *Window) SetLayout(layout LayoutI) {
 }
 
 // onMouse process subscribed mouse events over the window
-func (w *Window) onMouse(evname eventenum.EventName, ev interface{}) {
+func (w *Window) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		// Move the window above everything contained in its parent
 		parent := w.Parent().(PanelI).GetPanel()
 		parent.SetTopChild(w)
@@ -148,7 +148,7 @@ func (w *Window) onMouse(evname eventenum.EventName, ev interface{}) {
 			w.drag = true
 			Manager().SetCursorFocus(w)
 		}
-	case eventenum.OnMouseUp:
+	case eventtype.OnMouseUp:
 		w.drag = false
 		Manager().SetCursorFocus(nil)
 	default:
@@ -157,13 +157,13 @@ func (w *Window) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onCursor process subscribed cursor events over the window
-func (w *Window) onCursor(evname eventenum.EventName, ev interface{}) {
+func (w *Window) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	// If the window is not resizable we are not interested in cursor movements
 	if !w.resizable {
 		return
 	}
-	if evname == eventenum.OnCursor {
+	if evname == eventtype.OnCursor {
 		cev := ev.(*window.CursorEvent)
 		// If already dragging - update window size and position depending
 		// on the cursor position and the borders being dragged
@@ -245,7 +245,7 @@ func (w *Window) onCursor(evname eventenum.EventName, ev interface{}) {
 				window.Get().SetCursor(window.ArrowCursor)
 			}
 		}
-	} else if evname == eventenum.OnCursorLeave {
+	} else if evname == eventtype.OnCursorLeave {
 		window.Get().SetCursor(window.ArrowCursor)
 		w.drag = false
 	}
@@ -328,22 +328,22 @@ func newWindowTitle(win *Window, text string) *WindowTitle {
 
 	wt.closeButton = NewButton("")
 	wt.closeButton.SetIcon(icon.Close)
-	wt.closeButton.Subscribe(eventenum.OnCursorEnter, func(s eventenum.EventName, i interface{}) {
+	wt.closeButton.Subscribe(eventtype.OnCursorEnter, func(s eventtype.EventType, i interface{}) {
 		window.Get().SetCursor(window.ArrowCursor)
 	})
-	wt.closeButton.Subscribe(eventenum.OnClick, func(s eventenum.EventName, i interface{}) {
+	wt.closeButton.Subscribe(eventtype.OnClick, func(s eventtype.EventType, i interface{}) {
 		wt.win.Parent().GetNode().Remove(wt.win)
 		wt.win.Dispose()
-		wt.win.Dispatch(eventenum.OnWindowClose, nil)
+		wt.win.Dispatch(eventtype.OnWindowClose, nil)
 	})
 	wt.Panel.Add(wt.closeButton)
 	wt.closeButtonVisible = true
 
-	wt.Subscribe(eventenum.OnMouseDown, wt.onMouse)
-	wt.Subscribe(eventenum.OnMouseUp, wt.onMouse)
-	wt.Subscribe(eventenum.OnCursor, wt.onCursor)
-	wt.Subscribe(eventenum.OnCursorEnter, wt.onCursor)
-	wt.Subscribe(eventenum.OnCursorLeave, wt.onCursor)
+	wt.Subscribe(eventtype.OnMouseDown, wt.onMouse)
+	wt.Subscribe(eventtype.OnMouseUp, wt.onMouse)
+	wt.Subscribe(eventtype.OnCursor, wt.onCursor)
+	wt.Subscribe(eventtype.OnCursorEnter, wt.onCursor)
+	wt.Subscribe(eventtype.OnCursorLeave, wt.onCursor)
 
 	wt.recalc()
 	return wt
@@ -362,16 +362,16 @@ func (wt *WindowTitle) setCloseButton(state bool) {
 }
 
 // onMouse process subscribed mouse button events over the window title.
-func (wt *WindowTitle) onMouse(evname eventenum.EventName, ev interface{}) {
+func (wt *WindowTitle) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	mev := ev.(*window.MouseEvent)
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		wt.pressed = true
 		wt.mouseX = mev.Xpos
 		wt.mouseY = mev.Ypos
 		Manager().SetCursorFocus(wt)
-	case eventenum.OnMouseUp:
+	case eventtype.OnMouseUp:
 		wt.pressed = false
 		Manager().SetCursorFocus(nil)
 	default:
@@ -380,12 +380,12 @@ func (wt *WindowTitle) onMouse(evname eventenum.EventName, ev interface{}) {
 }
 
 // onCursor process subscribed cursor events over the window title.
-func (wt *WindowTitle) onCursor(evname eventenum.EventName, ev interface{}) {
+func (wt *WindowTitle) onCursor(evname eventtype.EventType, ev interface{}) {
 
-	if evname == eventenum.OnCursorLeave {
+	if evname == eventtype.OnCursorLeave {
 		window.Get().SetCursor(window.ArrowCursor)
 		wt.pressed = false
-	} else if evname == eventenum.OnCursor {
+	} else if evname == eventtype.OnCursor {
 		if !wt.pressed {
 			return
 		}

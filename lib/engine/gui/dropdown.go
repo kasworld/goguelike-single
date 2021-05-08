@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 )
 
@@ -41,10 +41,10 @@ func NewDropDown(width float32, item *ImageLabel) *DropDown {
 	dd.litem = item
 
 	dd.Panel.Initialize(dd, width, 0)
-	dd.Panel.Subscribe(eventenum.OnMouseDown, dd.onMouse)
-	dd.Panel.Subscribe(eventenum.OnCursorEnter, dd.onCursor)
-	dd.Panel.Subscribe(eventenum.OnCursorLeave, dd.onCursor)
-	dd.Panel.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { dd.recalc() })
+	dd.Panel.Subscribe(eventtype.OnMouseDown, dd.onMouse)
+	dd.Panel.Subscribe(eventtype.OnCursorEnter, dd.onCursor)
+	dd.Panel.Subscribe(eventtype.OnCursorLeave, dd.onCursor)
+	dd.Panel.Subscribe(eventtype.OnResize, func(name eventtype.EventType, ev interface{}) { dd.recalc() })
 
 	// ListItem
 	dd.Panel.Add(dd.litem)
@@ -62,22 +62,22 @@ func NewDropDown(width float32, item *ImageLabel) *DropDown {
 	dd.list.dropdown = true
 	dd.list.SetVisible(false)
 
-	dd.Panel.Subscribe(eventenum.OnKeyDown, dd.list.onKeyEvent)
-	dd.Subscribe(eventenum.OnMouseDownOut, func(s eventenum.EventName, i interface{}) {
+	dd.Panel.Subscribe(eventtype.OnKeyDown, dd.list.onKeyEvent)
+	dd.Subscribe(eventtype.OnMouseDownOut, func(s eventtype.EventType, i interface{}) {
 		// Hide list when clicked out
 		if dd.list.Visible() {
 			dd.list.SetVisible(false)
 		}
 	})
 
-	dd.list.Subscribe(eventenum.OnCursorEnter, func(evname eventenum.EventName, ev interface{}) {
-		dd.Dispatch(eventenum.OnCursorLeave, ev)
+	dd.list.Subscribe(eventtype.OnCursorEnter, func(evname eventtype.EventType, ev interface{}) {
+		dd.Dispatch(eventtype.OnCursorLeave, ev)
 	})
-	dd.list.Subscribe(eventenum.OnCursorLeave, func(evname eventenum.EventName, ev interface{}) {
-		dd.Dispatch(eventenum.OnCursorEnter, ev)
+	dd.list.Subscribe(eventtype.OnCursorLeave, func(evname eventtype.EventType, ev interface{}) {
+		dd.Dispatch(eventtype.OnCursorEnter, ev)
 	})
 
-	dd.list.Subscribe(eventenum.OnChange, dd.onListChangeEvent)
+	dd.list.Subscribe(eventtype.OnChange, dd.onListChangeEvent)
 	dd.Panel.Add(dd.list)
 
 	dd.update()
@@ -144,7 +144,7 @@ func (dd *DropDown) SelectPos(pos int) {
 
 	dd.list.SetSelected(dd.selItem, false)
 	dd.list.SelectPos(pos, true)
-	dd.Dispatch(eventenum.OnChange, nil)
+	dd.Dispatch(eventtype.OnChange, nil)
 }
 
 // SetStyles sets the drop down styles overriding the default style
@@ -155,22 +155,22 @@ func (dd *DropDown) SetStyles(dds *DropDownStyles) {
 }
 
 // onMouse receives subscribed mouse events over the dropdown
-func (dd *DropDown) onMouse(evname eventenum.EventName, ev interface{}) {
+func (dd *DropDown) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	Manager().SetKeyFocus(dd.list)
-	if evname == eventenum.OnMouseDown {
+	if evname == eventtype.OnMouseDown {
 		dd.list.SetVisible(!dd.list.Visible())
 		return
 	}
 }
 
 // onCursor receives subscribed cursor events over the dropdown
-func (dd *DropDown) onCursor(evname eventenum.EventName, ev interface{}) {
+func (dd *DropDown) onCursor(evname eventtype.EventType, ev interface{}) {
 
-	if evname == eventenum.OnCursorEnter {
+	if evname == eventtype.OnCursorEnter {
 		dd.overDropdown = true
 	}
-	if evname == eventenum.OnCursorLeave {
+	if evname == eventtype.OnCursorLeave {
 		dd.overDropdown = false
 	}
 	dd.update()
@@ -186,14 +186,14 @@ func (dd *DropDown) copySelected() {
 		dd.litem.CopyFields(dd.selItem)
 		dd.litem.SetWidth(dd.selItem.Width())
 		dd.recalc()
-		dd.Dispatch(eventenum.OnChange, nil)
+		dd.Dispatch(eventtype.OnChange, nil)
 	} else {
 		return
 	}
 }
 
 // onListChangeEvent is called when an item in the list is selected
-func (dd *DropDown) onListChangeEvent(evname eventenum.EventName, ev interface{}) {
+func (dd *DropDown) onListChangeEvent(evname eventtype.EventType, ev interface{}) {
 
 	dd.copySelected()
 }

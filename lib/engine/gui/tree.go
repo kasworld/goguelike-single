@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -61,8 +61,8 @@ func (t *Tree) Initialize(width, height float32) {
 
 	t.List.initialize(true, width, height)
 	t.SetStyles(&StyleDefault().Tree)
-	t.List.Subscribe(eventenum.OnKeyDown, t.onKey)
-	t.List.Subscribe(eventenum.OnKeyUp, t.onKey)
+	t.List.Subscribe(eventtype.OnKeyDown, t.onKey)
+	t.List.Subscribe(eventtype.OnKeyUp, t.onKey)
 }
 
 // SetStyles sets the tree styles overriding the default style.
@@ -164,7 +164,7 @@ func (t *Tree) FindChild(child PanelI) (*TreeNode, int) {
 }
 
 // onKey receives key down events for the embedded list
-func (t *Tree) onKey(evname eventenum.EventName, ev interface{}) {
+func (t *Tree) onKey(evname eventtype.EventType, ev interface{}) {
 
 	// Get selected item
 	item := t.Selected()
@@ -179,7 +179,7 @@ func (t *Tree) onKey(evname eventenum.EventName, ev interface{}) {
 	}
 	// If not enter key pressed, ignore
 	kev := ev.(*window.KeyEvent)
-	if evname != eventenum.OnKeyDown || kev.Key != window.KeyEnter {
+	if evname != eventtype.OnKeyDown || kev.Key != window.KeyEnter {
 		return
 	}
 	// Toggles the expansion state of the node
@@ -209,8 +209,8 @@ func newTreeNode(text string, tree *Tree, parNode *TreeNode) *TreeNode {
 	n.Panel.Add(&n.icon)
 
 	// Subscribe to events
-	n.Panel.Subscribe(eventenum.OnMouseDown, n.onMouse)
-	n.Panel.Subscribe(eventenum.OnListItemResize, func(evname eventenum.EventName, ev interface{}) {
+	n.Panel.Subscribe(eventtype.OnMouseDown, n.onMouse)
+	n.Panel.Subscribe(eventtype.OnListItemResize, func(evname eventtype.EventType, ev interface{}) {
 		n.recalc()
 	})
 	n.tree = tree
@@ -328,10 +328,10 @@ func (n *TreeNode) Remove(child PanelI) {
 }
 
 // onMouse receives mouse button events over the tree node panel
-func (n *TreeNode) onMouse(evname eventenum.EventName, ev interface{}) {
+func (n *TreeNode) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		n.expanded = !n.expanded
 		n.update()
 		n.recalc()

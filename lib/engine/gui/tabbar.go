@@ -7,7 +7,7 @@ package gui
 import (
 	"fmt"
 
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -72,23 +72,23 @@ func NewTabBar(width, height float32) *TabBar {
 
 	// Create list for contained tabs not visible
 	tb.list = NewVList(0, 0)
-	tb.list.Subscribe(eventenum.OnMouseDownOut, func(evname eventenum.EventName, ev interface{}) {
+	tb.list.Subscribe(eventtype.OnMouseDownOut, func(evname eventtype.EventType, ev interface{}) {
 		tb.list.SetVisible(false)
 	})
-	tb.list.Subscribe(eventenum.OnChange, tb.onListChange)
+	tb.list.Subscribe(eventtype.OnChange, tb.onListChange)
 	tb.Add(tb.list)
 
 	// Creates list icon button
 	tb.listButton = NewIcon(tb.styles.ListButtonIcon)
 	tb.listButton.SetPaddingsFrom(&tb.styles.ListButtonPaddings)
-	tb.listButton.Subscribe(eventenum.OnMouseDown, tb.onListButton)
+	tb.listButton.Subscribe(eventtype.OnMouseDown, tb.onListButton)
 	tb.Add(tb.listButton)
 
 	// Subscribe to panel events
-	tb.Subscribe(eventenum.OnCursorEnter, tb.onCursor)
-	tb.Subscribe(eventenum.OnCursorLeave, tb.onCursor)
-	tb.Subscribe(eventenum.OnEnable, func(name eventenum.EventName, ev interface{}) { tb.update() })
-	tb.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { tb.recalc() })
+	tb.Subscribe(eventtype.OnCursorEnter, tb.onCursor)
+	tb.Subscribe(eventtype.OnCursorLeave, tb.onCursor)
+	tb.Subscribe(eventtype.OnEnable, func(name eventtype.EventType, ev interface{}) { tb.update() })
+	tb.Subscribe(eventtype.OnResize, func(name eventtype.EventType, ev interface{}) { tb.recalc() })
 
 	tb.recalc()
 	tb.update()
@@ -239,13 +239,13 @@ func (tb *TabBar) Selected() int {
 }
 
 // onCursor process subscribed cursor events
-func (tb *TabBar) onCursor(evname eventenum.EventName, ev interface{}) {
+func (tb *TabBar) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnCursorEnter:
+	case eventtype.OnCursorEnter:
 		tb.cursorOver = true
 		tb.update()
-	case eventenum.OnCursorLeave:
+	case eventtype.OnCursorLeave:
 		tb.cursorOver = false
 		tb.update()
 	default:
@@ -254,10 +254,10 @@ func (tb *TabBar) onCursor(evname eventenum.EventName, ev interface{}) {
 }
 
 // onListButtonMouse process subscribed MouseButton events over the list button
-func (tb *TabBar) onListButton(evname eventenum.EventName, ev interface{}) {
+func (tb *TabBar) onListButton(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		if !tb.list.Visible() {
 			tb.list.SetVisible(true)
 		}
@@ -267,7 +267,7 @@ func (tb *TabBar) onListButton(evname eventenum.EventName, ev interface{}) {
 }
 
 // onListChange process OnChange event from the tab list
-func (tb *TabBar) onListChange(evname eventenum.EventName, ev interface{}) {
+func (tb *TabBar) onListChange(evname eventtype.EventType, ev interface{}) {
 
 	selected := tb.list.Selected()
 	pos := selected[0].GetPanel().UserData().(int)
@@ -418,23 +418,23 @@ func newTab(text string, tb *TabBar, styles *TabStyles) *Tab {
 	tab.header.Add(&tab.bottom)
 
 	// Subscribe to header panel events
-	tab.header.Subscribe(eventenum.OnCursorEnter, tab.onCursor)
-	tab.header.Subscribe(eventenum.OnCursorLeave, tab.onCursor)
-	tab.header.Subscribe(eventenum.OnMouseDown, tab.onMouseHeader)
-	tab.iconClose.Subscribe(eventenum.OnMouseDown, tab.onMouseIcon)
+	tab.header.Subscribe(eventtype.OnCursorEnter, tab.onCursor)
+	tab.header.Subscribe(eventtype.OnCursorLeave, tab.onCursor)
+	tab.header.Subscribe(eventtype.OnMouseDown, tab.onMouseHeader)
+	tab.iconClose.Subscribe(eventtype.OnMouseDown, tab.onMouseIcon)
 
 	tab.update()
 	return tab
 }
 
 // onCursor process subscribed cursor events over the tab header
-func (tab *Tab) onCursor(evname eventenum.EventName, ev interface{}) {
+func (tab *Tab) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnCursorEnter:
+	case eventtype.OnCursorEnter:
 		tab.cursorOver = true
 		tab.update()
-	case eventenum.OnCursorLeave:
+	case eventtype.OnCursorLeave:
 		tab.cursorOver = false
 		tab.update()
 	default:
@@ -443,18 +443,18 @@ func (tab *Tab) onCursor(evname eventenum.EventName, ev interface{}) {
 }
 
 // onMouse process subscribed mouse events over the tab header
-func (tab *Tab) onMouseHeader(evname eventenum.EventName, ev interface{}) {
+func (tab *Tab) onMouseHeader(evname eventtype.EventType, ev interface{}) {
 
-	if evname == eventenum.OnMouseDown && ev.(*window.MouseEvent).Button == window.MouseButtonLeft {
+	if evname == eventtype.OnMouseDown && ev.(*window.MouseEvent).Button == window.MouseButtonLeft {
 		tab.tb.SetSelected(tab.tb.TabPosition(tab))
 	}
 }
 
 // onMouseIcon process subscribed mouse events over the tab close icon
-func (tab *Tab) onMouseIcon(evname eventenum.EventName, ev interface{}) {
+func (tab *Tab) onMouseIcon(evname eventtype.EventType, ev interface{}) {
 
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		tab.tb.RemoveTab(tab.tb.TabPosition(tab))
 	default:
 		return

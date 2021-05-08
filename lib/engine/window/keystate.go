@@ -6,7 +6,7 @@ package window
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 )
 
 // KeyState keeps track of the state of all keys.
@@ -145,8 +145,8 @@ func NewKeyState(win dispatcheri.DispatcherI) *KeyState {
 	}
 
 	// Subscribe to window key events
-	ks.win.SubscribeID(eventenum.OnKeyUp, &ks, ks.onKey)
-	ks.win.SubscribeID(eventenum.OnKeyDown, &ks, ks.onKey)
+	ks.win.SubscribeID(eventtype.OnKeyUp, &ks, ks.onKey)
+	ks.win.SubscribeID(eventtype.OnKeyDown, &ks, ks.onKey)
 
 	return ks
 }
@@ -154,8 +154,8 @@ func NewKeyState(win dispatcheri.DispatcherI) *KeyState {
 // Dispose unsubscribes from the window events.
 func (ks *KeyState) Dispose() {
 
-	ks.win.UnsubscribeID(eventenum.OnKeyUp, &ks)
-	ks.win.UnsubscribeID(eventenum.OnKeyDown, &ks)
+	ks.win.UnsubscribeID(eventtype.OnKeyUp, &ks)
+	ks.win.UnsubscribeID(eventtype.OnKeyDown, &ks)
 }
 
 // Pressed returns whether the specified key is currently pressed.
@@ -165,13 +165,13 @@ func (ks *KeyState) Pressed(k Key) bool {
 }
 
 // onKey receives key events and updates the internal map of states.
-func (ks *KeyState) onKey(evname eventenum.EventName, ev interface{}) {
+func (ks *KeyState) onKey(evname eventtype.EventType, ev interface{}) {
 
 	kev := ev.(*KeyEvent)
 	switch evname {
-	case eventenum.OnKeyUp:
+	case eventtype.OnKeyUp:
 		ks.states[kev.Key] = false
-	case eventenum.OnKeyDown:
+	case eventtype.OnKeyDown:
 		ks.states[kev.Key] = true
 	}
 }

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -82,7 +82,7 @@ func (ch *Chart) Init(width float32, height float32) {
 	ch.formatY = "%v"
 	ch.fontSizeX = 14
 	ch.fontSizeY = 14
-	ch.Subscribe(eventenum.OnResize, ch.onResize)
+	ch.Subscribe(eventtype.OnResize, ch.onResize)
 }
 
 // SetTitle sets the chart title text and font size.
@@ -407,7 +407,7 @@ func (ch *Chart) updateGraphs() {
 }
 
 // onResize process OnResize events for this chart
-func (ch *Chart) onResize(evname eventenum.EventName, ev interface{}) {
+func (ch *Chart) onResize(evname eventtype.EventType, ev interface{}) {
 
 	ch.recalc()
 }

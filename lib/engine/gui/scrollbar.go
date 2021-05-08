@@ -5,7 +5,7 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
+	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -86,13 +86,13 @@ func (sb *ScrollBar) initialize(width, height float32, vertical bool) {
 	sb.styles = &StyleDefault().ScrollBar
 	sb.vertical = vertical
 	sb.Panel.Initialize(sb, width, height)
-	sb.Panel.Subscribe(eventenum.OnMouseDown, sb.onMouse)
+	sb.Panel.Subscribe(eventtype.OnMouseDown, sb.onMouse)
 
 	// Initialize scrollbar button
 	sb.button.Panel.Initialize(&sb.button, 0, 0)
-	sb.button.Panel.Subscribe(eventenum.OnMouseDown, sb.button.onMouse)
-	sb.button.Panel.Subscribe(eventenum.OnMouseUp, sb.button.onMouse)
-	sb.button.Panel.Subscribe(eventenum.OnCursor, sb.button.onCursor)
+	sb.button.Panel.Subscribe(eventtype.OnMouseDown, sb.button.onMouse)
+	sb.button.Panel.Subscribe(eventtype.OnMouseUp, sb.button.onMouse)
+	sb.button.Panel.Subscribe(eventtype.OnCursor, sb.button.onCursor)
 	sb.button.SetMargins(1, 1, 1, 1)
 	sb.button.Size = sb.styles.Normal.ButtonLength
 	sb.button.sb = sb
@@ -149,7 +149,7 @@ func (sb *ScrollBar) SetValue(v float32) {
 }
 
 // onMouse receives subscribed mouse events over the scrollbar outer panel
-func (sb *ScrollBar) onMouse(evname eventenum.EventName, ev interface{}) {
+func (sb *ScrollBar) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	if e.Button != window.MouseButtonLeft {
@@ -164,7 +164,7 @@ func (sb *ScrollBar) onMouse(evname eventenum.EventName, ev interface{}) {
 		newX := math32.Clamp(posx-(sb.button.width/2), 0, sb.content.Width-sb.button.width)
 		sb.button.SetPositionX(newX)
 	}
-	sb.Dispatch(eventenum.OnChange, nil)
+	sb.Dispatch(eventtype.OnChange, nil)
 }
 
 // recalc recalculates sizes and positions
@@ -202,19 +202,19 @@ func (sb *ScrollBar) applyStyle(sbs *ScrollBarStyle) {
 }
 
 // onMouse receives subscribed mouse events for the scroll bar button
-func (button *scrollBarButton) onMouse(evname eventenum.EventName, ev interface{}) {
+func (button *scrollBarButton) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	if e.Button != window.MouseButtonLeft {
 		return
 	}
 	switch evname {
-	case eventenum.OnMouseDown:
+	case eventtype.OnMouseDown:
 		button.pressed = true
 		button.mouseX = e.Xpos
 		button.mouseY = e.Ypos
 		Manager().SetCursorFocus(button)
-	case eventenum.OnMouseUp:
+	case eventtype.OnMouseUp:
 		button.pressed = false
 		Manager().SetCursorFocus(nil)
 	default:
@@ -223,7 +223,7 @@ func (button *scrollBarButton) onMouse(evname eventenum.EventName, ev interface{
 }
 
 // onCursor receives subscribed cursor events for the scroll bar button
-func (button *scrollBarButton) onCursor(evname eventenum.EventName, ev interface{}) {
+func (button *scrollBarButton) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	e := ev.(*window.CursorEvent)
 	if !button.pressed {
@@ -240,5 +240,5 @@ func (button *scrollBarButton) onCursor(evname eventenum.EventName, ev interface
 	}
 	button.mouseX = e.Xpos
 	button.mouseY = e.Ypos
-	button.sb.Dispatch(eventenum.OnChange, nil)
+	button.sb.Dispatch(eventtype.OnChange, nil)
 }
