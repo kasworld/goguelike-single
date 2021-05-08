@@ -219,7 +219,7 @@ func (oc *OrbitControl) onMouse(evname eventtype.EventType, ev interface{}) {
 	}
 
 	switch evname {
-	case window.OnMouseDown:
+	case eventtype.OnMouseDown:
 		gui.Manager().SetCursorFocus(oc)
 		mev := ev.(*window.MouseEvent)
 		switch mev.Button {
@@ -239,7 +239,7 @@ func (oc *OrbitControl) onMouse(evname eventtype.EventType, ev interface{}) {
 				oc.panStart.Set(mev.Xpos, mev.Ypos)
 			}
 		}
-	case window.OnMouseUp:
+	case eventtype.OnMouseUp:
 		gui.Manager().SetCursorFocus(nil)
 		oc.state = stateNone
 	}

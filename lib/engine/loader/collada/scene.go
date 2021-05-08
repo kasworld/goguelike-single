@@ -53,11 +53,11 @@ func (d *Decoder) NewScene() (node.NodeI, error) {
 
 func (d *Decoder) newNode(cnode *Node) (node.NodeI, error) {
 
-	var node node.NodeI
+	var nnode node.NodeI
 	switch nt := cnode.Instance.(type) {
 	// Empty Node
 	case nil:
-		node = node.NewNode()
+		nnode = node.NewNode()
 		// Geometry
 	case *InstanceGeometry:
 
@@ -86,20 +86,20 @@ func (d *Decoder) newNode(cnode *Node) (node.NodeI, error) {
 					}
 				}
 			}
-			node = mesh
+			nnode = mesh
 
 		case gls.POINTS:
 			mat := material.NewPoint(&math32.Color{})
 			mat.SetSize(30)
-			node = graphic.NewPoints(geomi, mat)
+			nnode = graphic.NewPoints(geomi, mat)
 
 		case gls.LINES:
 			mat := material.NewBasic()
-			node = graphic.NewLines(geomi, mat)
+			nnode = graphic.NewLines(geomi, mat)
 
 		case gls.LINE_STRIP:
 			mat := material.NewBasic()
-			node = graphic.NewLineStrip(geomi, mat)
+			nnode = graphic.NewLineStrip(geomi, mat)
 
 		default:
 			return nil, fmt.Errorf("primitive not supported")
@@ -108,7 +108,7 @@ func (d *Decoder) newNode(cnode *Node) (node.NodeI, error) {
 		return nil, fmt.Errorf("instance geometry type:%T not supported", nt)
 	}
 
-	n := node.GetNode()
+	n := nnode.GetNode()
 	n.SetLoaderID(cnode.Id)
 
 	// Apply transformation elements to the node
@@ -155,7 +155,7 @@ func (d *Decoder) newNode(cnode *Node) (node.NodeI, error) {
 		n.Add(c)
 	}
 
-	return node, nil
+	return nnode, nil
 }
 
 func findVisualScene(dom *Collada, uri string) *VisualScene {
