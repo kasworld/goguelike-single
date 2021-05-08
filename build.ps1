@@ -1,6 +1,10 @@
 
 
+# generate for engine 
 
+cd lib/engine 
+./gen.ps1
+cd ../..
 
 
 ################################################################################
@@ -40,9 +44,6 @@ genenum -typename=TurnResultType      -packagename=turnresulttype      -basedir=
 genenum -typename=Way9Type            -packagename=way9type            -basedir=enum 
 
 goimports -w enum
-
-genenum -typename=EventType           -packagename=eventtype            -basedir=lib/engine 
-goimports -w lib/engine/eventtype
 
 $Data_VERSION=makesha256sum config/gameconst/*.go config/gamedata/*.go enum/*.enum
 echo "Data Version: ${Data_VERSION}"

@@ -1,8 +1,22 @@
 # Modified G3N for my taste
 
-## require to modify eventtype enum 
+## requirement and install
 
-https://github.com/kasworld/genenum
+to auto fix import 
+    
+    goimports 
+    go get golang.org/x/tools/cmd/goimports 
+
+to modify eventtype enum (https://github.com/kasworld/genenum)
+
+    go get github.com/kasworld/genenum
+    
+
+to modify loglevel (https://github.com/kasworld/log)
+
+    go get github.com/kasworld/log
+    run install.sh to make genlog
+
 
 ## change from G3N (https://github.com/g3n/engine)
 
