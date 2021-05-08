@@ -30,9 +30,9 @@ rename app to appbase, Application to AppBase
 
     use same package name with main struct name as possible 
 
-typed event name 
+merge event to one file and to enum by genenum
 
-    evname string -> evname EventName
+    evname string -> evname eventtype.EventType
 
 ## TODO 
 
