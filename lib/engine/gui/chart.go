@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/geometry"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
@@ -408,7 +407,7 @@ func (ch *Chart) updateGraphs() {
 }
 
 // onResize process OnResize events for this chart
-func (ch *Chart) onResize(evname dispatcheri.EventName, ev interface{}) {
+func (ch *Chart) onResize(evname eventenum.EventName, ev interface{}) {
 
 	ch.recalc()
 }

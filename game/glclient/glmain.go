@@ -18,7 +18,6 @@ import (
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/lib/engine/appbase"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 	"github.com/kasworld/goguelike-single/lib/engine/graphic"
@@ -88,7 +87,7 @@ func (ga *GLClient) glInit() error {
 }
 
 // onMouse is called when an OnMouseDown/OnMouseUp event is received.
-func (ga *GLClient) onMouse(evname dispatcheri.EventName, ev interface{}) {
+func (ga *GLClient) onMouse(evname eventenum.EventName, ev interface{}) {
 
 	switch evname {
 	case eventenum.OnMouseDown:
@@ -105,7 +104,7 @@ func (ga *GLClient) onMouse(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onScroll is called when an OnScroll event is received.
-func (ga *GLClient) onScroll(evname dispatcheri.EventName, ev interface{}) {
+func (ga *GLClient) onScroll(evname eventenum.EventName, ev interface{}) {
 	zF := float32(1.5)
 	sev := ev.(*window.ScrollEvent)
 	if sev.Yoffset > 0 {
@@ -166,7 +165,7 @@ func (ga *GLClient) moveGLPos() {
 }
 
 // Set up callback to update viewport and camera aspect ratio when the window is resized
-func (ga *GLClient) onResize(evname dispatcheri.EventName, ev interface{}) {
+func (ga *GLClient) onResize(evname eventenum.EventName, ev interface{}) {
 	// Get framebuffer size and update viewport accordingly
 	width, height := ga.app.GetSize()
 	ga.app.Gls().Viewport(0, 0, int32(width), int32(height))

@@ -5,7 +5,6 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -366,7 +365,7 @@ func (li *List) highlighted() (pos int) {
 }
 
 // onKeyEvent receives subscribed key events for the list
-func (li *List) onKeyEvent(evname dispatcheri.EventName, ev interface{}) {
+func (li *List) onKeyEvent(evname eventenum.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	// Dropdown mode
@@ -463,7 +462,7 @@ func newListItem(list *List, item PanelI) *ListItem {
 	litem.SetContentWidth(item.GetPanel().Width())
 	litem.SetContentHeight(item.GetPanel().Height())
 	// If this list item is resized, sends event to its child panel
-	litem.Subscribe(eventenum.OnResize, func(evname dispatcheri.EventName, ev interface{}) {
+	litem.Subscribe(eventenum.OnResize, func(evname eventenum.EventName, ev interface{}) {
 		item.GetPanel().Dispatch(eventenum.OnListItemResize, nil)
 	})
 	litem.update()
@@ -471,7 +470,7 @@ func newListItem(list *List, item PanelI) *ListItem {
 }
 
 // onMouse receives mouse button events over the list item
-func (litem *ListItem) onMouse(evname dispatcheri.EventName, ev interface{}) {
+func (litem *ListItem) onMouse(evname eventenum.EventName, ev interface{}) {
 
 	if litem.list.single {
 		litem.list.setSelection(litem, true, true, true)
@@ -484,7 +483,7 @@ func (litem *ListItem) onMouse(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events over the list item
-func (litem *ListItem) onCursor(evname dispatcheri.EventName, ev interface{}) {
+func (litem *ListItem) onCursor(evname eventenum.EventName, ev interface{}) {
 
 	if litem.list.dropdown {
 		litem.list.setSelection(litem, true, true, false)

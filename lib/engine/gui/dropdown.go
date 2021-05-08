@@ -5,7 +5,6 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 )
@@ -45,7 +44,7 @@ func NewDropDown(width float32, item *ImageLabel) *DropDown {
 	dd.Panel.Subscribe(eventenum.OnMouseDown, dd.onMouse)
 	dd.Panel.Subscribe(eventenum.OnCursorEnter, dd.onCursor)
 	dd.Panel.Subscribe(eventenum.OnCursorLeave, dd.onCursor)
-	dd.Panel.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { dd.recalc() })
+	dd.Panel.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { dd.recalc() })
 
 	// ListItem
 	dd.Panel.Add(dd.litem)
@@ -64,17 +63,17 @@ func NewDropDown(width float32, item *ImageLabel) *DropDown {
 	dd.list.SetVisible(false)
 
 	dd.Panel.Subscribe(eventenum.OnKeyDown, dd.list.onKeyEvent)
-	dd.Subscribe(eventenum.OnMouseDownOut, func(s dispatcheri.EventName, i interface{}) {
+	dd.Subscribe(eventenum.OnMouseDownOut, func(s eventenum.EventName, i interface{}) {
 		// Hide list when clicked out
 		if dd.list.Visible() {
 			dd.list.SetVisible(false)
 		}
 	})
 
-	dd.list.Subscribe(eventenum.OnCursorEnter, func(evname dispatcheri.EventName, ev interface{}) {
+	dd.list.Subscribe(eventenum.OnCursorEnter, func(evname eventenum.EventName, ev interface{}) {
 		dd.Dispatch(eventenum.OnCursorLeave, ev)
 	})
-	dd.list.Subscribe(eventenum.OnCursorLeave, func(evname dispatcheri.EventName, ev interface{}) {
+	dd.list.Subscribe(eventenum.OnCursorLeave, func(evname eventenum.EventName, ev interface{}) {
 		dd.Dispatch(eventenum.OnCursorEnter, ev)
 	})
 
@@ -156,7 +155,7 @@ func (dd *DropDown) SetStyles(dds *DropDownStyles) {
 }
 
 // onMouse receives subscribed mouse events over the dropdown
-func (dd *DropDown) onMouse(evname dispatcheri.EventName, ev interface{}) {
+func (dd *DropDown) onMouse(evname eventenum.EventName, ev interface{}) {
 
 	Manager().SetKeyFocus(dd.list)
 	if evname == eventenum.OnMouseDown {
@@ -166,7 +165,7 @@ func (dd *DropDown) onMouse(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onCursor receives subscribed cursor events over the dropdown
-func (dd *DropDown) onCursor(evname dispatcheri.EventName, ev interface{}) {
+func (dd *DropDown) onCursor(evname eventenum.EventName, ev interface{}) {
 
 	if evname == eventenum.OnCursorEnter {
 		dd.overDropdown = true
@@ -194,7 +193,7 @@ func (dd *DropDown) copySelected() {
 }
 
 // onListChangeEvent is called when an item in the list is selected
-func (dd *DropDown) onListChangeEvent(evname dispatcheri.EventName, ev interface{}) {
+func (dd *DropDown) onListChangeEvent(evname eventenum.EventName, ev interface{}) {
 
 	dd.copySelected()
 }

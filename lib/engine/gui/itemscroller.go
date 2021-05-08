@@ -7,7 +7,6 @@ package gui
 import (
 	"math"
 
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -306,7 +305,7 @@ func (s *ItemScroller) initialize(vert bool, width, height float32) {
 }
 
 // onCursor receives subscribed cursor events over the panel
-func (s *ItemScroller) onCursor(evname dispatcheri.EventName, ev interface{}) {
+func (s *ItemScroller) onCursor(evname eventenum.EventName, ev interface{}) {
 
 	switch evname {
 	case eventenum.OnCursorEnter:
@@ -319,7 +318,7 @@ func (s *ItemScroller) onCursor(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onScroll receives mouse scroll events
-func (s *ItemScroller) onScroll(evname dispatcheri.EventName, ev interface{}) {
+func (s *ItemScroller) onScroll(evname eventenum.EventName, ev interface{}) {
 
 	sev := ev.(*window.ScrollEvent)
 	if sev.Yoffset > 0 {
@@ -330,7 +329,7 @@ func (s *ItemScroller) onScroll(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onResize receives resize events
-func (s *ItemScroller) onResize(evname dispatcheri.EventName, ev interface{}) {
+func (s *ItemScroller) onResize(evname eventenum.EventName, ev interface{}) {
 
 	s.recalc()
 }
@@ -602,7 +601,7 @@ func (s *ItemScroller) setHScrollBar(state bool) {
 }
 
 // onScrollEvent is called when the list scrollbar value changes
-func (s *ItemScroller) onScrollBarEvent(evname dispatcheri.EventName, ev interface{}) {
+func (s *ItemScroller) onScrollBarEvent(evname eventenum.EventName, ev interface{}) {
 
 	var pos float64
 	if s.vert {

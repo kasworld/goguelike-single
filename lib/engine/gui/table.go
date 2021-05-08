@@ -10,7 +10,6 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
@@ -232,7 +231,7 @@ func NewTable(width, height float32, cols []TableColumn) (*Table, error) {
 		if c.sort != TableSortNone {
 			c.ricon = NewIcon(string(tableSortedNoneIcon))
 			c.Add(c.ricon)
-			c.ricon.Subscribe(eventenum.OnMouseDown, func(evname dispatcheri.EventName, ev interface{}) {
+			c.ricon.Subscribe(eventenum.OnMouseDown, func(evname eventenum.EventName, ev interface{}) {
 				t.onRicon(evname, c)
 			})
 		}
@@ -772,7 +771,7 @@ func (t *Table) removeRow(row int) {
 }
 
 // onCursorPos process subscribed cursor position events
-func (t *Table) onCursorPos(evname dispatcheri.EventName, ev interface{}) {
+func (t *Table) onCursorPos(evname eventenum.EventName, ev interface{}) {
 
 	// Convert mouse window coordinates to table content coordinates
 	cev := ev.(*window.CursorEvent)
@@ -808,7 +807,7 @@ func (t *Table) onCursorPos(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onMouseEvent process subscribed mouse events
-func (t *Table) onMouse(evname dispatcheri.EventName, ev interface{}) {
+func (t *Table) onMouse(evname eventenum.EventName, ev interface{}) {
 
 	e := ev.(*window.MouseEvent)
 	Manager().SetKeyFocus(t)
@@ -862,7 +861,7 @@ func (t *Table) onMouse(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onKeyEvent receives subscribed key events for this table
-func (t *Table) onKey(evname dispatcheri.EventName, ev interface{}) {
+func (t *Table) onKey(evname eventenum.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if kev.Key == window.KeyUp && kev.Mods == 0 {
@@ -885,14 +884,14 @@ func (t *Table) onKey(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onResize receives subscribed resize events for this table
-func (t *Table) onResize(evname dispatcheri.EventName, ev interface{}) {
+func (t *Table) onResize(evname eventenum.EventName, ev interface{}) {
 
 	t.recalc()
 	t.recalcStatus()
 }
 
 // onScroll receives subscribed scroll events for this table
-func (t *Table) onScroll(evname dispatcheri.EventName, ev interface{}) {
+func (t *Table) onScroll(evname eventenum.EventName, ev interface{}) {
 
 	sev := ev.(*window.ScrollEvent)
 	if sev.Yoffset > 0 {
@@ -903,7 +902,7 @@ func (t *Table) onScroll(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onRicon receives subscribed events for column header right icon
-func (t *Table) onRicon(evname dispatcheri.EventName, c *tableColHeader) {
+func (t *Table) onRicon(evname eventenum.EventName, c *tableColHeader) {
 
 	ico := tableSortedNoneIcon
 	var asc bool
@@ -1465,7 +1464,7 @@ func (t *Table) setVScrollBar(state bool) {
 }
 
 // onVScrollBar is called when a vertical scroll bar event is received
-func (t *Table) onVScrollBar(evname dispatcheri.EventName, ev interface{}) {
+func (t *Table) onVScrollBar(evname eventenum.EventName, ev interface{}) {
 
 	// Calculates the new first visible line
 	pos := t.vscroll.Value()

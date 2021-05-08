@@ -5,7 +5,6 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/texture"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
@@ -75,8 +74,8 @@ func NewImageButton(normalImgPath string) (*ImageButton, error) {
 	b.Panel.Subscribe(eventenum.OnCursor, b.onCursor)
 	b.Panel.Subscribe(eventenum.OnCursorEnter, b.onCursor)
 	b.Panel.Subscribe(eventenum.OnCursorLeave, b.onCursor)
-	b.Panel.Subscribe(eventenum.OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
-	b.Panel.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
+	b.Panel.Subscribe(eventenum.OnEnable, func(name eventenum.EventName, ev interface{}) { b.update() })
+	b.Panel.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { b.recalc() })
 
 	b.recalc()
 	b.update()
@@ -168,7 +167,7 @@ func (b *ImageButton) SetStyles(bs *ImageButtonStyles) {
 }
 
 // onCursor process subscribed cursor events
-func (b *ImageButton) onCursor(evname dispatcheri.EventName, ev interface{}) {
+func (b *ImageButton) onCursor(evname eventenum.EventName, ev interface{}) {
 
 	switch evname {
 	case eventenum.OnCursorEnter:
@@ -182,7 +181,7 @@ func (b *ImageButton) onCursor(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onMouseEvent process subscribed mouse events
-func (b *ImageButton) onMouse(evname dispatcheri.EventName, ev interface{}) {
+func (b *ImageButton) onMouse(evname eventenum.EventName, ev interface{}) {
 
 	switch evname {
 	case eventenum.OnMouseDown:
@@ -199,7 +198,7 @@ func (b *ImageButton) onMouse(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onKey processes subscribed key events
-func (b *ImageButton) onKey(evname dispatcheri.EventName, ev interface{}) {
+func (b *ImageButton) onKey(evname eventenum.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if evname == eventenum.OnKeyDown && kev.Key == window.KeyEnter {

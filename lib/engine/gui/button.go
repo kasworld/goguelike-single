@@ -5,7 +5,6 @@
 package gui
 
 import (
-	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventenum"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
@@ -65,12 +64,12 @@ func NewButton(text string) *Button {
 	b.Subscribe(eventenum.OnCursor, b.onCursor)
 	b.Subscribe(eventenum.OnCursorEnter, b.onCursor)
 	b.Subscribe(eventenum.OnCursorLeave, b.onCursor)
-	b.Subscribe(eventenum.OnEnable, func(name dispatcheri.EventName, ev interface{}) { b.update() })
-	b.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
+	b.Subscribe(eventenum.OnEnable, func(name eventenum.EventName, ev interface{}) { b.update() })
+	b.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { b.recalc() })
 
 	// Creates label
 	b.Label = NewLabel(text)
-	b.Label.Subscribe(eventenum.OnResize, func(name dispatcheri.EventName, ev interface{}) { b.recalc() })
+	b.Label.Subscribe(eventenum.OnResize, func(name eventenum.EventName, ev interface{}) { b.recalc() })
 	b.Panel.Add(b.Label)
 
 	b.recalc() // recalc first then update!
@@ -123,7 +122,7 @@ func (b *Button) SetStyles(bs *ButtonStyles) {
 }
 
 // onCursor process subscribed cursor events
-func (b *Button) onCursor(evname dispatcheri.EventName, ev interface{}) {
+func (b *Button) onCursor(evname eventenum.EventName, ev interface{}) {
 
 	switch evname {
 	case eventenum.OnCursorEnter:
@@ -136,7 +135,7 @@ func (b *Button) onCursor(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onMouseEvent process subscribed mouse events
-func (b *Button) onMouse(evname dispatcheri.EventName, ev interface{}) {
+func (b *Button) onMouse(evname eventenum.EventName, ev interface{}) {
 
 	if !b.Enabled() {
 		return
@@ -161,7 +160,7 @@ func (b *Button) onMouse(evname dispatcheri.EventName, ev interface{}) {
 }
 
 // onKey processes subscribed key events
-func (b *Button) onKey(evname dispatcheri.EventName, ev interface{}) {
+func (b *Button) onKey(evname eventenum.EventName, ev interface{}) {
 
 	kev := ev.(*window.KeyEvent)
 	if kev.Key != window.KeyEnter {
