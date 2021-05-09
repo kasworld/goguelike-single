@@ -5,19 +5,19 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // List represents a list GUI element
 type List struct {
-	ItemScroller             // Embedded scroller
-	styles       *ListStyles // Pointer to styles
-	single       bool        // Single selection flag (default is true)
-	focus        bool        // has keyboard focus
-	dropdown     bool        // this is used as dropdown
-	keyNext      window.Key  // Code of key to select next item
-	keyPrev      window.Key  // Code of key to select previous item
+	ItemScroller               // Embedded scroller
+	styles       *ListStyles   // Pointer to styles
+	single       bool          // Single selection flag (default is true)
+	focus        bool          // has keyboard focus
+	dropdown     bool          // this is used as dropdown
+	keyNext      appwindow.Key // Code of key to select next item
+	keyPrev      appwindow.Key // Code of key to select previous item
 }
 
 // ListItem encapsulates each item inserted into the list
@@ -83,11 +83,11 @@ func (li *List) initialize(vert bool, width, height float32) {
 	li.ItemScroller.Subscribe(eventtype.OnKeyRepeat, li.onKeyEvent)
 
 	if vert {
-		li.keyNext = window.KeyDown
-		li.keyPrev = window.KeyUp
+		li.keyNext = appwindow.KeyDown
+		li.keyPrev = appwindow.KeyUp
 	} else {
-		li.keyNext = window.KeyRight
-		li.keyPrev = window.KeyLeft
+		li.keyNext = appwindow.KeyRight
+		li.keyPrev = appwindow.KeyLeft
 	}
 
 	li.update()
@@ -367,7 +367,7 @@ func (li *List) highlighted() (pos int) {
 // onKeyEvent receives subscribed key events for the list
 func (li *List) onKeyEvent(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
+	kev := ev.(*appwindow.KeyEvent)
 	// Dropdown mode
 	if li.dropdown {
 		switch kev.Key {
@@ -375,7 +375,7 @@ func (li *List) onKeyEvent(evname eventtype.EventType, ev interface{}) {
 			li.selNext(true, true)
 		case li.keyPrev:
 			li.selPrev(true, true)
-		case window.KeyEnter:
+		case appwindow.KeyEnter:
 			li.SetVisible(false)
 		default:
 			return
@@ -402,7 +402,7 @@ func (li *List) onKeyEvent(evname eventtype.EventType, ev interface{}) {
 		li.selNext(false, true)
 	case li.keyPrev:
 		li.selPrev(false, true)
-	case window.KeySpace:
+	case appwindow.KeySpace:
 		pos := li.highlighted()
 		if pos >= 0 {
 			litem := li.items[pos].(*ListItem)

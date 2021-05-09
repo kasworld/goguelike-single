@@ -5,9 +5,9 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 const (
@@ -173,8 +173,8 @@ func (cb *CheckRadio) onMouse(evname eventtype.EventType, ev interface{}) {
 
 	// Dispatch OnClick for left mouse button down
 	if evname == eventtype.OnMouseDown {
-		mev := ev.(*window.MouseEvent)
-		if mev.Button == window.MouseButtonLeft && cb.Enabled() {
+		mev := ev.(*appwindow.MouseEvent)
+		if mev.Button == appwindow.MouseButtonLeft && cb.Enabled() {
 			Manager().SetKeyFocus(cb)
 			cb.toggleState()
 			cb.Dispatch(eventtype.OnClick, nil)
@@ -196,8 +196,8 @@ func (cb *CheckRadio) onCursor(evname eventtype.EventType, ev interface{}) {
 // onKey receives subscribed key events
 func (cb *CheckRadio) onKey(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
-	if evname == eventtype.OnKeyDown && kev.Key == window.KeyEnter {
+	kev := ev.(*appwindow.KeyEvent)
+	if evname == eventtype.OnKeyDown && kev.Key == appwindow.KeyEnter {
 		cb.toggleState()
 		cb.update()
 		cb.Dispatch(eventtype.OnClick, nil)

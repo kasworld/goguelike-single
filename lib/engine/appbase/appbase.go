@@ -10,36 +10,36 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/audio/al"
 	"github.com/kasworld/goguelike-single/lib/engine/audio/vorbis"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/log"
 	"github.com/kasworld/goguelike-single/lib/engine/renderer"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // AppBase
 type AppBase struct {
-	window.WindowI                    // Embedded GlfwWindow
-	keyState       *window.KeyState   // Keep track of keyboard state
-	renderer       *renderer.Renderer // Renderer object
-	audioDev       *al.Device         // Default audio device
-	startTime      time.Time          // AppBase start time
-	frameStart     time.Time          // Frame start time
-	frameDelta     time.Duration      // Duration of last frame
+	appwindow.AppWindowI                     // Embedded GlfwWindow
+	keyState             *appwindow.KeyState // Keep track of keyboard state
+	renderer             *renderer.Renderer  // Renderer object
+	audioDev             *al.Device          // Default audio device
+	startTime            time.Time           // AppBase start time
+	frameStart           time.Time           // Frame start time
+	frameDelta           time.Duration       // Duration of last frame
 }
 
 // New returns the AppBase object
 func New(title string, width, height int) *AppBase {
 	appBase := new(AppBase)
-	// Initialize window
-	err := window.Init(width, height, title)
+	// Initialize appwindow
+	err := appwindow.Init(width, height, title)
 	if err != nil {
 		panic(err)
 	}
-	appBase.WindowI = window.Get()
-	appBase.openDefaultAudioDevice()               // Set up audio
-	appBase.keyState = window.NewKeyState(appBase) // Create KeyState
+	appBase.AppWindowI = appwindow.Get()
+	appBase.openDefaultAudioDevice()                  // Set up audio
+	appBase.keyState = appwindow.NewKeyState(appBase) // Create KeyState
 	// Create renderer and add default shaders
 	appBase.renderer = renderer.NewRenderer(appBase.Gls())
 	err = appBase.renderer.AddDefaultShaders()
@@ -61,11 +61,11 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 	for true {
 		// If Exit() was called or there was an attempt to close the window dispatch OnExit event for subscribers.
 		// If no subscriber cancelled the event, terminate the application.
-		if a.WindowI.(*window.GlfwWindow).ShouldClose() {
+		if a.AppWindowI.(*appwindow.GlfwWindow).ShouldClose() {
 			a.Dispatch(eventtype.OnExit, nil)
 			// TODO allow for cancelling exit e.g. showing dialog asking the user if he/she wants to save changes
 			// if exit was cancelled {
-			//     a.WindowI.(*window.GlfwWindow).SetShouldClose(false)
+			//     a.AppWindowI.(*appwindow.GlfwWindow).SetShouldClose(false)
 			// } else {
 			break
 			// }
@@ -77,15 +77,15 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 		// Call user's update function
 		update(a.renderer, a.frameDelta)
 		// Swap buffers and poll events
-		a.WindowI.(*window.GlfwWindow).SwapBuffers()
-		a.WindowI.(*window.GlfwWindow).PollEvents()
+		a.AppWindowI.(*appwindow.GlfwWindow).SwapBuffers()
+		a.AppWindowI.(*appwindow.GlfwWindow).PollEvents()
 	}
 
 	// Close default audio device
 	if a.audioDev != nil {
 		al.CloseDevice(a.audioDev)
 	}
-	// Destroy window
+	// Destroy appwindow
 	a.Destroy()
 }
 
@@ -94,7 +94,7 @@ func (a *AppBase) Run(update func(rend *renderer.Renderer, deltaTime time.Durati
 // can cancel the process by calling CancelDispatch().
 func (a *AppBase) Exit() {
 
-	a.WindowI.(*window.GlfwWindow).SetShouldClose(true)
+	a.AppWindowI.(*appwindow.GlfwWindow).SetShouldClose(true)
 }
 
 // Renderer returns the application's renderer.
@@ -104,7 +104,7 @@ func (a *AppBase) Renderer() *renderer.Renderer {
 }
 
 // KeyState returns the application's KeyState.
-func (a *AppBase) KeyState() *window.KeyState {
+func (a *AppBase) KeyState() *appwindow.KeyState {
 
 	return a.keyState
 }

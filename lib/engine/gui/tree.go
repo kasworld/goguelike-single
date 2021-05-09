@@ -5,9 +5,9 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // Tree is the tree structure GUI element.
@@ -178,8 +178,8 @@ func (t *Tree) onKey(evname eventtype.EventType, ev interface{}) {
 		return
 	}
 	// If not enter key pressed, ignore
-	kev := ev.(*window.KeyEvent)
-	if evname != eventtype.OnKeyDown || kev.Key != window.KeyEnter {
+	kev := ev.(*appwindow.KeyEvent)
+	if evname != eventtype.OnKeyDown || kev.Key != appwindow.KeyEnter {
 		return
 	}
 	// Toggles the expansion state of the node

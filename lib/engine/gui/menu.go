@@ -5,10 +5,10 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 
 	"time"
 )
@@ -42,20 +42,20 @@ type MenuStyles struct {
 
 // MenuItem is an option of a Menu
 type MenuItem struct {
-	Panel                       // embedded panel
-	styles   *MenuItemStyles    // pointer to current styles
-	menu     *Menu              // pointer to parent menu
-	licon    *Label             // optional left icon label
-	label    *Label             // optional text label (nil for separators)
-	shortcut *Label             // optional shorcut text label
-	ricon    *Label             // optional right internal icon label for submenu
-	id       string             // optional text id
-	icode    int                // icon code (if icon is set)
-	submenu  *Menu              // pointer to optional associated sub menu
-	keyMods  window.ModifierKey // shortcut key modifier
-	keyCode  window.Key         // shortcut key code
-	disabled bool               // item disabled state
-	selected bool               // selection state
+	Panel                          // embedded panel
+	styles   *MenuItemStyles       // pointer to current styles
+	menu     *Menu                 // pointer to parent menu
+	licon    *Label                // optional left icon label
+	label    *Label                // optional text label (nil for separators)
+	shortcut *Label                // optional shorcut text label
+	ricon    *Label                // optional right internal icon label for submenu
+	id       string                // optional text id
+	icode    int                   // icon code (if icon is set)
+	submenu  *Menu                 // pointer to optional associated sub menu
+	keyMods  appwindow.ModifierKey // shortcut key modifier
+	keyCode  appwindow.Key         // shortcut key code
+	disabled bool                  // item disabled state
+	selected bool                  // selection state
 }
 
 // MenuItemStyle describes the style of a menu item
@@ -75,67 +75,67 @@ type MenuItemStyles struct {
 	Separator MenuItemStyle
 }
 
-var mapKeyModifier = map[window.ModifierKey]string{
-	window.ModShift:   "Shift",
-	window.ModControl: "Ctrl",
-	window.ModAlt:     "Alt",
+var mapKeyModifier = map[appwindow.ModifierKey]string{
+	appwindow.ModShift:   "Shift",
+	appwindow.ModControl: "Ctrl",
+	appwindow.ModAlt:     "Alt",
 }
-var mapKeyText = map[window.Key]string{
-	window.KeyApostrophe: "'",
-	window.KeyComma:      ",",
-	window.KeyMinus:      "-",
-	window.KeyPeriod:     ".",
-	window.KeySlash:      "/",
-	window.Key0:          "0",
-	window.Key1:          "1",
-	window.Key2:          "2",
-	window.Key3:          "3",
-	window.Key4:          "4",
-	window.Key5:          "5",
-	window.Key6:          "6",
-	window.Key7:          "7",
-	window.Key8:          "8",
-	window.Key9:          "9",
-	window.KeySemicolon:  ";",
-	window.KeyEqual:      "=",
-	window.KeyA:          "A",
-	window.KeyB:          "B",
-	window.KeyC:          "C",
-	window.KeyD:          "D",
-	window.KeyE:          "E",
-	window.KeyF:          "F",
-	window.KeyG:          "G",
-	window.KeyH:          "H",
-	window.KeyI:          "I",
-	window.KeyJ:          "J",
-	window.KeyK:          "K",
-	window.KeyL:          "L",
-	window.KeyM:          "M",
-	window.KeyN:          "N",
-	window.KeyO:          "O",
-	window.KeyP:          "P",
-	window.KeyQ:          "Q",
-	window.KeyR:          "R",
-	window.KeyS:          "S",
-	window.KeyT:          "T",
-	window.KeyU:          "U",
-	window.KeyV:          "V",
-	window.KeyW:          "W",
-	window.KeyX:          "X",
-	window.KeyY:          "Y",
-	window.KeyZ:          "Z",
-	window.KeyF1:         "F1",
-	window.KeyF2:         "F2",
-	window.KeyF3:         "F3",
-	window.KeyF4:         "F4",
-	window.KeyF5:         "F5",
-	window.KeyF6:         "F6",
-	window.KeyF7:         "F7",
-	window.KeyF8:         "F8",
-	window.KeyF9:         "F9",
-	window.KeyF10:        "F10",
-	window.KeyF11:        "F11",
-	window.KeyF12:        "F12",
+var mapKeyText = map[appwindow.Key]string{
+	appwindow.KeyApostrophe: "'",
+	appwindow.KeyComma:      ",",
+	appwindow.KeyMinus:      "-",
+	appwindow.KeyPeriod:     ".",
+	appwindow.KeySlash:      "/",
+	appwindow.Key0:          "0",
+	appwindow.Key1:          "1",
+	appwindow.Key2:          "2",
+	appwindow.Key3:          "3",
+	appwindow.Key4:          "4",
+	appwindow.Key5:          "5",
+	appwindow.Key6:          "6",
+	appwindow.Key7:          "7",
+	appwindow.Key8:          "8",
+	appwindow.Key9:          "9",
+	appwindow.KeySemicolon:  ";",
+	appwindow.KeyEqual:      "=",
+	appwindow.KeyA:          "A",
+	appwindow.KeyB:          "B",
+	appwindow.KeyC:          "C",
+	appwindow.KeyD:          "D",
+	appwindow.KeyE:          "E",
+	appwindow.KeyF:          "F",
+	appwindow.KeyG:          "G",
+	appwindow.KeyH:          "H",
+	appwindow.KeyI:          "I",
+	appwindow.KeyJ:          "J",
+	appwindow.KeyK:          "K",
+	appwindow.KeyL:          "L",
+	appwindow.KeyM:          "M",
+	appwindow.KeyN:          "N",
+	appwindow.KeyO:          "O",
+	appwindow.KeyP:          "P",
+	appwindow.KeyQ:          "Q",
+	appwindow.KeyR:          "R",
+	appwindow.KeyS:          "S",
+	appwindow.KeyT:          "T",
+	appwindow.KeyU:          "U",
+	appwindow.KeyV:          "V",
+	appwindow.KeyW:          "W",
+	appwindow.KeyX:          "X",
+	appwindow.KeyY:          "Y",
+	appwindow.KeyZ:          "Z",
+	appwindow.KeyF1:         "F1",
+	appwindow.KeyF2:         "F2",
+	appwindow.KeyF3:         "F3",
+	appwindow.KeyF4:         "F4",
+	appwindow.KeyF5:         "F5",
+	appwindow.KeyF6:         "F6",
+	appwindow.KeyF7:         "F7",
+	appwindow.KeyF8:         "F8",
+	appwindow.KeyF9:         "F9",
+	appwindow.KeyF10:        "F10",
+	appwindow.KeyF11:        "F11",
+	appwindow.KeyF12:        "F12",
 }
 
 // NewMenuBar creates and returns a pointer to a new empty menu bar
@@ -217,10 +217,10 @@ func (m *Menu) RemoveItem(mi *MenuItem) {
 func (m *Menu) onKey(evname eventtype.EventType, ev interface{}) {
 
 	sel := m.selectedPos()
-	kev := ev.(*window.KeyEvent)
+	kev := ev.(*appwindow.KeyEvent)
 	switch kev.Key {
 	// Select next enabled menu item
-	case window.KeyDown:
+	case appwindow.KeyDown:
 		if sel < 0 {
 			return
 		}
@@ -242,7 +242,7 @@ func (m *Menu) onKey(evname eventtype.EventType, ev interface{}) {
 		next := m.nextItem(sel)
 		m.setSelectedPos(next)
 	// Up -> Previous item for vertical menus
-	case window.KeyUp:
+	case appwindow.KeyUp:
 		if sel < 0 {
 			return
 		}
@@ -252,7 +252,7 @@ func (m *Menu) onKey(evname eventtype.EventType, ev interface{}) {
 		prev := m.prevItem(sel)
 		m.setSelectedPos(prev)
 	// Left -> Previous menu item for menu bar
-	case window.KeyLeft:
+	case appwindow.KeyLeft:
 		if sel < 0 {
 			return
 		}
@@ -276,7 +276,7 @@ func (m *Menu) onKey(evname eventtype.EventType, ev interface{}) {
 		}
 
 	// Right -> Next menu bar item || Next sub menu
-	case window.KeyRight:
+	case appwindow.KeyRight:
 		if sel < 0 {
 			return
 		}
@@ -301,7 +301,7 @@ func (m *Menu) onKey(evname eventtype.EventType, ev interface{}) {
 			Manager().SetKeyFocus(m.mitem.menu)
 		}
 	// Enter -> Select menu option
-	case window.KeyEnter:
+	case appwindow.KeyEnter:
 		if sel < 0 {
 			return
 		}
@@ -352,7 +352,7 @@ func (m *Menu) onResize(evname eventtype.EventType, ev interface{}) {
 
 // checkKey checks if this menu and any of its children contains
 // a menu item with the specified key shortcut
-func (m *Menu) checkKey(kev *window.KeyEvent) *MenuItem {
+func (m *Menu) checkKey(kev *appwindow.KeyEvent) *MenuItem {
 
 	for i := 0; i < len(m.items); i++ {
 		mi := m.items[i]
@@ -610,7 +610,7 @@ func (mi *MenuItem) SetText(text string) *MenuItem {
 }
 
 // SetShortcut sets the keyboard shortcut of this menu item
-func (mi *MenuItem) SetShortcut(mods window.ModifierKey, key window.Key) *MenuItem {
+func (mi *MenuItem) SetShortcut(mods appwindow.ModifierKey, key appwindow.Key) *MenuItem {
 
 	if mapKeyText[key] == "" {
 		panic("Invalid menu shortcut key")
@@ -625,20 +625,20 @@ func (mi *MenuItem) SetShortcut(mods window.ModifierKey, key window.Key) *MenuIt
 
 	// Builds shortcut text
 	text := ""
-	if mi.keyMods&window.ModShift != 0 {
-		text = mapKeyModifier[window.ModShift]
+	if mi.keyMods&appwindow.ModShift != 0 {
+		text = mapKeyModifier[appwindow.ModShift]
 	}
-	if mi.keyMods&window.ModControl != 0 {
+	if mi.keyMods&appwindow.ModControl != 0 {
 		if text != "" {
 			text += "+"
 		}
-		text += mapKeyModifier[window.ModControl]
+		text += mapKeyModifier[appwindow.ModControl]
 	}
-	if mi.keyMods&window.ModAlt != 0 {
+	if mi.keyMods&appwindow.ModAlt != 0 {
 		if text != "" {
 			text += "+"
 		}
-		text += mapKeyModifier[window.ModAlt]
+		text += mapKeyModifier[appwindow.ModAlt]
 	}
 	if text != "" {
 		text += "+"

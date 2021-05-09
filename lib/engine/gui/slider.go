@@ -5,8 +5,8 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 /***************************************
@@ -164,8 +164,8 @@ func (s *Slider) setPos(pos float32) {
 // onMouse process subscribed mouse events over the outer panel
 func (s *Slider) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	mev := ev.(*window.MouseEvent)
-	if mev.Button != window.MouseButtonLeft {
+	mev := ev.(*appwindow.MouseEvent)
+	if mev.Button != appwindow.MouseButtonLeft {
 		return
 	}
 	switch evname {
@@ -192,20 +192,20 @@ func (s *Slider) onCursor(evname eventtype.EventType, ev interface{}) {
 	if evname == eventtype.OnCursorEnter {
 		s.cursorOver = true
 		if s.horiz {
-			window.Get().SetCursor(window.HResizeCursor)
+			appwindow.Get().SetCursor(appwindow.HResizeCursor)
 		} else {
-			window.Get().SetCursor(window.VResizeCursor)
+			appwindow.Get().SetCursor(appwindow.VResizeCursor)
 		}
 		s.update()
 	} else if evname == eventtype.OnCursorLeave {
 		s.cursorOver = false
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		s.update()
 	} else if evname == eventtype.OnCursor {
 		if !s.pressed {
 			return
 		}
-		cev := ev.(*window.CursorEvent)
+		cev := ev.(*appwindow.CursorEvent)
 		var pos float32
 		if s.horiz {
 			delta := cev.Xpos - s.posLast
@@ -225,7 +225,7 @@ func (s *Slider) onCursor(evname eventtype.EventType, ev interface{}) {
 // onScroll process subscribed scroll events
 func (s *Slider) onScroll(evname eventtype.EventType, ev interface{}) {
 
-	sev := ev.(*window.ScrollEvent)
+	sev := ev.(*appwindow.ScrollEvent)
 	v := s.pos
 	v += sev.Yoffset * 0.01
 	s.setPos(v)
@@ -234,14 +234,14 @@ func (s *Slider) onScroll(evname eventtype.EventType, ev interface{}) {
 // onKey process subscribed key events
 func (s *Slider) onKey(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
+	kev := ev.(*appwindow.KeyEvent)
 	delta := float32(0.01)
 	// Horizontal slider
 	if s.horiz {
 		switch kev.Key {
-		case window.KeyLeft:
+		case appwindow.KeyLeft:
 			s.setPos(s.pos - delta)
-		case window.KeyRight:
+		case appwindow.KeyRight:
 			s.setPos(s.pos + delta)
 		default:
 			return
@@ -249,9 +249,9 @@ func (s *Slider) onKey(evname eventtype.EventType, ev interface{}) {
 		// Vertical slider
 	} else {
 		switch kev.Key {
-		case window.KeyDown:
+		case appwindow.KeyDown:
 			s.setPos(s.pos - delta)
-		case window.KeyUp:
+		case appwindow.KeyUp:
 			s.setPos(s.pos + delta)
 		default:
 			return

@@ -17,6 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/lib/engine/appbase"
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/camera"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
@@ -28,7 +29,6 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/renderer"
 	"github.com/kasworld/goguelike-single/lib/engine/util/framerater"
 	"github.com/kasworld/goguelike-single/lib/engine/util/helper"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // runtime.LockOSThread
@@ -92,11 +92,11 @@ func (ga *GLClient) onMouse(evname eventtype.EventType, ev interface{}) {
 	switch evname {
 	case eventtype.OnMouseDown:
 		// gui.Manager().SetCursorFocus(ga)
-		mev := ev.(*window.MouseEvent)
+		mev := ev.(*appwindow.MouseEvent)
 		switch mev.Button {
-		case window.MouseButtonLeft: // Rotate
-		case window.MouseButtonMiddle: // Zoom
-		case window.MouseButtonRight: // Pan
+		case appwindow.MouseButtonLeft: // Rotate
+		case appwindow.MouseButtonMiddle: // Zoom
+		case appwindow.MouseButtonRight: // Pan
 		}
 	case eventtype.OnMouseUp:
 		// gui.Manager().SetCursorFocus(nil)
@@ -106,7 +106,7 @@ func (ga *GLClient) onMouse(evname eventtype.EventType, ev interface{}) {
 // onScroll is called when an OnScroll event is received.
 func (ga *GLClient) onScroll(evname eventtype.EventType, ev interface{}) {
 	zF := float32(1.5)
-	sev := ev.(*window.ScrollEvent)
+	sev := ev.(*appwindow.ScrollEvent)
 	if sev.Yoffset > 0 {
 		ga.camZpos *= zF
 		if ga.camZpos > 1000 {

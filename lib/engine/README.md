@@ -25,7 +25,7 @@ remove wasm support
 rename interface I*** -> ***I 
 
     NodeI
-    WindowI
+    AppWindowI
     DispatcherI
     MaterialI
     LightI
@@ -63,6 +63,8 @@ merge event to one file and to enum by genenum
     evname string -> evname eventtype.EventType
 
 replace logger 
+
+rename window -> appwindow
 
 ## TODO 
 

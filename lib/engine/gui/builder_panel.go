@@ -7,8 +7,8 @@ package gui
 import (
 	"path/filepath"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // buildPanel builds an object of type Panel
@@ -421,7 +421,7 @@ func buildMenu(b *Builder, am map[string]interface{}) (PanelI, error) {
 			// Sets optional menu item shortcut
 			if sci := item[AttribShortcut]; sci != nil {
 				sc := sci.([]int)
-				mi.SetShortcut(window.ModifierKey(sc[0]), window.Key(sc[1]))
+				mi.SetShortcut(appwindow.ModifierKey(sc[0]), appwindow.Key(sc[1]))
 			}
 		}
 	}

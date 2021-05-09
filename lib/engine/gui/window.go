@@ -5,10 +5,10 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 /*********************************************
@@ -103,7 +103,7 @@ func (w *Window) SetCloseButton(state bool) {
 	w.title.setCloseButton(state)
 }
 
-// SetTitle sets the title of the window.
+// SetTitle sets the title of the appwindow.
 func (w *Window) SetTitle(text string) {
 
 	if w.title == nil {
@@ -164,7 +164,7 @@ func (w *Window) onCursor(evname eventtype.EventType, ev interface{}) {
 		return
 	}
 	if evname == eventtype.OnCursor {
-		cev := ev.(*window.CursorEvent)
+		cev := ev.(*appwindow.CursorEvent)
 		// If already dragging - update window size and position depending
 		// on the cursor position and the borders being dragged
 		if w.drag {
@@ -232,21 +232,21 @@ func (w *Window) onCursor(evname eventtype.EventType, ev interface{}) {
 			}
 			// Update cursor image based on cursor position
 			if (w.overTop || w.overBottom) && !w.overRight && !w.overLeft {
-				window.Get().SetCursor(window.VResizeCursor)
+				appwindow.Get().SetCursor(appwindow.VResizeCursor)
 			} else if (w.overRight || w.overLeft) && !w.overTop && !w.overBottom {
-				window.Get().SetCursor(window.HResizeCursor)
+				appwindow.Get().SetCursor(appwindow.HResizeCursor)
 			} else if (w.overRight && w.overTop) || (w.overBottom && w.overLeft) {
-				window.Get().SetCursor(window.DiagResize1Cursor)
+				appwindow.Get().SetCursor(appwindow.DiagResize1Cursor)
 			} else if (w.overRight && w.overBottom) || (w.overTop && w.overLeft) {
-				window.Get().SetCursor(window.DiagResize2Cursor)
+				appwindow.Get().SetCursor(appwindow.DiagResize2Cursor)
 			}
 			// If cursor is not near the border of the window then reset the cursor
 			if !w.overTop && !w.overRight && !w.overBottom && !w.overLeft {
-				window.Get().SetCursor(window.ArrowCursor)
+				appwindow.Get().SetCursor(appwindow.ArrowCursor)
 			}
 		}
 	} else if evname == eventtype.OnCursorLeave {
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		w.drag = false
 	}
 }
@@ -261,7 +261,7 @@ func (w *Window) update() {
 	w.applyStyle(&w.styles.Normal)
 }
 
-// applyStyle applies a window style to the window.
+// applyStyle applies a window style to the appwindow.
 func (w *Window) applyStyle(s *WindowStyle) {
 
 	w.SetBordersColor4(&s.BorderColor)
@@ -329,7 +329,7 @@ func newWindowTitle(win *Window, text string) *WindowTitle {
 	wt.closeButton = NewButton("")
 	wt.closeButton.SetIcon(icon.Close)
 	wt.closeButton.Subscribe(eventtype.OnCursorEnter, func(s eventtype.EventType, i interface{}) {
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 	})
 	wt.closeButton.Subscribe(eventtype.OnClick, func(s eventtype.EventType, i interface{}) {
 		wt.win.Parent().GetNode().Remove(wt.win)
@@ -364,7 +364,7 @@ func (wt *WindowTitle) setCloseButton(state bool) {
 // onMouse process subscribed mouse button events over the window title.
 func (wt *WindowTitle) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	mev := ev.(*window.MouseEvent)
+	mev := ev.(*appwindow.MouseEvent)
 	switch evname {
 	case eventtype.OnMouseDown:
 		wt.pressed = true
@@ -383,13 +383,13 @@ func (wt *WindowTitle) onMouse(evname eventtype.EventType, ev interface{}) {
 func (wt *WindowTitle) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	if evname == eventtype.OnCursorLeave {
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		wt.pressed = false
 	} else if evname == eventtype.OnCursor {
 		if !wt.pressed {
 			return
 		}
-		cev := ev.(*window.CursorEvent)
+		cev := ev.(*appwindow.CursorEvent)
 		dy := wt.mouseY - cev.Ypos
 		dx := wt.mouseX - cev.Xpos
 		wt.mouseX = cev.Xpos

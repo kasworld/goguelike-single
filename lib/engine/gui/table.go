@@ -10,10 +10,10 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // TableSortType is the type used to specify the sort method for a table column
@@ -130,13 +130,13 @@ type TableStyles struct {
 // TableClickEvent describes a mouse click event over a table
 // It contains the original mouse event plus additional information
 type TableClickEvent struct {
-	window.MouseEvent         // Embedded window mouse event
-	X                 float32 // Table content area X coordinate
-	Y                 float32 // Table content area Y coordinate
-	Header            bool    // True if header was clicked
-	Row               int     // Index of table row (may be -1)
-	Col               string  // Id of table column (may be empty)
-	ColOrder          int     // Current column exhibition order
+	appwindow.MouseEvent         // Embedded appwindow mouse event
+	X                    float32 // Table content area X coordinate
+	Y                    float32 // Table content area Y coordinate
+	Header               bool    // True if header was clicked
+	Row                  int     // Index of table row (may be -1)
+	Col                  string  // Id of table column (may be empty)
+	ColOrder             int     // Current column exhibition order
 }
 
 // tableHeader is panel which contains the individual header panels for each column
@@ -773,8 +773,8 @@ func (t *Table) removeRow(row int) {
 // onCursorPos process subscribed cursor position events
 func (t *Table) onCursorPos(evname eventtype.EventType, ev interface{}) {
 
-	// Convert mouse window coordinates to table content coordinates
-	cev := ev.(*window.CursorEvent)
+	// Convert mouse appwindow coordinates to table content coordinates
+	cev := ev.(*appwindow.CursorEvent)
 	cx, _ := t.ContentCoords(cev.Xpos, cev.Ypos)
 
 	// If user is dragging the resizer, updates its position
@@ -793,15 +793,15 @@ func (t *Table) onCursorPos(evname eventtype.EventType, ev interface{}) {
 				found = true
 				t.resizeCol = ci
 				t.resizerX = c.xr
-				window.Get().SetCursor(window.HResizeCursor)
+				appwindow.Get().SetCursor(appwindow.HResizeCursor)
 			}
 			break
 		}
 	}
 	// If column not found but previously was near a resizable column,
-	// resets the the window cursor.
+	// resets the the appwindow cursor.
 	if !found && t.resizeCol >= 0 {
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		t.resizeCol = -1
 	}
 }
@@ -809,12 +809,12 @@ func (t *Table) onCursorPos(evname eventtype.EventType, ev interface{}) {
 // onMouseEvent process subscribed mouse events
 func (t *Table) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	e := ev.(*window.MouseEvent)
+	e := ev.(*appwindow.MouseEvent)
 	Manager().SetKeyFocus(t)
 	switch evname {
 	case eventtype.OnMouseDown:
 		// If over a resizable column border, shows the resizer panel
-		if t.resizeCol >= 0 && e.Button == window.MouseButtonLeft {
+		if t.resizeCol >= 0 && e.Button == appwindow.MouseButtonLeft {
 			t.resizing = true
 			height := t.ContentHeight()
 			if t.statusPanel.Visible() {
@@ -832,9 +832,9 @@ func (t *Table) onMouse(evname eventtype.EventType, ev interface{}) {
 		tce.MouseEvent = *e
 		t.findClick(&tce)
 		// If row is clicked, selects it
-		if tce.Row >= 0 && e.Button == window.MouseButtonLeft {
+		if tce.Row >= 0 && e.Button == appwindow.MouseButtonLeft {
 			t.rowCursor = tce.Row
-			if t.selType == TableSelMultiRow && e.Mods == window.ModControl {
+			if t.selType == TableSelMultiRow && e.Mods == appwindow.ModControl {
 				t.toggleRowSel(t.rowCursor)
 			}
 			t.recalc()
@@ -848,7 +848,7 @@ func (t *Table) onMouse(evname eventtype.EventType, ev interface{}) {
 		if t.resizing {
 			t.resizing = false
 			t.resizerPanel.SetVisible(false)
-			window.Get().SetCursor(window.ArrowCursor)
+			appwindow.Get().SetCursor(appwindow.ArrowCursor)
 			// Calculates the new column width
 			cx, _ := t.ContentCoords(e.Xpos, e.Ypos)
 			c := t.header.cols[t.resizeCol]
@@ -863,20 +863,20 @@ func (t *Table) onMouse(evname eventtype.EventType, ev interface{}) {
 // onKeyEvent receives subscribed key events for this table
 func (t *Table) onKey(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
-	if kev.Key == window.KeyUp && kev.Mods == 0 {
+	kev := ev.(*appwindow.KeyEvent)
+	if kev.Key == appwindow.KeyUp && kev.Mods == 0 {
 		t.selPrev()
-	} else if kev.Key == window.KeyDown && kev.Mods == 0 {
+	} else if kev.Key == appwindow.KeyDown && kev.Mods == 0 {
 		t.selNext()
-	} else if kev.Key == window.KeyPageUp && kev.Mods == 0 {
+	} else if kev.Key == appwindow.KeyPageUp && kev.Mods == 0 {
 		t.prevPage()
-	} else if kev.Key == window.KeyPageDown && kev.Mods == 0 {
+	} else if kev.Key == appwindow.KeyPageDown && kev.Mods == 0 {
 		t.nextPage()
-	} else if kev.Key == window.KeyPageUp && kev.Mods == window.ModControl {
+	} else if kev.Key == appwindow.KeyPageUp && kev.Mods == appwindow.ModControl {
 		t.firstPage()
-	} else if kev.Key == window.KeyPageDown && kev.Mods == window.ModControl {
+	} else if kev.Key == appwindow.KeyPageDown && kev.Mods == appwindow.ModControl {
 		t.lastPage()
-	} else if kev.Key == window.KeyEnter && kev.Mods == window.ModControl {
+	} else if kev.Key == appwindow.KeyEnter && kev.Mods == appwindow.ModControl {
 		if t.selType == TableSelMultiRow {
 			t.toggleRowSel(t.rowCursor)
 		}
@@ -893,7 +893,7 @@ func (t *Table) onResize(evname eventtype.EventType, ev interface{}) {
 // onScroll receives subscribed scroll events for this table
 func (t *Table) onScroll(evname eventtype.EventType, ev interface{}) {
 
-	sev := ev.(*window.ScrollEvent)
+	sev := ev.(*appwindow.ScrollEvent)
 	if sev.Yoffset > 0 {
 		t.scrollUp(1)
 	} else if sev.Yoffset < 0 {

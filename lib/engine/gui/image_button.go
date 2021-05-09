@@ -5,9 +5,9 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/texture"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // ImageButton represents an image button GUI element
@@ -200,14 +200,14 @@ func (b *ImageButton) onMouse(evname eventtype.EventType, ev interface{}) {
 // onKey processes subscribed key events
 func (b *ImageButton) onKey(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
-	if evname == eventtype.OnKeyDown && kev.Key == window.KeyEnter {
+	kev := ev.(*appwindow.KeyEvent)
+	if evname == eventtype.OnKeyDown && kev.Key == appwindow.KeyEnter {
 		b.pressed = true
 		b.update()
 		b.Dispatch(eventtype.OnClick, nil)
 		return
 	}
-	if evname == eventtype.OnKeyUp && kev.Key == window.KeyEnter {
+	if evname == eventtype.OnKeyUp && kev.Key == appwindow.KeyEnter {
 		b.pressed = false
 		b.update()
 		return

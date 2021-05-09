@@ -5,12 +5,12 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcher"
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/engine/timermanager"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // manager singleton
@@ -20,13 +20,13 @@ var gm *manager
 type manager struct {
 	dispatcher.Dispatcher                             // Embedded Dispatcher
 	timermanager.TimerManager                         // Embedded TimerManager
-	win                       window.WindowI          // The current WindowI
+	win                       appwindow.AppWindowI    // The current AppWindowI
 	scene                     node.NodeI              // NodeI containing IPanels to dispatch events to (can contain non-IPanels as well)
 	modal                     PanelI                  // Panel which along its descendants will exclusively receive all events
 	target                    PanelI                  // Panel immediately under the cursor
 	keyFocus                  dispatcheri.DispatcherI // DispatcherI which will exclusively receive all key and char events
 	cursorFocus               dispatcheri.DispatcherI // DispatcherI which will exclusively receive all OnCursor events
-	cev                       *window.CursorEvent     // DispatcherI which will exclusively receive all OnCursor events
+	cev                       *appwindow.CursorEvent  // DispatcherI which will exclusively receive all OnCursor events
 }
 
 // Manager returns the GUI manager singleton (creating it the first time)
@@ -41,8 +41,8 @@ func Manager() *manager {
 	gm.Dispatcher.Initialize()
 	gm.TimerManager.Initialize()
 
-	// Subscribe to window events
-	gm.win = window.Get()
+	// Subscribe to appwindow events
+	gm.win = appwindow.Get()
 	gm.win.Subscribe(eventtype.OnKeyUp, gm.onKeyboard)
 	gm.win.Subscribe(eventtype.OnKeyDown, gm.onKeyboard)
 	gm.win.Subscribe(eventtype.OnKeyRepeat, gm.onKeyboard)
@@ -183,7 +183,7 @@ func (gm *manager) onCursor(evname eventtype.EventType, ev interface{}) {
 	}
 
 	// Get and store CursorEvent
-	gm.cev = ev.(*window.CursorEvent)
+	gm.cev = ev.(*appwindow.CursorEvent)
 
 	// Temporarily store last target and clear current one
 	oldTarget := gm.target

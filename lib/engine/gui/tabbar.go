@@ -7,10 +7,10 @@ package gui
 import (
 	"fmt"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/log"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // TabBar is a panel which can contain other panels arranged in horizontal Tabs.
@@ -447,7 +447,7 @@ func (tab *Tab) onCursor(evname eventtype.EventType, ev interface{}) {
 // onMouse process subscribed mouse events over the tab header
 func (tab *Tab) onMouseHeader(evname eventtype.EventType, ev interface{}) {
 
-	if evname == eventtype.OnMouseDown && ev.(*window.MouseEvent).Button == window.MouseButtonLeft {
+	if evname == eventtype.OnMouseDown && ev.(*appwindow.MouseEvent).Button == appwindow.MouseButtonLeft {
 		tab.tb.SetSelected(tab.tb.TabPosition(tab))
 	}
 }

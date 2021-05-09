@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/text"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // Edit represents a text edit box GUI element
@@ -223,19 +223,19 @@ func (ed *Edit) redraw(caret bool) {
 // onKey receives subscribed key events
 func (ed *Edit) onKey(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
+	kev := ev.(*appwindow.KeyEvent)
 	switch kev.Key {
-	case window.KeyLeft:
+	case appwindow.KeyLeft:
 		ed.CursorLeft()
-	case window.KeyRight:
+	case appwindow.KeyRight:
 		ed.CursorRight()
-	case window.KeyHome:
+	case appwindow.KeyHome:
 		ed.CursorHome()
-	case window.KeyEnd:
+	case appwindow.KeyEnd:
 		ed.CursorEnd()
-	case window.KeyBackspace:
+	case appwindow.KeyBackspace:
 		ed.CursorBack()
-	case window.KeyDelete:
+	case appwindow.KeyDelete:
 		ed.CursorDelete()
 	default:
 		return
@@ -245,15 +245,15 @@ func (ed *Edit) onKey(evname eventtype.EventType, ev interface{}) {
 // onChar receives subscribed char events
 func (ed *Edit) onChar(evname eventtype.EventType, ev interface{}) {
 
-	cev := ev.(*window.CharEvent)
+	cev := ev.(*appwindow.CharEvent)
 	ed.CursorInput(string(cev.Char))
 }
 
 // onMouseEvent receives subscribed mouse down events
 func (ed *Edit) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	e := ev.(*window.MouseEvent)
-	if e.Button != window.MouseButtonLeft {
+	e := ev.(*appwindow.MouseEvent)
+	if e.Button != appwindow.MouseButtonLeft {
 		return
 	}
 
@@ -280,13 +280,13 @@ func (ed *Edit) onMouse(evname eventtype.EventType, ev interface{}) {
 func (ed *Edit) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	if evname == eventtype.OnCursorEnter {
-		window.Get().SetCursor(window.IBeamCursor)
+		appwindow.Get().SetCursor(appwindow.IBeamCursor)
 		ed.cursorOver = true
 		ed.update()
 		return
 	}
 	if evname == eventtype.OnCursorLeave {
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		ed.cursorOver = false
 		ed.update()
 		return

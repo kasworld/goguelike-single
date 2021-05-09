@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package window
+package appwindow
 
 import (
 	"github.com/kasworld/goguelike-single/lib/engine/dispatcheri"

@@ -1,4 +1,4 @@
-package window
+package appwindow
 
 // Key corresponds to a keyboard key.
 type Key int

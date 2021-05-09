@@ -4,7 +4,7 @@
 
 // Package window abstracts a platform-specific window.
 // Depending on the build tags it can be a GLFW desktop window or a browser WebGlCanvas.
-package window
+package appwindow
 
 import (
 	"fmt"
@@ -13,11 +13,11 @@ import (
 	"github.com/kasworld/goguelike-single/lib/engine/gls"
 )
 
-// WindowI singleton
-var win WindowI
+// AppWindowI singleton
+var win AppWindowI
 
-// Get returns the WindowI singleton.
-func Get() WindowI {
+// Get returns the AppWindowI singleton.
+func Get() AppWindowI {
 	// Return singleton if already created
 	if win != nil {
 		return win
@@ -25,8 +25,8 @@ func Get() WindowI {
 	panic(fmt.Errorf("need to call window.Init() first"))
 }
 
-// WindowI is the interface for all windows
-type WindowI interface {
+// AppWindowI is the interface for all windows
+type AppWindowI interface {
 	dispatcheri.DispatcherI
 	Gls() *gls.GLS
 	GetFramebufferSize() (width int, height int)

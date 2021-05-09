@@ -7,8 +7,8 @@ package gui
 import (
 	"math"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // ItemScroller is the GUI element that allows scrolling of IPanels
@@ -320,7 +320,7 @@ func (s *ItemScroller) onCursor(evname eventtype.EventType, ev interface{}) {
 // onScroll receives mouse scroll events
 func (s *ItemScroller) onScroll(evname eventtype.EventType, ev interface{}) {
 
-	sev := ev.(*window.ScrollEvent)
+	sev := ev.(*appwindow.ScrollEvent)
 	if sev.Yoffset > 0 {
 		s.ScrollUp()
 	} else if sev.Yoffset < 0 {

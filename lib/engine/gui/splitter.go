@@ -5,9 +5,9 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // Splitter is a GUI element that splits two panels and can be adjusted
@@ -116,8 +116,8 @@ func (s *Splitter) onResize(evname eventtype.EventType, ev interface{}) {
 // onMouse receives subscribed mouse events over the spacer panel
 func (s *Splitter) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	mev := ev.(*window.MouseEvent)
-	if mev.Button != window.MouseButtonLeft {
+	mev := ev.(*appwindow.MouseEvent)
+	if mev.Button != appwindow.MouseButtonLeft {
 		return
 	}
 	switch evname {
@@ -131,7 +131,7 @@ func (s *Splitter) onMouse(evname eventtype.EventType, ev interface{}) {
 		Manager().SetCursorFocus(&s.spacer)
 	case eventtype.OnMouseUp:
 		s.pressed = false
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		Manager().SetCursorFocus(nil)
 	}
 }
@@ -141,21 +141,21 @@ func (s *Splitter) onCursor(evname eventtype.EventType, ev interface{}) {
 
 	if evname == eventtype.OnCursorEnter {
 		if s.horiz {
-			window.Get().SetCursor(window.HResizeCursor)
+			appwindow.Get().SetCursor(appwindow.HResizeCursor)
 		} else {
-			window.Get().SetCursor(window.VResizeCursor)
+			appwindow.Get().SetCursor(appwindow.VResizeCursor)
 		}
 		s.mouseOver = true
 		s.update()
 	} else if evname == eventtype.OnCursorLeave {
-		window.Get().SetCursor(window.ArrowCursor)
+		appwindow.Get().SetCursor(appwindow.ArrowCursor)
 		s.mouseOver = false
 		s.update()
 	} else if evname == eventtype.OnCursor {
 		if !s.pressed {
 			return
 		}
-		cev := ev.(*window.CursorEvent)
+		cev := ev.(*appwindow.CursorEvent)
 		var delta float32
 		pos := s.pos
 		if s.horiz {

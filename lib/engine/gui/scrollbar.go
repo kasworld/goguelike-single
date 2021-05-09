@@ -5,9 +5,9 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 /***************************************
@@ -151,8 +151,8 @@ func (sb *ScrollBar) SetValue(v float32) {
 // onMouse receives subscribed mouse events over the scrollbar outer panel
 func (sb *ScrollBar) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	e := ev.(*window.MouseEvent)
-	if e.Button != window.MouseButtonLeft {
+	e := ev.(*appwindow.MouseEvent)
+	if e.Button != appwindow.MouseButtonLeft {
 		return
 	}
 	if sb.vertical {
@@ -204,8 +204,8 @@ func (sb *ScrollBar) applyStyle(sbs *ScrollBarStyle) {
 // onMouse receives subscribed mouse events for the scroll bar button
 func (button *scrollBarButton) onMouse(evname eventtype.EventType, ev interface{}) {
 
-	e := ev.(*window.MouseEvent)
-	if e.Button != window.MouseButtonLeft {
+	e := ev.(*appwindow.MouseEvent)
+	if e.Button != appwindow.MouseButtonLeft {
 		return
 	}
 	switch evname {
@@ -225,7 +225,7 @@ func (button *scrollBarButton) onMouse(evname eventtype.EventType, ev interface{
 // onCursor receives subscribed cursor events for the scroll bar button
 func (button *scrollBarButton) onCursor(evname eventtype.EventType, ev interface{}) {
 
-	e := ev.(*window.CursorEvent)
+	e := ev.(*appwindow.CursorEvent)
 	if !button.pressed {
 		return
 	}

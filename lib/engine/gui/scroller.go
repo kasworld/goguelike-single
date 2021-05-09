@@ -5,10 +5,10 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/log"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 // Scroller is the GUI element that allows scrolling of a target PanelI.
@@ -85,7 +85,7 @@ type ScrollerScrollbarStyle struct {
 // They should not be added to style since they are not style changes and not to the struct since they are global
 
 // ScrollModifierKey is the ModifierKey that changes the scrolling direction from vertical to horizontal when pressed
-const ScrollModifierKey = window.ModShift
+const ScrollModifierKey = appwindow.ModShift
 
 // NewScroller creates and returns a pointer to a new Scroller with the specified
 // target PanelI and ScrollMode.
@@ -278,7 +278,7 @@ func (s *Scroller) ScrollTo(x, y float32) {
 // onScroll receives mouse scroll events when this scroller has the scroll focus (set by OnMouseEnter)
 func (s *Scroller) onScroll(evname eventtype.EventType, ev interface{}) {
 
-	sev := ev.(*window.ScrollEvent)
+	sev := ev.(*appwindow.ScrollEvent)
 
 	vScrollVisible := (s.vscroll != nil) && s.vscroll.Visible()
 	hScrollVisible := (s.hscroll != nil) && s.hscroll.Visible()

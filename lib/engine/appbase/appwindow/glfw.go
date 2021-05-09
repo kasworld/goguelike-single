@@ -4,7 +4,7 @@
 
 // +build !wasm
 
-package window
+package appwindow
 
 import (
 	"bytes"

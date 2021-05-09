@@ -5,8 +5,8 @@
 package gui
 
 import (
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
 /***************************************
@@ -162,8 +162,8 @@ func (b *Button) onMouse(evname eventtype.EventType, ev interface{}) {
 // onKey processes subscribed key events
 func (b *Button) onKey(evname eventtype.EventType, ev interface{}) {
 
-	kev := ev.(*window.KeyEvent)
-	if kev.Key != window.KeyEnter {
+	kev := ev.(*appwindow.KeyEvent)
+	if kev.Key != appwindow.KeyEnter {
 		return
 	}
 	switch evname {

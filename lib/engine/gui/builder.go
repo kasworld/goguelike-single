@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/kasworld/goguelike-single/lib/engine/appbase/appwindow"
 	"github.com/kasworld/goguelike-single/lib/engine/gui/assets/icon"
 	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/window"
 	"gopkg.in/yaml.v2"
 )
 
@@ -773,15 +773,15 @@ func AttribCheckMenuShortcut(b *Builder, am map[string]interface{}, fname string
 		return nil
 	}
 	parts := strings.Split(sc, "+")
-	var mods window.ModifierKey
+	var mods appwindow.ModifierKey
 	for i := 0; i < len(parts)-1; i++ {
 		switch parts[i] {
 		case "Shift":
-			mods |= window.ModShift
+			mods |= appwindow.ModShift
 		case "Ctrl":
-			mods |= window.ModControl
+			mods |= appwindow.ModControl
 		case "Alt":
-			mods |= window.ModAlt
+			mods |= appwindow.ModAlt
 		default:
 			return b.err(am, fname, "Invalid shortcut:"+sc)
 		}
