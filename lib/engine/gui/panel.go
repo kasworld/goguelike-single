@@ -53,10 +53,10 @@ type Panel struct {
 	layout       LayoutI     // current layout for children
 	layoutParams interface{} // current layout parameters used by container panel
 
-	marginSizes  RectBounds // external margin sizes in pixel coordinates
-	borderSizes  RectBounds // border sizes in pixel coordinates
-	paddingSizes RectBounds // padding sizes in pixel coordinates
-	content      Rect       // current content rectangle in pixel coordinates
+	marginSizes  math32.RectBounds // external margin sizes in pixel coordinates
+	borderSizes  math32.RectBounds // border sizes in pixel coordinates
+	paddingSizes math32.RectBounds // padding sizes in pixel coordinates
+	content      math32.Rect       // current content rectangle in pixel coordinates
 
 	// Absolute screen position and external size in pixels
 	pospix math32.Vector3
@@ -86,9 +86,9 @@ type Panel struct {
 
 // PanelStyle contains all the styling attributes of a Panel.
 type PanelStyle struct {
-	Margin      RectBounds
-	Border      RectBounds
-	Padding     RectBounds
+	Margin      math32.RectBounds
+	Border      math32.RectBounds
+	Padding     math32.RectBounds
 	BorderColor math32.Color4
 	BgColor     math32.Color4
 }
@@ -320,14 +320,14 @@ func (p *Panel) SetMargins(top, right, bottom, left float32) {
 
 // SetMarginsFrom sets this panel margins sizes from the specified
 // RectBounds pointer and recalculates the panel external size
-func (p *Panel) SetMarginsFrom(src *RectBounds) {
+func (p *Panel) SetMarginsFrom(src *math32.RectBounds) {
 
 	p.marginSizes = *src
 	p.resize(p.calcWidth(), p.calcHeight(), true)
 }
 
 // Margins returns the current margin sizes in pixels
-func (p *Panel) Margins() RectBounds {
+func (p *Panel) Margins() math32.RectBounds {
 
 	return p.marginSizes
 }
@@ -342,14 +342,14 @@ func (p *Panel) SetBorders(top, right, bottom, left float32) {
 
 // SetBordersFrom sets this panel border sizes from the specified
 // RectBounds pointer and recalculates the panel size
-func (p *Panel) SetBordersFrom(src *RectBounds) {
+func (p *Panel) SetBordersFrom(src *math32.RectBounds) {
 
 	p.borderSizes = *src
 	p.resize(p.calcWidth(), p.calcHeight(), true)
 }
 
 // Borders returns this panel current border sizes
-func (p *Panel) Borders() RectBounds {
+func (p *Panel) Borders() math32.RectBounds {
 
 	return p.borderSizes
 }
@@ -363,14 +363,14 @@ func (p *Panel) SetPaddings(top, right, bottom, left float32) {
 
 // SetPaddingsFrom sets this panel padding sizes from the specified
 // RectBounds pointer and recalculates the panel size
-func (p *Panel) SetPaddingsFrom(src *RectBounds) {
+func (p *Panel) SetPaddingsFrom(src *math32.RectBounds) {
 
 	p.paddingSizes = *src
 	p.resize(p.calcWidth(), p.calcHeight(), true)
 }
 
 // Paddings returns this panel padding sizes in pixels
-func (p *Panel) Paddings() RectBounds {
+func (p *Panel) Paddings() math32.RectBounds {
 
 	return p.paddingSizes
 }
@@ -753,8 +753,8 @@ func (p *Panel) calcHeight() float32 {
 // panel layout and dispatch OnSize event.
 func (p *Panel) resize(width, height float32, dispatch bool) {
 
-	var padding Rect
-	var border Rect
+	var padding math32.Rect
+	var border math32.Rect
 
 	width = math32.Round(width)
 	height = math32.Round(height)

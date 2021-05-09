@@ -9,6 +9,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/lib/engine/eventtype"
 	"github.com/kasworld/goguelike-single/lib/engine/log"
+	"github.com/kasworld/goguelike-single/lib/engine/math32"
 	"github.com/kasworld/goguelike-single/lib/engine/window"
 )
 
@@ -31,14 +32,14 @@ type TabBarStyle BasicStyle
 
 // TabBarStyles describes all the TabBarStyles
 type TabBarStyles struct {
-	SepHeight          float32     // Separator width
-	ListButtonIcon     string      // Icon for list button
-	ListButtonPaddings RectBounds  // Paddings for list button
-	Normal             TabBarStyle // Style for normal exhibition
-	Over               TabBarStyle // Style when cursor is over the TabBar
-	Focus              TabBarStyle // Style when the TabBar has key focus
-	Disabled           TabBarStyle // Style when the TabBar is disabled
-	Tab                TabStyles   // Style for Tabs
+	SepHeight          float32           // Separator width
+	ListButtonIcon     string            // Icon for list button
+	ListButtonPaddings math32.RectBounds // Paddings for list button
+	Normal             TabBarStyle       // Style for normal exhibition
+	Over               TabBarStyle       // Style when cursor is over the TabBar
+	Focus              TabBarStyle       // Style when the TabBar has key focus
+	Disabled           TabBarStyle       // Style when the TabBar is disabled
+	Tab                TabStyles         // Style for Tabs
 }
 
 // TabStyle describes the style of the individual Tabs header
@@ -46,14 +47,14 @@ type TabStyle BasicStyle
 
 // TabStyles describes all Tab styles
 type TabStyles struct {
-	IconPaddings  RectBounds // Paddings for optional icon
-	ImagePaddings RectBounds // Paddings for optional image
-	IconClose     string     // Codepoint for close icon in Tab header
-	Normal        TabStyle   // Style for normal exhibition
-	Over          TabStyle   // Style when cursor is over the Tab
-	Focus         TabStyle   // Style when the Tab has key focus
-	Disabled      TabStyle   // Style when the Tab is disabled
-	Selected      TabStyle   // Style when the Tab is selected
+	IconPaddings  math32.RectBounds // Paddings for optional icon
+	ImagePaddings math32.RectBounds // Paddings for optional image
+	IconClose     string            // Codepoint for close icon in Tab header
+	Normal        TabStyle          // Style for normal exhibition
+	Over          TabStyle          // Style when cursor is over the Tab
+	Focus         TabStyle          // Style when the Tab has key focus
+	Disabled      TabStyle          // Style when the Tab is disabled
+	Selected      TabStyle          // Style when the Tab is selected
 }
 
 // NewTabBar creates and returns a pointer to a new TabBar widget

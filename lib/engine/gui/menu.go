@@ -62,9 +62,9 @@ type MenuItem struct {
 type MenuItemStyle struct {
 	PanelStyle
 	FgColor          math32.Color4
-	IconPaddings     RectBounds
-	ShortcutPaddings RectBounds
-	RiconPaddings    RectBounds
+	IconPaddings     math32.RectBounds
+	ShortcutPaddings math32.RectBounds
+	RiconPaddings    math32.RectBounds
 }
 
 // MenuItemStyles describes all the menu item styles

@@ -530,12 +530,12 @@ func (b *Builder) SetAttribs(am map[string]interface{}, ipan PanelI) error {
 
 	// Set optional margin sizes
 	if am[AttribMargins] != nil {
-		panel.SetMarginsFrom(am[AttribMargins].(*RectBounds))
+		panel.SetMarginsFrom(am[AttribMargins].(*math32.RectBounds))
 	}
 
 	// Set optional border sizes
 	if am[AttribBorders] != nil {
-		panel.SetBordersFrom(am[AttribBorders].(*RectBounds))
+		panel.SetBordersFrom(am[AttribBorders].(*math32.RectBounds))
 	}
 
 	// Set optional border color
@@ -545,7 +545,7 @@ func (b *Builder) SetAttribs(am map[string]interface{}, ipan PanelI) error {
 
 	// Set optional paddings sizes
 	if am[AttribPaddings] != nil {
-		panel.SetPaddingsFrom(am[AttribPaddings].(*RectBounds))
+		panel.SetPaddingsFrom(am[AttribPaddings].(*math32.RectBounds))
 	}
 
 	// Set optional panel color
@@ -940,10 +940,10 @@ func AttribCheckBorderSizes(b *Builder, am map[string]interface{}, fname string)
 		return nil
 	}
 	if len(va) == 1 {
-		am[fname] = &RectBounds{va[0], va[0], va[0], va[0]}
+		am[fname] = &math32.RectBounds{va[0], va[0], va[0], va[0]}
 		return nil
 	}
-	am[fname] = &RectBounds{va[0], va[1], va[2], va[3]}
+	am[fname] = &math32.RectBounds{va[0], va[1], va[2], va[3]}
 	return nil
 }
 

@@ -111,7 +111,7 @@ type TableStatusStyle BasicStyle
 // TableResizerStyle describes the style of the table resizer panel
 type TableResizerStyle struct {
 	Width       float32
-	Border      RectBounds
+	Border      math32.RectBounds
 	BorderColor math32.Color4
 	BgColor     math32.Color4
 }

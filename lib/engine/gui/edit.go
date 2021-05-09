@@ -31,8 +31,8 @@ type Edit struct {
 
 // EditStyle contains the styling of an Edit
 type EditStyle struct {
-	Border      RectBounds
-	Paddings    RectBounds
+	Border      math32.RectBounds
+	Paddings    math32.RectBounds
 	BorderColor math32.Color4
 	BgColor     math32.Color4
 	BgAlpha     float32
