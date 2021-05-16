@@ -3,8 +3,8 @@ module github.com/kasworld/goguelike-single
 go 1.16
 
 require (
-	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2
-	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/kasworld/actpersec v0.0.0-20191019021204-8c24cd60715c
 	github.com/kasworld/argdefault v0.0.0-20200515031517-5b81c2684ab9
 	github.com/kasworld/direction v0.0.0-20200404021744-bc9d917fa31b // indirect
@@ -14,6 +14,7 @@ require (
 	github.com/kasworld/g2rand v0.0.0-20200315073237-cff14c61a4f0
 	github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888
 	github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93
+	github.com/kasworld/h4o v0.0.0-20210516034655-4dbd679168d9
 	github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025
 	github.com/kasworld/htmlcolors v0.0.0-20210321033505-e7fe9c6a43cc
 	github.com/kasworld/intervalduration v0.0.0-20191119062840-82a720a6b837
@@ -26,6 +27,6 @@ require (
 	github.com/kasworld/walk2d v0.0.0-20190508054438-4e630929cb37
 	github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f
 	github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62
-	golang.org/x/image v0.0.0-20190910094157-69e4b8554b2a
-	gopkg.in/yaml.v2 v2.2.2
+	golang.org/x/image v0.0.0-20190910094157-69e4b8554b2a // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
 )

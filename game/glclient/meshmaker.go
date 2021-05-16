@@ -21,10 +21,10 @@ import (
 	"github.com/kasworld/goguelike-single/enum/factiontype_vector_int"
 	"github.com/kasworld/goguelike-single/enum/tile"
 	"github.com/kasworld/goguelike-single/enum/tile_vector_int"
-	"github.com/kasworld/goguelike-single/lib/engine/geometry"
-	"github.com/kasworld/goguelike-single/lib/engine/graphic"
-	"github.com/kasworld/goguelike-single/lib/engine/material"
-	"github.com/kasworld/goguelike-single/lib/engine/texture"
+	"github.com/kasworld/h4o/geometry"
+	"github.com/kasworld/h4o/graphic"
+	"github.com/kasworld/h4o/material"
+	"github.com/kasworld/h4o/texture"
 )
 
 func (mm *MeshMaker) String() string {

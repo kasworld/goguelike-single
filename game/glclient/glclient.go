@@ -19,12 +19,12 @@ import (
 	"github.com/kasworld/goguelike-single/game/bias"
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/goguelike-single/game/glclient/pid2rspfn"
-	"github.com/kasworld/goguelike-single/lib/engine/appbase"
-	"github.com/kasworld/goguelike-single/lib/engine/camera"
-	"github.com/kasworld/goguelike-single/lib/engine/gui"
-	"github.com/kasworld/goguelike-single/lib/engine/light"
-	"github.com/kasworld/goguelike-single/lib/engine/node"
-	"github.com/kasworld/goguelike-single/lib/engine/util/framerater"
+	"github.com/kasworld/h4o/appbase"
+	"github.com/kasworld/h4o/camera"
+	"github.com/kasworld/h4o/gui"
+	"github.com/kasworld/h4o/light"
+	"github.com/kasworld/h4o/node"
+	"github.com/kasworld/h4o/util/framerater"
 )
 
 type GLClient struct {

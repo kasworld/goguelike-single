@@ -24,11 +24,11 @@ import (
 	"github.com/kasworld/goguelike-single/game/tilearea"
 	"github.com/kasworld/goguelike-single/game/tilearea4pathfind"
 	"github.com/kasworld/goguelike-single/game/visitarea"
-	"github.com/kasworld/goguelike-single/lib/engine/graphic"
-	"github.com/kasworld/goguelike-single/lib/engine/node"
 	"github.com/kasworld/goguelike-single/lib/g2log"
 	"github.com/kasworld/goguelike-single/lib/uuidposman_map"
 	"github.com/kasworld/goguelike-single/lib/uuidposmani"
+	"github.com/kasworld/h4o/graphic"
+	"github.com/kasworld/h4o/node"
 	"github.com/kasworld/wrapper"
 )
 

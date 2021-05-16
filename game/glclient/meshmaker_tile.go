@@ -19,12 +19,12 @@ import (
 	"os"
 
 	"github.com/kasworld/goguelike-single/enum/tile"
-	"github.com/kasworld/goguelike-single/lib/engine/geometry"
-	"github.com/kasworld/goguelike-single/lib/engine/graphic"
-	"github.com/kasworld/goguelike-single/lib/engine/material"
-	"github.com/kasworld/goguelike-single/lib/engine/math32"
-	"github.com/kasworld/goguelike-single/lib/engine/texture"
 	"github.com/kasworld/goguelike-single/lib/g2log"
+	"github.com/kasworld/h4o/geometry"
+	"github.com/kasworld/h4o/graphic"
+	"github.com/kasworld/h4o/material"
+	"github.com/kasworld/h4o/math32"
+	"github.com/kasworld/h4o/texture"
 )
 
 // mange tile

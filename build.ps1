@@ -1,11 +1,7 @@
 
 
-# generate for engine 
 
-cd lib/engine 
-./gen.ps1
-cd ../..
-
+# go get -d github.com/kasworld/h4o
 
 ################################################################################
 cd lib

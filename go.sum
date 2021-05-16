@@ -20,6 +20,8 @@ github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888 h1:mixTHsjZw0A8CtQ
 github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888/go.mod h1:moB6/tYyUKW8vrzgnT+8e/9qrf0PA0TEfjcLZcgYsuo=
 github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93 h1:VKUGnqkj5GPGc8WYhWpm9EE5QozMqWWa3xdvGVXLrb4=
 github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93/go.mod h1:vaAHegt/rkNqbmVH8A+kFkk619vik1ZCg1mxwi/WnA0=
+github.com/kasworld/h4o v0.0.0-20210516034655-4dbd679168d9 h1://AVIXCpcqPhn1H8jXRLpg6FL+w8JLUvcthllkzS4iA=
+github.com/kasworld/h4o v0.0.0-20210516034655-4dbd679168d9/go.mod h1:7cjExdHUPs5KbPOxKlt3d4eAedea9AdTRZ9o+5NoNAk=
 github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025 h1:DL5MhNZOKmhFcrueif1Pp2KoI/ycsrpO3bROm+sBevw=
 github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025/go.mod h1:5MFelptnk10uY/53tD3jwoSQHos9K8kPPBCN2NImf5w=
 github.com/kasworld/htmlcolors v0.0.0-20210321033505-e7fe9c6a43cc h1:IROWgK4RkGMrbePTlau5iyOVk+BSXpAK2241MNocvLM=
