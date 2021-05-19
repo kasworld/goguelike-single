@@ -1,5 +1,5 @@
-github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2 h1:Ac1OEHHkbAZ6EUnJahF0GKcU0FjPc/V8F1DvjhKngFE=
-github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200707082815-5321531c36a2/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
+github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210410170116-ea3d685f79fb h1:T6gaWBvRzJjuOrdCtg8fXXjKai2xSDqWTcKFUPuw8Tw=
+github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210410170116-ea3d685f79fb/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 h1:DACJavvAHhabrF08vX0COfcOBJRhZ8lUbR+ZWIs0Y5g=
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
 github.com/kasworld/actpersec v0.0.0-20191019021204-8c24cd60715c h1:eaKT+Mq6Mc5Ie/vAuOEH1b51WT+shXR8UwPB0o3vSqY=
@@ -20,8 +20,8 @@ github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888 h1:mixTHsjZw0A8CtQ
 github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888/go.mod h1:moB6/tYyUKW8vrzgnT+8e/9qrf0PA0TEfjcLZcgYsuo=
 github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93 h1:VKUGnqkj5GPGc8WYhWpm9EE5QozMqWWa3xdvGVXLrb4=
 github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93/go.mod h1:vaAHegt/rkNqbmVH8A+kFkk619vik1ZCg1mxwi/WnA0=
-github.com/kasworld/h4o v0.0.0-20210516034655-4dbd679168d9 h1://AVIXCpcqPhn1H8jXRLpg6FL+w8JLUvcthllkzS4iA=
-github.com/kasworld/h4o v0.0.0-20210516034655-4dbd679168d9/go.mod h1:7cjExdHUPs5KbPOxKlt3d4eAedea9AdTRZ9o+5NoNAk=
+github.com/kasworld/h4o v0.0.0-20210519081921-8106f4cd58c3 h1:09M70rLIHwqBpoBHPFOfN3iVOSK/3J4Bh5sx8WhhrXg=
+github.com/kasworld/h4o v0.0.0-20210519081921-8106f4cd58c3/go.mod h1:znaAxzPtX0nZeaOeVTdle9KaIGn6evESRgai+uM+lME=
 github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025 h1:DL5MhNZOKmhFcrueif1Pp2KoI/ycsrpO3bROm+sBevw=
 github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025/go.mod h1:5MFelptnk10uY/53tD3jwoSQHos9K8kPPBCN2NImf5w=
 github.com/kasworld/htmlcolors v0.0.0-20210321033505-e7fe9c6a43cc h1:IROWgK4RkGMrbePTlau5iyOVk+BSXpAK2241MNocvLM=
@@ -46,10 +46,10 @@ github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f h1:pTcno+UXDRvgWqX
 github.com/kasworld/weblib v0.0.0-20200408024824-4b4f01a6be3f/go.mod h1:uzuYzY532n+RaDXT9fT5v5vzHxQfRtdVxTo3n3PfW6U=
 github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62 h1:FOMk4XqG2QhF8WFROCBZfpCx6/IkhlDMUF8eLSPk02o=
 github.com/kasworld/wrapper v0.0.0-20190506073115-622d5083ea62/go.mod h1:w5JSR2UgcngOWe+907WptW6FNx23yqGkMCKSCZkgRYI=
-golang.org/x/image v0.0.0-20190910094157-69e4b8554b2a h1:gHevYm0pO4QUbwy8Dmdr01R5r1BuKtfYqRqF0h/Cbh0=
-golang.org/x/image v0.0.0-20190910094157-69e4b8554b2a/go.mod h1:FeLwcggjj3mMvU+oOTbSwawSJRM1uh48EjtB4UJZlP0=
+golang.org/x/image v0.0.0-20210504121937-7319ad40d33e h1:PzJMNfFQx+QO9hrC1GwZ4BoPGeNGhfeQEgcQFArEjPk=
+golang.org/x/image v0.0.0-20210504121937-7319ad40d33e/go.mod h1:FeLwcggjj3mMvU+oOTbSwawSJRM1uh48EjtB4UJZlP0=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
-gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
-gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
+gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=
