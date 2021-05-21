@@ -12,7 +12,7 @@ require (
 	github.com/kasworld/g2rand v0.0.0-20200315073237-cff14c61a4f0
 	github.com/kasworld/go-abs v0.0.0-20190506031457-98e1b15a2888
 	github.com/kasworld/go-profile v0.0.0-20151115093915-b12be73c3c93
-	github.com/kasworld/h4o v0.0.0-20210519081921-8106f4cd58c3
+	github.com/kasworld/h4o v0.0.0-20210520074844-ce4c9c00a623
 	github.com/kasworld/hitrate v0.0.0-20190507000730-8b6a0a06b025
 	github.com/kasworld/htmlcolors v0.0.0-20210321033505-e7fe9c6a43cc
 	github.com/kasworld/intervalduration v0.0.0-20191119062840-82a720a6b837

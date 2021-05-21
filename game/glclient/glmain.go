@@ -17,7 +17,7 @@ import (
 
 	"github.com/kasworld/goguelike-single/game/csprotocol"
 	"github.com/kasworld/h4o/appbase"
-	"github.com/kasworld/h4o/appbase/appwindow"
+	"github.com/kasworld/h4o/appwindow"
 	"github.com/kasworld/h4o/camera"
 	"github.com/kasworld/h4o/eventtype"
 	"github.com/kasworld/h4o/gls"
